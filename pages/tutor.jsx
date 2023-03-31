@@ -18,7 +18,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 function Tutor() {
-  {console.log(API_KEY)}
+  { console.log("API KEY NOW:" + API_KEY)}
   const [language, setLanguage] = useState("en");
   const [chat, setChat] = useState([]);
   useEffect(() => {
@@ -131,15 +131,10 @@ function Tutor() {
       setLanguage("en");
     }
   }
-  /*useEffect(() => {
-    fetchResponse(chat).then((data) => {
-      setChat((prev) => [
-        ...prev,
-        { sender: "ai", message: data.bot.replace(/^\n\n/, "") },
-      ]);
-    });
+  useEffect(() => {
+    console.log(API_KEY)
   }, []);
-  */
+  
   const mutation = useMutation({
     mutationFn: () => {
       return fetchResponse(chat);
