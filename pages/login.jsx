@@ -23,7 +23,7 @@ function Login() {
         const user = userCredential.user;
         console.log(user.uid);
         router.push({
-          pathname: "/",
+          pathname: "/tutor",
           query: { userId: user.uid },
         });
         // ...
@@ -42,7 +42,7 @@ function Login() {
        //This gives the uid of the user
         const user = result.user;
         router.push({
-          pathname: "/",
+          pathname: "/tutor",
           query: { userId: user.uid },
         }
           );
