@@ -36,7 +36,7 @@ const ButtonWrapper = ({ type }) => {
       createSubscription={(data, actions) => {
         return actions.subscription
           .create({
-            plan_id: "P-3RX065706M3469222L5IFM4I",
+            plan_id: "P-8MS40752A79241224MQNAKFY",
           })
           .then((orderId) => {
             //You code here
@@ -81,7 +81,8 @@ export default function YearlylySubscription() {
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <PayPalScriptProvider
         options={{
-          "client-id": "test",
+          "client-id":
+            "ASpt5aPvpjGZzACXTuwBTC4_8VVsPSJQGwLSzRNluEecY6bMm9i67e_MXCsHNqLqYtvAIM1fgPBo5D0a",
           components: "buttons",
           intent: "subscription",
           vault: true,
