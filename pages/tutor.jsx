@@ -6,7 +6,9 @@ import { auth, db } from "../config/firebase";
 import { useMutation } from "react-query";
 import Link from "next/link";
 import Router from "next/router";
-const API_KEY = "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"
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+//If API_KEY is none then load the API_KEY from the database
+
 import {
   collection,
   getDocs,
