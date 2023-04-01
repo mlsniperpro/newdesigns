@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 
 function Login() {
+  {console.log("API KEY", process.env.NEXT_PUBLIC_API_KEY)}
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
