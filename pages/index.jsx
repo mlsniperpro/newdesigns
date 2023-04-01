@@ -83,7 +83,6 @@ function Index() {
           {
             auth? (
               subScribed === "subscribed" ? (
-                
                 <Dashboard />
               ) : subScribed === "Loading" ? (
                 <Loader />
