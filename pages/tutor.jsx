@@ -20,7 +20,6 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 function Tutor() {
-  { console.log("API KEY NOW:" + API_KEY)}
   const [language, setLanguage] = useState("en");
   const [chat, setChat] = useState([]);
   useEffect(() => {
@@ -67,7 +66,6 @@ function Tutor() {
     try {
       //If the chat is more than 3 values, remove the first one
       let lastFive = chat.slice(Math.max(chat.length - 40, 0));
-      console.log("Last five", lastFive);
       const response = await fetch(
         "https://api.openai.com/v1/chat/completions",
         {
@@ -83,7 +81,6 @@ function Tutor() {
         }
       );
       const data = await response.json();
-      console.log("Response", data);
 
       const updateUserWordCount = async () => {
         try {
@@ -105,7 +102,6 @@ function Tutor() {
             const userDoc = wordsGenerated.find(
               (word) => word.userId === auth.currentUser.uid
             );
-            console.log(userDoc);
             await updateDoc(doc(db, "wordsgenerated", userDoc.id), {
               count: userDoc.count + data.choices[0].message.content.length,
             });
@@ -133,9 +129,6 @@ function Tutor() {
       setLanguage("en");
     }
   }
-  useEffect(() => {
-    console.log(API_KEY)
-  }, []);
   
   const mutation = useMutation({
     mutationFn: () => {
@@ -155,7 +148,6 @@ function Tutor() {
 
   return (
     <div className="bg-[#1A232E] h-screen py-6 relative sm:px-16 px-12 text-white overflow-hidden flex flex-col justify-between  align-middle w-screen">
-      {/*console.log(chat)*/}
       {/* gradients */}
       <div className="gradient-01 z-0 absolute"></div>
       <div className="gradient-02 z-0 absolute"></div>
