@@ -22,6 +22,55 @@ import {
 function Tutor() {
   const [language, setLanguage] = useState("en");
   const [chat, setChat] = useState([]);
+  const [subScribed, setSubScribed] = useState("Loading");
+  const subScribedF = async () => {
+    if (!auth?.currentUser?.uid) {
+      Router.push("/login");
+      return;
+    }
+
+    const data = await getDocs(collection(db, "subscribers"));
+    
+    const subscribers = data.docs.map((doc) => doc.data());
+    //If any document userId same as auth.currentUser.uid obtain obtain all of them and get the the one with maximum count value attribute
+    const subscriptions = subscribers.filter(
+      (subscriber) => subscriber.userId === auth?.currentUser?.uid
+    );
+    //
+    const latest_subscription = subscriptions.reduce(
+      (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
+      { subscriptionEndDate: 0 }
+    );
+    const wordsGenerated = await getDocs(collection(db, "wordsgenerated"));
+
+    const usersWords = wordsGenerated.docs.map((doc) => doc.data());
+    const currentUserWords = usersWords.filter(
+      (word) => word.userId === auth?.currentUser?.uid
+    );
+    //console.log(currentUserWords[0].count);
+    //console.log(auth.currentUser.uid);
+    //console.log(subscriberData)
+    if (Date.now() < latest_subscription.subscriptionEndDate) {
+      setSubScribed("subscribed");
+      return;
+    } else if (currentUserWords[0]?.count < 1000) {
+      setSubScribed("subscribed");
+      return;
+    } else if (!currentUserWords[0]?.count) {
+      setSubScribed("subscribed");
+      return;
+    }
+    setSubScribed("not subscribed");
+  };
+   useEffect(() => {
+    try {
+      if (auth) {
+        subScribedF();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   useEffect(() => {
     if (language === "en") {
       setChat([

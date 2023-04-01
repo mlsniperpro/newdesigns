@@ -12,11 +12,12 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-function Keyword() {
+function Keyword({ language}) {
   const [keyword, setKeyword] = useState("");
   const [response, setResponse] = useState("");
   const data = response;
-  const prompt = `
+  //Use appropriate prompt based on whether language is english or spanish
+  const prompt = language === "english" ? `
   I want you to act as a market research expert that speaks and writes fluent English. 
   Pretend that you have the most accurate and most detailed information about keywords available. 
   Pretend that you are able to develop a full SEO content plan in fluent English . I will give you the target keyword ${keyword} . 
@@ -30,6 +31,26 @@ function Keyword() {
   quotes or any other enclosing characters in any of the columns you fill in . Do not explain why and what you are doing, just return your suggestion 
   in the table. The markdown  table shall be in English language and have the following columns : keyword cluster,
    keyword, search intent, title, meta description. Here is the keyword to start again :${keyword}
+  `:
+
+  `
+  Quiero que actúes como un experto en investigación de mercado que habla y escribe inglés fluido.
+  Supongamos que tienes la información más precisa y más detallada sobre palabras clave disponibles.
+  Supongamos que eres capaz de desarrollar un plan completo de contenido SEO en inglés fluido. Te daré la palabra clave objetivo ${keyword}.
+  A partir de esta palabra clave, crea una tabla de markdown con una lista de palabras clave para un plan de estrategia de contenido SEO sobre el tema ${keyword}.
+  Agrupa las palabras clave de acuerdo con las 10 supercategorías superiores y nombra la supercategoría en la primera columna llamada cluster de palabras clave.
+  Agrega otra columna con 7 subcategorías para cada cluster de palabras clave o palabras clave específicas de cola larga para cada uno de los clusters.
+  Lista en otra columna la intención del buscador humano para la palabra clave.
+  Agrupa el tema en uno de los tres grupos de intención basado en la intención de búsqueda, ya sea comercial, transaccional o informativa.
+  Luego, en otra columna, escribe un título simple pero muy atractivo para el usuario para un artículo sobre esa palabra clave.
+  Luego, en otra columna, escribe una meta descripción atractiva que tenga la posibilidad de una alta tasa de clics para el tema con 120 a un máximo de 155 palabras.
+  La meta descripción debe ser basada en el valor, así que mencione el valor del artículo y tenga una llamada simple a la acción para que el buscador haga clic.
+  NO bajo ninguna circunstancia utilice una palabra clave demasiado genérica como "introducción" o "conclusión" o "tl: dr".
+  Focalízate solo en las palabras clave más específicas.
+  No utilice comillas simples, comillas dobles u otros caracteres de cierre en ninguna de las columnas que complete.
+  No explique por qué y qué está haciendo, solo regrese su sugerencia en la tabla.
+  La tabla de markdown debe estar en idioma inglés y tener las siguientes columnas: cluster de palabras clave, palabra clave, intención de búsqueda, título, meta descripción.
+  Aquí está la palabra clave para comenzar de nuevo: ${keyword}
   `;
   const tablify = (data) => {
     let structuredData = [];
@@ -130,7 +151,8 @@ function Keyword() {
             <div className="w-full lg:w-10/12 xl:w-10/12 px-4">
               <div className="mb-12 lg:mb-0">
                 <span className="block mb-4 text-base text-primary font-semibold">
-                  Keyword-based Contenet Generation
+                  {/*Use appropriate heading based on whether langaue is english or spanish*/}
+                  {language === "en" ? "Keyword-based Content Generation" : "Generación de contenido basado en palabras clave"}
                 </span>
                 {data && (
                   <div className="flex flex-col w-200 h-400">
@@ -192,7 +214,7 @@ function Keyword() {
                       cols={300}
                       value={keyword}
                       onChange={(e) => setKeyword(e.target.value)}
-                      placeholder="Your Keyword"
+                      placeholder={language==="english"?"Your Keyword":"Tu palabra clave"}
                       className="
                         w-full
                         rounded
@@ -212,7 +234,9 @@ function Keyword() {
                       type="submit"
                       className="w-full text-white bg-primary rounded border border-primary p-3 transition hover:bg-opacity-90"
                     >
-                      Generate Using Keyword
+                      {/*Use appropriate wording based on whether the language is english or spanish*/}
+                      {language === "english" ? "Generate Using Keyword" : "Generar usando palabra clave"}
+                      
                     </button>
                   </div>
                 </form>

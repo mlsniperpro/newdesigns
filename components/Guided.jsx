@@ -15,11 +15,12 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { resolveHref } from "next/dist/shared/lib/router/router";
-function Guided() {
+function Guided({language}) {
+  {console.log(language)}
   const [title, setTitle] = useState("");
   const [resNo, setResNo] = useState('res1');
   const [description, setDescription] = useState("");
-  const [language, setLanguage] = useState("");
+  //const [language, setLanguage] = useState("");
   const [tone, setTone] = useState("");
   const [copy, setCopy] = useState("");
   const [audience, setAudience] = useState("");
@@ -304,12 +305,13 @@ function Guided() {
             className="bg-white rounded-md shadow-2xl p-5"
           >
             <h1 className="text-gray-800 font-bold text-2xl mb-1">
-              AI Content Generator: More Accurate and Efficient than ChatGPT
+              {/*Use appropriate wording based on whether language is english or spanish*/}
+              {language==="english"?"AI Content Generator: More Accurate and Efficient than ChatGPT": "Generador de contenido AI: Más preciso y eficiente que ChatGPT"}
             </h1>
-            <p className="text-sm font-normal text-gray-600 mb-8">
-              Una forma sencilla de generar contenido más rápido
-            </p>
-            <label htmlFor="product_title">Product/Service Title</label>
+            <label htmlFor="product_title">
+              {/*Use appropriate wording based on whether language is english or spanish*/}
+              {language==="english"?"Product/Service Title":"Título del producto/servicio"}
+              </label>
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
               <input
                 id="email"
@@ -323,7 +325,10 @@ function Guided() {
                 placeholder="Título del producto/servicio"
               />
             </div>
-            <label htmlFor="audience">Specify Target Audience</label>
+            <label htmlFor="audience">
+              {/*Use appropriate wording based on whether language is english or spanish*/}
+              {language==="english"?"Target Audience":"Audiencia objetivo"}
+            </label>
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
               <input
                 className="pl-2 w-full outline-none border-none"
@@ -334,12 +339,13 @@ function Guided() {
                 }}
                 name="audience"
                 id="audience"
-                placeholder="Especificar audiencia objetivo"
+                placeholder={language==="spanish"?"Especificar audiencia objetivo" : "Specify target audience"}
               />
             </div>
 
             <label htmlFor="product_description">
-              The Benefits of your product/service
+              {/*Use appropriate wording based on whether language is english or spanish*/}
+              {language==="english"?"The Benefits of the product or service":"Los beneficios del producto o servicio"}
             </label>
             {/*Use textarea for product description let the product description span 4 rows*/}
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
@@ -352,12 +358,15 @@ function Guided() {
                 }}
                 name="product_description"
                 id="product_description"
-                placeholder="¿Qué hace único a su producto/servicio?"
+                placeholder={language==="spanish"?"¿Qué hace único a su producto/servicio?": "What makes your product/service unique?"}
                 rows="4"
               />
             </div>
             {/*Copy type if a drop down of 3 options: 1. Copywriting 2. Blog Post 3. Social Media Post Make a floating label that translate the main label to spanish*/}
-            <label htmlFor="copy_type">Select Copy Type</label>
+            <label htmlFor="copy_type">
+              {/*Use appropriate wording based on whether language is english or spanish*/}
+              {language==="english"?"Copy Type":"Tipo de copia"}
+            </label>
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
               <select
                 onChange={(e) => {
@@ -368,8 +377,14 @@ function Guided() {
                 name="copy_type"
                 id="copy_type"
               >
-                <option value="copywriting">Copywriting</option>
-                <option value="Blog Post">Blog Post</option>
+                <option value="copywriting">
+                  {/*Use appropriate wording based on whether language is english or spanish*/}
+                  Copywriting</option>
+                <option value="Blog Post">
+                  {/*Use appropriate wording based on whether language is english or spanish*/}
+
+                  Blog Post
+                </option>
                 <option value="social media post">Social Media copy</option>
                 <option value="email Marketing">Email Marketing</option>
                 <option value="product description">Product Description</option>
@@ -383,24 +398,11 @@ function Guided() {
                 <option value="linkedin post">LinkedIn Post</option>
               </select>
             </div>
-            {/*Language is a selection of drop down of either English or Spanish*/}
-            <label htmlFor="language">Language</label>
-            <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
-              <select
-                onChange={(e) => {
-                  setLanguage(e.target.value);
-                }}
-                value={language}
-                className="pl-2 w-full outline-none border-none"
-                name="language"
-                id="language"
-              >
-                <option value="English">English</option>
-                <option value="Spanish">Spanish</option>
-              </select>
-            </div>
             {/*Tone is a selection of drop down of either Formal or Informal*/}
-            <label htmlFor="tone">Tone</label>
+            <label htmlFor="tone">
+              {/*Use appropriate wording based on whether language is english or spanish*/}
+              {language==="english"?"Tone":"Tono"}
+              </label>
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
               <select
                 onChange={(e) => {
@@ -428,7 +430,8 @@ function Guided() {
               type="submit"
               className="block w-full bg-indigo-600 mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
             >
-              Generate Content
+              {/*Use appropriate wording based on whether language is english or spanish*/}
+              {language==="english"?"Generate Content":"Generar contenido"}
             </button>
           </form>
         </div>

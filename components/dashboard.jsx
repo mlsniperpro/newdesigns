@@ -13,6 +13,7 @@ import Tutor from "@/pages/tutor";
 
 function Dashboard() {
   const router = useRouter();
+  const [language, setLanguage] = React.useState("english");
   const [mode, setMode] = React.useState("guided");
 
   const signout = async() => {
@@ -36,12 +37,27 @@ function Dashboard() {
             <li>
               <a
                 onClick={() => {
+                  language==="english"? setLanguage("spanish") : setLanguage("english");
+                }}
+                className="hover:bg-gray-500 hover:bg-opacity-30 hover:text-blue-600 flex items-center justify-between py-1.5 px-4 rounded cursor-pointer"
+              >
+               
+                <span className="flex items-center space-x-2">
+                  <span>{(language==="english")? "English" : "Spanish"}</span>
+                </span>
+              </a>
+            </li>
+            <li></li>
+            <li>
+              <a
+                onClick={() => {
                   setMode("guided");
                 }}
                 className="hover:bg-gray-500 hover:bg-opacity-30 hover:text-blue-600 flex items-center justify-between py-1.5 px-4 rounded cursor-pointer"
               >
+               
                 <span className="flex items-center space-x-2">
-                  <span>Guided</span>
+                  <span>{language==="english"? "Guided": "Guiado"}</span>
                 </span>
               </a>
             </li>
@@ -52,7 +68,7 @@ function Dashboard() {
                 }}
                 className="hover:bg-gray-500  hover:bg-opacity-30 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
-                <span>Free Style</span>
+                <span>{language==="english"? "Freestyle": "Libre"}</span>
               </a>
             </li>
             <li>
@@ -62,12 +78,12 @@ function Dashboard() {
                 }}
                 className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
-                <span>Keyword</span>
+                <span>{language==="english"? "Keyword": "Palabra clave"}</span>
               </a>
             </li>
             <li >
               <Link href="/tutor" className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer">
-                <span>Tutor</span>
+                <span>{language==="english"? "Tutor": "Tutor"}</span>
               </Link>
             </li>
 
@@ -76,7 +92,7 @@ function Dashboard() {
                 onClick={signout}
                 className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
-                <span>Log Out</span>
+                <span>{language==="english"? "Log Out": "Cerrar sesión"}</span>
               </a>
             </li>
           </ul>
@@ -84,15 +100,15 @@ function Dashboard() {
       </div>
       <div>
         {mode === "guided" ? (
-          <Guided />
+          <Guided language={language}/>
         ) : mode === "freestyle" ? (
-          <Freestyle />
+          <Freestyle language={language}/>
         ) : mode === "keyword" ? (
-          <Keyword />
+          <Keyword language={language}/>
         ) : mode === "tutor" ? (
           router.push("/tutor")
         ) : (
-          <Guided />
+          <Guided language={language}/>
         )}
       </div>
     </div>

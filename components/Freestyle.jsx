@@ -12,7 +12,7 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-function Freestyle() {
+function Freestyle({language}) {
   const [content, setContent] = useState("");
   const [prompt, setPrompt] = useState("");
   const handleSubmit = (e) => {
@@ -90,7 +90,8 @@ function Freestyle() {
             <div className="w-full lg:w-1/2 xl:w-6/12 px-4">
               <div className="max-w-[570px] mb-12 lg:mb-0">
                 <span className="block mb-4 text-base text-primary font-semibold">
-                  Freestyle Content Generation
+                  {/*Use appropriate wording based on whether language is english or spanish*/}
+                  {language === "english" ? "Freestyle Content Generation" : "Generación de contenido libre" }
                 </span>
 
                 <p className="text-base text-body-color leading-relaxed mb-9">
@@ -106,7 +107,8 @@ function Freestyle() {
                       rows={20}
                       cols={300}
                       onChange={(e) => setPrompt(e.target.value)}
-                      placeholder="Your Message"
+
+                      placeholder={language==="english"?"Your Message":"Tu mensaje"}
                       className="
                         w-full
                         rounded
@@ -136,7 +138,8 @@ function Freestyle() {
                         hover:bg-opacity-90
                         "
                     >
-                      Generate Content
+                      {/*Use appropriate wording based on whether language is english or spanish*/}
+                      {language === "english" ? "Generate Content" : "Generar contenido" }
                     </button>
                   </div>
                 </form>
