@@ -174,8 +174,10 @@ function Tutor() {
   function changeLanguage() {
     if (language === "en") {
       setLanguage("spanish");
-    } else {
+    } else if(language === "spanish") {
       setLanguage("en");
+    } else {
+      setLanguage("spanish")
     }
   }
   
