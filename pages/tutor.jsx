@@ -20,7 +20,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 function Tutor() {
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState("spanish");
   const [chat, setChat] = useState([]);
   const [subScribed, setSubScribed] = useState("Loading");
   const subScribedF = async () => {
