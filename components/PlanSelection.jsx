@@ -109,7 +109,7 @@ function PlanSelection() {
                     One Month
                   </p>
                   <p className="text-[#00153B] text-[50px] leading-[63px] font-bold">
-                    $4
+                    $9
                   </p>
                 </div>
                 <div>
@@ -154,7 +154,7 @@ function PlanSelection() {
                     One Year
                   </p>
                   <p className="text-[#00153B] text-[50px] leading-[63px] font-bold">
-                    $40
+                    $75
                   </p>
                 </div>
                 <div>
