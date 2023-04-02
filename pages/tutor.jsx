@@ -64,9 +64,12 @@ function Tutor() {
   };
    useEffect(() => {
     try {
-      if (auth) {
+      if (auth?.currentUser?.uid) {
         subScribedF();
+      } else {
+        Router.push("/login");
       }
+      
     } catch (error) {
       console.log(error);
     }
