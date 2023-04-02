@@ -3,9 +3,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import {
-  signInWithPopup,
-} from "firebase/auth";
+import { signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 
 function Login() {
@@ -13,7 +11,6 @@ function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const signIn = async (e) => {
     e.preventDefault();
     await signInWithEmailAndPassword(auth, email, password)
@@ -21,18 +18,20 @@ function Login() {
         // Signed in
         const user = userCredential.user;
         console.log(user.emailVerified);
-        if(!user.emailVerified){
-          alert("Please verify your email address");
+        if (!user.emailVerified) {
+          language === "en"
+            ? alert("Please verify your email address")
+            : alert("Por favor verifica tu correo electrónico");
           return;
         } else {
-        router.push({
-          pathname: "/tutor",
-          query: { userId: user.uid },
-        });
-      }
+          router.push({
+            pathname: "/tutor",
+            query: { userId: user.uid },
+          });
+        }
         // ...
       })
-    
+
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -41,38 +40,49 @@ function Login() {
   };
 
   const signInWithGoogle = async () => {
-    try{
+    try {
       await signInWithPopup(auth, googleProvider)
-      .then((result) => {
-       //This gives the uid of the user
-        const user = result.user;
-        router.push({
-          pathname: "/tutor",
-          query: { userId: user.uid },
-        }
-          );
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-      });
-    }catch(error){
+        .then((result) => {
+          //This gives the uid of the user
+          const user = result.user;
+          router.push({
+            pathname: "/tutor",
+            query: { userId: user.uid },
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+        });
+    } catch (error) {
       console.log(error);
     }
   };
 
-
-
-  
   return (
     <div className="antialiased bg-slate-200">
       <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
-        <h1 className="text-4xl font-medium">Login</h1>
-        <button onClick={() => language==="sp"?setLanguage("en"): setLanguage("sp")}>{language === "sp"? "English": "Spanish"}</button>
-        <p>Hi, Welcome Back to Vioniko 👋</p>
+        <h1 className="text-4xl font-medium">
+          {language === "sp" ? "Iniciar sesión" : "Login"}
+        </h1>
+        <button
+          onClick={() =>
+            language === "sp" ? setLanguage("en") : setLanguage("sp")
+          }
+        >
+          {language === "sp" ? "English" : "Spanish"}
+        </button>
+        <p>
+          {language === "sp"
+            ? "Bienvenido de vuelta a Vioniko 👋"
+            : "Hi, Welcome Back to Vioniko 👋"}
+        </p>
         <div className="my-5">
-          <button onClick={signInWithGoogle} className="w-full text-center py-3 my-3 border flex space-x-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
+          <button
+            onClick={signInWithGoogle}
+            className="w-full text-center py-3 my-3 border flex space-x-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
+          >
             <Image
               src="https://www.svgrepo.com/show/355037/google.svg"
               width={24}
@@ -80,13 +90,19 @@ function Login() {
               className="w-6 h-6"
               alt=""
             />{" "}
-            <span>Login with Google</span>
+            <span>
+              {language === "sp"
+                ? "Iniciar sesión con Google"
+                : "Login with Google"}
+            </span>
           </button>
         </div>
         <form action="" onSubmit={signIn} className="my-10">
           <div className="flex flex-col space-y-5">
             <label htmlFor="email">
-              <p className="font-medium text-slate-700 pb-2">Email address</p>
+              <p className="font-medium text-slate-700 pb-2">
+                {language === "sp" ? "Correo electrónico" : "Email address"}
+              </p>
               <input
                 id="email"
                 name="email"
@@ -98,7 +114,9 @@ function Login() {
               />
             </label>
             <label htmlFor="password">
-              <p className="font-medium text-slate-700 pb-2">Password</p>
+              <p className="font-medium text-slate-700 pb-2">
+                {language === "sp" ? "Contraseña" : "Password"}
+              </p>
               <input
                 id="password"
                 name="password"
@@ -117,16 +135,21 @@ function Login() {
                     id="remember"
                     className="w-4 h-4 border-slate-200 focus:bg-indigo-600"
                   />
-                  Remember me
+                  {language === "sp" ? "Recuérdame" : "Remember me"}
                 </label>
               </div>
               <div>
                 <Link href="/login" className="font-medium text-indigo-600">
-                  Forgot Password?
+                  {language === "sp"
+                    ? "¿Olvidaste tu contraseña?"
+                    : "Forgot Password?"}
                 </Link>
               </div>
             </div>
-            <button type='submit' className="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center">
+            <button
+              type="submit"
+              className="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -141,15 +164,17 @@ function Login() {
                   d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
                 />
               </svg>
-              <span>Login</span>
+              <span>{language === "sp" ? "Iniciar sesión" : "Login"}</span>
             </button>
             <p className="text-center">
-              Not registered yet?{" "}
+              {language === "sp"
+                ? "¿No tienes una cuenta?"
+                : "Not registered yet?"}
               <Link
                 className="text-indigo-600 font-medium inline-flex space-x-1 items-center"
                 href="/signup"
               >
-                <span>Register now </span>
+                <span>{language === "sp" ? "Regístrate" : "Register now"}</span>
               </Link>
             </p>
           </div>
