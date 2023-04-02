@@ -48,11 +48,15 @@ function Keyword({ language}) {
 
     for (let i = 0; i < rows.length; i += 5) {
       let obj = {};
-      obj["keyword Cluster"] = rows[i];
-      obj["keyword"] = rows[i + 1];
-      obj["search intent"] = rows[i + 2];
-      obj["title"] = rows[i + 3];
-      obj["meta description"] = rows[i + 4];
+      obj[
+        language === "english" ? "keyword Cluster" : "grupo de palabras clave"
+      ] = rows[i];
+      obj[language === "english" ? "keyword" : "palabra clave"] = rows[i + 1];
+      obj[language === "english" ? "search intent" : "intención de búsqueda"] =
+        rows[i + 2];
+      obj[language === "english" ? "title" : "Título"] = rows[i + 3];
+      obj[language === "english" ? "meta description" : "Descripción Meta"] =
+        rows[i + 4];
       structuredData.push(obj);
     }
     //Remove the second element in StructuredData array which is the first row of the table
