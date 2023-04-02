@@ -1,9 +1,22 @@
 import React from "react";
 import Link from "next/link";
 import { useState } from "react";
-import { auth } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { useRouter } from "next/router";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  collection,
+  addDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 
 function Signup() {
   const router = useRouter();
@@ -16,22 +29,33 @@ function Signup() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user);
+    const newUserCredentials = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    console.log("The user credentials ", newUserCredentials.user.uid);
+    await sendEmailVerification(newUserCredentials.user)
+      .then(() => {
+        const addUser = async () => {
+          try {
+            const docRef = await addDoc(collection(db, "users"), {
+              userId: newUserCredentials.user.uid,
+              email: email,
+              password: password,
+              firstName: firstName,
+              lastName: lastName,
+              phoneNumber: phoneNumber,
+            });
+            console.log("Document written with ID: ", docRef.id);
+          } catch (e) {
+            console.error("Error adding document: ", e);
+          }
+        };
+        addUser();
         router.push("/login");
-        // ...
-        
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        // ..
-      });
+      }
+      )
   };
 
   return (

@@ -9,7 +9,6 @@ import {
 import { useState } from "react";
 
 function Login() {
-  {console.log("API KEY", process.env.NEXT_PUBLIC_API_KEY)}
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,13 +20,19 @@ function Login() {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log(user.uid);
+        console.log(user.emailVerified);
+        if(!user.emailVerified){
+          alert("Please verify your email address");
+          return;
+        } else {
         router.push({
           pathname: "/tutor",
           query: { userId: user.uid },
         });
+      }
         // ...
       })
+    
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
