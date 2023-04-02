@@ -17,7 +17,7 @@ function Keyword({ language}) {
   const [response, setResponse] = useState("");
   const data = response;
   //Use appropriate prompt based on whether language is english or spanish
-  const prompt =  `
+  let prompt =  `
   I want you to act as a market research expert that speaks and writes fluent English. 
   Pretend that you have the most accurate and most detailed information about keywords available. 
   Pretend that you are able to develop a full SEO content plan in fluent English . I will give you the target keyword ${keyword} . 
