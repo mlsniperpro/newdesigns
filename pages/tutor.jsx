@@ -103,7 +103,7 @@ function Tutor() {
     {
       role: "assistant",
       content:
-        "¿Qué tipo de redacción publicitaria necesita?\n\n1. Página de destino\n2. Carta de ventas\n3. Marketing por correo electrónico\n4. Redacción de blog\n5. Guión de video\n6. Guión de video de YouTube\n7. Anuncio de Facebook\n8. Anuncio de Google\n9. Mensaje directo frío\n10. Correo electrónico frío\n11. Idea de historia de Instagram\n12. Idea de video de YouTube\n13. Texto de Twitter\n14. Campaña de marketing",
+        "¿Qué tipo de redacción publicitaria necesita?\n\n1. Página de aterrizaje\n2. Carta de ventas\n3. Marketing por correo electrónico\n4. Redacción de blog\n5. Guión de video\n6. Guión de video de YouTube\n7. Anuncio de Facebook\n8. Anuncio de Google\n9. Mensaje directo frío\n10. Correo electrónico frío\n11. Idea de historia de Instagram\n12. Idea de video de YouTube\n13. Texto de Twitter\n14. Campaña de marketing",
     },
   ]);
     }
@@ -206,7 +206,7 @@ function Tutor() {
       {/* header */}
       <div className="uppercase font-bold  text-2xl text-center mb-3">
         <h1>{
-          language === "en" ? "AI Copywriting Tutor" : "Tutor de redacción publicitaria de IA"
+          language === "en" ? "VIONIKO AI Copywriting Tutor" : "Tutor vioniko de redacción publicitaria de IA"
           }</h1>
       </div>
       <Link href="/">
