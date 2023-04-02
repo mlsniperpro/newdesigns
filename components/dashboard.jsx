@@ -13,7 +13,7 @@ import Tutor from "@/pages/tutor";
 
 function Dashboard() {
   const router = useRouter();
-  const [language, setLanguage] = React.useState("english");
+  const [language, setLanguage] = React.useState("spanish");
   const [mode, setMode] = React.useState("guided");
 
   const signout = async() => {
