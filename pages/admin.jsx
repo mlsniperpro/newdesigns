@@ -1,8 +1,10 @@
 import React from "react";
 
-function admin() {
+function Admin() {
+
+  const [plan, setPlan] = React.useState("Monthly");
   function handleAward() {
-    console.log("Awarded");
+    console.log(plan);
   }
 
   return (
@@ -38,7 +40,9 @@ function admin() {
               </label>
               {/*Change to selection of either yearly of monthly*/}
 
-              <select className="mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none border-gray-200 text-green-500">
+              <select
+                onChange={(e) => setPlan(e.target.value)}   
+               className="mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none border-gray-200 text-green-500">
                 <option value="Monthly">Monthly</option>
                 <option value="Yearly">Yearly</option>
               </select>
@@ -60,4 +64,4 @@ function admin() {
   );
 }
 
-export default admin;
+export default Admin;
