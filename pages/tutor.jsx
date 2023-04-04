@@ -249,13 +249,5 @@ function Tutor() {
   );
 }
 
-function Main() {
-  return (
-    <main>
-     <Tutor />
-    </main>
-  );
-}
 
-
-export default Main;
+export default Tutor;
