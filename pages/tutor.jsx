@@ -32,7 +32,7 @@ function Tutor() {
     }
 
     const data = await getDocs(collection(db, "subscribers"));
-    
+
     const subscribers = data.docs.map((doc) => doc.data());
     //If any document userId same as auth.currentUser.uid obtain obtain all of them and get the the one with maximum count value attribute
     const subscriptions = subscribers.filter(
@@ -64,23 +64,22 @@ function Tutor() {
     }
     setSubScribed("not subscribed");
   };
-   useEffect(() => {
+  useEffect(() => {
     try {
       if (auth?.currentUser?.uid) {
         subScribedF();
       } else {
         Router.push("/login");
       }
-      
     } catch (error) {
       console.log(error);
     }
   }, []);
   useEffect(() => {
-    if (subScribed !== "subscribed") {
+    if (subScribed === "not subscribed") {
       Router.push("/");
     }
-  }, [subScribed]);
+  }, []);
   useEffect(() => {
     if (language === "en") {
       setChat([
@@ -100,26 +99,24 @@ function Tutor() {
         },
       ]);
     } else {
-  setChat([
-    {
-      role: "system",
-      content:
-        "Actúe como un experimentado redactor publicitario con más de 20 años de experiencia a nivel mundial, interactuará paso a paso, haciendo una pregunta a la vez y esperando una respuesta como si estuviera entrevistando a un cliente sobre sus necesidades para ofrecer la mejor propuesta al final de la redacción publicitaria. Presentará las opciones disponibles para responder en un formato de lista numerada para facilitar la respuesta. La primera pregunta es sobre qué tipo de redacción se desea de estas opciones (página de aterrizaje, carta de ventas, marketing por correo electrónico, escritura de blog, guión de video, guión de video de YouTube, anuncio de Facebook, anuncio de Google, mensaje directo frío, correo electrónico frío, idea de historia de Instagram, idea de video de YouTube, texto de Twitter, imán de prospectos, campaña de marketing). La segunda pregunta será sobre el tono de la redacción, y sugerirá estos tipos de tonos (amistoso, relajado, profesional, divertido, audaz, aventurero, ingenioso, persuasivo, empático). La tercera pregunta será sobre el avatar ideal del cliente objetivo. La cuarta pregunta será sobre el producto o servicio ofrecido y qué lo hace especial. La quinta pregunta será sobre el resultado deseado. Con todas las respuestas que obtenga, compartirá los textos específicos que se utilizarán con la mejor redacción publicitaria sugerida para cada uno de los componentes del tipo de escritura solicitado. Es importante no dar recomendaciones generales, compartir exactamente qué estructura y texto usar, y también compartir recomendaciones sobre diseño y formato al final. Comencemos solo con la primera pregunta sin decir quién es usted.",
-    },
-    {
-      role: "user",
-      content: "EMPEZAR",
-    },
-    {
-      role: "assistant",
-      content:
-        "¿Qué tipo de redacción publicitaria necesita?\n\n1. Página de aterrizaje\n2. Carta de ventas\n3. Marketing por correo electrónico\n4. Redacción de blog\n5. Guión de video\n6. Guión de video de YouTube\n7. Anuncio de Facebook\n8. Anuncio de Google\n9. Mensaje directo frío\n10. Correo electrónico frío\n11. Idea de historia de Instagram\n12. Idea de video de YouTube\n13. Texto de Twitter\n14. Campaña de marketing",
-    },
-  ]);
+      setChat([
+        {
+          role: "system",
+          content:
+            "Actúe como un experimentado redactor publicitario con más de 20 años de experiencia a nivel mundial, interactuará paso a paso, haciendo una pregunta a la vez y esperando una respuesta como si estuviera entrevistando a un cliente sobre sus necesidades para ofrecer la mejor propuesta al final de la redacción publicitaria. Presentará las opciones disponibles para responder en un formato de lista numerada para facilitar la respuesta. La primera pregunta es sobre qué tipo de redacción se desea de estas opciones (página de aterrizaje, carta de ventas, marketing por correo electrónico, escritura de blog, guión de video, guión de video de YouTube, anuncio de Facebook, anuncio de Google, mensaje directo frío, correo electrónico frío, idea de historia de Instagram, idea de video de YouTube, texto de Twitter, imán de prospectos, campaña de marketing). La segunda pregunta será sobre el tono de la redacción, y sugerirá estos tipos de tonos (amistoso, relajado, profesional, divertido, audaz, aventurero, ingenioso, persuasivo, empático). La tercera pregunta será sobre el avatar ideal del cliente objetivo. La cuarta pregunta será sobre el producto o servicio ofrecido y qué lo hace especial. La quinta pregunta será sobre el resultado deseado. Con todas las respuestas que obtenga, compartirá los textos específicos que se utilizarán con la mejor redacción publicitaria sugerida para cada uno de los componentes del tipo de escritura solicitado. Es importante no dar recomendaciones generales, compartir exactamente qué estructura y texto usar, y también compartir recomendaciones sobre diseño y formato al final. Comencemos solo con la primera pregunta sin decir quién es usted.",
+        },
+        {
+          role: "user",
+          content: "EMPEZAR",
+        },
+        {
+          role: "assistant",
+          content:
+            "¿Qué tipo de redacción publicitaria necesita?\n\n1. Página de aterrizaje\n2. Carta de ventas\n3. Marketing por correo electrónico\n4. Redacción de blog\n5. Guión de video\n6. Guión de video de YouTube\n7. Anuncio de Facebook\n8. Anuncio de Google\n9. Mensaje directo frío\n10. Correo electrónico frío\n11. Idea de historia de Instagram\n12. Idea de video de YouTube\n13. Texto de Twitter\n14. Campaña de marketing",
+        },
+      ]);
     }
   }, [language]);
-
-
 
   const fetchResponse = async (chat) => {
     try {
@@ -184,13 +181,13 @@ function Tutor() {
   function changeLanguage() {
     if (language === "en") {
       setLanguage("spanish");
-    } else if(language === "spanish") {
+    } else if (language === "spanish") {
       setLanguage("en");
     } else {
-      setLanguage("spanish")
+      setLanguage("spanish");
     }
   }
-  
+
   const mutation = useMutation({
     mutationFn: () => {
       return fetchResponse(chat);
@@ -215,21 +212,22 @@ function Tutor() {
 
       {/* header */}
       <div className="uppercase font-bold  text-2xl text-center mb-3">
-        <h1>{
-          language === "en" ? "VIONIKO AI Copywriting Tutor" : "Tutor vioniko de redacción publicitaria de IA"
-          }</h1>
+        <h1>
+          {language === "en"
+            ? "VIONIKO AI Copywriting Tutor"
+            : "Tutor vioniko de redacción publicitaria de IA"}
+        </h1>
       </div>
       <Link href="/">
         <button className="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-          {
-            language === "en" ? "Home" : "Inicio"
-          }
+          {language === "en" ? "Home" : "Inicio"}
         </button>
       </Link>
-      <button onClick={changeLanguage} className="block mt-6 uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-        {
-          language === "en" ? "Switch to Spanish" : "Cambiar a Inglés"
-        }
+      <button
+        onClick={changeLanguage}
+        className="block mt-6 uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded"
+      >
+        {language === "en" ? "Switch to Spanish" : "Cambiar a Inglés"}
       </button>
 
       {/* body */}
@@ -248,6 +246,5 @@ function Tutor() {
     </div>
   );
 }
-
 
 export default Tutor;
