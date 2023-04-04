@@ -66,9 +66,6 @@ function Tutor() {
     try {
       if (auth?.currentUser?.uid) {
         subScribedF();
-        if(subScribed === "not subscribed"){
-          Router.push("/");
-        }
       } else {
         Router.push("/login");
       }
@@ -77,6 +74,11 @@ function Tutor() {
       console.log(error);
     }
   }, []);
+  useEffect(() => {
+    if (subScribed !== "subscribed") {
+      Router.push("/");
+    }
+  }, [subScribed]);
   useEffect(() => {
     if (language === "en") {
       setChat([
@@ -245,4 +247,11 @@ function Tutor() {
   );
 }
 
-export default Tutor;
+function Main() {
+  return (
+    <h1>Hello world</h1>
+  );
+}
+
+
+export default Main;
