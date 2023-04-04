@@ -2,9 +2,28 @@ import React from "react";
 
 function Admin() {
 
-  const [plan, setPlan] = React.useState("Monthly");
+  const [plan, setPlan] = React.useState("monthly");
+  const [userId, setUserId] = React.useState("");
+  const addSubscriber = async () => {
+    try {
+        const docRef = await addDoc(collection(db, "subscribers"), {
+            userId: userId,
+            subscriptionStartDate: Date.now(),
+            subscriptionEndDate: Date.now() + plan==="monthly"? 2592000000: 31536000000,
+            plan: plan,
+            subscriptionStartDate: Date.now(),
+            //Random number is subscriptionId
+            subscriptionId: Math.floor(Math.random() * 10 ** 10),
+
+        });
+        console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+    };
+
   function handleAward() {
-    console.log(plan);
+    addSubscriber();
   }
 
   return (
@@ -25,6 +44,7 @@ function Admin() {
                 userId
               </label>
               <input
+                onChange={(e) => setUserId(e.target.value)}
                 type="text"
                 id="email"
                 placeholder="Enter the Unique User Id"
@@ -43,8 +63,8 @@ function Admin() {
               <select
                 onChange={(e) => setPlan(e.target.value)}   
                className="mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none border-gray-200 text-green-500">
-                <option value="Monthly">Monthly</option>
-                <option value="Yearly">Yearly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
               </select>
             </div>
             <div className="flex w-full items-center justify-center bg-gray-100">
