@@ -1,6 +1,10 @@
 import React from "react";
 
 function admin() {
+  function handleAward() {
+    console.log("Awarded");
+  }
+
   return (
     <div>
       <>
@@ -41,7 +45,10 @@ function admin() {
             </div>
             <div className="flex w-full items-center justify-center bg-gray-100">
               {/* component */}
-              <button className="group rounded-2xl h-12 w-48 bg-green-500 font-bold text-lg text-white relative overflow-hidden">
+              <button
+                onClick={() => handleAward()}
+                className="group rounded-2xl h-12 w-48 bg-green-500 font-bold text-lg text-white relative overflow-hidden"
+              >
                 Award Now!
                 <div className="absolute duration-300 inset-0 w-full h-full transition-all scale-0 group-hover:scale-100 group-hover:bg-white/30 rounded-2xl"></div>
               </button>
