@@ -19,7 +19,7 @@ function Admin() {
         const docRef = await addDoc(collection(db, "subscribers"), {
             userId: userId,
             subscriptionStartDate: Date.now(),
-            subscriptionEndDate: Date.now() + plan==="monthly"? 2592000000: 31536000000,
+            subscriptionEndDate: Date.now() + (plan==="monthly"? 2592000000: 31536000000),
             plan: plan,
             subscriptionStartDate: Date.now(),
             //Random number is subscriptionId
