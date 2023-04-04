@@ -252,17 +252,7 @@ function Tutor() {
 function Main() {
   return (
     <main>
-      {auth ? (
-        subScribed === "subscribed" ? (
-          <Tutor />
-        ) : subScribed === "Loading" ? (
-          <Loader />
-        ) : (
-          <PlanSelection />
-        )
-      ) : (
-        <Loader />
-      )}
+     <Tutor />
     </main>
   );
 }
