@@ -66,6 +66,9 @@ function Tutor() {
     try {
       if (auth?.currentUser?.uid) {
         subScribedF();
+        if(subScribed === "not subscribed"){
+          Router.push("/");
+        }
       } else {
         Router.push("/login");
       }
