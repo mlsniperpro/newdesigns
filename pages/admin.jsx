@@ -1,5 +1,15 @@
 import React from "react";
-
+import { auth, db } from "../config/firebase";
+import {
+  collection,
+  addDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 function Admin() {
 
   const [plan, setPlan] = React.useState("monthly");
