@@ -3,7 +3,9 @@ import { useEffect } from "react";
 import ChatBody from "@/components/ChatBody";
 import ChatInput from "@/components/ChatInput";
 import { auth, db } from "../config/firebase";
+import PlanSelection from "@/components/PlanSelection";
 import { useMutation } from "react-query";
+import Loader from "@/components/Loader";
 import Link from "next/link";
 import Router from "next/router";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
@@ -249,7 +251,19 @@ function Tutor() {
 
 function Main() {
   return (
-    <h1>Hello world</h1>
+    <main>
+      {auth ? (
+        subScribed === "subscribed" ? (
+          <Tutor />
+        ) : subScribed === "Loading" ? (
+          <Loader />
+        ) : (
+          <PlanSelection />
+        )
+      ) : (
+        <Loader />
+      )}
+    </main>
   );
 }
 
