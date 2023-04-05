@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Freestyle from "@/components/Freestyle";
@@ -16,6 +16,19 @@ function Dashboard() {
   const router = useRouter();
   const [language, setLanguage] = React.useState("spanish");
   const [mode, setMode] = React.useState("guided");
+
+  function checkIfAdmin(){
+    if (
+    auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
+    auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
+  ) {
+    setAdmin(true);
+    return;
+  }
+}
+useEffect(() => {
+  checkIfAdmin()
+}, [])
 
   const signout = async() => {
     await signOut(auth)
