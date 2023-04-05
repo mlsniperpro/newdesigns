@@ -27,7 +27,17 @@ function Dashboard() {
       console.log(error);
     });
   }
-
+function onlyAdmins() {
+  if (
+    auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
+    auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
+  ) {
+    return;
+  } else {
+    alert("Admins only!");
+    Router.push("/login");
+  }
+}
 
   return (
     <div className="w-full bg-white shadow-xl rounded-lg flex overflow-x-auto custom-scrollbar">
@@ -94,6 +104,7 @@ function Dashboard() {
             <li>
               <Link
                 href="/admin"
+                onClick={onlyAdmins}
                 className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
                 <span>{language === "english" ? "Admin" : "Admin"}</span>
