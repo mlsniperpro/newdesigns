@@ -76,7 +76,7 @@ function Admin() {
           </button>
           
           
-          <button onClick={()=>Router.push("/")} className="flex px-3 py-2 bg-orange-400 text-white font-semibold rounded">
+          <button onClick={()=>Router.push("/tutor")} className="flex px-3 py-2 bg-orange-400 text-white font-semibold rounded">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
