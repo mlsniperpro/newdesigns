@@ -56,7 +56,7 @@ function Admin() {
     <div>
       <>
         {/*Start of the header  Buttons*/}
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center">
           <button className="flex px-3 py-2 bg-blue-400 mr-1 text-white font-semibold rounded">
             <svg
               xmlns="http://www.w3.org/2000/svg"
