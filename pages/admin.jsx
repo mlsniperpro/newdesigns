@@ -18,7 +18,7 @@ function Admin() {
   const [userId, setUserId] = React.useState("");
   function getUidByEmailAddress(emailAddress) {
     getAuth()
-  .getUserByEmail(email)
+  .getUserByEmail(emailAddress)
   .then((userRecord) => {
     // See the UserRecord reference doc for the contents of userRecord.
     console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
