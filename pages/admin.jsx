@@ -15,17 +15,6 @@ import {
 function Admin() {
   const [plan, setPlan] = React.useState("monthly");
   const [userId, setUserId] = React.useState("");
-  function getUidByEmailAddress(emailAddress) {
-    auth
-  .getUserByEmail(emailAddress)
-  .then((userRecord) => {
-    // See the UserRecord reference doc for the contents of userRecord.
-    console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
-  })
-  .catch((error) => {
-    console.log('Error fetching user data:', error);
-  });
-  }
 
   function onlyAdmins () {
     if(!auth.currentUser?.uid) {
@@ -68,7 +57,6 @@ function Admin() {
 
   function handleAward() {
     addSubscriber();
-    getUidByEmailAddress(userId);
   }
  
 
