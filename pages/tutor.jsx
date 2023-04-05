@@ -55,7 +55,7 @@ function Tutor() {
     if (Date.now() < latest_subscription.subscriptionEndDate) {
       setSubScribed("subscribed");
       return;
-    } else if (currentUserWords[0]?.count < 3000) {
+    } else if (currentUserWords[0]?.count < 10000) {
       setSubScribed("subscribed");
       return;
     } else if (!currentUserWords[0]?.count) {
