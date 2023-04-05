@@ -2,7 +2,6 @@ import React from "react";
 import { auth, db } from "../config/firebase";
 import Router from "next/router";
 import { useEffect } from "react";
-import { getAuth } from "firebase/auth";
 import {
   collection,
   addDoc,
@@ -17,7 +16,7 @@ function Admin() {
   const [plan, setPlan] = React.useState("monthly");
   const [userId, setUserId] = React.useState("");
   function getUidByEmailAddress(emailAddress) {
-    getAuth()
+    auth
   .getUserByEmail(emailAddress)
   .then((userRecord) => {
     // See the UserRecord reference doc for the contents of userRecord.
@@ -27,7 +26,7 @@ function Admin() {
     console.log('Error fetching user data:', error);
   });
   }
-/*
+
   function onlyAdmins () {
     if(!auth.currentUser?.uid) {
       Router.push("/login");
@@ -48,7 +47,7 @@ function Admin() {
   useEffect(() => {
     onlyAdmins();
   }, []);
-  */
+
   const addSubscriber = async () => {
     try {
         const docRef = await addDoc(collection(db, "subscribers"), {
