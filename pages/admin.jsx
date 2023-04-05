@@ -1,6 +1,7 @@
 import React from "react";
 import { auth, db } from "../config/firebase";
 import Router from "next/router";
+import { useEffect } from "react";
 import {
   collection,
   addDoc,
@@ -30,6 +31,9 @@ function Admin() {
 
   const [plan, setPlan] = React.useState("monthly");
   const [userId, setUserId] = React.useState("");
+  useEffect(() => {
+    onlyAdmins();
+  }, []);
   const addSubscriber = async () => {
     try {
         const docRef = await addDoc(collection(db, "subscribers"), {
