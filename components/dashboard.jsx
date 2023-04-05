@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import Tutor from "@/pages/tutor";
 
 function Dashboard() {
+  const [admin, setAdmin] = React.useState(false);
   const router = useRouter();
   const [language, setLanguage] = React.useState("spanish");
   const [mode, setMode] = React.useState("guided");
@@ -32,6 +33,7 @@ function onlyAdmins() {
     auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
     auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
   ) {
+    setAdmin(true);
     return;
   } else {
     alert("Admins only!");
@@ -101,7 +103,7 @@ function onlyAdmins() {
                 <span>{language === "english" ? "Tutor" : "Tutor"}</span>
               </Link>
             </li>
-            <li>
+            {admin ? (<li>
               <Link
                 href="/admin"
                 onClick={onlyAdmins}
@@ -110,6 +112,9 @@ function onlyAdmins() {
                 <span>{language === "english" ? "Admin" : "Admin"}</span>
               </Link>
             </li>
+            ) : null
+              }
+            
 
             <li>
               <a
