@@ -1,5 +1,6 @@
 import React from "react";
 import { auth, db } from "../config/firebase";
+import Router from "next/router";
 import {
   collection,
   addDoc,
@@ -11,6 +12,21 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 function Admin() {
+
+  function onlyAdmins () {
+    if(!auth.currentUser?.uid) {
+      Router.push("/login");
+      return;
+    }
+    if (
+      auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
+      auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
+    ) {
+      return;
+    } else {
+      Router.push("/login");
+    }
+  }
 
   const [plan, setPlan] = React.useState("monthly");
   const [userId, setUserId] = React.useState("");
