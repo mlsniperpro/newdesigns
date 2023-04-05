@@ -16,7 +16,6 @@ import {
 function Admin() {
   const [plan, setPlan] = React.useState("monthly");
   const [userId, setUserId] = React.useState("");
-  const [count, setCount] = React.useState(0);
 
   function onlyAdmins () {
     if(!auth.currentUser?.uid) {
@@ -29,11 +28,7 @@ function Admin() {
     ) {
       return;
     } else {
-      if (count <= 3){
-        alert("Admins only! You will be logged out if you click 3 times");
-        setCount(count + 1);
-        return;
-      }
+      alert("Admins only!");
       Router.push("/login");
     }
   }
