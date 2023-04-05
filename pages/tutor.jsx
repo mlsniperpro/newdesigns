@@ -75,11 +75,16 @@ function Tutor() {
       console.log(error);
     }
   }, []);
-  useEffect(() => {
+  function redirectUnsubscribed() {
     if (subScribed === "not subscribed") {
       Router.push("/");
     }
-  }, []);
+  }
+  //Run below when subScribed changes
+  useEffect(() => {
+    redirectUnsubscribed();
+  }, [subScribed]);
+
   useEffect(() => {
     if (language === "en") {
       setChat([
