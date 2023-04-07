@@ -12,6 +12,7 @@ import {
   getDoc,
   getDocs,
   query,
+  where,
   setDoc,
   updateDoc,
   deleteDoc,
