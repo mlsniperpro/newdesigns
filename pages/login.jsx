@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 import { useState } from "react";
+import { auth, db } from "../config/firebase";
 import {
   collection,
   addDoc,
