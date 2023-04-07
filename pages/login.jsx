@@ -45,6 +45,26 @@ function Login() {
         .then((result) => {
           //This gives the uid of the user
           const user = result.user;
+          const addUser = async () => {
+          const q = query(
+            collection(db, "users"),
+            where("uid", "==", user.uid)
+          );
+          const docs = await getDocs(q);
+          if (docs.empty) {
+            await addDoc(collection(db, "users"), {
+              uid: user.uid,
+              email: user.email,
+              name: user.displayName,
+              photo: user.photoURL,
+              authProvider: "google",
+              dateSignedUp: `${new Date().getFullYear()}-${
+                new Date().getMonth() + 1
+              }-${new Date().getDate()}`,
+            });
+          }
+        };
+          addUser();
           router.push({
             pathname: "/tutor",
             query: { userId: user.uid },

@@ -46,6 +46,9 @@ function Signup() {
               firstName: firstName,
               lastName: lastName,
               phoneNumber: phoneNumber,
+              dateSignedUp: `${new Date().getFullYear()}-${
+                new Date().getMonth() + 1
+              }-${new Date().getDate()}`,
             });
             console.log("Document written with ID: ", docRef.id);
           } catch (e) {
