@@ -4,6 +4,9 @@ import { db } from "../config/firebase";
 
 
 function Users() {
+   const [searchTerm, setSearchTerm] = useState("");
+   const [userData, setUserData] = useState([]);
+   const [actions, setActions] = useState({});
     const data = [
       {
         id: 1,
@@ -49,6 +52,7 @@ function Users() {
       },
     ];
 
+
     //Write code to retrieve users from firebase collection users
     // const [users, setUsers] = useState(data);
     const retrieveUsers=async()=>{
@@ -59,15 +63,16 @@ function Users() {
         users.push(doc.data());
       });
       console.log(users)
+      console.log(typeof(users))
       return users;
     }
-
-    useEffect(()=>{
-      retrieveUsers()
-    }, [])
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedAction, setSelectedAction] = useState("");
-  const [actions, setActions] = useState({})
+    const getUsers=async()=>{
+    const newData = await retrieveUsers();
+    setUserData(newData);
+    }
+    getUsers();
+    
+ 
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -80,17 +85,18 @@ function Users() {
     setActions(updatedActions)
     alert(`Action Completed`)
   };
-  const filteredData = data.filter((user) => {
+  const filteredData = userData.filter((user) => {
     return user.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
   const handleActionChange = (event, id) => {
-    const userToUpdate = data.find((user) => user.id === id);
+    const userToUpdate = userData.find((user) => user.uid === id);
     userToUpdate.action = event.target.value;
     setActions({...actions, [id]: event.target.value})
   };
   
 
   return (
+    
     <div>
       <div className="mt-4 mx-4">
         <div className="flex justify-between items-center mb-4">
@@ -118,7 +124,7 @@ function Users() {
               <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                 {filteredData.map((user) => (
                   <tr
-                    key={user.name}
+                    key={user.uid}
                     className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-700 dark:text-gray-400"
                   >
                     <td className="px-4 py-3">
@@ -126,7 +132,7 @@ function Users() {
                         <div>
                           <p className="font-semibold">{user.name}</p>
                           <p className="text-xs text-gray-600 dark:text-gray-400">
-                            {user.title}
+                            {user.email}
                           </p>
                         </div>
                       </div>
@@ -143,7 +149,7 @@ function Users() {
                         {user.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm">{user.date}</td>
+                    <td className="px-4 py-3 text-sm">{user.dateSignedUp}</td>
                     <td className="px-4 py-3 text-sm">
                       <select
                         value={user.action}

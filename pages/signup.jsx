@@ -45,6 +45,7 @@ function Signup() {
               password: password,
               firstName: firstName,
               lastName: lastName,
+              name: `${firstName} ${lastName}`,
               phoneNumber: phoneNumber,
               dateSignedUp: `${new Date().getFullYear()}-${
                 new Date().getMonth() + 1
