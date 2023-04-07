@@ -1,11 +1,10 @@
-import { auth, googleProvider } from "../config/firebase";
+import { auth,db, googleProvider } from "../config/firebase";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 import { useState } from "react";
-import { auth, db } from "../config/firebase";
 import {
   collection,
   addDoc,
