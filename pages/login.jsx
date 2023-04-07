@@ -45,6 +45,7 @@ function Login() {
         .then((result) => {
           //This gives the uid of the user
           const user = result.user;
+          console.log(user);
           const addUser = async () => {
           const q = query(
             collection(db, "users"),
