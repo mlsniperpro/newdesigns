@@ -5,7 +5,17 @@ import Link from "next/link";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 import { useState } from "react";
-
+import {
+  collection,
+  addDoc,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 function Login() {
   const [language, setLanguage] = useState("sp");
   const router = useRouter();
