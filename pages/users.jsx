@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function Users() {
     const data = [
@@ -45,6 +45,23 @@ function Users() {
         accountStatus: "Active",
       },
     ];
+
+    //Write code to retrieve users from firebase collection users
+    // const [users, setUsers] = useState(data);
+    const retrieveUsers=async()=>{
+      const users = [];
+      const q = query(collection(db, "users"));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        users.push(doc.data());
+      });
+      console.log(users)
+      return users;
+    }
+
+    useEffect(()=>{
+      retrieveUsers()
+    }, [])
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const [actions, setActions] = useState({})
