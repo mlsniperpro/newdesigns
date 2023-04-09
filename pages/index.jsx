@@ -2,11 +2,9 @@ import React from "react";
 import Head from "next/head";
 import PlanSelection from "@/components/PlanSelection";
 import { useEffect } from "react";
-//import { useRouter } from "next/router";
 import Router from "next/router";
 import { useState } from "react";
 import Dashboard from "../components/dashboard";
-import PayPal from "@/components/payment";
 import Loader from "@/components/Loader";
 import { auth, db } from "../config/firebase";
 import {
