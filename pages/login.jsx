@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   collection,
   addDoc,
@@ -18,6 +18,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 function Login() {
+  const [disabled, setDisabled] = useState(false);
   const [language, setLanguage] = useState("sp");
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -28,6 +29,28 @@ function Login() {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        //Check if user is disabled
+        const checkIfDisabled = async () => {
+          console.log("Checking if user is disabled");
+          const disabledQuery = query(
+            collection(db, "deactivatedUsers"),
+            where("userId", "==", user.uid)
+          );
+          const disabledDocs = await getDocs(disabledQuery);
+          console.log("DisabledDocs", disabledDocs);
+          if (disabledDocs.empty) {
+            router.push({
+              pathname: "/tutor",
+              query: { userId: user.uid },
+            });
+          } else {
+            console.log("User disabled");
+            console.log("User Disabled from using Vioniko");
+            alert("You have been disabled from using Vioniko");
+            console.log("User Disabled from using Vioniko");
+            throw new Error("User Disabled from using Vioniko");
+          }
+        };
         console.log(user.emailVerified);
         if (!user.emailVerified) {
           language === "en"
@@ -35,12 +58,13 @@ function Login() {
             : alert("Por favor verifica tu correo electrónico");
           return;
         } else {
-          router.push({
+          checkIfDisabled();
+          /*router.push({
             pathname: "/tutor",
             query: { userId: user.uid },
           });
+          */
         }
-        // ...
       })
 
       .catch((error) => {
@@ -52,35 +76,56 @@ function Login() {
 
   const signInWithGoogle = async () => {
     try {
+      
       await signInWithPopup(auth, googleProvider)
         .then((result) => {
           //This gives the uid of the user
           const user = result.user;
           console.log(user);
           const addUser = async () => {
-          const q = query(
-            collection(db, "users"),
-            where("userId", "==", user.uid)
-          );
-          const docs = await getDocs(q);
-          if (docs.empty) {
-            await addDoc(collection(db, "users"), {
-              userId: user.uid,
-              email: user.email,
-              name: user.displayName,
-              photo: user.photoURL,
-              authProvider: "google",
-              dateSignedUp: `${new Date().getFullYear()}-${
-                new Date().getMonth() + 1
-              }-${new Date().getDate()}`,
-            });
-          }
-        };
+            const q = query(
+              collection(db, "users"),
+              where("userId", "==", user.uid)
+            );
+            const docs = await getDocs(q);
+
+            if (docs.empty) {
+              await addDoc(collection(db, "users"), {
+                userId: user.uid,
+                email: user.email,
+                name: user.displayName,
+                photo: user.photoURL,
+                authProvider: "google",
+                dateSignedUp: `${new Date().getFullYear()}-${
+                  new Date().getMonth() + 1
+                }-${new Date().getDate()}`,
+              });
+            }
+          };
+
           addUser();
-          router.push({
-            pathname: "/tutor",
-            query: { userId: user.uid },
-          });
+          const checkIfDisabled = async () => {
+            console.log("Checking if user is disabled");
+            const disabledQuery = query(
+              collection(db, "deactivatedUsers"),
+              where("userId", "==", user.uid)
+            );
+            const disabledDocs = await getDocs(disabledQuery);
+            console.log("DisabledDocs", disabledDocs);
+            if (disabledDocs.empty) {
+              router.push({
+                pathname: "/tutor",
+                query: { userId: user.uid },
+              });
+            } else {
+              console.log("User disabled");
+               console.log("User Disabled from using Vioniko");
+               alert("You have been disabled from using Vioniko");
+               console.log("User Disabled from using Vioniko");
+               throw new Error("User Disabled from using Vioniko");
+            }
+          };
+          checkIfDisabled();      
         })
         .catch((error) => {
           const errorCode = error.code;

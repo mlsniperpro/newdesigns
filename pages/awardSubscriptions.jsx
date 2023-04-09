@@ -13,6 +13,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 function Admin() {
+  const [emailIdMapper, setEmailIdMapper] = React.useState({});
   const [plan, setPlan] = React.useState("monthly");
   const [userId, setUserId] = React.useState("");
 
@@ -23,7 +24,7 @@ function Admin() {
     }
     if (
       auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-      auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
+      auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3" 
     ) {
       return;
     } else {
@@ -31,13 +32,27 @@ function Admin() {
       Router.push("/login");
     }
   }
-
-  
+  const mapEmailToId = async () => {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data().email, " => ", doc.id);
+      setEmailIdMapper((prev) => {
+        return { ...prev, [doc.data().email]: doc.id };
+      });
+    });
+  };
   useEffect(() => {
+    mapEmailToId();
+    console.log("My email to id mappers are", emailIdMapper);
+  }, []);
+  
+ /* useEffect(() => {
     onlyAdmins();
   }, []);
+  */
 
   const addSubscriber = async () => {
+    console.log("Adding subscriber", userId, plan)
     try {
         const docRef = await addDoc(collection(db, "subscribers"), {
             userId: userId,
@@ -50,6 +65,7 @@ function Admin() {
 
         });
         console.log("Document written with ID: ", docRef.id);
+        console.log(docRef)
     } catch (e) {
         console.error("Error adding document: ", e);
     }
@@ -57,6 +73,7 @@ function Admin() {
 
   function handleAward() {
     addSubscriber();
+    alert("Subscription added successfully!");
   }
  
 
@@ -124,10 +141,10 @@ function Admin() {
                 userId
               </label>
               <input
-                onChange={(e) => setUserId(e.target.value)}
+                onChange={(e) => setUserId(emailIdMapper[e.target.value])}
                 type="text"
                 id="email"
-                placeholder="Enter the Unique User Id"
+                placeholder="Enter User Email"
                 className="mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none border-gray-200"
               />
             </div>

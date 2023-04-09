@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import Tutor from "@/pages/tutor";
 
 function Dashboard() {
-  const [admin, setAdmin] = React.useState(false);
+  const [admin, setAdmin] = React.useState(true);
   const router = useRouter();
   const [language, setLanguage] = React.useState("spanish");
   const [mode, setMode] = React.useState("guided");
@@ -116,18 +116,28 @@ function onlyAdmins() {
                 <span>{language === "english" ? "Tutor" : "Tutor"}</span>
               </Link>
             </li>
-            {admin ? (<li>
-              <Link
-                href="/admin"
-                onClick={onlyAdmins}
-                className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
-              >
-                <span>{language === "english" ? "Admin" : "Admin"}</span>
-              </Link>
-            </li>
-            ) : null
-              }
-            
+            {admin ? (
+              <li>
+                <Link
+                  href="/awardSubscriptions"
+                  onClick={onlyAdmins}
+                  className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
+                >
+                  <span>Award Subscriptions</span>
+                </Link>
+              </li>
+            ) : null}
+            {admin ? (
+              <li>
+                <Link
+                  href="/users"
+                  onClick={onlyAdmins}
+                  className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
+                >
+                  <span>Manage Users</span>
+                </Link>
+              </li>
+            ) : null}
 
             <li>
               <a
