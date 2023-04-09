@@ -7,55 +7,9 @@ function Users() {
    const [searchTerm, setSearchTerm] = useState("");
    const [userData, setUserData] = useState([]);
    const [actions, setActions] = useState({});
-    const data = [
-      {
-        id: 1,
-        name: "Hans Burger",
-        description: "10x Developer",
-        amount: 855.85,
-        status: "Approved",
-        date: "15-01-2021",
-      },
-      {
-        id: 2,
-        name: "Jolina Angelie",
-        description: "Unemployed",
-        amount: 369.75,
-        status: "Pending",
-        date: "23-03-2021",
-      },
-      {
-        id: 3,
-        name: "Dave Li",
-        description: "Influencer",
-        amount: 775.45,
-        status: "Expired",
-        date: "09-02-2021",
-      },
-      {
-        id: 4,
-        name: "Rulia Joberts",
-        description: "Actress",
-        amount: 1276.75,
-        status: "Approved",
-        date: "17-04-2021",
-        accountStatus: "Active",
-      },
-      {
-        id: 5,
-        name: "Hitney Wouston",
-        description: "Singer",
-        amount: 1064.45,
-        status: "Pending",
-        date: "21-03-2021",
-        accountStatus: "Active",
-      },
-    ];
-
-
     //Write code to retrieve users from firebase collection users
-    // const [users, setUsers] = useState(data);
     const retrieveUsers=async()=>{
+      console.log("I started running here")
       const users = [];
       const q = query(collection(db, "users"));
       const querySnapshot = await getDocs(q);
@@ -63,15 +17,15 @@ function Users() {
         users.push(doc.data());
       });
       console.log(users)
-      console.log(typeof(users))
       return users;
     }
     const getUsers=async()=>{
     const newData = await retrieveUsers();
     setUserData(newData);
     }
-    getUsers();
-    
+    useEffect(()=>{
+      getUsers();
+    },[])
  
 
   const handleSearch = (event) => {
@@ -161,14 +115,14 @@ function Users() {
                         <option value="Demote">Demote</option>
                         <option value="Suspend">Deactivate</option>
                       </select>
-                      {actions[user.id] && (
+                      {console.log(actions[user.userId]) /*&& (
                         <button
                           onClick={()=>handleConfirm(user.id)}
                           className="px-4 py-2 bg-blue-600 text-white rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50"
                         >
                           Confirm
                         </button>
-                      )}
+                      )*/}
                     </td>
                   </tr>
                 ))}
