@@ -44,12 +44,12 @@ function Admin() {
   useEffect(() => {
     mapEmailToId();
     console.log("My email to id mappers are", emailIdMapper);
-  }, []);
+  }, [emailIdMapper]);
   
- /* useEffect(() => {
+  useEffect(() => {
     onlyAdmins();
   }, []);
-  */
+
 
   const addSubscriber = async () => {
     console.log("Adding subscriber", userId, plan)

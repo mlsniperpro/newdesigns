@@ -22,6 +22,7 @@ const ButtonWrapper = ({ type }) => {
   const [{ options }, dispatch] = usePayPalScriptReducer();
 
   useEffect(() => {
+    console.log("The type is", type)
     dispatch({
       type: "resetOptions",
       value: {
