@@ -124,7 +124,7 @@ function Users() {
               <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                 {filteredData.map((user) => (
                   <tr
-                    key={user.uid}
+                    key={user.uid||user.userId}
                     className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-700 dark:text-gray-400"
                   >
                     <td className="px-4 py-3">
