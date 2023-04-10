@@ -30,6 +30,26 @@ function Users() {
       console.log("I started running here")
       getUsers();
     },[])
+
+    useEffect(() => {
+      const onlyAdmins = () => {
+        if (!auth.currentUser?.uid) {
+          Router.push("/login");
+          return;
+        }
+        if (
+          auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
+          auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
+        ) {
+          return;
+        } else {
+          alert("Admins only!");
+          Router.push("/login");
+        }
+      };
+      onlyAdmins();
+    }, []);
+
     
   const demoteUsers = async (userId) => {
     console.log("I am now running demote")

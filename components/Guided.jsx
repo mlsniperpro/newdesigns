@@ -14,7 +14,6 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { resolveHref } from "next/dist/shared/lib/router/router";
 function Guided({language}) {
   {console.log(language)}
   const [title, setTitle] = useState("");
@@ -149,79 +148,38 @@ function Guided({language}) {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content: prompt,
-          }
-        ]
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data)
-        setResponse(data.choices[0].message.content);
+ const handleSubmit = async (e) => {
+   e.preventDefault();
 
-        updateUserWordCount(response);
-      });
+   const prompts = [prompt, prompt2, prompt3];
+   const requests = prompts.map((prompt) =>
+     fetch("https://api.openai.com/v1/chat/completions", {
+       method: "POST",
+       headers: {
+         Authorization: `Bearer ${API_KEY}`,
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify({
+         model: "gpt-3.5-turbo",
+         messages: [
+           {
+             role: "system",
+             content: prompt,
+           },
+         ],
+       }),
+     }).then((res) => res.json())
+   );
 
-    //After 5 seconds, the bot will respond again
-    setTimeout(() => {
-      fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: prompt2,
-            }
-          ]
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setResponse2(data.choices[0].message.content);
-        });
-    }, 10000);
-    //After 10 seconds, the bot will respond again
-    setTimeout(() => {
-      fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: prompt3,
-            }
-          ]
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setResponse3(data.choices[0].message.content);
-        });
-    }, 20000);
-  };
+   const responses = await Promise.all(requests);
+
+   setResponse(responses[0].choices[0].message.content);
+   setResponse2(responses[1].choices[0].message.content);
+   setResponse3(responses[2].choices[0].message.content);
+
+   updateUserWordCount(responses);
+ };
+
 
   return (
     <div className="h-screen flex">
@@ -243,39 +201,6 @@ function Guided({language}) {
           >
 
             {
-              /*For values of 0, 1 and 2 map  <p>response && response[value].text</p> */
-              /*response && <ContentCard content={response} />
-              response && response2 && response3 ? (
-                <div>
-                  <CopyToClipboard text={response}>
-                    <ContentCard content={response} />
-                  </CopyToClipboard>
-                  <CopyToClipboard>
-                    <ContentCard content={response2} />
-                  </CopyToClipboard>
-                  <CopyToClipboard>
-                    <ContentCard content={response3} />
-                  </CopyToClipboard>
-                </div>
-              ) : response && response2 ? (
-                <div>
-                  <CopyToClipboard  text={response}>
-                    <ContentCard content={response} />
-                  </CopyToClipboard>
-                  <CopyToClipboard>
-                    <ContentCard content={response2} />
-                  </CopyToClipboard>
-                </div>
-              ) : (
-                response && (
-                  <div>
-                    <CopyToClipboard text={response}>
-                      <ContentCard content={response} />
-                    </CopyToClipboard>
-                  </div>
-                )
-              )
-              */
               resNo === "res1"
                 ? response && (
                     <CopyToClipboard text={response}>
