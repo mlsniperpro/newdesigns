@@ -1,88 +1,80 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import Router from "next/router";
-import { useEffect } from "react";
-import {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
-function Admin() {
-  const [emailIdMapper, setEmailIdMapper] = React.useState({});
-  const [plan, setPlan] = React.useState("monthly");
-  const [userId, setUserId] = React.useState("");
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
-  function onlyAdmins () {
-    if(!auth.currentUser?.uid) {
-      Router.push("/login");
-      return;
-    }
-    if (
-      auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-      auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3" 
-    ) {
-      return;
-    } else {
-      alert("Admins only!");
-      Router.push("/login");
-    }
-  }
-  const mapEmailToId = async () => {
-    const querySnapshot = await getDocs(collection(db, "users"));
-    querySnapshot.forEach((doc) => {
-      console.log(doc.data().email, " => ", doc.id);
-      setEmailIdMapper((prev) => {
-        return { ...prev, [doc.data().email]: doc.id };
-      });
-    });
-  };
+function Admin() {
+  const [emailIdMapper, setEmailIdMapper] = useState({});
+  const [plan, setPlan] = useState("monthly");
+  const [userId, setUserId] = useState("");
+
   useEffect(() => {
-    mapEmailToId();
-    console.log("My email to id mappers are", emailIdMapper);
-  }, [emailIdMapper]);
-  
-  useEffect(() => {
+    const onlyAdmins = () => {
+      if (!auth.currentUser?.uid) {
+        Router.push("/login");
+        return;
+      }
+      if (
+        auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
+        auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
+      ) {
+        return;
+      } else {
+        alert("Admins only!");
+        Router.push("/login");
+      }
+    };
     onlyAdmins();
   }, []);
 
+  useEffect(() => {
+    const mapEmailToId = async () => {
+      const querySnapshot = await getDocs(collection(db, "users"));
+      const emailIdMap = querySnapshot.docs.reduce((acc, doc) => {
+        return { ...acc, [doc.data().email]: doc.id };
+      }, {});
+      setEmailIdMapper(emailIdMap);
+      console.log("My email to id mappers are", emailIdMap);
+    };
+    mapEmailToId();
+  }, []);
 
   const addSubscriber = async () => {
-    console.log("Adding subscriber", userId, plan)
+    console.log("Adding subscriber", userId, plan);
     try {
-        const docRef = await addDoc(collection(db, "subscribers"), {
-            userId: userId,
-            subscriptionStartDate: Date.now(),
-            subscriptionEndDate: Date.now() + (plan==="monthly"? 2592000000: 31536000000),
-            plan: plan,
-            subscriptionStartDate: Date.now(),
-            //Random number is subscriptionId
-            subscriptionId: Math.floor(Math.random() * 10 ** 10),
-
-        });
-        console.log("Document written with ID: ", docRef.id);
-        console.log(docRef)
+      await addDoc(collection(db, "subscribers"), {
+        userId: userId,
+        subscriptionStartDate: Date.now(),
+        subscriptionEndDate:
+          Date.now() + (plan === "monthly" ? 2592000000 : 31536000000),
+        plan: plan,
+        subscriptionId: Math.floor(Math.random() * 10 ** 10),
+      });
+      alert("Subscription added successfully!");
     } catch (e) {
-        console.error("Error adding document: ", e);
+      alert("The subscriber not among the users")
+      console.error("Error adding document: ", e);
     }
-    };
+  };
 
-  function handleAward() {
-    addSubscriber();
-    alert("Subscription added successfully!");
-  }
- 
+  const handleAward = async () => {
+    try {
+      addSubscriber();
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
 
   return (
     <div>
       <>
         {/*Start of the header  Buttons*/}
         <div className="flex items-center justify-center">
-          <button onClick={()=>Router.push("/")} className="flex px-3 py-2 bg-blue-400 mr-1 text-white font-semibold rounded">
+          <button
+            onClick={() => Router.push("/")}
+            className="flex px-3 py-2 bg-blue-400 mr-1 text-white font-semibold rounded"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -99,9 +91,11 @@ function Admin() {
             </svg>
             <span className="ml-1">Home</span>
           </button>
-          
-          
-          <button onClick={()=>Router.push("/tutor")} className="flex px-3 py-2 bg-orange-400 text-white font-semibold rounded">
+
+          <button
+            onClick={() => Router.push("/tutor")}
+            className="flex px-3 py-2 bg-orange-400 text-white font-semibold rounded"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
