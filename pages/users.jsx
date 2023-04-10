@@ -5,6 +5,8 @@ import Link from "next/link";
 
 function Users() {
    const  [subscribers, setSubscribers] = useState({});
+   const [wordsgen, setWordsgen] = useState({});
+   const [subscriptions, setSubscriptions] = useState({});
    const [searchTerm, setSearchTerm] = useState("");
    const [userData, setUserData] = useState([]);
    const [actions, setActions] = useState({});
@@ -90,6 +92,7 @@ const retrieveSubscribers = async () => {
     const data = await getDocs(collection(db, "subscribers"));
 
     const subscribers = {};
+    const subscriptions_ = {};
 
     for (const id of ids) {
 
@@ -100,19 +103,40 @@ const retrieveSubscribers = async () => {
         (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
         { subscriptionEndDate: 0}
       );
+      subscriptions_[latestSubscription.userId] = latestSubscription; 
         console.log("Latest subscription is: ", latestSubscription)
       subscribers[id] =
         latestSubscription.subscriptionEndDate >= Date.now()
           ? "Subscribed"
           : "Not Subscribed";
     }
+    
     console.log("The subscribers just before setting are: ", subscribers)
     setSubscribers(subscribers);
+    setSubscriptions(subscriptions_);
     console.log("The subscribers just after setting are  are: ", subscribers)
   } catch (error) {
     console.error("Error retrieving subscribers:", error);
   }
 };
+
+    const retrieveWordsGen = async () => {
+      console.log("Now querying words generated")
+      try {
+        const data = await getDocs(collection(db, "wordsgenerated"));
+        const wordsgen = {};
+        data.forEach((doc) => {
+          wordsgen[doc.data().userId] = doc.data().count;
+        });
+        setWordsgen(wordsgen);
+        console.log("The words generated are ", wordsgen)
+      } catch (error) {
+        console.error("Error retrieving wordsGen:", error);
+      }
+    };
+    useEffect(() => {
+      retrieveWordsGen();
+    }, [userData]);
 
     useEffect(()=>{
       retrieveSubscribers();
@@ -159,10 +183,7 @@ const retrieveSubscribers = async () => {
     <div>
       <div className="mt-4 mx-4">
         <div className="flex justify-between items-center mb-4">
-          <Link
-          href = "/"
-
-          >
+          <Link href="/">
             <h1 className="text-lg font-semibold text-gray-900">Home</h1>
           </Link>
 
@@ -184,6 +205,8 @@ const retrieveSubscribers = async () => {
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Date Signed Up</th>
                   <th>Take Action</th>
+                  <th>Words Generated</th>
+                  <td>Subscription Plan</td>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -237,6 +260,9 @@ const retrieveSubscribers = async () => {
                         </button>
                       )}
                     </td>
+                    <td className="px-4 py-3 text-sm">{wordsgen[user.userId]?wordsgen[user.userId]:0}</td>
+                    <td className="px-4 py-3 text-sm">{subscriptions[user.userId]?subscriptions[user.userId]["plan"]:"Free"}</td>
+
                   </tr>
                 ))}
               </tbody>
