@@ -116,7 +116,7 @@ const retrieveSubscribers = async () => {
     useEffect(()=>{
       retrieveSubscribers();
       console.log("Subscribers are: ", subscribers)
-    },[userData])
+    },[])
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
