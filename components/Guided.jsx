@@ -16,6 +16,7 @@ import {
 } from "firebase/firestore";
 function Guided({language}) {
   {console.log(language)}
+  const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [resNo, setResNo] = useState('res1');
   const [description, setDescription] = useState("");
@@ -150,7 +151,7 @@ function Guided({language}) {
 
  const handleSubmit = async (e) => {
    e.preventDefault();
-
+    setLoading(true);
    const prompts = [prompt, prompt2, prompt3];
    const requests = prompts.map((prompt) =>
      fetch("https://api.openai.com/v1/chat/completions", {
@@ -356,7 +357,7 @@ function Guided({language}) {
               className="block w-full bg-indigo-600 mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
             >
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language==="english"?"Generate Content":"Generar contenido"}
+              {loading? "Loading...": language==="english"?"Generate Content":"Generar contenido"}
             </button>
           </form>
         </div>

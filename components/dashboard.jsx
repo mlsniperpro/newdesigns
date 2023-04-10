@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import Tutor from "@/pages/tutor";
 
 function Dashboard() {
-  const [admin, setAdmin] = React.useState(true);
+  const [admin, setAdmin] = React.useState(false);
   const router = useRouter();
   const [language, setLanguage] = React.useState("spanish");
   const [mode, setMode] = React.useState("guided");
