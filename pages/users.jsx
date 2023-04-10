@@ -98,7 +98,7 @@ const retrieveSubscribers = async () => {
       console.log("Subscriptions are: ", subscriptions)
       const latestSubscription = subscriptions.reduce(
         (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
-        { subscriptionEndDate: 0 }
+        { subscriptionEndDate: 0}
       );
         console.log("Latest subscription is: ", latestSubscription)
       subscribers[id] =
@@ -106,8 +106,9 @@ const retrieveSubscribers = async () => {
           ? "Active"
           : "Inactive";
     }
-
+    console.log("The subscribers just before setting are: ", subscribers)
     setSubscribers(subscribers);
+    console.log("The subscribers just after setting are  are: ", subscribers)
   } catch (error) {
     console.error("Error retrieving subscribers:", error);
   }
@@ -116,7 +117,7 @@ const retrieveSubscribers = async () => {
     useEffect(()=>{
       retrieveSubscribers();
       console.log("Subscribers are: ", subscribers)
-    },[])
+    },[userData])
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
