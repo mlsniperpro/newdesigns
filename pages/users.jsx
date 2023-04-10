@@ -84,6 +84,7 @@ function Users() {
   //Get all the subscribers from the collection subscribers
 const retrieveSubscribers = async () => {
   try {
+    console.log("User are ", userData)
     const ids = userData.map((user) => user.userId);
 
     const data = await getDocs(collection(db, "subscribers"));

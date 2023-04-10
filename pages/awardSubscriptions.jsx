@@ -31,7 +31,8 @@ function Admin() {
     const mapEmailToId = async () => {
       const querySnapshot = await getDocs(collection(db, "users"));
       const emailIdMap = querySnapshot.docs.reduce((acc, doc) => {
-        return { ...acc, [doc.data().email]: doc.id };
+        console.log("The document is ", doc.data(), " and the id is ", doc.id);
+        return { ...acc, [doc.data().email]: doc.data().userId};
       }, {});
       setEmailIdMapper(emailIdMap);
       console.log("My email to id mappers are", emailIdMap);

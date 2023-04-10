@@ -1,81 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import PlanSelection from "@/components/PlanSelection";
-import { useEffect } from "react";
 import Router from "next/router";
-import { useState } from "react";
+import { collection, getDocs, where } from "firebase/firestore";
+import { auth, db } from "../config/firebase";
 import Dashboard from "../components/dashboard";
 import Loader from "@/components/Loader";
-import { auth, db } from "../config/firebase";
-import {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
+import PlanSelection from "@/components/PlanSelection";
 
 function Index() {
-  const [subScribed, setSubScribed] = useState("Loading");
-  const subScribedF = async () => {
-    if (!auth?.currentUser?.uid) {
-      Router.push("/login");
-      return;
-    }
+  const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-    const data = await getDocs(collection(db, "subscribers"));
-    
-    const subscribers = data.docs.map((doc) => doc.data());
-    //If any document userId same as auth.currentUser.uid obtain obtain all of them and get the the one with maximum count value attribute
-    const subscriptions = subscribers.filter(
-      (subscriber) => subscriber.userId === auth?.currentUser?.uid
-    );
-    //
-    const latest_subscription = subscriptions.reduce(
-      (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
-      { subscriptionEndDate: 0 }
-    );
-    const wordsGenerated = await getDocs(collection(db, "wordsgenerated"));
-
-    const usersWords = wordsGenerated.docs.map((doc) => doc.data());
-    const currentUserWords = usersWords.filter(
-      (word) => word.userId === auth?.currentUser?.uid
-    );
-    //console.log(currentUserWords[0].count);
-    //console.log(auth.currentUser.uid);
-    //console.log(subscriberData)
-    if (Date.now() < latest_subscription.subscriptionEndDate) {
-      setSubScribed("subscribed");
-      return;
-    } else if (currentUserWords[0]?.count < 10000) {
-      setSubScribed("subscribed");
-      return;
-    } else if (!currentUserWords[0]?.count) {
-      setSubScribed("subscribed");
-      return;
-    } else if (
-      auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-      auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
-    ) {
-      setSubScribed("subscribed");
-      return;
-    }
-    setSubScribed("not subscribed");
-  };
-  
   useEffect(() => {
-    try {
-      if (auth) {
-        subScribedF();
+    const checkSubscription = async () => {
+      console.log("Now checking subscription")
+      try {
+        if (!auth.currentUser) {
+          Router.push("/login");
+          return;
+        }
+
+        const subscribersSnapshot = await getDocs(
+          collection(db, "subscribers")
+        );
+        const subscribers = subscribersSnapshot.docs.map((doc) => doc.data());
+        const userSubscriptions = subscribers.filter(
+          (subscriber) => subscriber.userId === auth.currentUser.uid
+        );
+        const latestSubscription = userSubscriptions.reduce(
+          (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
+          {}
+        );
+
+        const wordsSnapshot = await getDocs(
+          collection(db, "wordsgenerated"), where(
+            "userId",
+            "==",
+            auth.currentUser.uid
+          )
+        );
+        const wordsGenerated = wordsSnapshot.docs.map((doc) => doc.data());
+        const currentUserWords = wordsGenerated[0] || { count: 0 };
+
+        if (
+          Date.now() < latestSubscription.subscriptionEndDate ||
+          currentUserWords.count >= 10000 ||
+          auth.currentUser.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
+          auth.currentUser.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
+        ) {
+          console.log("The current user Id", auth.currentUser.uid)
+          setSubscribed(true);
+        } else {
+          console.log("The current user Id", auth.currentUser.uid)
+          setSubscribed(false);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    };
+    checkSubscription();
   }, []);
-  
 
   return (
     <div>
@@ -84,18 +70,13 @@ function Index() {
       </Head>
       <div className="bg-[#1A232E] flex flex-col items-center justify-center min-h-screen py-2">
         <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-          {
-            auth? (
-              subScribed === "subscribed" ? (
-                <Dashboard />
-              ) : subScribed === "Loading" ? (
-                <Loader />
-              ) : (
-                <PlanSelection />
-              )
-            ) :
+          {loading ? (
             <Loader />
-          }
+          ) : subscribed ? (
+            <Dashboard />
+          ) : (
+            <PlanSelection />
+          )}
         </main>
       </div>
     </div>
