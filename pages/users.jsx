@@ -103,8 +103,8 @@ const retrieveSubscribers = async () => {
         console.log("Latest subscription is: ", latestSubscription)
       subscribers[id] =
         latestSubscription.subscriptionEndDate >= Date.now()
-          ? "Active"
-          : "Inactive";
+          ? "Subscribed"
+          : "Not Subscribed";
     }
     console.log("The subscribers just before setting are: ", subscribers)
     setSubscribers(subscribers);
