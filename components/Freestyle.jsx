@@ -13,10 +13,12 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 function Freestyle({language}) {
+  const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
   const [prompt, setPrompt] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -75,6 +77,7 @@ function Freestyle({language}) {
       }
     };
     updateUserWordCount();
+    setLoading(false);
   };
 
   return (
@@ -139,7 +142,7 @@ function Freestyle({language}) {
                         "
                     >
                       {/*Use appropriate wording based on whether language is english or spanish*/}
-                      {language === "english" ? "Generate Content" : "Generar contenido" }
+                      {loading? "Loading":language === "english" ? "Generate Content" : "Generar contenido" }
                     </button>
                   </div>
                 </form>

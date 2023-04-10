@@ -179,6 +179,7 @@ function Guided({language}) {
    setResponse3(responses[2].choices[0].message.content);
 
    updateUserWordCount(responses);
+   setLoading(false);
  };
 
 

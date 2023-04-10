@@ -13,6 +13,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 function Keyword({ language}) {
+  const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [response, setResponse] = useState("");
   const data = response;
@@ -68,6 +69,7 @@ function Keyword({ language}) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     //console.log(prompt);
     fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -126,6 +128,7 @@ function Keyword({ language}) {
       }
     };
     updateUserWordCount();
+    setLoading(false);
   };
   return (
     <div>
@@ -223,7 +226,7 @@ function Keyword({ language}) {
                       className="w-full text-white bg-primary rounded border border-primary p-3 transition hover:bg-opacity-90"
                     >
                       {/*Use appropriate wording based on whether the language is english or spanish*/}
-                      {language === "english" ? "Generate Using Keyword" : "Generar usando palabra clave"}
+                      {loading? "Loading":language === "english" ? "Generate Using Keyword" : "Generar usando palabra clave"}
                       
                     </button>
                   </div>
