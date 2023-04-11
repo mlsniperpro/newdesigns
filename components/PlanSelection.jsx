@@ -68,12 +68,13 @@ function PlanSelection() {
                   </p>
                   <p className="text-[#00153B] text-[50px] leading-[63px] font-bold">
                     {language === "english" ? "SELECTION" : "SELECCIÓN"}
-                  
                   </p>
                 </div>
                 <div>
                   <p className="text-[#717F87] text-[18px] leading-[28px] font-medium">
-                    {language === "english" ? "Click Button Below to Change to Spanish" : "Haga clic en el botón de abajo para cambiar al español"}
+                    {language === "english"
+                      ? "Click Button Below to Change to Spanish"
+                      : "Haga clic en el botón de abajo para cambiar al español"}
                   </p>
                   <p className="text-[#717F87] text-[18px] leading-[28px] font-medium">
                     {language === "english"
@@ -106,10 +107,17 @@ function PlanSelection() {
                   </p>
                 </div>
                 <div className="mt-[25px]">
-                  <button onClick={()=>{language==="english"? setLanguage("spanish"): setLanguage("english")}} className="bg-[#006EF5] rounded-[5px] py-[15px] px-[25px] text-[#fff] text-[14px] leading-[17px] font-semibold">
+                  <button
+                    onClick={() => {
+                      language === "english"
+                        ? setLanguage("spanish")
+                        : setLanguage("english");
+                    }}
+                    className="bg-[#006EF5] rounded-[5px] py-[15px] px-[25px] text-[#fff] text-[14px] leading-[17px] font-semibold"
+                  >
                     {language === "english"
                       ? "Switch to Spanish"
-                      : "Cambiar a español"}
+                      : "Cambiar a inglés"}
                   </button>
                 </div>
               </div>
@@ -131,7 +139,7 @@ function PlanSelection() {
                     {language === "english" ? "Monthly" : "Mensual"}
                   </p>
                   <p className="text-[#00153B] text-[50px] leading-[63px] font-bold">
-                    USD {monthly}
+                    {monthly} USD
                   </p>
                 </div>
                 <div>
@@ -188,7 +196,7 @@ function PlanSelection() {
                     {language === "english" ? "Yearly" : "Anual"}
                   </p>
                   <p className="text-[#00153B] text-[50px] leading-[63px] font-bold">
-                    USD {yearly}
+                    {yearly} USD
                   </p>
                 </div>
                 <div>
