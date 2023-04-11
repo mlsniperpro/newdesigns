@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import ChatBody from "@/components/ChatBody";
 import ChatInput from "@/components/ChatInput";
 import { auth, db } from "../config/firebase";
-import PlanSelection from "@/components/PlanSelection";
 import { useMutation } from "react-query";
 import Loader from "@/components/Loader";
 import Link from "next/link";

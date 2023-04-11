@@ -1,7 +1,26 @@
 import React from 'react'
 import Link from 'next/link';
+import { getDocs, collection } from "firebase/firestore";
+import { db } from "../config/firebase";
+
+
 function PlanSelection() {
+  const [yearly, setYearly] = React.useState(90);
+  const [monthly, setMonthly] = React.useState(9);
   const [language, setLanguage] = React.useState("spanish"); //Language can be english or spanish
+  const retrievePrices = async () => {
+    const pricesDoc = await getDocs(collection(db, "Payment"));
+    console.log("The prices retrieved are: ", pricesDoc);
+    pricesDoc.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data());
+        setMonthly(doc.data().monthly);
+        setYearly(doc.data().yearly);
+    });
+  };
+  React.useEffect(() => {
+    retrievePrices();
+  }, []);
+
   return (
     <>
       {/* This is an example component */}
@@ -112,7 +131,7 @@ function PlanSelection() {
                     {language === "english" ? "Monthly" : "Mensual"}
                   </p>
                   <p className="text-[#00153B] text-[50px] leading-[63px] font-bold">
-                    $9
+                    USD {monthly}
                   </p>
                 </div>
                 <div>
@@ -169,7 +188,7 @@ function PlanSelection() {
                     {language === "english" ? "Yearly" : "Anual"}
                   </p>
                   <p className="text-[#00153B] text-[50px] leading-[63px] font-bold">
-                    $75
+                    USD {yearly}
                   </p>
                 </div>
                 <div>
