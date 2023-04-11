@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs, query,where, deleteDoc, doc, addDoc } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import Link from "next/link";
+import Router from "next/router";
 
 function Users() {
    const  [subscribers, setSubscribers] = useState({});

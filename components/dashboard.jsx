@@ -1,15 +1,11 @@
 import React, { useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import Freestyle from "@/components/Freestyle";
 import Guided from "@/components/Guided";
 import Keyword from "@/components/Keyword";
-import Navbar from "@/components/Navbar";
 import { signOut } from "firebase/auth";
-//import Tutor from "@/components/Tutor";
 import { auth } from "../config/firebase";
 import { useRouter } from "next/router";
-import Tutor from "@/pages/tutor";
 
 function Dashboard() {
   const [admin, setAdmin] = React.useState(false);

@@ -1,5 +1,4 @@
 import { useState } from "react";
-//import Content from "./Content";
 import ContentCard from "./ContentCard";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { auth, db } from "../config/firebase";
@@ -204,7 +203,7 @@ function Guided({language}) {
             {resNo === "res1"
               ? response && (
                   <CopyToClipboard text={response}>
-                    <ContentCard content={response} fn={setRes} />
+                    <ContentCard content={response} fn={setRes} language={language} />
                   </CopyToClipboard>
                 )
               : resNo === "res2"

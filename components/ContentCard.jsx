@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ContentCard({content, fn}) {
+function ContentCard({content, fn, language}) {
   return (
     <div className="flex items-center justify-center mb-5">
       {" "}
@@ -8,7 +8,7 @@ function ContentCard({content, fn}) {
         <div className="flex w-full items-center justify-between border-b pb-3">
           <div className="flex items-center space-x-8">
             <button onClick={fn} className="rounded-2xl border bg-neutral-100 px-3 py-1 text-xs font-semibold">
-              Next
+              {language === "english"? "Next Copy Example": "Siguiente ejemplo de copia"}
             </button>
           </div>
         </div>
