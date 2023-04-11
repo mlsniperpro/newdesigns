@@ -1,19 +1,5 @@
 import React from 'react'
-import MonthlySubscription from '../pages/monthly';
-import YearlySubscription from '../pages/yearly';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { auth, db } from "../config/firebase";
-import {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
 function PlanSelection() {
   const [language, setLanguage] = React.useState("english"); //Language can be english or spanish
   return (
