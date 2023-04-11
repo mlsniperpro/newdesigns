@@ -16,67 +16,56 @@ function Freestyle({language}) {
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
   const [prompt, setPrompt] = useState("");
-  const handleSubmit = (e) => {
+  const handleSubmit = async (
+    e
+  ) => {
     e.preventDefault();
     setLoading(true);
-    fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + API_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are an expert copywriter with over 20 years of experince. listen to user carefully",
+    try {
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + API_KEY,
+            "Content-Type": "application/json",
           },
-          { role: "user", content: prompt },
-        ],
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Data", data);
-        setContent(data.choices[0].message.content);
-      });
-    const updateUserWordCount = async () => {
-      try {
-        //Get the document from wordsgenerated collection where userId attribute is equal to the current user's uid and update it by adding 30 to curent count attribute in the same document
-        const docRef = await getDocs(collection(db, "wordsgenerated"));
-        const wordsGenerated = docRef.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        //Check if the any document in wordsgenerated collection has userId attribute equal to the current user's uid if so update the count attribute by adding 30 to it or else create a new document with userId attribute equal to the current user's uid and count attribute equal to 30
-        if (
-          wordsGenerated.some((word) => word.userId === auth.currentUser.uid)
-        ) {
-          const docRef = await getDocs(collection(db, "wordsgenerated"));
-          const wordsGenerated = docRef.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          const userDoc = wordsGenerated.find(
-            (word) => word.userId === auth.currentUser.uid
-          );
-          //console.log(userDoc);
-          await updateDoc(doc(db, "wordsgenerated", userDoc.id), {
-            count: userDoc.count + content.length,
-          });
-        } else {
-          await setDoc(doc(db, "wordsgenerated", auth.currentUser.uid), {
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [
+              {
+                role: "system",
+                content:
+                  "You are an expert copywriter with over 20 years of experience. Listen to user carefully.",
+              },
+              { role: "user", content: prompt },
+            ],
+          }),
+        }
+      );
+      const data = await response.json();
+      setContent(data.choices[0].message.content);
+
+      const docRef = await doc(
+        collection(db, "wordsgenerated"),
+        auth.currentUser.uid
+      ).get();
+      if (docRef.exists()) {
+        await updateDoc(docRef.ref, {
+          count: docRef.data().count + content.length,
+        });
+      } else {
+        await setDoc(
+          doc(collection(db, "wordsgenerated"), auth.currentUser.uid),
+          {
             userId: auth.currentUser.uid,
             count: content.length,
-          });
-        }
-      } catch (error) {
-        console.log(error);
+          }
+        );
       }
-    };
-    updateUserWordCount();
+    } catch (error) {
+      console.error(error);
+    }
     setLoading(false);
   };
 

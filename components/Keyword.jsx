@@ -67,10 +67,39 @@ function Keyword({ language}) {
     return structuredData;
   };
 
+  const updateUserWordCount = async (response) => {
+    try {
+      const docRef = await getDocs(collection(db, "wordsgenerated"));
+      const wordsGenerated = docRef.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      if (wordsGenerated.some((word) => word.userId === auth.currentUser.uid)) {
+        const userDoc = wordsGenerated.find(
+          (word) => word.userId === auth.currentUser.uid
+        );
+
+        await updateDoc(doc(db, "wordsgenerated", userDoc.id), {
+          count: userDoc.count + response.length,
+        });
+      } else {
+        await setDoc(doc(db, "wordsgenerated", auth.currentUser.uid), {
+          userId: auth.currentUser.uid,
+          count: response.length,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    //console.log(prompt);
+
     fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -90,46 +119,16 @@ function Keyword({ language}) {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setResponse(data.choices[0].message.content);
-      });
-
-    const updateUserWordCount = async () => {
-      try {
-        //Get the document from wordsgenerated collection where userId attribute is equal to the current user's uid and update it by adding 30 to curent count attribute in the same document
-        const docRef = await getDocs(collection(db, "wordsgenerated"));
-        const wordsGenerated = docRef.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        //Check if the any document in wordsgenerated collection has userId attribute equal to the current user's uid if so update the count attribute by adding 30 to it or else create a new document with userId attribute equal to the current user's uid and count attribute equal to 30
-        if (
-          wordsGenerated.some((word) => word.userId === auth.currentUser.uid)
-        ) {
-          const docRef = await getDocs(collection(db, "wordsgenerated"));
-          const wordsGenerated = docRef.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          const userDoc = wordsGenerated.find(
-            (word) => word.userId === auth.currentUser.uid
-          );
-          //console.log(userDoc);
-          await updateDoc(doc(db, "wordsgenerated", userDoc.id), {
-            count: userDoc.count + response.length,
-          });
-        } else {
-          await setDoc(doc(db, "wordsgenerated", auth.currentUser.uid), {
-            userId: auth.currentUser.uid,
-            count: response.length,
-          });
-        }
-      } catch (error) {
+        const response = data.choices[0].message.content;
+        setResponse(response);
+        updateUserWordCount(response);
+      })
+      .catch((error) => {
         console.log(error);
-      }
-    };
-    updateUserWordCount();
-    setLoading(false);
+        setLoading(false);
+      });
   };
+
   return (
     <div>
       <link
@@ -226,7 +225,7 @@ function Keyword({ language}) {
                       className="w-full text-white bg-primary rounded border border-primary p-3 transition hover:bg-opacity-90"
                     >
                       {/*Use appropriate wording based on whether the language is english or spanish*/}
-                      {loading? "Loading":language === "english" ? "Generate Using Keyword" : "Generar usando palabra clave"}
+                      {loading? "Loading...":language === "english" ? "Generate Using Keyword" : "Generar usando palabra clave"}
                       
                     </button>
                   </div>
