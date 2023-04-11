@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link';
 function PlanSelection() {
-  const [language, setLanguage] = React.useState("english"); //Language can be english or spanish
+  const [language, setLanguage] = React.useState("spanish"); //Language can be english or spanish
   return (
     <>
       {/* This is an example component */}
