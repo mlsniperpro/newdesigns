@@ -131,7 +131,7 @@ function Freestyle({language}) {
                         "
                     >
                       {/*Use appropriate wording based on whether language is english or spanish*/}
-                      {loading? "Loading":language === "english" ? "Generate Content" : "Generar contenido" }
+                      {language === "english" ? (loading? "Loading...":"Generate Content" ): (loading? "Procesando...":"Generar contenido") }
                     </button>
                   </div>
                 </form>

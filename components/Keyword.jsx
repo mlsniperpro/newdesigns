@@ -142,7 +142,9 @@ function Keyword({ language}) {
               <div className="mb-12 lg:mb-0">
                 <span className="block mb-4 text-base text-primary font-semibold">
                   {/*Use appropriate heading based on whether langaue is english or spanish*/}
-                  {language === "en" ? "Keyword-based Content Generation" : "Generación de contenido basado en palabras clave"}
+                  {language === "en"
+                    ? "Keyword-based Content Generation"
+                    : "Generación de contenido basado en palabras clave"}
                 </span>
                 {data && (
                   <div className="flex flex-col w-200 h-400">
@@ -204,7 +206,11 @@ function Keyword({ language}) {
                       cols={300}
                       value={keyword}
                       onChange={(e) => setKeyword(e.target.value)}
-                      placeholder={language==="english"?"Your Keyword":"Tu palabra clave"}
+                      placeholder={
+                        language === "english"
+                          ? "Your Keyword"
+                          : "Tu palabra clave"
+                      }
                       className="
                         w-full
                         rounded
@@ -225,8 +231,11 @@ function Keyword({ language}) {
                       className="w-full text-white bg-primary rounded border border-primary p-3 transition hover:bg-opacity-90"
                     >
                       {/*Use appropriate wording based on whether the language is english or spanish*/}
-                      {loading? "Loading...":language === "english" ? "Generate Using Keyword" : "Generar usando palabra clave"}
-                      
+                      {language === "english"
+                        ? (loading
+                          ? "Loading..."
+                          : "Generate Using Keyword")
+                        : (loading? "Procesando...":"Generar usando palabra clave")}
                     </button>
                   </div>
                 </form>
