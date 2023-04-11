@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Router from "next/router";
-import { collection, getDocs, where } from "firebase/firestore";
+import { collection, getDocs, where, query } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import Dashboard from "../components/dashboard";
 import Loader from "@/components/Loader";
@@ -33,10 +33,9 @@ function Index() {
         );
 
         const wordsSnapshot = await getDocs(
-          collection(db, "wordsgenerated"), where(
-            "userId",
-            "==",
-            auth.currentUser.uid
+          query(
+            collection(db, "wordsgenerated"),
+            where("userId", "==", auth.currentUser.uid)
           )
         );
         const wordsGenerated = wordsSnapshot.docs.map((doc) => doc.data());
@@ -48,7 +47,12 @@ function Index() {
           auth.currentUser.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
           auth.currentUser.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
         ) {
-          console.log("The current user Id", auth.currentUser.uid)
+          console.log(
+            "The current user Id and the user is subscribed",
+            auth.currentUser.uid,
+            "based on ",
+            wordsSnapshot.docs.map((doc) => doc.data())
+          );
           setSubscribed(true);
         } else {
           console.log("The current user Id", auth.currentUser.uid)
