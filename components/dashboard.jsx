@@ -78,7 +78,7 @@ function onlyAdmins() {
                 className="hover:bg-gray-500 hover:bg-opacity-30 hover:text-blue-600 flex items-center justify-between py-1.5 px-4 rounded cursor-pointer"
               >
                 <span className="flex items-center space-x-2">
-                  <span>{language === "english" ? "Guided" : "Guiado"}</span>
+                  <span>{language === "english" ? "española" : "English"}</span>
                 </span>
               </a>
             </li>
