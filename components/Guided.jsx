@@ -201,26 +201,23 @@ function Guided({language}) {
             onClick={() => console.log("Hello")}
             className="overflow-x-auto flex justify-center lg:justify-start mt-6"
           >
-
-            {
-              resNo === "res1"
-                ? response && (
-                    <CopyToClipboard text={response}>
-                      <ContentCard content={response} fn={setRes} />
-                    </CopyToClipboard>
-                  )
-                : resNo === "res2"
-                ? response2 && (
-                    <CopyToClipboard text={response2} fn={setRes}>
-                      <ContentCard content={response2} fn={setRes} />
-                    </CopyToClipboard>
-                  )
-                : response3 && (
-                    <CopyToClipboard text={response3}>
-                      <ContentCard content={response3} fn={setRes} />
-                    </CopyToClipboard>
-                  )
-            }
+            {resNo === "res1"
+              ? response && (
+                  <CopyToClipboard text={response}>
+                    <ContentCard content={response} fn={setRes} />
+                  </CopyToClipboard>
+                )
+              : resNo === "res2"
+              ? response2 && (
+                  <CopyToClipboard text={response2} fn={setRes}>
+                    <ContentCard content={response2} fn={setRes} />
+                  </CopyToClipboard>
+                )
+              : response3 && (
+                  <CopyToClipboard text={response3}>
+                    <ContentCard content={response3} fn={setRes} />
+                  </CopyToClipboard>
+                )}
           </div>
         </div>
       </div>
@@ -233,12 +230,16 @@ function Guided({language}) {
           >
             <h1 className="text-gray-800 font-bold text-2xl mb-1">
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language==="english"?"AI Content Generator: More Accurate and Efficient than ChatGPT": "Generador de contenido AI: Más preciso y eficiente que ChatGPT"}
+              {language === "english"
+                ? "AI Content Generator: More Accurate and Efficient than ChatGPT"
+                : "Generador de contenido AI: Más preciso y eficiente que ChatGPT"}
             </h1>
             <label htmlFor="product_title">
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language==="english"?"Product/Service Title":"Título del producto/servicio"}
-              </label>
+              {language === "english"
+                ? "Product/Service Title"
+                : "Título del producto/servicio"}
+            </label>
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
               <input
                 id="email"
@@ -254,7 +255,9 @@ function Guided({language}) {
             </div>
             <label htmlFor="audience">
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language==="english"?"Target Audience":"Audiencia objetivo"}
+              {language === "english"
+                ? "Target Audience"
+                : "Audiencia objetivo"}
             </label>
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
               <input
@@ -266,13 +269,19 @@ function Guided({language}) {
                 }}
                 name="audience"
                 id="audience"
-                placeholder={language==="spanish"?"Especificar audiencia objetivo" : "Specify target audience"}
+                placeholder={
+                  language === "spanish"
+                    ? "Especificar audiencia objetivo"
+                    : "Specify target audience"
+                }
               />
             </div>
 
             <label htmlFor="product_description">
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language==="english"?"The Benefits of the product or service":"Los beneficios del producto o servicio"}
+              {language === "english"
+                ? "The Benefits of the product or service"
+                : "Los beneficios del producto o servicio"}
             </label>
             {/*Use textarea for product description let the product description span 4 rows*/}
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
@@ -285,14 +294,18 @@ function Guided({language}) {
                 }}
                 name="product_description"
                 id="product_description"
-                placeholder={language==="spanish"?"¿Qué hace único a su producto/servicio?": "What makes your product/service unique?"}
+                placeholder={
+                  language === "spanish"
+                    ? "¿Qué hace único a su producto/servicio?"
+                    : "What makes your product/service unique?"
+                }
                 rows="4"
               />
             </div>
             {/*Copy type if a drop down of 3 options: 1. Copywriting 2. Blog Post 3. Social Media Post Make a floating label that translate the main label to spanish*/}
             <label htmlFor="copy_type">
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language==="english"?"Copy Type":"Tipo de copia"}
+              {language === "english" ? "Copy Type" : "Tipo de copia"}
             </label>
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
               <select
@@ -306,30 +319,75 @@ function Guided({language}) {
               >
                 <option value="copywriting">
                   {/*Use appropriate wording based on whether language is english or spanish*/}
-                  Copywriting</option>
+                  {language==="english"? "Copywriting": "Redacción de copia"}
+                </option>
                 <option value="Blog Post">
                   {/*Use appropriate wording based on whether language is english or spanish*/}
 
-                  Blog Post
+                  {language === "english" ? "Blog Post" : "Publicación de blog"}
                 </option>
-                <option value="social media post">Social Media copy</option>
-                <option value="email Marketing">Email Marketing</option>
-                <option value="product description">Product Description</option>
-                <option value="Website Copy">Website Copy</option>
-                <option value="Facebook Ad">Facebook Ad</option>
-                <option value="instagram ad">Instagram Ad</option>
-                <option value="SEO Copy">SEO Copy</option>
-                <option value="video scripts">Video Scripts</option>
-                <option value="cold dm">Cold DM</option>
-                <option value="cold email">Cold Email</option>
-                <option value="linkedin post">LinkedIn Post</option>
+                <option value="social media post">
+                  {language === "english"
+                    ? "Social Media copy"
+                    : "texto para redes sociales"}
+                </option>
+                <option value="email Marketing">
+                  {language === "english"
+                    ? "Email Marketing"
+                    : "Marketing por correo electrónico"}
+                </option>
+                <option value="product description">
+                  {language === "english"
+                    ? "Product Description"
+                    : "Descripción del producto"}
+                </option>
+                <option value="Website Copy">
+                  {language === "english"
+                    ? "Website Copy"
+                    : "Texto para sitio web"}
+                </option>
+                <option value="Facebook Ad">
+                  {language === "english"
+                    ? "Facebook Ad"
+                    : "Anuncio de Facebook"}
+                </option>
+                <option value="instagram ad">
+                  {language === "english"
+                    ? "Instagram Ad"
+                    : "Anuncio de Instagram"}
+                </option>
+                <option value="SEO Copy">
+                  {language === "english"
+                    ? "SEO Copy"
+                    : "Texto optimizado para motores de búsqueda"}
+                </option>
+                <option value="video scripts">
+                  {language === "english"
+                    ? "Video Scripts"
+                    : "Guion para video"}
+                </option>
+                <option value="cold dm">
+                  {language === "english"
+                    ? "Cold DM"
+                    : "Mensaje directo frío (DM)"}
+                </option>
+                <option value="cold email">
+                  {language === "english"
+                    ? "Cold Email"
+                    : "Correo electrónico frío"}
+                </option>
+                <option value="linkedin post">
+                  {language === "english"
+                    ? "LinkedIn Post"
+                    : "Publicación de LinkedIn"}
+                </option>
               </select>
             </div>
             {/*Tone is a selection of drop down of either Formal or Informal*/}
             <label htmlFor="tone">
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language==="english"?"Tone":"Tono"}
-              </label>
+              {language === "english" ? "Tone" : "Tono"}
+            </label>
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
               <select
                 onChange={(e) => {
@@ -340,16 +398,36 @@ function Guided({language}) {
                 name="tone"
                 id="tone"
               >
-                <option value="formal">Formal</option>
-                <option value="informal">Informal</option>
-                <option value="professional">Professional</option>
-                <option value="conversational">Conversational</option>
-                <option value="educational">Educational</option>
-                <option value="casual">Casual</option>
-                <option value="friendly">Friendly</option>
-                <option value="corporate">Corporate</option>
-                <option value="business">Business</option>
-                <option value="fun">Fun</option>
+                <option value="formal">
+                  {language === "english" ? "Formal" : "Formal"}
+                </option>
+                <option value="informal">
+                  {language === "english" ? "Informal" : "Informal"}
+                </option>
+                <option value="professional">
+                  {language === "english" ? "Professional" : "Profesional"}
+                </option>
+                <option value="conversational">
+                  {language === "english" ? "Conversational" : "Conversacional"}
+                </option>
+                <option value="educational">
+                  {language === "english" ? "Educational" : "Educativo"}
+                </option>
+                <option value="casual">
+                  {language === "english" ? "Casual" : "Informal"}
+                </option>
+                <option value="friendly">
+                  {language === "english" ? "Friendly" : "Amistoso"}
+                </option>
+                <option value="corporate">
+                  {language === "english" ? "Corporate" : "Corporativo"}
+                </option>
+                <option value="business">
+                  {language === "english" ? "Business" : "Negocios"}
+                </option>
+                <option value="fun">
+                  {language === "english" ? "Fun" : "Divertido"}
+                </option>
               </select>
             </div>
 
@@ -358,7 +436,11 @@ function Guided({language}) {
               className="block w-full bg-indigo-600 mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
             >
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {loading? "Loading...": language==="english"?"Generate Content":"Generar contenido"}
+              {loading
+                ? "Loading..."
+                : language === "english"
+                ? "Generate Content"
+                : "Generar contenido"}
             </button>
           </form>
         </div>
