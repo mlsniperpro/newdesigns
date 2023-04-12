@@ -4,26 +4,35 @@ import ChatBody from "@/components/ChatBody";
 import ChatInput from "@/components/ChatInput";
 import { auth, db } from "../config/firebase";
 import { useMutation } from "react-query";
-import Loader from "@/components/Loader";
 import Link from "next/link";
 import Router from "next/router";
+import React from "react";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 //If API_KEY is none then load the API_KEY from the database
 
 import {
   collection,
   getDocs,
-  getDoc,
   doc,
   setDoc,
   updateDoc,
-  addDoc,
-  deleteDoc,
 } from "firebase/firestore";
 function Tutor() {
   const [language, setLanguage] = useState("spanish");
   const [chat, setChat] = useState([]);
+  const [limit, setLimit] = useState(20000);
   const [subScribed, setSubScribed] = useState("Loading");
+  const retrieveWordLimit = async () => {
+    try {
+      const limitDoc = await getDocs(collection(db, "wordlimit"));
+      console.log("The lits are : ", limitDoc);
+      const limit = limitDoc.docs[0].data().limit;
+      setLimit(limit);
+      console.log("Limit retrived and updated successflly as : ", limit);
+    } catch (error) {
+      console.log("Error retrieving prices: ", error);
+    }
+  };
   const subScribedF = async () => {
     if (!auth?.currentUser?.uid) {
       Router.push("/login");
@@ -54,7 +63,7 @@ function Tutor() {
     if (Date.now() < latest_subscription.subscriptionEndDate) {
       setSubScribed("subscribed");
       return;
-    } else if (currentUserWords[0]?.count < 10000) {
+    } else if (currentUserWords[0]?.count < limit) {
       setSubScribed("subscribed");
       return;
     } else if (!currentUserWords[0]?.count) {
@@ -67,18 +76,24 @@ function Tutor() {
       setSubScribed("subscribed");
       return;
     }
+      
       setSubScribed("not subscribed");
   };
   useEffect(() => {
-    try {
-      if (auth?.currentUser?.uid) {
-        subScribedF();
-      } else {
-        Router.push("/login");
+    async function fetchData() {
+      await retrieveWordLimit();
+      try {
+        if (auth?.currentUser?.uid) {
+          subScribedF();
+        } else {
+          Router.push("/login");
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
+
+    fetchData();
   }, []);
   function redirectUnsubscribed() {
     if (subScribed === "not subscribed") {
@@ -88,7 +103,7 @@ function Tutor() {
   //Run below when subScribed changes
   useEffect(() => {
     redirectUnsubscribed();
-  }, [subScribed]);
+  }, [limit]);
 
   useEffect(() => {
     if (language === "en") {

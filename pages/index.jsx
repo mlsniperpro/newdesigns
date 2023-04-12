@@ -10,7 +10,22 @@ import PlanSelection from "@/components/PlanSelection";
 function Index() {
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [limit, setLimit] = useState(20000);
+  const retrieveWordLimit = async () => {
+    try {
+      const limitDoc = await getDocs(collection(db, "wordlimit"));
+      console.log("The lits are : ", limitDoc);
+      const limit = limitDoc.docs[0].data().limit;
+      setLimit(limit);
+      console.log("Limit retrived and updated successflly as : ", limit);
+    } catch (error) {
+      console.log("Error retrieving prices: ", error);
+    }
+  };
 
+  React.useEffect(() => {
+    retrieveWordLimit();
+  }, []);
   useEffect(() => {
     const checkSubscription = async () => {
       console.log("Now checking subscription")
@@ -43,7 +58,7 @@ function Index() {
 
         if (
           Date.now() < latestSubscription.subscriptionEndDate ||
-          currentUserWords.count < 10000 ||
+          currentUserWords.count < limit ||
           auth.currentUser.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
           auth.currentUser.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
         ) {
@@ -51,11 +66,11 @@ function Index() {
             "The current user Id and the user is subscribed",
             auth.currentUser.uid,
             "based on ",
-            wordsSnapshot.docs.map((doc) => doc.data())
+            currentUserWords.count < limit
           );
           setSubscribed(true);
         } else {
-          console.log("The current user Id", auth.currentUser.uid)
+          console.log("The current user Id is not subscribed", auth.currentUser.uid)
           setSubscribed(false);
         }
       } catch (error) {
@@ -65,10 +80,12 @@ function Index() {
       }
     };
     checkSubscription();
-  }, []);
-
+  }, [limit]);
+  
   return (
+    
     <div>
+      {console.log("The limit down here are : ", limit)}
       <Head>
         <title>Vionko Marketing AI</title>
       </Head>
