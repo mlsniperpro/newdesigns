@@ -145,6 +145,17 @@ function onlyAdmins() {
                 </Link>
               </li>
             ) : null}
+            {admin ? (
+              <li>
+                <Link
+                  href="/wordlimit"
+                  onClick={onlyAdmins}
+                  className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
+                >
+                  <span>Word Limit</span>
+                </Link>
+              </li>
+            ) : null}
 
             <li>
               <a
