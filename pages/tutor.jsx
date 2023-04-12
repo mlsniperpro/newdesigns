@@ -12,98 +12,96 @@ const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 import {
   collection,
+  query,
+  where,
   getDocs,
   doc,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
 function Tutor() {
+  const [loading, setLoading] = useState(true);
+  const [subscribed, setSubscribed] = useState(true);
   const [language, setLanguage] = useState("spanish");
   const [chat, setChat] = useState([]);
   const [limit, setLimit] = useState(20000);
-  const [subScribed, setSubScribed] = useState("Loading");
-  const retrieveWordLimit = async () => {
-    try {
-      const limitDoc = await getDocs(collection(db, "wordlimit"));
-      console.log("The lits are : ", limitDoc);
-      const limit = limitDoc.docs[0].data().limit;
-      setLimit(limit);
-      console.log("Limit retrived and updated successflly as : ", limit);
-    } catch (error) {
-      console.log("Error retrieving prices: ", error);
-    }
-  };
-  const subScribedF = async () => {
-    if (!auth?.currentUser?.uid) {
-      Router.push("/login");
-      return;
-    }
+ const retrieveWordLimit = async () => {
+   try {
+     const limitDoc = await getDocs(collection(db, "wordlimit"));
+     console.log("The lits are : ", limitDoc);
+     const limit = limitDoc.docs[0].data().limit;
+     setLimit(limit);
+     console.log("Limit retrived and updated successflly as : ", limit);
+   } catch (error) {
+     console.log("Error retrieving prices: ", error);
+   }
+ };
 
-    const data = await getDocs(collection(db, "subscribers"));
+ React.useEffect(() => {
+   retrieveWordLimit();
+ }, [loading]);
+ useEffect(() => {
+   const checkSubscription = async () => {
+     console.log("Now checking subscription");
+     try {
+       if (!auth.currentUser) {
+         Router.push("/login");
+         return;
+       }
 
-    const subscribers = data.docs.map((doc) => doc.data());
-    //If any document userId same as auth.currentUser.uid obtain obtain all of them and get the the one with maximum count value attribute
-    const subscriptions = subscribers.filter(
-      (subscriber) => subscriber.userId === auth?.currentUser?.uid
-    );
-    //
-    const latest_subscription = subscriptions.reduce(
-      (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
-      { subscriptionEndDate: 0 }
-    );
-    const wordsGenerated = await getDocs(collection(db, "wordsgenerated"));
+       const subscribersSnapshot = await getDocs(collection(db, "subscribers"));
+       const subscribers = subscribersSnapshot.docs.map((doc) => doc.data());
+       const userSubscriptions = subscribers.filter(
+         (subscriber) => subscriber.userId === auth.currentUser.uid
+       );
+       const latestSubscription = userSubscriptions.reduce(
+         (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
+         {}
+       );
 
-    const usersWords = wordsGenerated.docs.map((doc) => doc.data());
-    const currentUserWords = usersWords.filter(
-      (word) => word.userId === auth?.currentUser?.uid
-    );
-    //console.log(currentUserWords[0].count);
-    //console.log(auth.currentUser.uid);
-    //console.log(subscriberData)
-    if (Date.now() < latest_subscription.subscriptionEndDate) {
-      setSubScribed("subscribed");
-      return;
-    } else if (currentUserWords[0]?.count < limit) {
-      setSubScribed("subscribed");
-      return;
-    } else if (!currentUserWords[0]?.count) {
-      setSubScribed("subscribed");
-      return;
-    } else if (
-      auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-      auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
-    ){
-      setSubScribed("subscribed");
-      return;
-    }
-      
-      setSubScribed("not subscribed");
-  };
-  useEffect(() => {
-    async function fetchData() {
-      await retrieveWordLimit();
-      try {
-        if (auth?.currentUser?.uid) {
-          subScribedF();
-        } else {
-          Router.push("/login");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
+       const wordsSnapshot = await getDocs(
+         query(
+           collection(db, "wordsgenerated"),
+           where("userId", "==", auth.currentUser.uid)
+         )
+       );
+       const wordsGenerated = wordsSnapshot.docs.map((doc) => doc.data());
+       const currentUserWords = wordsGenerated[0] || { count: 0 };
 
-    fetchData();
-  }, []);
-  function redirectUnsubscribed() {
-    if (subScribed === "not subscribed") {
-      Router.push("/");
-    }
-  }
-  //Run below when subScribed changes
-  useEffect(() => {
-    redirectUnsubscribed();
-  }, [limit]);
+       if (
+         Date.now() < latestSubscription.subscriptionEndDate ||
+         currentUserWords.count < limit ||
+         auth.currentUser.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
+         auth.currentUser.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
+       ) {
+         console.log(
+           "The current user Id and the user is subscribed",
+           auth.currentUser.uid,
+           "based on ",
+           currentUserWords.count < limit
+         );
+         setSubscribed(true);
+       } else {
+         console.log(
+           "The current user Id is not subscribed",
+           auth.currentUser.uid
+         );
+         setSubscribed(false);
+       }
+     } catch (error) {
+       console.log(error);
+     } finally {
+       setLoading(false);
+       
+     }
+   };
+   checkSubscription();
+ }, [limit]);
+ useEffect(() => {
+  if(!subscribed && !loading){
+         Router.push("/");
+       }
+  }, [loading]);
 
   useEffect(() => {
     if (language === "en") {
@@ -232,6 +230,7 @@ function Tutor() {
   return (
     <div className="bg-[#1A232E] h-screen py-6 relative sm:px-16 px-12 text-white overflow-hidden flex flex-col justify-between  align-middle w-screen">
       {/* gradients */}
+      {console.log("The value of subscribed here at the Tutor is " + subscribed)}
       <div className="gradient-01 z-0 absolute"></div>
       <div className="gradient-02 z-0 absolute"></div>
 
