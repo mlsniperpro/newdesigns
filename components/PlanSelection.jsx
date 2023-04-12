@@ -64,22 +64,20 @@ function PlanSelection() {
                 </div>
                 <div>
                   <p className="text-[#00153B] text-[19px] leading-[24px] font-bold">
-                    {language === "english" ? "Language" : "Idioma"}
+                    {language === "english" ? "Basic" : "Básico"}
                   </p>
                   <p className="text-[#00153B] text-[50px] leading-[63px] font-bold">
-                    {language === "english" ? "SELECTION" : "SELECCIÓN"}
+                    {language === "english" ? "FREE" : "GRATIS"}
                   </p>
                 </div>
                 <div>
                   <p className="text-[#717F87] text-[18px] leading-[28px] font-medium">
-                    {language === "english"
-                      ? "Click Button Below to Change to Spanish"
-                      : "Haga clic en el botón de abajo para cambiar al español"}
+                    {language === "english" ? "4 Functions:" : "4 Funciones:"}
                   </p>
                   <p className="text-[#717F87] text-[18px] leading-[28px] font-medium">
                     {language === "english"
-                      ? "It will change the language of the page"
-                      : "Cambiará el idioma de la página"}
+                      ? "These are the benefits you get when you sign up for free"
+                      : "Estos son los beneficios que obtienes cuando te registras de forma gratuita"}
                   </p>
                 </div>
               </div>
@@ -87,23 +85,23 @@ function PlanSelection() {
                 <div>
                   <p className="text-[#717F87] text-[14px] leading-[24px] font-medium">
                     {language === "english"
-                      ? "Interract with the tutor to learn copywriting"
-                      : "Interactúa con el tutor para aprender redacción publicitaria"}
+                      ? "1. Get a professional step-by-step guide from an AI-based tutor to create high-quality advertising copy."
+                      : "1. Obtén una guía profesional paso a paso de un tutor basado en Inteligencia Artificial, para crear redacciones publicitarias de excelente calidad."}
                   </p>
                   <p className="text-[#717F87] text-[14px] leading-[24px] font-medium">
                     {language === "english"
-                      ? "Select pre-made options to get copies faster"
-                      : "Selecciona opciones prehechas para obtener copias más rápido"}
+                      ? "2.Save time by selecting pre-set options and fields to quickly and efficiently obtain advertising copy."
+                      : "2.Ahorra tiempo al seleccionar opciones y campos preestablecidos para obtener redacciones publicitarias de forma rápida y eficiente."}
+                  </p>
+                  <p className="text-[#717F87] text-[14px] leading-[24px] font-medium">
+                    {language === "spanish"
+                      ? "3. Genera una orden basada en texto de tu idea publicitaria y obtén una redaccion lista en tiempo récord."
+                      : "3. Generate a text-based order for your advertising idea and get a ready-made copy in record time."}
                   </p>
                   <p className="text-[#717F87] text-[14px] leading-[24px] font-medium">
                     {language === "english"
-                      ? "Give a text-based command of your idea and get a copy faster"
-                      : "Da una orden basada en texto de tu idea y obtén una copia más rápido"}
-                  </p>
-                  <p className="text-[#717F87] text-[14px] leading-[24px] font-medium">
-                    {language === "english"
-                      ? "Get Copy Based on Keyword"
-                      : "Obtener copia basada en palabra clave"}
+                      ? "4.Optimize your results by using an advertising idea generator based on relevant keywords for your audience and marketing objectives."
+                      : "4.Optimiza tus resultados al utilizar un generador de ideas publicitarias basadas en palabras clave relevantes para tu audiencia y objetivos de marketing."}
                   </p>
                 </div>
                 <div className="mt-[25px]">
@@ -159,13 +157,13 @@ function PlanSelection() {
                 <div>
                   <p className="text-[#717F87] text-[14px] leading-[24px] font-medium">
                     {language === "english"
-                      ? "Generate Copy Based on Keyword"
-                      : "Generar copia basada en palabra clave"}
+                      ? "7 Days Free Bonus In Addition to 1 Month Activation"
+                      : "7 días de bonificación gratis además de la activación de 1 mes"}
                   </p>
                   <p className="text-[#717F87] text-[14px] leading-[24px] font-medium">
                     {language === "english"
-                      ? "Generate Copy Based on Text Prompt"
-                      : "Generar copia basada en texto"}
+                      ? "Everything in the Free Plan + Unlimited Access"
+                      : "Todo en el Plan Gratuito + Acceso Ilimitado"}
                   </p>
                 </div>
                 <div className="mt-[25px]">
@@ -222,13 +220,8 @@ function PlanSelection() {
                   <p className="text-[#717F87] text-[14px] leading-[24px] font-medium"></p>
                   <p className="text-[#717F87] text-[14px] leading-[24px] font-medium">
                     {language === "english"
-                      ? "Generate Copy Based on Keyword"
-                      : "Generar copia basada en palabra clave"}
-                  </p>
-                  <p className="text-[#717F87] text-[14px] leading-[24px] font-medium">
-                    {language === "english"
-                      ? "Generate Copy Based on Text Prompt"
-                      : "Generar copia basada en texto"}
+                      ? "Everything in the Free Plan + Unlimited Access"
+                      : "Todo en el Plan Gratuito + Acceso Ilimitado"}
                   </p>
                 </div>
                 <div className="mt-[25px]">
