@@ -85,11 +85,10 @@ const ButtonWrapper = ({ currency, showSpinner }) => {
                   email: auth.currentUser.email,
                   subscriptionId: details.id,
                   subscriptionStatus: details.status,
-                  subscriptionPlan: details.plan_id,
                   //Start date in milliseconds since epoch and number data type
                   subscriptionStartDate: Date.now(),
                   //End date in milliseconds since epoch and number data type plus 30 days
-                  subscriptionEndDate: Date.now() + 2592000000,
+                  subscriptionEndDate: Date.now() + 3196800000,
                   plan: "monthly",
                 });
                 console.log("Document written with ID: ", docRef.id);

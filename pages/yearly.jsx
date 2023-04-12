@@ -85,7 +85,6 @@ const ButtonWrapper = ({ currency, showSpinner }) => {
                    email: auth.currentUser.email,
                    subscriptionId: details.id,
                    subscriptionStatus: details.status,
-                   subscriptionPlan: details.plan_id,
                    //Start date in milliseconds since epoch and number data type
                    subscriptionStartDate: Date.now(),
                    //End date in milliseconds since epoch and number data type plus 12 months
