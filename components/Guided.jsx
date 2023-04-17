@@ -13,6 +13,10 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
+
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CategoryIcon from '@mui/icons-material/Category';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 function Guided({language}) {
   {console.log(language)}
   const [loading, setLoading] = useState(false);
@@ -183,10 +187,11 @@ function Guided({language}) {
 
 
   return (
-    <div className="h-screen flex">
+    <div className="h-screen flex" >
       <div
         className="hidden lg:flex w-full lg:w-1/2 login_img_section
           justify-around items-center"
+          
       >
         <div
           className=" 
@@ -220,26 +225,30 @@ function Guided({language}) {
           </div>
         </div>
       </div>
-      <div className="flex w-full lg:w-1/2 justify-center items-center bg-white space-y-8">
-        <div className="w-full px-8 md:px-32 lg:px-24">
+      <div className="flex w-full justify-center items-center bg-white space-y-8"  style={{background:'white'}}>
+        
+        <div className="w-full px-8 md:px-32 lg:px-24" >
           <form
             noValidate
             onSubmit={handleSubmit}
             className="bg-white rounded-md shadow-2xl p-5"
+            style={{background: "rgb(40, 48, 129)"}}
           >
-            <h1 className="text-gray-800 font-bold text-2xl mb-1">
+            <h1 className="text-gray-800 font-bold text-2xl mb-1" style={{color:'white',fontFamily:"Monospace",fontSize:'18px'}}>
               {/*Use appropriate wording based on whether language is english or spanish*/}
+             <MenuBookIcon style={{marginRight:'10px'}}/>
               {language === "english"
                 ? "AI Content Generator: More Accurate and Efficient than ChatGPT"
                 : "Generador de contenido AI: Más preciso y eficiente que ChatGPT"}
             </h1>
-            <label htmlFor="product_title">
+            <br></br>
+            <label htmlFor="product_title" style={{color:'white',fontSize:'18px',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}}>
               {/*Use appropriate wording based on whether language is english or spanish*/}
               {language === "english"
-                ? "Product/Service Title"
-                : "Título del producto/servicio"}
+                ? "  Título del producto/servicio"
+                : "  Product/Service Title"}
             </label>
-            <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+            <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl"  style={{background:'white',fontFamily:"Monospace",fontSize:'16px'}}>
               <input
                 id="email"
                 className=" pl-2 w-full outline-none border-none"
@@ -252,13 +261,13 @@ function Guided({language}) {
                 placeholder="Título del producto/servicio"
               />
             </div>
-            <label htmlFor="audience">
+            <label htmlFor="audience" style={{color:'white',fontSize:'18px',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}}>
               {/*Use appropriate wording based on whether language is english or spanish*/}
               {language === "english"
-                ? "Target Audience"
-                : "Audiencia objetivo"}
+                ? "  Target Audience"
+                : "  Audiencia objetivo"}
             </label>
-            <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+            <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl"  style={{background:'white',fontFamily:"Monospace",fontSize:'16px'}}>
               <input
                 className="pl-2 w-full outline-none border-none"
                 type="text"
@@ -276,14 +285,14 @@ function Guided({language}) {
               />
             </div>
 
-            <label htmlFor="product_description">
+            <label htmlFor="product_description"style={{color:'white',fontSize:'18px',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}}> 
               {/*Use appropriate wording based on whether language is english or spanish*/}
               {language === "english"
-                ? "The Benefits of the product or service"
-                : "Los beneficios del producto o servicio"}
+                ? "  The Benefits of the product or service"
+                : "  Los beneficios del producto o servicio"}
             </label>
             {/*Use textarea for product description let the product description span 4 rows*/}
-            <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+            <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl"  style={{background:'white',fontFamily:"Monospace",fontSize:'16px'}}>
               <textarea
                 className="pl-2 w-full outline-none border-none"
                 type="text"
@@ -302,11 +311,11 @@ function Guided({language}) {
               />
             </div>
             {/*Copy type if a drop down of 3 options: 1. Copywriting 2. Blog Post 3. Social Media Post Make a floating label that translate the main label to spanish*/}
-            <label htmlFor="copy_type">
+            <label htmlFor="copy_type" style={{color:'white',fontSize:'18px',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}} >
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language === "english" ? "Copy Type" : "Tipo de copia"}
+              <CategoryIcon /> {language === "english" ? "  Copy Type" : " Tipo de copia"}
             </label>
-            <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+            <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl"  style={{background:'white',fontFamily:"Monospace",fontSize:'16px'}}>
               <select
                 onChange={(e) => {
                   setCopy(e.target.value);
@@ -383,11 +392,11 @@ function Guided({language}) {
               </select>
             </div>
             {/*Tone is a selection of drop down of either Formal or Informal*/}
-            <label htmlFor="tone">
+            <label htmlFor="tone" style={{color:'white',fontSize:'18px',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}}>
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language === "english" ? "Tone" : "Tono"}
+              <CategoryIcon />  {language === "english" ? "  Tone" : "  Tono"}
             </label>
-            <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+            <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl" style={{background:'white',fontFamily:"Monospace",fontSize:'16px'}}>
               <select
                 onChange={(e) => {
                   setTone(e.target.value);
@@ -433,7 +442,9 @@ function Guided({language}) {
             <button
               type="submit"
               className="block w-full bg-indigo-600 mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
+            style={{color:'#283081',background:'white',fontFamily:"Monospace",fontSize:'16px'}}
             >
+              <ContentCopyIcon style={{marginRight:'10px'}} />
               {/*Use appropriate wording based on whether language is english or spanish*/}
               {language === "english"
                 ? (loading? "Loading...":"Generate Content")

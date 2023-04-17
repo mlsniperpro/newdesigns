@@ -29,8 +29,8 @@ const ChatBody = ({ chat }) => {
               message.role === "assistant" && aiStyle
             }`}
           >
-            <pre className="whitespace-pre-wrap">
-              <span>{message.content}</span>
+            <pre className="whitespace-pre-wrap" style={{background:'1 1 1 0.2',border:'none'}}>
+              <span style={{color:'white',fontSize:'14px',fontFamily:"Monospace",fontSize:'16px'}}>{message.content}</span>
             </pre>
           </div>
         );

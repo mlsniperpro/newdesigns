@@ -12,6 +12,10 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
+import CreateIcon from '@mui/icons-material/Create';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import LineStyleIcon from '@mui/icons-material/LineStyle';
+
 function Freestyle({language}) {
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
@@ -76,22 +80,22 @@ function Freestyle({language}) {
         href="https://cdn.tailgrids.com/tailgrids-fallback.css"
       />
       {/* ====== Contact Section Start */}
-      <section className="bg-white py-20 lg:py-[120px] overflow-hidden relative z-10">
-        <div className="container">
-          <div className="flex flex-wrap lg:justify-between -mx-4">
-            <div className="w-full lg:w-1/2 xl:w-6/12 px-4">
-              <div className="max-w-[570px] mb-12 lg:mb-0">
-                <span className="block mb-4 text-base text-primary font-semibold">
+      <section className="bg-white py-20 lg:py-[120px] overflow-hidden relative z-10" >
+        <div className="container"  >
+          <div  >
+            <div className="w-full lg:w-1/2 xl:w-6/12 px-4" >
+              <div className="max-w-[570px] mb-12 lg:mb-0" >
+                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'27px',marginLeft:'15%'}}>
                   {/*Use appropriate wording based on whether language is english or spanish*/}
-                  {language === "english" ? "Freestyle Content Generation" : "Generación de contenido libre" }
+               <LineStyleIcon />   {language === "english" ? "Freestyle Content Generation" : "Generación de contenido libre" }
                 </span>
 
-                <p className="text-base text-body-color leading-relaxed mb-9">
+                <p className="text-base text-body-color leading-relaxed mb-9" style={{fontFamily:"Monospace",fontSize:'20px'}}>
                   {content && content}
                 </p>
               </div>
             </div>
-            <div className="w-full lg:w-1/2 xl:w-5/12 px-4">
+            <div className="w-full px-8 md:px-32 lg:px-24" >
               <div className="bg-white relative rounded-lg p-8 sm:p-12 shadow-lg">
                 <form>
                   <div className="mb-6">
@@ -99,7 +103,7 @@ function Freestyle({language}) {
                       rows={20}
                       cols={300}
                       onChange={(e) => setPrompt(e.target.value)}
-
+                      style={{fontFamily:'Monospace'}}
                       placeholder={language==="english"?"Your Message":"Tu mensaje"}
                       className="
                         w-full
@@ -119,19 +123,11 @@ function Freestyle({language}) {
                     <button
                       onClick={handleSubmit}
                       type="submit"
-                      className="
-                        w-full
-                        text-white
-                        bg-primary
-                        rounded
-                        border border-primary
-                        p-3
-                        transition
-                        hover:bg-opacity-90
-                        "
+                      className="block w-full bg-indigo-600 mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
+            style={{background:'#283081',fontFamily:"Monospace",fontSize:'18px'}}
                     >
                       {/*Use appropriate wording based on whether language is english or spanish*/}
-                      {language === "english" ? (loading? "Loading...":"Generate Content" ): (loading? "Procesando...":"Generar contenido") }
+                 <ContentCopyIcon />     {language === "english" ? (loading? "Loading...":"Generate Content" ): (loading? "Procesando...":"Generar contenido") }
                     </button>
                   </div>
                 </form>
