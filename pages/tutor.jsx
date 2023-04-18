@@ -9,7 +9,8 @@ import Router from "next/router";
 import React from "react";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 //If API_KEY is none then load the API_KEY from the database
-
+import HomeIcon from '@mui/icons-material/Home';
+import LanguageIcon from '@mui/icons-material/Language';
 import {
   collection,
   query,
@@ -228,7 +229,7 @@ function Tutor() {
   };
 
   return (
-    <div className="bg-[#1A232E] h-screen py-6 relative sm:px-16 px-12 text-white overflow-hidden flex flex-col justify-between  align-middle w-screen">
+    <div className="bg-[#1A232E] h-screen py-6 relative sm:px-16 px-12 text-white overflow-hidden flex flex-col justify-between  align-middle w-screen" style={{background: "rgb(40, 48, 129)"}}>
       {/* gradients */}
       {console.log("The value of subscribed here at the Tutor is " + subscribed)}
       <div className="gradient-01 z-0 absolute"></div>
@@ -236,23 +237,27 @@ function Tutor() {
 
       {/* header */}
       <div className="uppercase font-bold  text-2xl text-center mb-3">
-        <h1>
+        <h1 style={{fontFamily:"Monospace",fontSize:'30px'}}>
           {language === "en"
             ? "VIONIKO AI Copywriting Tutor"
             : "Tutor vioniko de redacción publicitaria de IA"}
         </h1>
       </div>
+      <div><br></br><br></br>
       <Link href="/">
-        <button className="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-          {language === "en" ? "Home" : "Inicio"}
+        <button className="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded" style={{background:'white',color:'rgb(40, 48, 129)',width:'200px',fontFamily:"Monospace",fontSize:'18px'}}>
+         <HomeIcon /> {language === "en" ? "Home" : "Inicio"}
         </button>
       </Link>
       <button
         onClick={changeLanguage}
         className="block mt-6 uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded"
+        style={{background:'white',color:'rgb(40, 48, 129)',width:'300px',fontFamily:"Monospace",fontSize:'18px'}}
       >
+        <LanguageIcon style={{marginRight:"10px"}}/>
         {language === "en" ? "Switch to Spanish" : "Cambiar a Inglés"}
       </button>
+      </div>
 
       {/* body */}
       <div
@@ -265,7 +270,7 @@ function Tutor() {
 
       {/* input */}
       <div className="w-full max-w-4xl min-w-[20rem] self-center">
-        <ChatInput sendMessage={sendMessage} loading={mutation.isLoading} />
+        <ChatInput sendMessage={sendMessage} loading={mutation.isLoading} style={{border:'1px solid white',fontFamily:"Monospace",fontSize:'20px'}}/>
       </div>
     </div>
   );

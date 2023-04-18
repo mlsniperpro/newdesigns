@@ -17,6 +17,9 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
+
+import LanguageIcon from '@mui/icons-material/Language';
+
 function Login() {
   const [disabled, setDisabled] = useState(false);
   const [language, setLanguage] = useState("sp");
@@ -138,19 +141,22 @@ function Login() {
   };
 
   return (
-    <div className="antialiased bg-slate-200">
-      <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
-        <h1 className="text-4xl font-medium">
+    <div className="antialiased ">
+      <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300"  style={{background:'rgb(40,48,129)',color:'white'}}>
+        <h1 className="text-4xl font-medium" style={{textAlign:'center',fontFamily:'monospace',fontSize:'40px'}}>
           {language === "sp" ? "Iniciar sesión" : "Login"}
         </h1>
+        <br></br>
         <button
           onClick={() =>
             language === "sp" ? setLanguage("en") : setLanguage("sp")
           }
+          style={{background:'white',color:'rgb(40,48,129)',height:'35px',width:"200px",borderRadius:'5px',fontFamily:'monospace',fontSize:'20px'}}
         >
-          {language === "sp" ? "English" : "Spanish"}
+         <LanguageIcon /> {language === "sp" ? "English" : "Spanish"}
         </button>
-        <p>
+        <br></br><br></br>
+        <p style={{fontSize:'20px',fontFamily:'monospace'}}>
           {language === "sp"
             ? "Bienvenido de vuelta a Vioniko 👋"
             : "Hi, Welcome Back to Vioniko 👋"}
@@ -159,6 +165,7 @@ function Login() {
           <button
             onClick={signInWithGoogle}
             className="w-full text-center py-3 my-3 border flex space-x-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
+          style={{background:'white',color:'rgb(40,48,129)'}}
           >
             <Image
               src="https://www.svgrepo.com/show/355037/google.svg"
@@ -167,7 +174,7 @@ function Login() {
               className="w-6 h-6"
               alt=""
             />{" "}
-            <span>
+            <span style={{fontSize:'17px'}}>
               {language === "sp"
                 ? "Iniciar sesión con Google"
                 : "Login with Google"}
@@ -177,8 +184,8 @@ function Login() {
         <form action="" onSubmit={signIn} className="my-10">
           <div className="flex flex-col space-y-5">
             <label htmlFor="email">
-              <p className="font-medium text-slate-700 pb-2">
-                {language === "sp" ? "Correo electrónico" : "Email address"}
+              <p className="font-medium text-slate-700 pb-2" style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}>
+              ➤ {language === "sp" ? "Correo electrónico" : "Email address"}
               </p>
               <input
                 id="email"
@@ -188,11 +195,12 @@ function Login() {
                 type="email"
                 className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
                 placeholder="Enter email address"
+                style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}
               />
             </label>
             <label htmlFor="password">
-              <p className="font-medium text-slate-700 pb-2">
-                {language === "sp" ? "Contraseña" : "Password"}
+              <p className="font-medium text-slate-700 pb-2" style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}>
+              ➤ {language === "sp" ? "Contraseña" : "Password"}
               </p>
               <input
                 id="password"
@@ -202,21 +210,23 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
                 placeholder="Enter your password"
+                style={{color:'black',fontFamily:'monospace',fontSize:'20px'}}
               />
             </label>
             <div className="flex flex-row justify-between">
               <div>
-                <label htmlFor="remember" className="">
+                <label htmlFor="remember" className=""  style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}>
                   <input
                     type="checkbox"
                     id="remember"
                     className="w-4 h-4 border-slate-200 focus:bg-indigo-600"
+                    style={{marginRight:'10px'}}
                   />
                   {language === "sp" ? "Recuérdame" : "Remember me"}
                 </label>
               </div>
               <div>
-                <Link href="/login" className="font-medium text-indigo-600">
+                <Link href="/login" className="font-medium text-indigo-600"  style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}>
                   {language === "sp"
                     ? "¿Olvidaste tu contraseña?"
                     : "Forgot Password?"}
@@ -226,6 +236,7 @@ function Login() {
             <button
               type="submit"
               className="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center"
+              style={{background:'white',color:'rgb(40,48,129)',fontFamily:'monospace',fontSize:'18px',}}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -243,13 +254,14 @@ function Login() {
               </svg>
               <span>{language === "sp" ? "Iniciar sesión" : "Login"}</span>
             </button>
-            <p className="text-center">
+            <p className="text-center"  style={{color:'white',fontFamily:'monospace',fontSize:'18px'}}>
               {language === "sp"
                 ? "¿No tienes una cuenta?"
                 : "Not registered yet?"}
               <Link
                 className="text-indigo-600 font-medium inline-flex space-x-1 items-center"
                 href="/signup"
+                style={{color:'white',fontFamily:'monospace',fontSize:'18px',marginLeft:'10px'}}
               >
                 <span>{language === "sp" ? "Regístrate" : "Register now"}</span>
               </Link>

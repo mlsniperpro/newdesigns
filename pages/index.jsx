@@ -95,8 +95,11 @@ function Index() {
             <Loader />
           ) : subscribed ? (
             <Dashboard />
+           
+            
           ) : (
             <PlanSelection />
+           
           )}
         </main>
       </div>
