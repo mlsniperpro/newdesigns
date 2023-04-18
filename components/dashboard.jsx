@@ -97,7 +97,7 @@ function onlyAdmins() {
                 style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'14px'}}
                 className="hover:bg-gray-500  hover:bg-opacity-30 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
-               <LineStyleIcon /> <span style={{fontFamily:'Monospace'}}>{language === "english" ? "Freestyle" : "Libre"}</span>
+               <LineStyleIcon /> <span  style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'14px'}}>{language === "english" ? "Freestyle" : "Libre"}</span>
               </a>
             </li>
             <li>
@@ -175,7 +175,7 @@ function onlyAdmins() {
                 onClick={signout}
                 className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
-                <span style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'14px'}}style={{fontFamily:'Monospace'}}>
+                <span style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'14px'}}>
                  <LogoutIcon /> {language === "english" ? "Log Out" : "Cerrar sesión"}
                  
                 </span>

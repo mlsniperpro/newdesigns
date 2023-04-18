@@ -81,11 +81,11 @@ function Freestyle({language}) {
       />
       {/* ====== Contact Section Start */}
       <section className="bg-white py-20 lg:py-[120px] overflow-hidden relative z-10" >
-        <div className="container"  style={{width:'50%'}}>
+        <div className="container"  style={{width:'55%'}}>
           <div  >
             <div className="w-full" style={{margin:'auto',width:'80%',textAlign:'left'}} >
               <div className=" mb-12 lg-12" >
-                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'27px'}}>
+                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'27px',marginLeft:'20px'}}>
                   {/*Use appropriate wording based on whether language is english or spanish*/}
                <LineStyleIcon />   {language === "english" ? "Freestyle Content Generation" : "Generación de contenido libre" }
                 </span>
