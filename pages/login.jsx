@@ -5,8 +5,6 @@ import Link from "next/link";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 import { useEffect, useState } from "react";
-import LanguageIcon from '@mui/icons-material/Language';
-
 import {
   collection,
   addDoc,
@@ -143,7 +141,6 @@ function Login() {
   };
 
   return (
-<<<<<<< HEAD
     <div className="antialiased ">
       <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300"  style={{background:'rgb(40,48,129)',color:'white'}}>
         <h1 className="text-4xl font-medium" style={{textAlign:'center',fontFamily:'monospace',fontSize:'40px'}}>
@@ -160,27 +157,6 @@ function Login() {
         </button>
         <br></br><br></br>
         <p style={{fontSize:'20px',fontFamily:'monospace'}}>
-=======
-    <div>
-      
-      <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300" style={{background: "rgb(40, 48, 129);",fontFamily:""}}>
-        <h1 className="text-4xl font-medium" style={{fontFamily:"Monospace",textAlign:'center',color:'white',fontSize:"45px"}}>
-          {language === "sp" ? "Iniciar sesión" : "Login"}
-        </h1><br></br>
-        
-        <button 
-          onClick={() =>
-            language === "sp" ? setLanguage("en") : setLanguage("sp")
-          }
-          className=" py-3 font-medium text-black bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center"
-          style={{backgroundColor:'white',fontSize:'20px',fontFamily:'Monospace',width:'120px',height:'40px'}}
-        ><LanguageIcon style={{marginRight:'10px'}}/>
-          {language === "sp" ? "English" : "Spanish"}
-        </button>
-        <br></br>
-        <br></br>
-        <p style={{color:'white',fontFamily:"Monospace",fontSize:'20px'}}>
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
           {language === "sp"
             ? "Bienvenido de vuelta a Vioniko 👋"
             : "Hi, Welcome Back to Vioniko 👋"}
@@ -189,11 +165,7 @@ function Login() {
           <button
             onClick={signInWithGoogle}
             className="w-full text-center py-3 my-3 border flex space-x-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
-<<<<<<< HEAD
           style={{background:'white',color:'rgb(40,48,129)'}}
-=======
-            style={{background:'white',color:'black',fontFamily:'Monospace',fontSize:'20px'}}
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
           >
             <Image
               src="https://www.svgrepo.com/show/355037/google.svg"
@@ -201,13 +173,8 @@ function Login() {
               height={24}
               className="w-6 h-6"
               alt=""
-<<<<<<< HEAD
             />{" "}
             <span style={{fontSize:'17px'}}>
-=======
-            /> {" "}
-            <span style={{fontFamily:'Monospace'}}>
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
               {language === "sp"
                 ? "Iniciar sesión con Google"
                 : "Login with Google"}
@@ -217,13 +184,8 @@ function Login() {
         <form action="" onSubmit={signIn} className="my-10">
           <div className="flex flex-col space-y-5">
             <label htmlFor="email">
-<<<<<<< HEAD
               <p className="font-medium text-slate-700 pb-2" style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}>
               ➤ {language === "sp" ? "Correo electrónico" : "Email address"}
-=======
-              <p className="font-medium text-slate-700 pb-2" style={{color:'white',fontFamily:'Monospace',fontSize:'20px'}}>
-                {language === "sp" ? " → Correo electrónico" : " → Email address"}
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
               </p>
               <input
                 id="email"
@@ -233,21 +195,12 @@ function Login() {
                 type="email"
                 className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
                 placeholder="Enter email address"
-<<<<<<< HEAD
                 style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}
               />
             </label>
             <label htmlFor="password">
               <p className="font-medium text-slate-700 pb-2" style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}>
               ➤ {language === "sp" ? "Contraseña" : "Password"}
-=======
-                style={{fontSize:'20px',fontFamily:"Monospace"}}
-              />
-            </label>
-            <label htmlFor="password">
-              <p className="font-medium text-slate-700 pb-2" style={{color:'white',fontFamily:"Monospace",fontSize:'20px'}}>
-                {language === "sp" ? " → Contraseña" : " → Password"}
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
               </p>
               <input
                 id="password"
@@ -257,7 +210,6 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
                 placeholder="Enter your password"
-<<<<<<< HEAD
                 style={{color:'black',fontFamily:'monospace',fontSize:'20px'}}
               />
             </label>
@@ -269,29 +221,12 @@ function Login() {
                     id="remember"
                     className="w-4 h-4 border-slate-200 focus:bg-indigo-600"
                     style={{marginRight:'10px'}}
-=======
-                style={{fontFamily:'Monospace',fontSize:'20px'}}
-              />
-            </label>
-            <div className="flex flex-row justify-between">
-              <div >
-                <label htmlFor="remember" className="" style={{color:'white',fontFamily:'Monospace',fontSize:'18px'}}>
-                  <input
-                    type="checkbox"
-                    id="remember"
-                    // className="w-4 h-4 border-slate-200 focus:bg-indigo-600"
-                    style={{marginRight:'5px',color:'white',fontSize:'18px'}}
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
                   />
-                  {language === "sp" ? " → Recuérdame" : " → Remember me"}
+                  {language === "sp" ? "Recuérdame" : "Remember me"}
                 </label>
               </div>
               <div>
-<<<<<<< HEAD
                 <Link href="/login" className="font-medium text-indigo-600"  style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}>
-=======
-                <Link href="/login" className="font-medium text-indigo-600" style={{color:'white',fontSize:'18px',fontFamily:'Monospace'}}>
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
                   {language === "sp"
                     ? "¿Olvidaste tu contraseña?"
                     : "Forgot Password?"}
@@ -301,11 +236,7 @@ function Login() {
             <button
               type="submit"
               className="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center"
-<<<<<<< HEAD
               style={{background:'white',color:'rgb(40,48,129)',fontFamily:'monospace',fontSize:'18px',}}
-=======
-              style={{backgroundColor:'white',fontSize:'20px',fontFamily:'Monospace'}}
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -314,7 +245,6 @@ function Login() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth="2"
-                style={{color:'black'}}
               >
                 <path
                   strokeLinecap="round"
@@ -322,32 +252,23 @@ function Login() {
                   d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
                 />
               </svg>
-              <span style={{fontSize:'18px',fontWeight:'bold',color:'black'}}>{language === "sp" ? "Iniciar sesión" : "Login"}</span>
+              <span>{language === "sp" ? "Iniciar sesión" : "Login"}</span>
             </button>
-<<<<<<< HEAD
             <p className="text-center"  style={{color:'white',fontFamily:'monospace',fontSize:'18px'}}>
-=======
-            <p className="text-center" style={{color:'white',fontSize:'20px',fontFamily:"Monospace"}}>
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
               {language === "sp"
                 ? "¿No tienes una cuenta?"
                 : "Not registered yet?"}
               <Link
                 className="text-indigo-600 font-medium inline-flex space-x-1 items-center"
                 href="/signup"
-<<<<<<< HEAD
                 style={{color:'white',fontFamily:'monospace',fontSize:'18px',marginLeft:'10px'}}
-=======
-                style={{color:'white',marginLeft:'10px',textDecoration:'underline',fontWeight:'bold',fontFamily:"Monospace"}}
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
               >
-                <span style={{fontFamily:'Monospace'}}>{language === "sp" ? "Regístrate" : "Register Now"}</span>
+                <span>{language === "sp" ? "Regístrate" : "Register now"}</span>
               </Link>
             </p>
           </div>
         </form>
       </div>
-      
     </div>
   );
 }

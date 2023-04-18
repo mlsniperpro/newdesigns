@@ -62,11 +62,7 @@ function onlyAdmins() {
       <div className="w-64 px-4" style={{background: "rgb(40, 48, 129)"}}>
         <div className="px-2 pt-4 pb-8 " >
           <ul className="space-y-0">
-<<<<<<< HEAD
             <li style={{color:'white',fontWeight:'bold',fontFamily:"Circular std bold,sans-serif",fontSize:'14px'}}>
-=======
-            <li style={{color:'white',fontWeight:'bold',fontFamily:"Circular std bold,sans-serif",fontSize:'20px'}}>
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
               <a
                 onClick={() => {
                   language === "english"
@@ -81,11 +77,7 @@ function onlyAdmins() {
               </a>
             </li>
             <li></li>
-<<<<<<< HEAD
             <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'14px'}} >
-=======
-            <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'20px'}} >
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
               <a
                 onClick={() => {
                   setMode("guided");
@@ -102,11 +94,7 @@ function onlyAdmins() {
                 onClick={() => {
                   setMode("freestyle");
                 }}
-<<<<<<< HEAD
-                style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}}
-=======
-                style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'20px'}}
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
+                style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'14px'}}
                 className="hover:bg-gray-500  hover:bg-opacity-30 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
                <LineStyleIcon /> <span style={{fontFamily:'Monospace'}}>{language === "english" ? "Freestyle" : "Libre"}</span>
@@ -114,21 +102,13 @@ function onlyAdmins() {
             </li>
             <li>
               <a
-<<<<<<< HEAD
               style={{color:'white',fontWeight:'bold',fontFamily:"Circular std bold,sans-serif",fontSize:'14px'}}
-=======
-              style={{color:'white',fontWeight:'bold',fontFamily:"Circular std bold,sans-serif",fontSize:'20px'}}
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
                 onClick={() => {
                   setMode("keyword");
                 }}
                 className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
-<<<<<<< HEAD
                 <span style={{fontFamily:'Monospace',fontSize:'14px'}}>
-=======
-                <span style={{fontFamily:'Monospace',fontSize:'18px'}}>
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
                  <BatchPredictionIcon /> {language === "english" ? "Keyword" : "Palabra clave"}
                 </span>
               </a>
@@ -136,11 +116,7 @@ function onlyAdmins() {
             <li >
               <Link
                 href="/tutor"
-<<<<<<< HEAD
                 style={{color:'white',fontWeight:'bold',fontFamily:"Circular std bold,sans-serif",fontSize:'14px'}}
-=======
-                style={{color:'white',fontWeight:'bold',fontFamily:"Circular std bold,sans-serif",fontSize:'20px'}}
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
                 className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
               <AccessibilityNewIcon />  <span style={{fontFamily:'Monospace'}}>{language === "english" ? "Tutor" : "Tutor"}</span>
@@ -159,11 +135,7 @@ function onlyAdmins() {
               </li>
             ) : null}
             {admin ? (
-<<<<<<< HEAD
               <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'14px'}}>
-=======
-              <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'20px'}}>
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
                 <Link
                  
                   href="/users"
@@ -175,11 +147,7 @@ function onlyAdmins() {
               </li>
             ) : null}
             {admin ? (
-<<<<<<< HEAD
               <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'14px'}} >
-=======
-              <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'20px'}} >
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
                 <Link
                   href="/priceUpdates"
                   onClick={onlyAdmins}
@@ -190,11 +158,7 @@ function onlyAdmins() {
               </li>
             ) : null}
             {admin ? (
-<<<<<<< HEAD
               <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'14px'}}>
-=======
-              <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'20px'}}>
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
                 <Link
                   href="/wordlimit"
                   onClick={onlyAdmins}
@@ -207,16 +171,13 @@ function onlyAdmins() {
 
             <li>
               <a
-<<<<<<< HEAD
               style={{color:'white',fontWeight:'bold',fontFamily:"Circular std bold,sans-serif",fontSize:'14px'}}
-=======
-              style={{color:'white',fontWeight:'bold',fontFamily:"Circular std bold,sans-serif",fontSize:'18px'}}
->>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
                 onClick={signout}
                 className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
                 <span style={{fontFamily:'Monospace'}}>
                  <LogoutIcon /> {language === "english" ? "Log Out" : "Cerrar sesión"}
+                 
                 </span>
               </a>
             </li>

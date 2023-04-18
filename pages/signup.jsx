@@ -77,7 +77,7 @@ function Signup() {
 
         <div className="flex items-center w-full max-w-3xl p-8 mx-auto lg:px-12 lg:w-3/5"style={{border:'1px solid white',background:'rgb(40,48,129',borderRadius:'15px'}}>
           <div className="w-full">
-            <h1 className="text-2xl font-semibold tracking-wider text-gray-800 capitalize dark:text-white" style={{fontSize:'30px',fontFamily:'Monospace'}}>
+            <h1 className="text-2xl font-semibold tracking-wider text-gray-800 capitalize " style={{fontSize:'30px',fontFamily:'Monospace',color:'white'}}>
             → Get your free account now.
             </h1>
 
