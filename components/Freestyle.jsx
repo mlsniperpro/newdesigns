@@ -83,14 +83,24 @@ function Freestyle({language}) {
       <section className="bg-white py-20 lg:py-[120px] overflow-hidden relative z-10" >
         <div className="container"  >
           <div  >
+<<<<<<< HEAD
             <div className="w-full" style={{margin:'auto',width:'80%',textAlign:'left'}} >
               <div className=" mb-12 lg-12" >
                 <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'27px'}}>
+=======
+            <div className="w-full lg:w-1/2 xl:w-6/12 px-4" >
+              <div className="max-w-[570px] mb-12 lg:mb-0" >
+                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'27px',marginLeft:'15%'}}>
+>>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
                   {/*Use appropriate wording based on whether language is english or spanish*/}
                <LineStyleIcon />   {language === "english" ? "Freestyle Content Generation" : "Generación de contenido libre" }
                 </span>
 
+<<<<<<< HEAD
                 <p className="text-base text-body-color leading-relaxed mb-9" style={{fontFamily:"Monospace",fontSize:'20px',margin:'auto'}}>
+=======
+                <p className="text-base text-body-color leading-relaxed mb-9" style={{fontFamily:"Monospace",fontSize:'20px'}}>
+>>>>>>> 215fdb8e7b92e25dde3514034b657c52d07df0fe
                   {content && content}
                 </p>
               </div>
