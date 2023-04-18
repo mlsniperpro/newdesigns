@@ -81,7 +81,7 @@ function Freestyle({language}) {
       />
       {/* ====== Contact Section Start */}
       <section className="bg-white py-20 lg:py-[120px] overflow-hidden relative z-10" >
-        <div className="container"  >
+        <div className="container"  style={{width:'50%'}}>
           <div  >
             <div className="w-full" style={{margin:'auto',width:'80%',textAlign:'left'}} >
               <div className=" mb-12 lg-12" >
