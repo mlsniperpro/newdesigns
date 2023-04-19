@@ -139,7 +139,7 @@ function Keyword({ language}) {
         href="https://cdn.tailgrids.com/tailgrids-fallback.css"
       />
       <section className="bg-white py-20 lg:py-[120px]  relative z-10">
-        <div className="container" style={{width:'55%'}}>
+        <div className="container" style={{width:'35%'}}>
           <div className="flex  lg:justify-between -mx-4" style={{display:'flex',flexDirection:'column'}}>
             <div style={{width:'100%'}}>
               <div className="mb-10 lg:mb-0">
