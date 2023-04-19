@@ -200,7 +200,7 @@ function Keyword({ language}) {
                 <p className="text-base text-body-color leading-relaxed mb-9"></p>
               </div>
             </div>
-            <div style={{margin:'auto',height:'600px',width:'60%',marginLeft:'40%'}}>
+            <div style={{margin:'auto',height:'600px',width:'420px',marginLeft:'40%'}}>
               <div className="bg-white relative rounded-lg p-8 sm:p-12 shadow-lg" >
                 <form noValidate onSubmit={handleSubmit}>
                   <div className="mb-6">
