@@ -89,7 +89,19 @@ function Freestyle({language}) {
                   {/*Use appropriate wording based on whether language is english or spanish*/}
                <LineStyleIcon />   {language === "english" ? "Freestyle Content Generation" : "Generación de contenido libre" }
                 </span>
+                <p>Ideas</p>
+                <p style={{fontSize:'12px'}}>
+                {language === "english" ? "Could you give me a summary with the key points of this book?" : "¿Podrías darme un resumen con los puntos clave de este libro?" } | 
+                {language === "english" ? "Could you give me the pros and cons of ...?" : "¿Podrías darme los pros y contras de...?" } |
+                {language === "english" ? "Generate 10 ideas on how to..." : "Genera 10 ideas sobre cómo..." } |
+                {language === "english" ? "Give me a recipe for... or a routine for..." : "Dame una receta para... o una rutina para..." } | 
+                {language === "english" ? "I'm looking for (x), could you give me 5 recommendations listing the differences between them?":"Estoy buscando (x), ¿podrías darme 5 recomendaciones enlistando las diferencias entre ellas?" } |
+                {language === "english" ? "I have this problem (x), could you give me 5 recommendations to solve it?" : "Tengo este problema (x), ¿podrías darme 5 recomendaciones para resolverlo?" } |
+                {language === "english" ? "Could you translate this text from ... to ...?" : "¿Podrías traducirme este texto de... a...?" } | 
+                {language === "english" ? "Could you share a joke about ...?" : "¿Podrías compartir un chiste sobre...?" } |
+                {language === "english" ? "Could you explain this concept (x) to me as if I were a 5-year-old?" : "¿Podrías explicarme este concepto (x) como si fuera un niño de 5 años?" } |
 
+                </p>
                 <p className="text-base text-body-color leading-relaxed mb-9" style={{fontFamily:"Monospace",fontSize:'20px',margin:'auto',cursor:'pointer'}}>
                 <ContentCopyIcon onClick={() => {navigator.clipboard.writeText(content); alert("Copied to clipboard.");}}/>
                 {   content && content}
