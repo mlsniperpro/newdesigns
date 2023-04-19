@@ -200,13 +200,14 @@ function Keyword({ language}) {
                 <p className="text-base text-body-color leading-relaxed mb-9"></p>
               </div>
             </div>
-            <div>
-              <div className="bg-white relative rounded-lg p-8 sm:p-12 shadow-lg" style={{width:'35%'}}>
-                <form noValidate onSubmit={handleSubmit}>
-                  <div className="mb-6">
+            <div >
+              <div className="bg-white relative rounded-lg p-8 sm:p-12 shadow-lg" style={{width:'40%',height:'600px'}}>
+                <form noValidate onSubmit={handleSubmit} >
+                  <div  >
                     <textarea
-                      rows={20}
-                      cols={300}
+                
+                      rows={5}
+                      cols={100}
                       value={keyword}
                       onChange={(e) => setKeyword(e.target.value)}
                       placeholder={
