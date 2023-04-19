@@ -143,7 +143,7 @@ function Keyword({ language}) {
           <div className="flex  lg:justify-between -mx-4" style={{display:'flex',flexDirection:'column'}}>
             <div style={{width:'100%'}}>
               <div className="mb-10 lg:mb-0">
-                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'27px',width:'55%'}}>
+                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'27px',width:'55%',margin:'auto'}}>
                   {/*Use appropriate heading based on whether langaue is english or spanish*/}
               <BatchPredictionIcon />    {language === "en"
                     ? "Keyword-based Content Generation"
@@ -200,8 +200,8 @@ function Keyword({ language}) {
                 <p className="text-base text-body-color leading-relaxed mb-9"></p>
               </div>
             </div>
-            <div >
-              <div className="bg-white relative rounded-lg p-8 sm:p-12 shadow-lg" style={{width:'40%',height:'600px'}}>
+            <div style={{margin:'auto'}}>
+              <div className="bg-white relative rounded-lg p-8 sm:p-12 shadow-lg" style={{width:'40%',height:'600px',margin:'auto'}}>
                 <form noValidate onSumit={handleSubmit} >
                   <div  >
                     <textarea
