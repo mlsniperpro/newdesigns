@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactTable from "react-table";
 import { auth, db } from "../config/firebase";
+import Link from "next/link";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 import {
   collection,
@@ -139,6 +140,7 @@ function Keyword({ language}) {
         href="https://cdn.tailgrids.com/tailgrids-fallback.css"
       />
       <section className="bg-white py-20 lg:py-[120px]  relative z-10">
+      <Link href="/tutor"> <button   style={{background:'#283081',fontFamily:"Monospace",fontSize:'18px',color:'white',padding:'5px',borderRadius:'1px solid #283081', borderRadius:'5px'}}> Main Menu</button></Link> 
         <div className="container">
           <div className="flex  lg:justify-between -mx-4" style={{display:'flex',flexDirection:'column'}}>
             <div >
