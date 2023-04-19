@@ -139,18 +139,18 @@ function Keyword({ language}) {
         href="https://cdn.tailgrids.com/tailgrids-fallback.css"
       />
       <section className="bg-white py-20 lg:py-[120px]  relative z-10">
-        <div className="container" style={{width:'35%'}}>
+        <div className="container">
           <div className="flex  lg:justify-between -mx-4" style={{display:'flex',flexDirection:'column'}}>
             <div style={{width:'100%'}}>
               <div className="mb-10 lg:mb-0">
-                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'27px'}}>
+                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'27px',width:'55%'}}>
                   {/*Use appropriate heading based on whether langaue is english or spanish*/}
               <BatchPredictionIcon />    {language === "en"
                     ? "Keyword-based Content Generation"
                     : "Generación de contenido basado en palabras clave"}
                 </span>
                 {data && (
-                  <div className="flex flex-col w-200 h-400">
+                  <div className="flex flex-col w-400 h-400" >
                     <div className="overflow-x-auto sm:mx-0.5 lg:mx-0.5">
                       <div className="py-2 inline-block  sm:px-6 lg:px-8">
                         <div className="mx-auto">
@@ -201,7 +201,7 @@ function Keyword({ language}) {
               </div>
             </div>
             <div>
-              <div className="bg-white relative rounded-lg p-8 sm:p-12 shadow-lg">
+              <div className="bg-white relative rounded-lg p-8 sm:p-12 shadow-lg" style={{width:'35%'}}>
                 <form noValidate onSubmit={handleSubmit}>
                   <div className="mb-6">
                     <textarea
