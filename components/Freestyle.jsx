@@ -90,8 +90,8 @@ function Freestyle({language}) {
                <LineStyleIcon />   {language === "english" ? "Freestyle Content Generation" : "Generación de contenido libre" }
                 </span>
 
-                <p className="text-base text-body-color leading-relaxed mb-9" style={{fontFamily:"Monospace",fontSize:'20px',margin:'auto'}}>
-                  {content && content}
+                <p className="text-base text-body-color leading-relaxed mb-9" style={{fontFamily:"Monospace",fontSize:'20px',margin:'auto',cursor:'pointer'}}>
+                <ContentCopyIcon onClick={() => {navigator.clipboard.writeText(content); alert("Copied to clipboard.");}}/>  {content && content}
                 </p>
               </div>
             </div>
@@ -127,7 +127,7 @@ function Freestyle({language}) {
             style={{background:'#283081',fontFamily:"Monospace",fontSize:'18px'}}
                     >
                       {/*Use appropriate wording based on whether language is english or spanish*/}
-                 <ContentCopyIcon />     {language === "english" ? (loading? "Loading...":"Generate Content" ): (loading? "Procesando...":"Generar contenido") }
+                      {language === "english" ? (loading? "Loading...":"Generate Content" ): (loading? "Procesando...":"Generar contenido") }
                     </button>
                   </div>
                 </form>

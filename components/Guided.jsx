@@ -3,6 +3,9 @@ import ContentCard from "./ContentCard";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { auth, db } from "../config/firebase";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+
+
+
 import {
   collection,
   addDoc,
