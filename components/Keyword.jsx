@@ -202,7 +202,7 @@ function Keyword({ language}) {
             </div>
             <div >
               <div className="bg-white relative rounded-lg p-8 sm:p-12 shadow-lg" style={{width:'40%',height:'600px'}}>
-                <form noValidate onSubmit={handleSubmit} >
+                <form noValidate onSumit={handleSubmit} >
                   <div  >
                     <textarea
                 
@@ -214,7 +214,7 @@ function Keyword({ language}) {
                         language === "english"
                           ? "Your Keyword"
                           : "Tu palabra clave"
-                      }
+                      }b
                       className="
                         w-full
                         rounded

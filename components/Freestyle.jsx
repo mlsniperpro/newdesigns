@@ -91,7 +91,8 @@ function Freestyle({language}) {
                 </span>
 
                 <p className="text-base text-body-color leading-relaxed mb-9" style={{fontFamily:"Monospace",fontSize:'20px',margin:'auto',cursor:'pointer'}}>
-                { <ContentCopyIcon onClick={() => {navigator.clipboard.writeText(content); alert("Copied to clipboard.");}}/>  &&content && content}
+                <ContentCopyIcon onClick={() => {navigator.clipboard.writeText(content); alert("Copied to clipboard.");}}/>
+                {   content && content}
                 </p>
               </div>
             </div>
