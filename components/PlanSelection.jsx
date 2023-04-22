@@ -41,7 +41,6 @@ function PlanSelection() {
       });
     `;
      document.head.appendChild(script);
-
      return () => {
        document.head.removeChild(script);
      };
