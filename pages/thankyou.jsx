@@ -1,10 +1,35 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import Router from "next/router";
+import { auth, db } from "../config/firebase";
 import { useState } from "react";
+import { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function ThankYou() {
-  const router = useRouter();
+  const [user, userLoading] = useAuthState(auth);
+  useEffect(() => {
+    if (!user && !userLoading) {
+      Router.push("/login");
+      return;
+    }
+    if(user){
+      console.log("The user details are : ", user.email);
+      
+    if (typeof window !== "undefined" && window.rewardful) {
+      console.log("The window is : ",  window.rewardful)
+      window.rewardful("ready", function () {
+        if(window.Rewardful.referral){
+          window.rewardful("convert", {
+        email: user.email,
+      });
+    }
+    });
+  }
+
+    }
+    
+  }, []);
   const [language, setLanguage] = useState("es");
 
   const toggleLanguage = () => {
