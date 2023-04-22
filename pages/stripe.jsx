@@ -12,7 +12,7 @@ export default function ThankYou() {
         <div className="mt-4 bg-white shadow-md rounded-lg text-lg text-gray-700 overflow-hidden">
           <div className="py-8 px-8">
             <p className="leading-normal">
-              Thanks you for subscribing to Vioniko premium. We're dedicated to
+              Thanks you for subscribing to Vioniko premium. Dedicated to
               helping you grow your business.
             </p>
             <div className="mt-6 pt-3">
