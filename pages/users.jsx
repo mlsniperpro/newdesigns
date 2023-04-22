@@ -185,9 +185,13 @@ const retrieveSubscribers = async () => {
     setActions(updatedActions)
     alert(`Action Completed`)
   };
-  const filteredData = userData.filter((user) => {
-    return user.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+ const filteredData = userData.filter((user) => {
+   // Check if the 'name' attribute exists and is a string
+   if (typeof user.name === "string") {
+     return user.name.toLowerCase().includes(searchTerm.toLowerCase());
+   }
+   return false;
+ });
 
   
 
