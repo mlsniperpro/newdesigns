@@ -4,6 +4,7 @@ import ChatBody from "@/components/ChatBody";
 import ChatInput from "@/components/ChatInput";
 import { auth, db } from "../config/firebase";
 import { useMutation } from "react-query";
+import { useAuthState } from "react-firebase-hooks/auth";
 import Link from "next/link";
 import Router from "next/router";
 import React from "react";
@@ -11,6 +12,7 @@ const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 //If API_KEY is none then load the API_KEY from the database
 import HomeIcon from '@mui/icons-material/Home';
 import LanguageIcon from '@mui/icons-material/Language';
+import usePremiumStatus from "@/stripe/usePremiumStatus";
 import {
   collection,
   query,
@@ -21,11 +23,14 @@ import {
   updateDoc,
 } from "firebase/firestore";
 function Tutor() {
+
+  const [user, userLoading] = useAuthState(auth);
   const [loading, setLoading] = useState(true);
   const [subscribed, setSubscribed] = useState(true);
   const [language, setLanguage] = useState("spanish");
   const [chat, setChat] = useState([]);
   const [limit, setLimit] = useState(20000);
+  const userIsPremium = usePremiumStatus(user);
  const retrieveWordLimit = async () => {
    try {
      const limitDoc = await getDocs(collection(db, "wordlimit"));
@@ -43,9 +48,8 @@ function Tutor() {
  }, [loading]);
  useEffect(() => {
    const checkSubscription = async () => {
-     console.log("Now checking subscription");
      try {
-       if (!auth.currentUser) {
+       if (!user && !userLoading) {
          Router.push("/login");
          return;
        }
@@ -75,18 +79,11 @@ function Tutor() {
          auth.currentUser.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
          auth.currentUser.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
        ) {
-         console.log(
-           "The current user Id and the user is subscribed",
-           auth.currentUser.uid,
-           "based on ",
-           currentUserWords.count < limit
-         );
          setSubscribed(true);
-       } else {
-         console.log(
-           "The current user Id is not subscribed",
-           auth.currentUser.uid
-         );
+       } else if(userIsPremium){
+          setSubscribed(true);
+        }
+        else {
          setSubscribed(false);
        }
      } catch (error) {
@@ -97,9 +94,9 @@ function Tutor() {
      }
    };
    checkSubscription();
- }, [limit]);
+ }, [limit, user]);
  useEffect(() => {
-  if(!subscribed && !loading){
+  if(!subscribed && !loading && !userIsPremium && !userLoading && user){
          Router.push("/");
        }
   }, [loading]);
@@ -231,7 +228,8 @@ function Tutor() {
   return (
     <div className="bg-[#1A232E] h-screen py-6 relative sm:px-16 px-12 text-white overflow-hidden flex flex-col justify-between  align-middle w-screen" style={{background: "rgb(40, 48, 129)"}}>
       {/* gradients */}
-      {console.log("The value of subscribed here at the Tutor is " + subscribed)}
+
+      {console.log("Checking whether user premium", userIsPremium)}
       <div className="gradient-01 z-0 absolute"></div>
       <div className="gradient-02 z-0 absolute"></div>
 

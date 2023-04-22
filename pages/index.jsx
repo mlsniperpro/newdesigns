@@ -4,10 +4,13 @@ import Router from "next/router";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import Dashboard from "../components/dashboard";
+import { useAuthState } from "react-firebase-hooks/auth";
 import Loader from "@/components/Loader";
 import PlanSelection from "@/components/PlanSelection";
+import usePremiumStatus from "@/stripe/usePremiumStatus";
 
-function Index() {
+function Index() 
+  const [user, loadingAuth] = useAuthState(auth);
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [limit, setLimit] = useState(20000);
@@ -22,7 +25,7 @@ function Index() {
       console.log("Error retrieving prices: ", error);
     }
   };
-
+  const isUserPremium = usePremiumStatus(user);
   React.useEffect(() => {
     retrieveWordLimit();
   }, []);
@@ -30,7 +33,7 @@ function Index() {
     const checkSubscription = async () => {
       console.log("Now checking subscription")
       try {
-        if (!auth.currentUser) {
+        if (!user && !loadingAuth) {
           Router.push("/login");
           return;
         }
@@ -69,7 +72,10 @@ function Index() {
             currentUserWords.count < limit
           );
           setSubscribed(true);
-        } else {
+        } else if(userIsPremium){
+          setSubscribed(true);
+        }
+        else {
           console.log("The current user Id is not subscribed", auth.currentUser.uid)
           setSubscribed(false);
         }
@@ -80,7 +86,7 @@ function Index() {
       }
     };
     checkSubscription();
-  }, [limit]);
+  }, [limit,user]);
   
   return (
     
