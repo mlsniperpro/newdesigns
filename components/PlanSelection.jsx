@@ -19,9 +19,7 @@ function PlanSelection() {
   const [language, setLanguage] = React.useState("spanish"); //Language can be english or spanish
   const retrievePrices = async () => {
     const pricesDoc = await getDocs(collection(db, "Payment"));
-    console.log("The prices retrieved are: ", pricesDoc);
     pricesDoc.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
         setMonthly(doc.data().monthly);
         setYearly(doc.data().yearly);
     });
@@ -33,7 +31,6 @@ function PlanSelection() {
      const script = document.createElement("script");
      script.innerHTML = `
       rewardful('ready', function() {
-        console.log("I am now checking if the user was referred by a friend");
         if (Rewardful.referral) {
           // The current website visitor is a referral from an affiliate.
           setReferred(true);
@@ -46,13 +43,11 @@ function PlanSelection() {
      };
    }, []);
    const handleMonthlyClick = () => {
-      console.log("I'm running the monthly click")
      if (referred) {
        createCheckoutSession(user.uid, "prod_Njtrgy9W8UwGW7");
      }
    };
    const handleYearlyClick = () => {
-    console.log("I'm running the yearly click")
      if (referred) {
        createCheckoutSession(user.uid, "prod_NjtvxM9XlsH2c6");
      }
@@ -61,12 +56,6 @@ function PlanSelection() {
   return (
     <>
       {/* This is an example component */}
-      {console.log(
-        "The referral status is: ",
-        referred,
-        "and the user is ",
-        user
-      )}
       <div
         className="flex min-h-screen pt-[30px] px-[40px]"
         style={{ background: "white" }}

@@ -34,10 +34,8 @@ function Tutor() {
  const retrieveWordLimit = async () => {
    try {
      const limitDoc = await getDocs(collection(db, "wordlimit"));
-     console.log("The lits are : ", limitDoc);
      const limit = limitDoc.docs[0].data().limit;
      setLimit(limit);
-     console.log("Limit retrived and updated successflly as : ", limit);
    } catch (error) {
      console.log("Error retrieving prices: ", error);
    }
@@ -228,8 +226,6 @@ function Tutor() {
   return (
     <div className="bg-[#1A232E] h-screen py-6 relative sm:px-16 px-12 text-white overflow-hidden flex flex-col justify-between  align-middle w-screen" style={{background: "rgb(40, 48, 129)"}}>
       {/* gradients */}
-
-      {console.log("Checking whether user premium", userIsPremium)}
       <div className="gradient-01 z-0 absolute"></div>
       <div className="gradient-02 z-0 absolute"></div>
 
