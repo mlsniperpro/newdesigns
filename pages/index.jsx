@@ -9,7 +9,7 @@ import Loader from "@/components/Loader";
 import PlanSelection from "@/components/PlanSelection";
 import usePremiumStatus from "@/stripe/usePremiumStatus";
 
-function Index() 
+function Index() {
   const [user, loadingAuth] = useAuthState(auth);
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(true);
