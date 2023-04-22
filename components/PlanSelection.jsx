@@ -15,7 +15,7 @@ function PlanSelection() {
   const [user, userLoading] = useAuthState(auth);
   const [yearly, setYearly] = React.useState(90);
   const [monthly, setMonthly] = React.useState(9);
-  const [referred, setReferred] = React.useState(true); //If the user was referred by a friend
+  const [referred, setReferred] = React.useState(false); //If the user was referred by a friend
   const [language, setLanguage] = React.useState("spanish"); //Language can be english or spanish
   const retrievePrices = async () => {
     const pricesDoc = await getDocs(collection(db, "Payment"));
