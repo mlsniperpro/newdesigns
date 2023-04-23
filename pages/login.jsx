@@ -263,7 +263,7 @@ function Login() {
                 href="/signup"
                 style={{color:'white',fontFamily:'monospace',fontSize:'18px',marginLeft:'10px'}}
               >
-                <span>{language === "sp" ? "Regístrate" : "Register now"}</span>
+                <span>{language === "sp" ? "Regístrate" : "Register now1"}</span>
               </Link>
             </p>
           </div>
