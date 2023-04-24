@@ -60,7 +60,48 @@ function PlanSelection() {
         className="flex min-h-screen pt-[30px] px-[40px]"
         style={{ background: "white" }}
       >
+        
         <div className="min-w-full">
+          <div style={{left:'150px'}}>
+          <button
+                    onClick={() => {
+                      language === "english"
+                        ? setLanguage("spanish")
+                        : setLanguage("english");
+                    }}
+                    className="bg-[white] rounded-[5px] py-[15px] px-[25px] text-[#fff] text-[14px] leading-[17px] font-semibold"
+                    style={{
+                      color: "white",
+                      fontFamily: "Monospace",
+                      fontSize: "18px",
+                      background:"#283081",
+
+                    }}
+                  >
+                    {language === "english"
+                      ? "Switch to Spanish"
+                      : "Cambiar a inglés"}
+                  </button>
+                  <Link href="/login">
+                  <button
+                  
+                    className="bg-[white] rounded-[5px] py-[15px] px-[25px] text-[#fff] text-[14px] leading-[17px] font-semibold"
+                    style={{
+                      color: "white",
+                      fontFamily: "Monospace",
+                      fontSize: "18px",
+                      background:"#283081",
+                      marginLeft:'20px'
+
+                    }}
+                  >
+                    {language === "english"
+                      ? "MEMBERS AREA"
+                      : "AREA de MIEMBROS"}
+                  </button>
+                  </Link>
+          </div>
+          <br></br>
           <p
             className="text-[#00153B] text-[20px] leading-[40px] font-semibold"
             style={{
@@ -249,24 +290,8 @@ function PlanSelection() {
                   </p>
                 </div>
                 <div className="mt-[25px]">
-                  <button
-                    onClick={() => {
-                      language === "english"
-                        ? setLanguage("spanish")
-                        : setLanguage("english");
-                    }}
-                    className="bg-[white] rounded-[5px] py-[15px] px-[25px] text-[#fff] text-[14px] leading-[17px] font-semibold"
-                    style={{
-                      color: "#283081",
-                      fontFamily: "Monospace",
-                      fontSize: "18px",
-                    }}
-                  >
-                    {language === "english"
-                      ? "Switch to Spanish"
-                      : "Cambiar a inglés"}
-                  </button>
-                  <Link href="/login">
+                 
+                  <Link href="/signup">
                   <button
                     
                     className="bg-[white] rounded-[5px] py-[15px] px-[25px] text-[#fff] text-[14px] leading-[17px] font-semibold"
@@ -278,8 +303,8 @@ function PlanSelection() {
                     }}
                   >
                     {language === "english"
-                      ? "Register"
-                      : "registro"}
+                      ? "Get Started - Its Free"
+                      : "Comience ya, es Gratis!"}
                   </button></Link>
                 </div>
               </div>
