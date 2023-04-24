@@ -266,6 +266,21 @@ function PlanSelection() {
                       ? "Switch to Spanish"
                       : "Cambiar a inglés"}
                   </button>
+                  <Link href="/login">
+                  <button
+                    
+                    className="bg-[white] rounded-[5px] py-[15px] px-[25px] text-[#fff] text-[14px] leading-[17px] font-semibold"
+                    style={{
+                      color: "#283081",
+                      fontFamily: "Monospace",
+                      fontSize: "18px",
+                      marginLeft:'10px'
+                    }}
+                  >
+                    {language === "english"
+                      ? "Register"
+                      : "registro"}
+                  </button></Link>
                 </div>
               </div>
             </div>

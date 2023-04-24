@@ -90,11 +90,12 @@ function Index() {
           {loadingAuth ? (
             <Loader />
           ) : subscribed ? (
-            
-            <PlanSelection />
+            <Dashboard />
+           
             
           ) : (
-            <Dashboard />
+            <PlanSelection />
+            
            
           )}
         </main>

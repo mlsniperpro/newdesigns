@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 import { useEffect, useState } from "react";
+import PlanSelection from "@/components/PlanSelection";
 import {
   collection,
   addDoc,
@@ -142,6 +143,22 @@ function Login() {
 
   return (
     <div className="antialiased ">
+       <Link href={''}>
+                  <button
+                    
+                    className="bg-[white] rounded-[5px] py-[15px] px-[25px] text-[#fff] text-[14px] leading-[17px] font-semibold "
+                    style={{
+                      color: "white",
+                      fontFamily: "Monospace",
+                      fontSize: "20px",
+                      background:"#283081",
+                      margin:'10px'
+                    }}
+                  >
+                    {language === "english"
+                      ? "Subscription"
+                      : "Subscription"}
+                  </button></Link>
       <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300"  style={{background:'rgb(40,48,129)',color:'white'}}>
         <h1 className="text-4xl font-medium" style={{textAlign:'center',fontFamily:'monospace',fontSize:'40px'}}>
           {language === "sp" ? "Iniciar sesión" : "Login"}
