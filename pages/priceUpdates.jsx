@@ -5,10 +5,30 @@ import Router from "next/router";
 import Link from "next/link";
 import { collection, getDocs, updateDoc, setDoc, doc } from "firebase/firestore";
 import { db, auth } from "../config/firebase";
+import axios from "axios";
 
 function Priceupdates() {
 const [price, setPrice] = useState(10.0);
 const [plan, setPlan] = useState("monthly");
+
+
+const createPrice = async (productId, currency, unitAmount) => {
+  try {
+    const response = await axios.post(
+      "https://us-central1-vioniko-82fcb.cloudfunctions.net/api/create-price",
+      {
+        product_id: productId,
+        currency: currency,
+        unit_amount: unitAmount,
+      }
+    );
+
+    return response.data.price;
+  } catch (error) {
+    console.error("Error creating price:", error);
+    throw error;
+  }
+};
 
 const handlePlanChange = (event) => {
 setPlan(event.target.value);
@@ -35,6 +55,21 @@ const priceUpdater = async () => {
       await updateDoc(paymentDocRef, {
         [plan]: price, // update the "plan" field with the new price
       });
+      if (plan === "monthly") {
+        const monthlyPrice = await createPrice(
+          "prod_Njtrgy9W8UwGW7",
+          "usd",
+          price*100
+        );
+        console.log(monthlyPrice);
+      } else if (plan === "yearly") {
+        const yearlyPrice = await createPrice(
+          "prod_NjtvxM9XlsH2c6",
+          "usd",
+          price*100
+        );
+        console.log(yearlyPrice);
+      }
     } else {
       console.log("Empty", paymentDocs)
       await setDoc(doc(db, "Payment", "payment"),{

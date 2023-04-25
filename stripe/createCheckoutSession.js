@@ -1,20 +1,8 @@
 import { addDoc, collection, onSnapshot } from "firebase/firestore";
-import { auth, db } from "../config/firebase";
-import getStripe from "./initializeStripe";
+import {db } from "../config/firebase";
 
-const productPriceMapping = {
-  prod_Njtrgy9W8UwGW7: "price_1MyQ3IIYCytGzqWh2pWK4Rrc",
-
-  prod_NjtvxM9XlsH2c6: "price_1MyQ7GIYCytGzqWhZOdLOpgs",
-};
-
-function getPriceId(productId) {
-  return productPriceMapping[productId];
-}
-
-export async function createCheckoutSession(uid, productId) {
+export async function createCheckoutSession(uid, priceId) {
   console.log("The uid is: " + uid);
-  const priceId = getPriceId(productId);
 
   const docRef = await addDoc(
     collection(db, "users", uid, "checkout_sessions"),

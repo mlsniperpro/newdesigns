@@ -13,10 +13,25 @@ import UpgradeIcon from '@mui/icons-material/Upgrade';
 
 function PlanSelection() {
   const [user, userLoading] = useAuthState(auth);
+  const [stripePrices, setStripePrices] = React.useState({}); //Dictionary of prices from stripe
   const [yearly, setYearly] = React.useState(90);
   const [monthly, setMonthly] = React.useState(9);
-  const [referred, setReferred] = React.useState(false); //If the user was referred by a friend
+  const [referred, setReferred] = React.useState(true); //If the user was referred by a friend
   const [language, setLanguage] = React.useState("spanish"); //Language can be english or spanish
+
+ const fetchPrices = async () => {
+   const pricesDict = {};
+   const stripePricesCollection = collection(db, "stripePrices");
+   const snapshot = await getDocs(stripePricesCollection);
+
+   snapshot.forEach((doc) => {
+     const productId = doc.id;
+     const priceId = doc.data().price_id;
+     pricesDict[productId] = priceId;
+   });
+
+   return pricesDict;
+ };
   const retrievePrices = async () => {
     const pricesDoc = await getDocs(collection(db, "Payment"));
     pricesDoc.forEach((doc) => {
@@ -25,6 +40,10 @@ function PlanSelection() {
     });
   };
   React.useEffect(() => {
+     fetchPrices().then((pricesDict) => {
+  setStripePrices(pricesDict);
+});
+  
     retrievePrices();
   }, []);
    useEffect(() => {
@@ -44,12 +63,14 @@ function PlanSelection() {
    }, []);
    const handleMonthlyClick = () => {
      if (referred) {
-       createCheckoutSession(user.uid, "prod_Njtrgy9W8UwGW7");
+      console.log("Here is the monthly price going to strpe ", stripePrices["prod_Njtrgy9W8UwGW7"])
+       createCheckoutSession(user.uid, stripePrices["prod_Njtrgy9W8UwGW7"]);
      }
    };
    const handleYearlyClick = () => {
      if (referred) {
-       createCheckoutSession(user.uid, "prod_NjtvxM9XlsH2c6");
+      console.log("Here is the yearly price going to strpe ", stripePrices["prod_NjtvxM9XlsH2c6"])
+       createCheckoutSession(user.uid, stripePrices["prod_NjtvxM9XlsH2c6"]);
      }
    };
 
