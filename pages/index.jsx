@@ -8,8 +8,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import Loader from "@/components/Loader";
 import PlanSelection from "@/components/PlanSelection";
 import usePremiumStatus from "@/stripe/usePremiumStatus";
-
 function Index() {
+ 
   const [user, loadingAuth] = useAuthState(auth);
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -24,62 +24,72 @@ function Index() {
       console.log("Error retrieving prices: ", error);
     }
   };
-
-  const userIsPremium = usePremiumStatus(user);
-
+   const userIsPremium = usePremiumStatus(user);
   useEffect(() => {
+    /*
+    if (!user && !loading) {
+      Router.push("/login");
+      return;
+    }
+    */
+   if(!auth?.currentUser?.uid){
+      Router.push("/login");
+      return;
+   }
     retrieveWordLimit();
-  }, []);
+  }, [user, loading, loadingAuth]);
+
+  const checkSubscription = async () => {
+    try {
+      // Check if the user is authenticated
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      const subscribersSnapshot = await getDocs(collection(db, "subscribers"));
+      const subscribers = subscribersSnapshot.docs.map((doc) => doc.data());
+      const userSubscriptions = subscribers.filter(
+        (subscriber) => subscriber.userId === auth.currentUser.uid
+      );
+      const latestSubscription = userSubscriptions.reduce(
+        (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
+        {}
+      );
+
+      const wordsSnapshot = await getDocs(
+        query(
+          collection(db, "wordsgenerated"),
+          where("userId", "==", auth.currentUser.uid)
+        )
+      );
+      const wordsGenerated = wordsSnapshot.docs.map((doc) => doc.data());
+      const currentUserWords = wordsGenerated[0] || { count: 0 };
+
+      
+
+      if (
+        Date.now() < latestSubscription.subscriptionEndDate ||
+        currentUserWords.count < limit ||
+        auth.currentUser.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
+        auth.currentUser.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3" ||
+        userIsPremium
+      ) {
+        setSubscribed(true);
+      } else {
+        setSubscribed(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    console.log("The user is: ", user)
-    const checkSubscription = async () => {
-      try {
-        if (!user?.uid && !loading) {
-          Router.push("/login");
-          return;
-        }
-
-        const subscribersSnapshot = await getDocs(
-          collection(db, "subscribers")
-        );
-        const subscribers = subscribersSnapshot.docs.map((doc) => doc.data());
-        const userSubscriptions = subscribers.filter(
-          (subscriber) => subscriber.userId === auth.currentUser.uid
-        );
-        const latestSubscription = userSubscriptions.reduce(
-          (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
-          {}
-        );
-
-        const wordsSnapshot = await getDocs(
-          query(
-            collection(db, "wordsgenerated"),
-            where("userId", "==", auth.currentUser.uid)
-          )
-        );
-        const wordsGenerated = wordsSnapshot.docs.map((doc) => doc.data());
-        const currentUserWords = wordsGenerated[0] || { count: 0 };
-
-        if (
-          Date.now() < latestSubscription.subscriptionEndDate ||
-          currentUserWords.count < limit ||
-          auth.currentUser.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-          auth.currentUser.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3" ||
-          userIsPremium
-        ) {
-          setSubscribed(true);
-        } else {
-          setSubscribed(false);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
     checkSubscription();
-  }, [limit, user]);
+  }, [limit, user, loadingAuth]);
 
   return (
     <div>
@@ -94,7 +104,8 @@ function Index() {
             <Dashboard />
           ) : (
             <PlanSelection />
-          )}
+          ) 
+          }
         </main>
       </div>
     </div>
@@ -102,3 +113,4 @@ function Index() {
 }
 
 export default Index;
+
