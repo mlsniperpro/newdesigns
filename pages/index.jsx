@@ -14,6 +14,7 @@ function Index() {
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [limit, setLimit] = useState(20000);
+
   const retrieveWordLimit = async () => {
     try {
       const limitDoc = await getDocs(collection(db, "wordlimit"));
@@ -23,14 +24,18 @@ function Index() {
       console.log("Error retrieving prices: ", error);
     }
   };
-  const isUserPremium = usePremiumStatus(user);
-  React.useEffect(() => {
+
+  const userIsPremium = usePremiumStatus(user);
+
+  useEffect(() => {
     retrieveWordLimit();
   }, []);
+
   useEffect(() => {
+    console.log("The user is: ", user)
     const checkSubscription = async () => {
       try {
-        if (!user && !loadingAuth) {
+        if (!user?.uid && !loading) {
           Router.push("/login");
           return;
         }
@@ -60,14 +65,11 @@ function Index() {
           Date.now() < latestSubscription.subscriptionEndDate ||
           currentUserWords.count < limit ||
           auth.currentUser.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-          auth.currentUser.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
+          auth.currentUser.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3" ||
+          userIsPremium
         ) {
-
           setSubscribed(true);
-        } else if(userIsPremium){
-          setSubscribed(true);
-        }
-        else {
+        } else {
           setSubscribed(false);
         }
       } catch (error) {
@@ -77,26 +79,21 @@ function Index() {
       }
     };
     checkSubscription();
-  }, [limit,user]);
-  
+  }, [limit, user]);
+
   return (
-    
     <div>
       <Head>
         <title>Vionko Marketing AI</title>
       </Head>
       <div className="bg-[#1A232E] flex flex-col items-center justify-center min-h-screen py-2">
         <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-          {loadingAuth ? (
+          {loading ? (
             <Loader />
           ) : subscribed ? (
-            
-            
             <Dashboard />
           ) : (
             <PlanSelection />
-            
-           
           )}
         </main>
       </div>
