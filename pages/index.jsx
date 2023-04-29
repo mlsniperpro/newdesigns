@@ -33,7 +33,7 @@ function Index() {
     }
     */
    if(!auth?.currentUser?.uid){
-      Router.push("/login");
+      Router.push("/home");
       return;
    }
     retrieveWordLimit();
@@ -102,10 +102,9 @@ function Index() {
             <Loader />
           ) : subscribed ? (
             <Dashboard />
-          ) : (
+          ) :(
             <PlanSelection />
-          ) 
-          }
+          ) }
         </main>
       </div>
     </div>
