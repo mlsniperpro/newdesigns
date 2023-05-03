@@ -1,6 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
+
 const LandingPage = () => {
+  const [submitted, setSubmitted] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (e) => {
+    console.log("I am submitting");
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = {
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+    };
+
+    try {
+      // Replace this URL with the endpoint for your server-side function or API
+      const response = await axios.post("/api/send-email", data);
+
+      if (response.status === 200) {
+        setSuccess(true);
+        setSubmitted(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (submitted) {
+      const timer = setTimeout(() => {
+        setSubmitted(false);
+        setSuccess(false);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [submitted]);
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 flex flex-col">
       <nav className="w-full px-4 py-4">
@@ -43,12 +84,13 @@ const LandingPage = () => {
             website link.
           </p>
           <div className="w-full md:w-1/2 mx-auto">
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="flex flex-col md:flex-row md:space-x-6">
                 <input
                   type="text"
                   name="firstName"
-                  placeholder="First Name"
+                  placeholder="
+                  First Name"
                   className="flex-1 px-4 py-2 border border-purple-600 rounded"
                 />
                 <input
@@ -77,6 +119,17 @@ const LandingPage = () => {
                 Submit
               </button>
             </form>
+            {submitted && (
+              <div
+                className={`mt-4 px-4 py-2 rounded ${
+                  success ? "bg-green-500" : "bg-red-500"
+                }`}
+              >
+                {success
+                  ? "You will receive an email with your personal affiliate link shortly."
+                  : "Something went wrong. Please try again."}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -104,4 +157,3 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
-

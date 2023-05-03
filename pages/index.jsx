@@ -14,6 +14,10 @@ function Index() {
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [limit, setLimit] = useState(20000);
+ const [upgrade, setUpgrade] = useState(false);
+  const handleValueChange = (newValue) => {
+    setUpgrade(newValue);
+  };
 
   const retrieveWordLimit = async () => {
     try {
@@ -100,8 +104,8 @@ function Index() {
         <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
           {loading ? (
             <Loader />
-          ) : subscribed ? (
-            <Dashboard />
+          ) : (subscribed && !upgrade)? (
+            <Dashboard onValueChange = {handleValueChange} />
           ) :(
             <PlanSelection />
           ) }

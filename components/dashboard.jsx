@@ -14,12 +14,15 @@ import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 
-function Dashboard() {
+function Dashboard(props) {
+  const {onValueChange} = props;
   const [admin, setAdmin] = React.useState(false);
   const router = useRouter();
   const [language, setLanguage] = React.useState("spanish");
   const [mode, setMode] = React.useState("guided");
-
+  const handleUpgrade = () => {
+    onValueChange(true);
+  };
   function checkIfAdmin(){
     if (
     auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
@@ -59,10 +62,17 @@ function onlyAdmins() {
 
   return (
     <div className="w-full bg-white shadow-xl rounded-lg flex overflow-x-auto custom-scrollbar">
-      <div className="w-64 px-4" style={{background: "rgb(40, 48, 129)"}}>
-        <div className="px-2 pt-4 pb-8 " >
+      <div className="w-64 px-4" style={{ background: "rgb(40, 48, 129)" }}>
+        <div className="px-2 pt-4 pb-8 ">
           <ul className="space-y-0">
-            <li style={{color:'white',fontWeight:'bold',fontFamily:"Circular std bold,sans-serif",fontSize:'13px'}}>
+            <li
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                fontFamily: "Circular std bold,sans-serif",
+                fontSize: "13px",
+              }}
+            >
               <a
                 onClick={() => {
                   language === "english"
@@ -71,13 +81,49 @@ function onlyAdmins() {
                 }}
                 className="hover:bg-gray-500 hover:bg-opacity-30 hover:text-white-600 flex items-center justify-between py-1.5 px-4 rounded cursor-pointer"
               >
-                <span className="flex items-center space-x-2" >
-                  <LanguageIcon /><span>{language === "english" ? "Español" : "English"}</span>
+                <span className="flex items-center space-x-2">
+                  <LanguageIcon />
+                  <span>{language === "english" ? "Español" : "English"}</span>
                 </span>
               </a>
             </li>
-            <li></li>
-            <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}} >
+            <li
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                fontFamily: "Monospace",
+                fontSize: "13px",
+              }}
+            >
+              <a
+                onClick={() => {
+                  handleUpgrade();
+                }}
+                className="hover:bg-gray-500 hover:bg-opacity-30 hover:text-white-600 flex items-center justify-between py-1.5 px-4 rounded cursor-pointer"
+              >
+                <span className="flex items-center space-x-2">
+                  <MenuBookIcon />
+                  <span
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      fontFamily: "Monospace",
+                      fontSize: "13px",
+                    }}
+                  >
+                    {language === "english" ? "Upgrade" : "Mejora"}
+                  </span>
+                </span>
+              </a>
+            </li>
+            <li
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                fontFamily: "Monospace",
+                fontSize: "13px",
+              }}
+            >
               <a
                 onClick={() => {
                   setMode("guided");
@@ -85,99 +131,220 @@ function onlyAdmins() {
                 className="hover:bg-gray-500 hover:bg-opacity-30 hover:text-white-600 flex items-center justify-between py-1.5 px-4 rounded cursor-pointer"
               >
                 <span className="flex items-center space-x-2">
-                  <MenuBookIcon /><span style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}>{language === "english" ? "Guided" : "Guiado"}</span>
+                  <MenuBookIcon />
+                  <span
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      fontFamily: "Monospace",
+                      fontSize: "13px",
+                    }}
+                  >
+                    {language === "english" ? "Guided" : "Guiado"}
+                  </span>
                 </span>
               </a>
             </li>
+
             <li>
               <a
                 onClick={() => {
                   setMode("freestyle");
                 }}
-                style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontFamily: "Monospace",
+                  fontSize: "13px",
+                }}
                 className="hover:bg-gray-500  hover:bg-opacity-30 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
-               <LineStyleIcon /> <span  style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}>{language === "english" ? "Freestyle" : "Libre"}</span>
+                <LineStyleIcon />{" "}
+                <span
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    fontFamily: "Monospace",
+                    fontSize: "13px",
+                  }}
+                >
+                  {language === "english" ? "Freestyle" : "Libre"}
+                </span>
               </a>
             </li>
             <li>
               <a
-              style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontFamily: "Monospace",
+                  fontSize: "13px",
+                }}
                 onClick={() => {
                   setMode("keyword");
                 }}
                 className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
-                <span style={{fontFamily:'Monospace',fontSize:'13px'}}>
-                 <BatchPredictionIcon /> {language === "english" ? "Keyword" : "Palabra clave"}
+                <span style={{ fontFamily: "Monospace", fontSize: "13px" }}>
+                  <BatchPredictionIcon />{" "}
+                  {language === "english" ? "Keyword" : "Palabra clave"}
                 </span>
               </a>
             </li>
-            <li >
+            <li>
               <Link
                 href="/tutor"
-                style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontFamily: "Monospace",
+                  fontSize: "13px",
+                }}
                 className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
-              <AccessibilityNewIcon />  <span style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}>{language === "english" ? "Tutor" : "Tutor"}</span>
+                <AccessibilityNewIcon />{" "}
+                <span
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    fontFamily: "Monospace",
+                    fontSize: "13px",
+                  }}
+                >
+                  {language === "english" ? "Tutor" : "Tutor"}
+                </span>
               </Link>
             </li>
             {admin ? (
-              <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}>
+              <li
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontFamily: "Monospace",
+                  fontSize: "13px",
+                }}
+              >
                 <Link
                   href="/awardSubscriptions"
-                  
                   onClick={onlyAdmins}
                   className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
                 >
-                  <span style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}>Award Subscriptions</span>
+                  <span
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      fontFamily: "Monospace",
+                      fontSize: "13px",
+                    }}
+                  >
+                    Award Subscriptions
+                  </span>
                 </Link>
               </li>
             ) : null}
             {admin ? (
-              <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}>
+              <li
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontFamily: "Monospace",
+                  fontSize: "13px",
+                }}
+              >
                 <Link
-                 
                   href="/users"
                   onClick={onlyAdmins}
                   className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
                 >
-                  <span style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}>Manage Users</span>
+                  <span
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      fontFamily: "Monospace",
+                      fontSize: "13px",
+                    }}
+                  >
+                    Manage Users
+                  </span>
                 </Link>
               </li>
             ) : null}
             {admin ? (
-              <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}} >
+              <li
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontFamily: "Monospace",
+                  fontSize: "13px",
+                }}
+              >
                 <Link
                   href="/priceUpdates"
                   onClick={onlyAdmins}
                   className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
                 >
-                  <span style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}>Price Updates</span>
+                  <span
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      fontFamily: "Monospace",
+                      fontSize: "13px",
+                    }}
+                  >
+                    Price Updates
+                  </span>
                 </Link>
               </li>
             ) : null}
             {admin ? (
-              <li style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}>
+              <li
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontFamily: "Monospace",
+                  fontSize: "13px",
+                }}
+              >
                 <Link
                   href="/wordlimit"
                   onClick={onlyAdmins}
                   className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
                 >
-                  <span style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}>Word Limit</span>
+                  <span
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      fontFamily: "Monospace",
+                      fontSize: "13px",
+                    }}
+                  >
+                    Word Limit
+                  </span>
                 </Link>
               </li>
             ) : null}
 
             <li>
               <a
-              style={{color:'white',fontWeight:'bold',fontFamily:"Circular std bold,sans-serif",fontSize:'13px'}}
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontFamily: "Circular std bold,sans-serif",
+                  fontSize: "13px",
+                }}
                 onClick={signout}
                 className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
-                <span style={{color:'white',fontWeight:'bold',fontFamily:"Monospace",fontSize:'13px'}}>
-                 <LogoutIcon /> {language === "english" ? "Log Out" : "Cerrar sesión"}
-                 
+                <span
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    fontFamily: "Monospace",
+                    fontSize: "13px",
+                  }}
+                >
+                  <LogoutIcon />{" "}
+                  {language === "english" ? "Log Out" : "Cerrar sesión"}
                 </span>
               </a>
             </li>
