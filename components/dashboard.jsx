@@ -111,7 +111,7 @@ function onlyAdmins() {
                       fontSize: "13px",
                     }}
                   >
-                    {language === "english" ? "Upgrade" : "Mejora"}
+                    {language === "english" ? "Upgrade" : "Actualizar"}
                   </span>
                 </span>
               </a>
