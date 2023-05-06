@@ -239,12 +239,12 @@ function Guided({language}) {
             className="bg-white rounded-md shadow-2xl p-5"
             style={{background: "rgb(40, 48, 129)"}}
           >
-            <h1 className="text-gray-800 font-bold text-2xl mb-1" style={{color:'white',fontFamily:"Monospace",fontSize:'18px'}}>
+            <h1 className="text-gray-800 font-bold text-2xl mb-1" style={{color:'white',fontFamily:"Monospace",fontSize:'18px',width:'350px'}}>
               {/*Use appropriate wording based on whether language is english or spanish*/}
              <MenuBookIcon style={{marginRight:'10px'}}/>
               {language === "english"
                 ? "AI Content Generator: More Accurate and Efficient than ChatGPT"
-                : "Generador de contenido AI: Más preciso y eficiente que ChatGPT"}
+                : "Crea Marketing Persuasivo en un Instant"}
             </h1>
             <br></br>
             <label htmlFor="product_title" style={{color:'white',fontSize:'18px',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}}>

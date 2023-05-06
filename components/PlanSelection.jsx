@@ -312,7 +312,7 @@ function PlanSelection() {
                 </div>
                 <div className="mt-[25px]">
                  
-                  <Link href="/signup">
+                  <Link href="/">
                   <button
                     
                     className="bg-[white] rounded-[5px] py-[15px] px-[25px] text-[#fff] text-[14px] leading-[17px] font-semibold"

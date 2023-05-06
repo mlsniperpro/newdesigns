@@ -19,11 +19,15 @@ import {
 } from "firebase/auth";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
+import LanguageIcon from '@mui/icons-material/Language';
+
+
 
 function Signup() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [language, setLanguage] = useState("sp");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -78,18 +82,29 @@ function Signup() {
         <div className="flex items-center w-full max-w-3xl p-8 mx-auto lg:px-12 lg:w-3/5"style={{border:'1px solid white',background:'rgb(40,48,129',borderRadius:'15px'}}>
           <div className="w-full">
             <h1 className="text-2xl font-semibold tracking-wider text-gray-800 capitalize " style={{fontSize:'30px',fontFamily:'Monospace',color:'white'}}>
-            → Get your free account now.
+            {language === "sp" ? "→ Obtén tu cuenta gratis ahora." : " Get your free account now."}
+           
             </h1>
 
             <p className="mt-4" style={{color:'white',fontFamily:"Monospace",fontSize:'20px'}}>
-              Let’s get you all set up so you can verify your personal account
-              and begin setting up your profile.
+            {language === "sp" ? " Vamos a prepararlo todo para que pueda verificar su cuenta personal y comenzar a configurar su perfil." : " Let’s get you all set up so you can verify your personal account and begin setting up your profile."}
+              
             </p>
+            <br></br>
+            <button
+          onClick={() =>
+            language === "sp" ? setLanguage("en") : setLanguage("sp")
+          }
+          style={{background:'white',color:'rgb(40,48,129)',height:'35px',width:"200px",borderRadius:'5px',fontFamily:'monospace',fontSize:'20px'}}
+        >
+         <LanguageIcon /> {language === "sp" ? "English" : "Spanish"}
+        </button>
 
             <div className="mt-6" >
               <h1 style={{color:'white',fontFamily:"Monospace",fontSize:'20px'}}>
                 <AccountCircleIcon style={{marginRight:"10px"}}/>
-                Already have an account
+                {language === "sp" ? " Ya tienes una cuentas" : " Already have an account"}
+                
               </h1>
 
               <div className="mt-3 md:flex md:items-center md:-mx-2">
@@ -109,7 +124,10 @@ function Signup() {
                     />
                   </svg>
                   <Link href="/login" style={{fontFamily:"Monospace",fontSize:'20px'}}>
-                    <span className="mx-2" style={{fontFamily:'Monospace'}}>Login</span>
+                    <span className="mx-2" style={{fontFamily:'Monospace'}}>
+                    {language === "sp" ? " Acceso" : " Login"}
+                      
+                      </span>
                   </Link>
                 </button>
               </div>
@@ -125,7 +143,8 @@ function Signup() {
                   className="block mb-2 "
                   style={{color:'white',fontFamily:"Monospace",fontSize:'20px'}}
                 >
-                  → First Name
+                  {language === "sp" ? " → Nombre de pila" : " → First Name"}
+                 
                 </label>
                 <input
                   type="text"
@@ -143,7 +162,8 @@ function Signup() {
                   className="block mb-2 "
                   style={{color:'white',fontFamily:"Monospace",fontSize:'20px'}}
                 >
-                   → Last name
+                  {language === "sp" ? " → Apellido" : " → Last name"}
+                
                 </label>
                 <input
                   type="text"
@@ -157,7 +177,8 @@ function Signup() {
 
               <div>
                 <label className="block mb-2 " style={{color:'white',fontFamily:"Monospace",fontSize:'20px'}}>
-                → Phone number
+                {language === "sp" ? " → Número de teléfono" : "  → Phone number"}
+               
                 </label>
                 <input
                   type="text"
@@ -171,7 +192,8 @@ function Signup() {
 
               <div>
                 <label className="block mb-2 " style={{color:'white',fontFamily:"Monospace",fontSize:'20px'}}>
-                → Email address
+                {language === "sp" ? " → dirección de correo electrónico" : "  → Email address"}
+            
                 </label>
                 <input
                   type="email"
@@ -185,7 +207,8 @@ function Signup() {
 
               <div>
                 <label className="block mb-2 " style={{color:'white',fontFamily:"Monospace",fontSize:'20px'}}>
-                → Password
+                {language === "sp" ? " → contraseña" : "   → Password"}
+               
                 </label>
                 <input
                   type="password"
@@ -199,7 +222,8 @@ function Signup() {
 
               <div>
                 <label className="block mb-2 " style={{color:'white',fontFamily:"Monospace",fontSize:'20px'}}>
-                → Confirm password
+                {language === "sp" ? " → confirmar Contraseña" : "   → Confirm Password"}
+             
                 </label>
                 <input
                   type="password"
@@ -216,7 +240,10 @@ function Signup() {
                 className="flex items-center justify-center  text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
               style={{color:'rgb(40, 48, 129)',background:'white',border:'none',width:'150px',height:'50px',textAlign:'center',fontFamily:"Monospace",fontSize:'20px'}}
               >
-                <span style={{fontFamily:"Monospace"}}><HowToRegIcon style={{marginRight:'10px'}} />Sign Up </span>
+                <span style={{fontFamily:"Monospace"}}><HowToRegIcon style={{marginRight:'10px'}} />
+                {language === "sp" ? "  Inscribirse" : "   Sign Up "}
+               
+                </span>
               </button>
             </form>
           </div>

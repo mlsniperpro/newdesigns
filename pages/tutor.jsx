@@ -258,7 +258,7 @@ function Tutor() {
         className="h-[90%] overflow-auto w-full max-w-4xl min-w-[20rem] py-8 px-4 self-center
       scrollbar-thumb-slate-400 scrollbar-thin scrollbar-track-gray-tranparent scrollbar-thumb-rounded-md
       "
-      >
+      >1
         <ChatBody chat={chat.slice(1)} />
       </div>
 

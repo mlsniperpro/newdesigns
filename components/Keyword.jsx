@@ -140,17 +140,22 @@ function Keyword({ language}) {
         href="https://cdn.tailgrids.com/tailgrids-fallback.css"
       />
       <section className="bg-white py-20 lg:py-[120px]  relative z-10">
-      <Link href="/tutor"> <button   style={{background:'#283081',fontFamily:"Monospace",fontSize:'18px',color:'white',padding:'5px',borderRadius:'1px solid #283081', borderRadius:'5px'}}> Main Menu</button></Link> 
-        <div className="container">
+      <Link href="/tutor"> <button   style={{background:'#283081',fontFamily:"Monospace",fontSize:'18px',color:'white',padding:'5px',borderRadius:'1px solid #283081', borderRadius:'5px',marginLeft:'-80px'}}> Main Menu</button></Link> 
+        <div className="container"><br></br>
           <div className="flex  lg:justify-between -mx-4" style={{display:'flex',flexDirection:'column'}}>
             <div >
               <div className="mb-10 lg:mb-0">
-                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'27px',width:'60%',marginLeft:'40%'}}>
-                  {/*Use appropriate heading based on whether langaue is english or spanish*/}
+                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'18px',width:'38%',marginLeft:'30%'}}>
               <BatchPredictionIcon />    {language === "en"
                     ? "Keyword-based Content Generation"
-                    : "Generación de contenido basado en palabras clave"}
+                    : "Optimiza tu contenido fácilmente con nuestra herramienta de generación de contenido basado en palabras clave"}
                 </span>
+                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'14px',width:'38%',marginLeft:'30%'}}>
+
+                Ingresa tu palabra clave y obtén una tabla con toda la información
+importante que necesitas para crear contenido efectivo.
+Use this image with nice lay out around it
+</span>
                 {data && (
                   <div className="flex flex-col w-200 h-400">
                     <div className="overflow-x-auto sm:mx-0.5 lg:mx-0.5">
@@ -202,7 +207,7 @@ function Keyword({ language}) {
                 <p className="text-base text-body-color leading-relaxed mb-9"></p>
               </div>
             </div>
-            <div style={{margin:'auto',height:'600px',width:'420px',marginLeft:'40%'}}>
+            <div style={{margin:'auto',height:'600px',width:'480px',marginLeft:'30%'}}>
               <div className="bg-white relative rounded-lg p-8 sm:p-12 shadow-lg" >
                 <form noValidate onSubmit={handleSubmit}>
                   <div className="mb-6">

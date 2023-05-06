@@ -143,7 +143,7 @@ function Login() {
 
   return (
     <div className="antialiased ">
-       <Link href={''}>
+       <Link href={'/'}>
                   <button
                     
                     className="bg-[white] rounded-[5px] py-[15px] px-[25px] text-[#fff] text-[14px] leading-[17px] font-semibold "
@@ -156,8 +156,9 @@ function Login() {
                     }}
                   >
                     {language === "english"
-                      ? "Subscription"
-                      : "Subscription"}
+                      ?"Subscription" :
+                      " Sitio Principal "
+                       }
                   </button></Link>
       <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300"  style={{background:'rgb(40,48,129)',color:'white'}}>
         <h1 className="text-4xl font-medium" style={{textAlign:'center',fontFamily:'monospace',fontSize:'40px'}}>
