@@ -24,7 +24,10 @@ const LandingPage = () => {
 
     try {
       // Replace this URL with the endpoint for your server-side function or API
-      const response = await axios.post("/api/send-email", data);
+      const response = await axios.post(
+        " https://us-central1-vioniko-82fcb.cloudfunctions.net/sendEmail",
+        data
+      );
 
       if (response.status === 200) {
         setSuccess(true);
