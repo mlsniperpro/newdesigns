@@ -294,7 +294,7 @@ const LandingPage = () => {
             Affiliates
           </a>
           <a
-            href="/privacy"
+            href="https://docs.google.com/document/d/1T1yIQBCKnGXUV6coRXrykN3ORRw3cGJ7/edit?usp=sharing&ouid=107890740335896726806&rtpof=true&sd=true"
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-purple-300 transition-colors duration-300"
@@ -302,7 +302,7 @@ const LandingPage = () => {
           >
             Privacy Notice
           </a>  <a
-            href="/terms"
+            href="https://docs.google.com/document/d/1kwXZSny8l1HRAscrdh0lTBxSXu6gZv7T/edit?usp=sharing&ouid=107890740335896726806&rtpof=true&sd=true"
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-purple-300 transition-colors duration-300"
