@@ -56,7 +56,7 @@ const LandingPage = () => {
 
             <button className="bg-transparent border border-white text-white font-semibold px-6 py-2 rounded hover:bg-white hover:text-purple-600 transition-colors duration-300">
             {language === "en"
-                      ?"Login1" :
+                      ?"Login" :
                       "Iniciar sesión"
                        }
              
