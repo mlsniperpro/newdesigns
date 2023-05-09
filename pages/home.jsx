@@ -120,7 +120,20 @@ const LandingPage = () => {
      
       <div className="bg-white py-8">
       <div className="max-w-7xl mx-auto text-center">
-        <h1 style={{fontFamily:'Monospace',color:'black',fontSize:'18px'}}>Get your <span style={{color:'#160647',fontWeight:'bolder'}}> free account today</span></h1>
+        <h1 style={{fontFamily:'Monospace',color:'black',fontSize:'18px'}}>
+        {language === "en"
+                      ?"Get your " :
+                      "conseguir su"
+                       }
+          
+          <span style={{color:'#160647',fontWeight:'bolder'}}> 
+          {language === "en"
+                      ?" free account today" :
+                      "cuenta gratis hoy"
+                       }
+             
+          </span>
+          </h1>
         <br></br>
       <div style={{display:'flex',justifyContent:'center'}}>
       <Link href="/login">
@@ -128,7 +141,7 @@ const LandingPage = () => {
            <GoogleIcon />
             {language === "en"
                       ?"Sign Up with Google" :
-                      "Sign Up with Google"
+                      "registrarse con google"
                        }
              
             </button></Link>
@@ -137,15 +150,22 @@ const LandingPage = () => {
             <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(40, 48, 129)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginLeft:'30px'}}>
             {language === "en"
                       ?"Sign Up with Email →" :
-                      "Sign Up with Email → "
+                      "Ingresa con e-mail → "
                        }
              
             </button>   </Link>     </div>     <br></br>
-            <p>No Credit Card Required</p>  <br></br>
+            <p>
+            {language === "en"
+                      ?"No Credit Card Required" :
+                      "No se requiere tarjeta de crédito"
+                       }
+              
+              </p>  <br></br>
       </div>
       <div class="container" style={{margin:'auto'}}>
       <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe>
+        {/* <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe> */}
+        <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen  style={{width:'100%'}}></iframe>
       </div>
     </div><br></br><br></br>
       <div className="max-w-7xl mx-auto text-center">
@@ -168,7 +188,7 @@ const LandingPage = () => {
             <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(40, 48, 129)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginLeft:'30px'}}>
             {language === "en"
                       ?"Get Started For Free" :
-                      "Get Started For Free "
+                      "empezar gratis"
                        }
              
             </button>    </Link>  
@@ -178,7 +198,7 @@ const LandingPage = () => {
              <br></br>   
              <div style={{display:'flex',justifyContent:'center'}}>
                        <div style={{marginRight:'50px',color:'rgb(40, 48, 129)'}}>
-                        <DoneIcon style={{marginRight:'10px'}}/>
+                        <DoneIcon style={{marginRight:'10px' ,background:'lightgrey',borderRadius:'100%',height:"30px",width:'30px'}} />
                        {language === "en"
                       ?"No credit card required" :
                       "No se ocupa tarjeta de crédito "
@@ -186,7 +206,7 @@ const LandingPage = () => {
 
                        </div>
                        <div style={{marginRight:'50px',color:'rgb(40, 48, 129)'}}>
-                       <DoneIcon style={{marginRight:'10px'}}/>
+                       <DoneIcon style={{marginRight:'10px' ,background:'lightgrey',borderRadius:'100%',height:"30px",width:'30px'}}/>
                        {language === "en"
                       ?"2000 Free Word Per Month" :
                       "2,000 palabras gratis por mes "
@@ -194,7 +214,7 @@ const LandingPage = () => {
 
                        </div>
                        <div style={{color:'rgb(40, 48, 129)'}} >
-                       <DoneIcon style={{marginRight:'10px'}}/>
+                       <DoneIcon style={{marginRight:'10px' ,background:'lightgrey',borderRadius:'100%',height:"30px",width:'30px'}}/>
                        {language === "en"
                       ?"Multiple functions available" :
                       "Multiples funciones disponibles"
@@ -254,7 +274,11 @@ const LandingPage = () => {
                 type="submit"
                 className="bg-purple-600 text-white font-semibold px-6 py-2 rounded shadow hover:bg-purple-700 transition-colors duration-300"
               >
-                Submit
+                {language === "en"
+                      ?"Submit" :
+                      "entregar"
+                       }
+              
               </button>
             </form>
             {submitted && (
@@ -273,7 +297,14 @@ const LandingPage = () => {
       </div>
     
       <footer className="bg-purple-600 py-6">
-      <p className="max-w-7xl mx-auto flex justify-center" style={{color:'white'}}> VIONIKO 2023. All Rights Reserved</p><br></br>
+      <p className="max-w-7xl mx-auto flex justify-center" style={{color:'white'}}> VIONIKO 2023. 
+      {language === "en"
+                      ?"All Rights Reserved" :
+                      "reservados todos los derechos"
+                       }
+      
+      
+      </p><br></br>
         <div className="max-w-7xl mx-auto flex justify-center">
          
           
@@ -294,7 +325,11 @@ const LandingPage = () => {
             className="text-white hover:text-purple-300 transition-colors duration-300"
             style={{marginRight:'25px'}}
           >
-            Affiliates
+            {language === "en"
+                      ?"Affiliates" :
+                      "afiliadas"
+                       }
+          
           </a>
           <a
             href="https://docs.google.com/document/d/1T1yIQBCKnGXUV6coRXrykN3ORRw3cGJ7/edit?usp=sharing&ouid=107890740335896726806&rtpof=true&sd=true"
@@ -303,7 +338,11 @@ const LandingPage = () => {
             className="text-white hover:text-purple-300 transition-colors duration-300"
             style={{marginRight:'25px'}}
           >
-            Privacy Notice
+             {language === "en"
+                      ?" Privacy Notice" :
+                      "vaviso de Privacidad"
+                       }
+           
           </a>  <a
             href="https://docs.google.com/document/d/1kwXZSny8l1HRAscrdh0lTBxSXu6gZv7T/edit?usp=sharing&ouid=107890740335896726806&rtpof=true&sd=true"
             target="_blank"
@@ -311,7 +350,11 @@ const LandingPage = () => {
             className="text-white hover:text-purple-300 transition-colors duration-300"
             style={{marginRight:'25px'}}
           >
-            Terms of Service
+             {language === "en"
+                      ?" Terms of Service" :
+                      "términos de servicio"
+                       }
+            
           </a>
           
           
