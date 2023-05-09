@@ -5,8 +5,10 @@ import axios from 'axios';
 import LanguageIcon from '@mui/icons-material/Language';
 import DoneIcon from '@mui/icons-material/Done';
 import GoogleIcon from '@mui/icons-material/Google';
+import { useRouter } from 'next/router';
 
 const LandingPage = () => {
+  const router = useRouter();
   const [submitted, setSubmitted] = useState(false);
   const [success, setSuccess] = useState(false);
   const [language, setLanguage] = useState("sp");
@@ -36,6 +38,14 @@ const LandingPage = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+  const handleClick = (e) => {
+    e.preventDefault();
+    router.push('/Terms');
+  };
+  const handleClick1 = (e) => {
+    e.preventDefault();
+    router.push('/privacy');
   };
 
   useEffect(() => {
@@ -162,8 +172,8 @@ const LandingPage = () => {
               
               </p>  <br></br>
       </div>
-      <div class="container" style={{margin:'auto'}}>
-      <div class="embed-responsive embed-responsive-16by9">
+      <div className="container" style={{margin:'auto'}}>
+      <div className="embed-responsive embed-responsive-16by9">
         {/* <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe> */}
         <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen  style={{width:'100%'}}></iframe>
       </div>
@@ -332,11 +342,12 @@ const LandingPage = () => {
           
           </a>
           <a
-            href="https://docs.google.com/document/d/1T1yIQBCKnGXUV6coRXrykN3ORRw3cGJ7/edit?usp=sharing&ouid=107890740335896726806&rtpof=true&sd=true"
+      
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-purple-300 transition-colors duration-300"
             style={{marginRight:'25px'}}
+            onClick={handleClick1}
           >
              {language === "en"
                       ?" Privacy Notice" :
@@ -344,11 +355,12 @@ const LandingPage = () => {
                        }
            
           </a>  <a
-            href="https://docs.google.com/document/d/1kwXZSny8l1HRAscrdh0lTBxSXu6gZv7T/edit?usp=sharing&ouid=107890740335896726806&rtpof=true&sd=true"
+    
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-purple-300 transition-colors duration-300"
             style={{marginRight:'25px'}}
+            onClick={handleClick}
           >
              {language === "en"
                       ?" Terms of Service" :
