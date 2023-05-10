@@ -341,33 +341,34 @@ const LandingPage = () => {
                        }
           
           </a>
+          <Link to="privacy">
           <a
       
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-purple-300 transition-colors duration-300"
             style={{marginRight:'25px'}}
-            onClick={handleClick1}
+           
           >
              {language === "en"
                       ?" Privacy Notice" :
                       "vaviso de Privacidad"
                        }
            
-          </a>  <a
+          </a> </Link> <Link to="Terms"><a
     
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-purple-300 transition-colors duration-300"
             style={{marginRight:'25px'}}
-            onClick={handleClick}
+            
           >
              {language === "en"
                       ?" Terms of Service" :
                       "términos de servicio"
                        }
             
-          </a>
+          </a></Link>
           
           
         </div>
