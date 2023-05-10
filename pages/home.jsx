@@ -6,6 +6,24 @@ import LanguageIcon from '@mui/icons-material/Language';
 import DoneIcon from '@mui/icons-material/Done';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useRouter } from 'next/router';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Collapse from '@mui/material/Collapse';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import { red } from '@mui/material/colors';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+// import logo from '../pages/b.png'
+// import logo1 from './c.png'
+// import logo2 from './d.png'
+
 
 const LandingPage = () => {
   const router = useRouter();
@@ -177,8 +195,79 @@ const LandingPage = () => {
         {/* <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe> */}
         <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen  style={{width:'100%'}}></iframe>
       </div>
-    </div><br></br><br></br>
+    </div><br></br><br></br><br></br>
+    <Card sx={{ maxWidth: '100%' }}>
+                       <div style={{display:'flex',paddingLeft:'10%',paddingRight:'10%'}}>
+                        <div style={{width:'40%'}}>
+                        <h2 style={{fontFamily:'monospace',fontSize:'20px',color:'rgb(22, 6, 71)'}}>
+                        {language === "en"
+                      ?"Create Persuasive Marketing in an Instant " :
+                      "Crea Marketing Persuasivo en un Instante"
+                       }</h2>
+                        <p style={{fontFamily:'monospace',fontSize:'18px'}}>
+                        {language === "en"
+                      ?"Whether you need marketing messages for your product, service, or brand, our quick and easy marketing generation tool has you covered. Just enter your target audience, key benefits, desired marketing style, and pitch, and our AI-powered tool will do the rest, delivering impactful marketing messages in minutes.  " :
+                      "Ya sea que necesites mensajes de marketing para tu producto, servicio o marca, nuestra  herramienta rápida y fácil de generación de marketing tiene todo lo que necesitas. Solo ingresa tu público objetivo, los beneficios clave, el estilo de marketing deseado y el tono, y nuestra herramienta impulsada por IA hará el resto, entregando mensajes de marketing impactantes en minutos."
+                       }
+                       </p>
+</div><div style={{width:'60%'}}>
+  <img src='./d.png' alt="" style={{width:'100%',height:'500px'}}
+      /><br></br>
+</div>
+                       </div>
+
+    </Card><br></br>
+    <Card sx={{ maxWidth: '100%' }}>
+                       <div style={{display:'flex',paddingLeft:'10%',paddingRight:'10%'}}>
+                       <div style={{width:'60%'}}>
+  <img src='./c.png' alt="" style={{width:'100%',height:'500px'}}
+      />
+</div>
+                        <div style={{width:'40%'}}>
+                        <h2 style={{fontFamily:'monospace',fontSize:'20px',marginLeft:'20px',color:'rgb(22, 6, 71)'}}>
+                        {language === "en"
+                      ?"Your personal factory of ideas with the power of A.I. " :
+                      "Tu fábrica personal de ideas con el poder de la I.Ae"
+                       }
+                         
+                          </h2>
+                        <p style={{fontFamily:'monospace',fontSize:'18px',marginLeft:'20px'}}> 
+                          
+                        {language === "en"
+                      ?"Enter your keyword and get a table with all the information important thing you need to create effective content." :
+                      " Ya sea que estés buscando recomendaciones, consejos para resolver  problemas o simplemente una buena risa, nuestro generador de ideas impulsado porIA ofrece inspiración interminable para cualquier necesidad .."
+                       }
+                       </p>
+</div>
+                       </div>
+                       <br></br>
+
+    </Card><br></br>
+    <Card sx={{ maxWidth: '100%' }}>
+                       <div style={{display:'flex',paddingLeft:'10%',paddingRight:'10%'}}>
+                        <div style={{width:'40%'}}>
+                        <h2 style={{fontFamily:'monospace',fontSize:'20px',color:'rgb(22, 6, 71)'}}>
+                        {language === "en"
+                      ?"Optimize your content easily with our tool keyword-based content generation" :
+                      "Optimiza tu contenido fácilmente con nuestra herramienta de generación de contenido basado en palabras clave"
+                       }
+                          </h2>
+                        <p style={{fontFamily:'monospace',fontSize:'18px'}}>
+                        {language === "en"
+                      ?"Enter your keyword and get a table with all the information important thing you need to create effective content." :
+                      " Ingresa tu palabra clave y obtén una tabla con toda la información importante que necesitas para crear contenido efectivo."
+                       }
+                       
+</p>
+</div><div style={{width:'60%'}}>
+  <img src='./b.png' alt="" style={{width:'100%',height:'500px'}}
+      />
+</div> 
+                       </div>
+                       <br></br><br></br><br></br>
+    </Card>
       <div className="max-w-7xl mx-auto text-center">
+      <br></br><br></br><br></br>
         <h1 style={{fontFamily:'Monospace',color:'black',fontSize:'40px',color:'rgb(22, 6, 71)',fontWeight:'bolder'}}>
         {language === "en"
                       ?"Ready to take your Marketing to the next level?" :
