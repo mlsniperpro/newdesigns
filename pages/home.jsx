@@ -130,13 +130,13 @@ const LandingPage = () => {
      
       <div className="bg-white py-8">
       <div className="max-w-7xl mx-auto text-center">
-        <h1 style={{fontFamily:'Monospace',color:'black',fontSize:'18px'}}>
+        <h1 style={{fontFamily:'monospace',color:'black',fontSize:'18px'}}>
         {language === "en"
                       ?"Get your " :
                       "conseguir su"
                        }
           
-          <span style={{color:'#160647',fontWeight:'bolder'}}> 
+          <span style={{color:'#160647',fontWeight:'bolder',fontFamily:'monospace'}}> 
           {language === "en"
                       ?" free account today" :
                       "cuenta gratis hoy"
@@ -147,24 +147,24 @@ const LandingPage = () => {
         <br></br>
       <div style={{display:'flex',justifyContent:'center'}}>
       <Link href="/login">
-        <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(40, 48, 129)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginRight:'30px'}}>
-           <GoogleIcon />
+        <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'#c084fc',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginRight:'30px',fontFamily:'monospace',fontSize:'18px'}}>
+           <GoogleIcon style={{marginRight:'10px'}} />
             {language === "en"
                       ?"Sign Up with Google" :
                       "registrarse con google"
                        }
              
             </button></Link>
-            <p style={{marginTop:'auto',marginBottom:'auto'}}>Or</p>
+            <p style={{marginTop:'auto',marginBottom:'auto',fontFamily:'monospace',fontSize:'18px'}}>Or</p>
             <Link href="/login">
-            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(40, 48, 129)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginLeft:'30px'}}>
+            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'#ec4899',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginLeft:'30px',fontFamily:'monospace',fontSize:'18px'}}>
             {language === "en"
                       ?"Sign Up with Email →" :
                       "Ingresa con e-mail → "
                        }
              
             </button>   </Link>     </div>     <br></br>
-            <p>
+            <p style={{fontFamily:'monospace',fontSize:'18px'}}>
             {language === "en"
                       ?"No Credit Card Required" :
                       "No se requiere tarjeta de crédito"
@@ -173,7 +173,7 @@ const LandingPage = () => {
               </p>  <br></br>
       </div>
       <div className="container" style={{margin:'auto'}}>
-      <div className="embed-responsive embed-responsive-16by9">
+      <div className="embed-responsive embed-responsive-16by9" style={{border:'20px solid #ec4899',width:'640px',margin:'auto',}}>
         {/* <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe> */}
         <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen  style={{width:'100%'}}></iframe>
       </div>
