@@ -147,7 +147,7 @@ function Keyword({ language}) {
         href="https://cdn.tailgrids.com/tailgrids-fallback.css"
       />
       
-      <h1 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'18px',padding:'10px'}}>
+      {/* <h1 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'18px',padding:'10px'}}>
       {language === "english"
                     ? "Optimize your content easily with our tool keyword-based content generation"
                     : "Optimiza tu contenido fácilmente con nuestra herramienta de generación de contenido basado en palabras clave"}
@@ -156,7 +156,7 @@ function Keyword({ language}) {
 {language === "english"
                     ? "Enter your keyword and get a table with all the important information you need to create effective content"
                     : "Ingresa tu palabra clave y obtén una tabla con toda la información importante que necesitas para crear contenido efectivo"}
-                    </h4>
+                    </h4> */}
       <section className="bg-white py-20 lg:py-[120px]  relative z-10" >
         
       <Link href="/tutor"> <button   style={{background:'#283081',fontFamily:"Monospace",fontSize:'18px',color:'white',padding:'5px',borderRadius:'1px solid #283081', borderRadius:'5px'}}> Main Menu</button></Link> 
@@ -165,7 +165,7 @@ function Keyword({ language}) {
           <div className="flex  lg:justify-between -mx-4" style={{display:'flex',flexDirection:'column'}}>
             <div >
               <div className="mb-10 lg:mb-0">
-                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'18px',width:'100%'}}>
+                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'18px',width:'100%',marginLeft:'30%'}}>
               <BatchPredictionIcon />    {language === "english"
                     ? "Keyword-based Content Generation"
                     : "Generacion de contenido basado en palabras clave"}

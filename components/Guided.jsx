@@ -234,7 +234,7 @@ function Guided({language}) {
       <div className="flex w-full justify-center items-center bg-white space-y-8"  style={{background:'white'}}>
        
         <div className="w-full px-8 md:px-32 lg:px-24" >
-        <div >
+        {/* <div >
       <h1 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'18px'}}>
       {language === "english"
                 ? " Crea Marketing Persuasivo en un Instante"
@@ -249,7 +249,7 @@ function Guided({language}) {
                 ? " público objetivo, los beneficios clave, el estilo de marketing deseado y el tono, y nuestra herramienta impulsada por IA hará el resto, entregando mensajes de marketing impactantes en minutos."
                 : "  target audience, key benefits, desired marketing style and tone, and our tool AI-powered will do the rest, delivering impactful marketing messages in minutes."}
 </p>
-      </div>
+      </div> */}
           <form
             noValidate
             onSubmit={handleSubmit}

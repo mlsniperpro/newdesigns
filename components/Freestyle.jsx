@@ -79,12 +79,12 @@ function Freestyle({language}) {
         rel="stylesheet"
         href="https://cdn.tailgrids.com/tailgrids-fallback.css"
       />
-      <h1 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'18px',padding:'10px'}}>
+      {/* <h1 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'18px',padding:'10px'}}>
       {language === "english" ? "Your personal idea factory powered by A.I." : " Tu fábrica personal de ideas con el poder de la I.A" }
        </h1>
       <h4 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'14px',padding:'5px'}}>
       {language === "english" ? "Whether you're looking for recommendations, tips to solve problems or just a good laugh, our idea generator powered by AI offers endless inspiration for any need" : " Ya sea que estés buscando recomendaciones, consejos para resolver problemas o simplemente una buena risa, nuestro generador de ideas impulsado por IA ofrece inspiración interminable para cualquier necesidad" }
-        </h4>
+        </h4> */}
       {/* ====== Contact Section Start */}
       <section className="bg-white py-20 lg:py-[120px] overflow-hidden relative z-10" >
         <div className="container"  style={{width:'100%'}}>
