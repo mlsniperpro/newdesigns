@@ -191,6 +191,7 @@ function Guided({language}) {
 
   return (
     <div className="h-screen flex" >
+      
       <div
         className="hidden lg:flex w-full lg:w-1/2 login_img_section
           justify-around items-center"
@@ -231,8 +232,24 @@ function Guided({language}) {
         </div>
       </div>
       <div className="flex w-full justify-center items-center bg-white space-y-8"  style={{background:'white'}}>
-        
+       
         <div className="w-full px-8 md:px-32 lg:px-24" >
+        <div >
+      <h1 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'18px'}}>
+      {language === "english"
+                ? " Crea Marketing Persuasivo en un Instante"
+                : "  Create Persuasive Marketing in an Instant"}
+                </h1>
+      <p style={{fontFamily:'monospace',color:'#ec4899',fontSize:'12px'}}>
+      {language === "english"
+                ? " Ya sea que necesites mensajes de marketing para tu producto, servicio o marca, nuestra herramienta rápida y fácil de generación de marketing tiene todo lo que necesitas. Solo ingresa tu"
+                : "  Whether you need marketing messages for your product, service or brand, our Quick and easy marketing generation tool has everything you need. just enter your"}
+        <br></br>
+        {language === "english"
+                ? " público objetivo, los beneficios clave, el estilo de marketing deseado y el tono, y nuestra herramienta impulsada por IA hará el resto, entregando mensajes de marketing impactantes en minutos."
+                : "  target audience, key benefits, desired marketing style and tone, and our tool AI-powered will do the rest, delivering impactful marketing messages in minutes."}
+</p>
+      </div>
           <form
             noValidate
             onSubmit={handleSubmit}
@@ -244,7 +261,7 @@ function Guided({language}) {
              <MenuBookIcon style={{marginRight:'10px'}}/>
               {language === "english"
                 ? "AI Content Generator: More Accurate and Efficient than ChatGPT"
-                : "Crea Marketing Persuasivo en un Instant"}
+                : "Generador de contenido AI: Mas preciso y eficiente que chatGPT"}
             </h1>
             <br></br>
             <label htmlFor="product_title" style={{color:'white',fontSize:'18px',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}}>

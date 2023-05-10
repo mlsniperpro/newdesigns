@@ -224,7 +224,7 @@ function Tutor() {
   };
 
   return (
-    <div className="bg-[#1A232E] h-screen py-6 relative sm:px-16 px-12 text-white overflow-hidden flex flex-col justify-between  align-middle w-screen" style={{background: "rgb(40, 48, 129)"}}>
+    <div className="bg-[#1A232E] h-screen py-6 relative sm:px-16 px-12 text-white overflow-hidden flex flex-col justify-between  align-middle w-screen" style={{background: "rgb(40, 48, 129)",}}>
       {/* gradients */}
       <div className="gradient-01 z-0 absolute"></div>
       <div className="gradient-02 z-0 absolute"></div>
@@ -236,8 +236,7 @@ function Tutor() {
             ? "VIONIKO AI Copywriting Tutor"
             : "Tutor vioniko de redacción publicitaria de IA"}
         </h1>
-        <p>DEMO del TUTOR VK 
-</p>
+        <p>DEMO del TUTOR VK </p>
       </div>
       <div><br></br><br></br>
       <Link href="/">
@@ -248,7 +247,7 @@ function Tutor() {
       <button
         onClick={changeLanguage}
         className="block mt-6 uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded"
-        style={{background:'white',color:'rgb(40, 48, 129)',width:'300px',fontFamily:"Monospace",fontSize:'18px'}}
+        style={{background:'white',color:'rgb(40, 48, 129)',width:'300px',fontFamily:"Monospace",fontSize:'18px',marginBottom:'10px'}}
       >
         <LanguageIcon style={{marginRight:"10px"}}/>
         {language === "en" ? "Switch to Spanish" : "Cambiar a Inglés"}
@@ -259,13 +258,13 @@ function Tutor() {
       <div
         className="h-[90%] overflow-auto w-full max-w-4xl min-w-[20rem] py-8 px-4 self-center
       scrollbar-thumb-slate-400 scrollbar-thin scrollbar-track-gray-tranparent scrollbar-thumb-rounded-md
-      "
-      >1
+      "style={{border:'1px solid #fff'}}
+      >
         <ChatBody chat={chat.slice(1)} />
       </div>
 
       {/* input */}
-      <div className="w-full max-w-4xl min-w-[20rem] self-center">
+      <div className="w-full max-w-4xl min-w-[20rem] self-center" style={{border:'1px solid #fff'}}>
         <ChatInput sendMessage={sendMessage} loading={mutation.isLoading} style={{border:'1px solid white',fontFamily:"Monospace",fontSize:'20px'}}/>
       </div>
     </div>

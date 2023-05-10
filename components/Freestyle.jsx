@@ -79,6 +79,12 @@ function Freestyle({language}) {
         rel="stylesheet"
         href="https://cdn.tailgrids.com/tailgrids-fallback.css"
       />
+      <h1 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'18px',padding:'10px'}}>
+      {language === "english" ? "Your personal idea factory powered by A.I." : " Tu fábrica personal de ideas con el poder de la I.A" }
+       </h1>
+      <h4 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'14px',padding:'5px'}}>
+      {language === "english" ? "Whether you're looking for recommendations, tips to solve problems or just a good laugh, our idea generator powered by AI offers endless inspiration for any need" : " Ya sea que estés buscando recomendaciones, consejos para resolver problemas o simplemente una buena risa, nuestro generador de ideas impulsado por IA ofrece inspiración interminable para cualquier necesidad" }
+        </h4>
       {/* ====== Contact Section Start */}
       <section className="bg-white py-20 lg:py-[120px] overflow-hidden relative z-10" >
         <div className="container"  style={{width:'100%'}}>
@@ -87,12 +93,10 @@ function Freestyle({language}) {
               <div className=" mb-12 lg-12" >
                 <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'27px',marginLeft:'20px'}}>
                   {/*Use appropriate wording based on whether language is english or spanish*/}
-               <LineStyleIcon />   {language === "english" ? "Freestyle Content Generation" : "Tu fábrica personal de ideas con el poder de la I.A." }
+               <LineStyleIcon />   {language === "english" ? "Freestyle Content Generation" : "Generacion de contenido libre" }
                 </span>
-                <p style={{fontSize:'12px'}}>
-                {language === "english" ? "Could you give me a summary with the key points of this book?" : "Ya sea que estés buscando recomendaciones, consejos para resolver problemas o simplemente una buena risa, nuestro generador de ideas impulsado por IA ofrece inspiración interminable para cualquier necesidad " }
                
-                </p>
+
                 <p className="text-base text-body-color leading-relaxed mb-9" style={{fontFamily:"Monospace",fontSize:'20px',margin:'auto',cursor:'pointer'}}>
                 <ContentCopyIcon onClick={() => {navigator.clipboard.writeText(content); alert("Copied to clipboard.");}}/>
                 {   content && content}

@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import ReactTable from "react-table";
 import { auth, db } from "../config/firebase";
 import Link from "next/link";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 import {
   collection,
@@ -134,28 +141,36 @@ function Keyword({ language}) {
   };
 
   return (
-    <div>
+    <div >
       <link
         rel="stylesheet"
         href="https://cdn.tailgrids.com/tailgrids-fallback.css"
       />
-      <section className="bg-white py-20 lg:py-[120px]  relative z-10">
-      <Link href="/tutor"> <button   style={{background:'#283081',fontFamily:"Monospace",fontSize:'18px',color:'white',padding:'5px',borderRadius:'1px solid #283081', borderRadius:'5px',marginLeft:'-80px'}}> Main Menu</button></Link> 
-        <div className="container"><br></br>
+      
+      <h1 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'18px',padding:'10px'}}>
+      {language === "english"
+                    ? "Optimize your content easily with our tool keyword-based content generation"
+                    : "Optimiza tu contenido fácilmente con nuestra herramienta de generación de contenido basado en palabras clave"}
+                    </h1>
+<h4 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'18px',padding:'5px'}}>
+{language === "english"
+                    ? "Enter your keyword and get a table with all the important information you need to create effective content"
+                    : "Ingresa tu palabra clave y obtén una tabla con toda la información importante que necesitas para crear contenido efectivo"}
+                    </h4>
+      <section className="bg-white py-20 lg:py-[120px]  relative z-10" >
+        
+      <Link href="/tutor"> <button   style={{background:'#283081',fontFamily:"Monospace",fontSize:'18px',color:'white',padding:'5px',borderRadius:'1px solid #283081', borderRadius:'5px'}}> Main Menu</button></Link> 
+        <div className="container">
+          
           <div className="flex  lg:justify-between -mx-4" style={{display:'flex',flexDirection:'column'}}>
             <div >
               <div className="mb-10 lg:mb-0">
-                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'18px',width:'38%',marginLeft:'30%'}}>
-              <BatchPredictionIcon />    {language === "en"
+                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'18px',width:'100%'}}>
+              <BatchPredictionIcon />    {language === "english"
                     ? "Keyword-based Content Generation"
-                    : "Optimiza tu contenido fácilmente con nuestra herramienta de generación de contenido basado en palabras clave"}
+                    : "Generacion de contenido basado en palabras clave"}
                 </span>
-                <span className="block mb-4 text-base text-primary font-semibold" style={{fontFamily:"Monospace",fontSize:'14px',width:'38%',marginLeft:'30%'}}>
-
-                Ingresa tu palabra clave y obtén una tabla con toda la información
-importante que necesitas para crear contenido efectivo.
-Use this image with nice lay out around it
-</span>
+               
                 {data && (
                   <div className="flex flex-col w-200 h-400">
                     <div className="overflow-x-auto sm:mx-0.5 lg:mx-0.5">

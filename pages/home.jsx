@@ -181,14 +181,14 @@ const LandingPage = () => {
       <div className="max-w-7xl mx-auto text-center">
         <h1 style={{fontFamily:'Monospace',color:'black',fontSize:'40px',color:'rgb(40, 48, 129)',fontWeight:'bolder'}}>
         {language === "en"
-                      ?"Ready to Level-up" :
+                      ?"Ready to take your Marketing to the next level?" :
                       "¿Listo para llevar tu Marketing al siguiente nivel?"
                        }
          
           </h1>
         <p style={{color:'#817a99'}}>
         {language === "en"
-                      ?" Write 10x faster, engage your audience, &  never struggle with the blank page again." :
+                      ?" Write at lightning speeds, captivate your audience and never suffer with the page down again.                      " :
                       "Escribe a velocidad de rayo, cautiva a tu audiencia y nunca vuelvas a sufrir con la página en blanco"
                        }
          
@@ -352,7 +352,7 @@ const LandingPage = () => {
           >
              {language === "en"
                       ?" Privacy Notice" :
-                      "vaviso de Privacidad1"
+                      "vaviso de Privacidad"
                        }
            
           </p> </Link> <Link href="Terms"><p

@@ -324,8 +324,8 @@ function PlanSelection() {
                     }}
                   >
                     {language === "english"
-                      ? "Get Started - Its Free"
-                      : "Comience ya, es Gratis!"}
+                      ? "Has reached the limit free to use available For this month"
+                      : "Ha alcanzado el límite gratuito de uso disponible para este mes"}
                   </button></Link>
                 </div>
               </div>
