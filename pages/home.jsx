@@ -352,7 +352,7 @@ const LandingPage = () => {
           >
              {language === "en"
                       ?" Privacy Notice" :
-                      "vaviso de Privacidad"
+                      "vaviso de Privacidad1"
                        }
            
           </p> </Link> <Link href="Terms"><p
