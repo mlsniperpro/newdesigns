@@ -133,13 +133,13 @@ const LandingPage = () => {
         <h1 style={{fontFamily:'monospace',color:'black',fontSize:'18px'}}>
         {language === "en"
                       ?"Get your " :
-                      "conseguir su"
+                      "conseguir "
                        }
           
-          <span style={{color:'#160647',fontWeight:'bolder',fontFamily:'monospace'}}> 
+          <span style={{color:'rgb(236, 72, 153)',fontWeight:'bolder',fontFamily:'monospace'}}> 
           {language === "en"
                       ?" free account today" :
-                      "cuenta gratis hoy"
+                      "sucuenta gratis hoy"
                        }
              
           </span>
@@ -164,7 +164,7 @@ const LandingPage = () => {
                        }
              
             </button>   </Link>     </div>     <br></br>
-            <p style={{fontFamily:'monospace',fontSize:'18px'}}>
+            <p style={{fontFamily:'monospace',fontSize:'18px',color:'rgb(236, 72, 153)'}}>
             {language === "en"
                       ?"No Credit Card Required" :
                       "No se requiere tarjeta de crédito"
@@ -179,14 +179,14 @@ const LandingPage = () => {
       </div>
     </div><br></br><br></br>
       <div className="max-w-7xl mx-auto text-center">
-        <h1 style={{fontFamily:'Monospace',color:'black',fontSize:'40px',color:'rgb(40, 48, 129)',fontWeight:'bolder'}}>
+        <h1 style={{fontFamily:'Monospace',color:'black',fontSize:'40px',color:'rgb(236, 72, 153)',fontWeight:'bolder'}}>
         {language === "en"
                       ?"Ready to take your Marketing to the next level?" :
                       "¿Listo para llevar tu Marketing al siguiente nivel?"
                        }
          
           </h1>
-        <p style={{color:'#817a99'}}>
+        <p style={{color:'#817a99',fontFamily:'monospace',fontFamily:'18px'}}>
         {language === "en"
                       ?" Write at lightning speeds, captivate your audience and never suffer with the page down again.                      " :
                       "Escribe a velocidad de rayo, cautiva a tu audiencia y nunca vuelvas a sufrir con la página en blanco"
@@ -195,7 +195,7 @@ const LandingPage = () => {
           </p>
         <br></br>
      <Link href="/login">
-            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(40, 48, 129)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginLeft:'30px'}}>
+            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(236, 72, 153)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginLeft:'30px'}}>
             {language === "en"
                       ?"Get Started For Free" :
                       "empezar gratis"
@@ -207,24 +207,24 @@ const LandingPage = () => {
              
              <br></br>   
              <div style={{display:'flex',justifyContent:'center'}}>
-                       <div style={{marginRight:'50px',color:'rgb(40, 48, 129)'}}>
-                        <DoneIcon style={{marginRight:'10px' ,background:'lightgrey',borderRadius:'100%',height:"30px",width:'30px'}} />
+                       <div style={{marginRight:'50px',color:'rgb(236, 72, 153)'}}>
+                        <DoneIcon style={{marginRight:'10px' ,background:'rgb(236, 72, 153)',borderRadius:'100%',height:"30px",width:'30px',color:'white'}} />
                        {language === "en"
                       ?"No credit card required" :
                       "No se ocupa tarjeta de crédito "
                        }
 
                        </div>
-                       <div style={{marginRight:'50px',color:'rgb(40, 48, 129)'}}>
-                       <DoneIcon style={{marginRight:'10px' ,background:'lightgrey',borderRadius:'100%',height:"30px",width:'30px'}}/>
+                       <div style={{marginRight:'50px',color:'rgb(236, 72, 153)'}}>
+                       <DoneIcon style={{marginRight:'10px' ,background:'rgb(236, 72, 153)',borderRadius:'100%',height:"30px",width:'30px',color:'white'}}/>
                        {language === "en"
                       ?"2000 Free Word Per Month" :
                       "2,000 palabras gratis por mes "
                        }
 
                        </div>
-                       <div style={{color:'rgb(40, 48, 129)'}} >
-                       <DoneIcon style={{marginRight:'10px' ,background:'lightgrey',borderRadius:'100%',height:"30px",width:'30px'}}/>
+                       <div style={{color:'rgb(236, 72, 153)'}} >
+                       <DoneIcon style={{marginRight:'10px' ,background:'rgb(236, 72, 153)',borderRadius:'100%',height:"30px",width:'30px',color:'white'}}/>
                        {language === "en"
                       ?"Multiple functions available" :
                       "Multiples funciones disponibles"
@@ -233,9 +233,9 @@ const LandingPage = () => {
                        </div>
              </div>
               <br></br>
-      </div>
+      </div><br></br><br></br>
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-8">
+          <h2 className="text-4xl font-bold mb-8" style={{color:'rgb(236, 72, 153)',fontFamily:'monospace'}}>
           {language === "en"
                       ?"Become an affiliate" :
                       "CONTACTO/SUGERENCIAS "
@@ -243,7 +243,7 @@ const LandingPage = () => {
             
             </h2>
 
-          <p className="text-xl mb-8">
+          <p className="text-xl mb-8" style={{color:'rgb(236, 72, 153)',fontFamily:'monospace'}} >
           {language === "en"
                       ?" Become an affiliate marketer and earn commission by sharing our website link." :
                       "Conviértase en un comercializador afiliado y gane una comisión compartiendo el enlace de nuestro sitio web."
