@@ -341,10 +341,10 @@ const LandingPage = () => {
                        }
           
           </a>
-          <Link to="privacy">
-          <a
+          <Link href="privacy">
+          <p
       
-            target="_blank"
+          
             rel="noopener noreferrer"
             className="text-white hover:text-purple-300 transition-colors duration-300"
             style={{marginRight:'25px'}}
@@ -355,9 +355,9 @@ const LandingPage = () => {
                       "vaviso de Privacidad"
                        }
            
-          </a> </Link> <Link to="Terms"><a
+          </p> </Link> <Link href="Terms"><p
     
-            target="_blank"
+           
             rel="noopener noreferrer"
             className="text-white hover:text-purple-300 transition-colors duration-300"
             style={{marginRight:'25px'}}
@@ -368,7 +368,7 @@ const LandingPage = () => {
                       "términos de servicio"
                        }
             
-          </a></Link>
+          </p></Link>
           
           
         </div>
