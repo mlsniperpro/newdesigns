@@ -19,7 +19,13 @@ import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SyncAltIcon from '@mui/icons-material/SyncAlt';
+import AttractionsIcon from '@mui/icons-material/Attractions';
+import ApprovalIcon from '@mui/icons-material/Approval';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import NotStartedIcon from '@mui/icons-material/NotStarted';
+import SelectAllIcon from '@mui/icons-material/SelectAll';
+import DrawIcon from '@mui/icons-material/Draw';
 // import logo from '../pages/b.png'
 // import logo1 from './c.png'
 // import logo2 from './d.png'
@@ -128,6 +134,7 @@ const LandingPage = () => {
           <div className="space-x-4">
             <Link href="/signup">
               <button className="bg-white  font-semibold px-6 py-2 rounded shadow hover:bg-white hover:text-white-600 transition-colors duration-300" style={{color:'rgb(22, 6, 71)',fontFamily:'monospace',fontSize:'24px'}}>
+              
               {language === "en"
                       ?" Get Started - It's Free" :
                       "Comience - es GRATIS!"
@@ -200,7 +207,8 @@ const LandingPage = () => {
               
               </p>  <br></br> <br></br> <br></br>
       </div><br></br>
-      <h1 style={{textAlign:'center',fontSize:'35px',fontFamily:'monospace'}}>
+      <h1 style={{textAlign:'center',fontSize:'45px',fontFamily:'monospace',fontWeight:'bolder',textDecoration:'underline',color:'rgb(22, 6, 71)'}}>
+        <DrawIcon style={{marginRight:'10px',fontSize:'30px',color:'white',backgroundColor:'rgb(22, 6, 71)',borderRadius:'100%',padding:'2px'}}/>
       {language === "en"
                       ?"Discover the Future of Copywriting " :
                       "Descubre el futuro de la redacción"
@@ -209,8 +217,8 @@ const LandingPage = () => {
         </h1>
         <h4 style={{textAlign:'center',fontFamily:'monospace',fontSize:'18px'}}>
         {language === "en"
-                      ?"Our AI Tutoring Demo Will Blow Your Mind! " :
-                      "¡Nuestra demostración de tutoría de IA te dejará impresionado!"
+                      ?"→ Our AI Tutoring Demo Will Blow Your Mind! " :
+                      "→ ¡Nuestra demostración de tutoría de IA te dejará impresionado!"
                        }
         </h4><br></br><br></br>
       <div className="container" style={{margin:'auto'}}>
@@ -222,7 +230,8 @@ const LandingPage = () => {
     </div><br></br><br></br><br></br><hr></hr>
     <Card sx={{ maxWidth: '100%' }}><br></br><br></br>
     <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'220px',borderRadius:'40px',padding:'20px 0px',}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'30px'}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'30px',textDecoration:'underline',fontWeight:'bolder'}}>
+                      <AttractionsIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
                        {language === "en"
                       ?"Create Persuasive Marketing in an Instant " :
                       "Crea Marketing Persuasivo en un Instante "
@@ -237,17 +246,18 @@ const LandingPage = () => {
                         
    
     </div><br></br>
-   
+    <br></br>
                    
                    
   <img src='./d.png' alt="" style={{width:'50%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
       /><br></br>
 
-                   
+<br></br><br></br>
 
-    </Card><br></br>
+    </Card><br></br><br></br><br></br>
     <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'200px',borderRadius:'40px',padding:'20px 0px',}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px'}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px',textDecoration:'underline',fontWeight:'bolder'}}>
+                      <SyncAltIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
                        {language === "en"
                       ?"Your Personal Factory of Ideas with the power of A.I." :
                       "Tu Fábrica Personal de Ideas con el poder de la I.A "
@@ -261,18 +271,19 @@ const LandingPage = () => {
                         </p>
                         
    
-    </div><br></br>
+    </div><br></br><br></br>
     
     <Card sx={{ maxWidth: '100%' }}>
                  
     <img src='./b.png' alt="" style={{width:'50%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
-      />
+      /><br></br><br></br>
 
                        <br></br>
 
-    </Card><br></br>
+    </Card><br></br><br></br><br></br>
     <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'200px',borderRadius:'40px',padding:'20px 0px',}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px'}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px',fontWeight:'bolder',textDecoration:'underline'}}>
+                    <SelectAllIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
                        {language === "en"
                       ?" Optimize your content easily with our keyword-based content generation tool" :
                       "Optimiza tu contenido fácilmente con nuestra herramienta de generación de contenido basado en palabras clave"
@@ -287,35 +298,37 @@ const LandingPage = () => {
                         
    
     </div><br></br>
-    
+    <br></br>
     <Card sx={{ maxWidth: '100%' }}>
                  
     <img src='./c.png' alt="" style={{width:'50%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
       />
 
                        <br></br>
-
+                       <br></br>
     </Card><br></br>
    
       <div className="max-w-7xl mx-auto text-center">
-      <br></br><br></br><br></br>
-        <h1 style={{fontFamily:'Monospace',color:'black',fontSize:'40px',color:'rgb(22, 6, 71)',fontWeight:'bolder'}}>
+      <br></br><br></br><br></br><br></br><br></br>
+        <h1 style={{fontFamily:'Monospace',color:'black',fontSize:'40px',color:'rgb(22, 6, 71)',fontWeight:'bolder',textDecoration:'underline'}}>
+          <AttractionsIcon  style={{marginRight:'10px',fontSize:'34px',color:'white',backgroundColor:'rgb(22, 6, 71)',borderRadius:'100%',padding:'2px'}}/>
         {language === "en"
                       ?"Ready to take your Marketing to the next level?" :
                       "¿Listo para llevar tu Marketing al siguiente nivel?"
                        }
          
-          </h1>
-        <p style={{color:'rgb(22, 6, 71)'}}>
+          </h1><br></br>
+        <p style={{color:'rgb(22, 6, 71)',fontFamily:'monospace',fontSize:'20px'}}>
         {language === "en"
                       ?" Write at lightning speeds, captivate your audience and never suffer with the page down again.                      " :
                       "Escribe a velocidad de rayo, cautiva a tu audiencia y nunca vuelvas a sufrir con la página en blanco"
                        }
          
           </p>
-        <br></br>
+        <br></br> <br></br> <br></br>
      <Link href="/login">
-            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',fontSize:'30px',height:'70px'}}>
+            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',fontSize:'30px',height:'60px'}}>
+          <NotStartedIcon style={{marginRight:'10px'}}/>
             {language === "en"
                       ?"Get Started For Free" :
                       "Empezar Gratis !"
@@ -323,7 +336,7 @@ const LandingPage = () => {
              
             </button>    </Link>  
             
-              <br></br>
+              <br></br> <br></br> <br></br>
              
              <br></br>   
              <div style={{display:'flex',justifyContent:'center'}}>
@@ -351,7 +364,7 @@ const LandingPage = () => {
                        }
                         
                        </div>
-             </div>
+             </div><br></br>
               <br></br><br></br> <br></br>
       </div><hr></hr><hr></hr>
       <br></br> <br></br><br></br> <br></br>
