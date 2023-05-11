@@ -236,7 +236,7 @@ function Tutor() {
             ? "VIONIKO AI Copywriting Tutor"
             : "Tutor vioniko de redacción publicitaria de IA"}
         </h1>
-        <p>DEMO del TUTOR VK </p>
+        {/* <p>DEMO del TUTOR VK </p> */}
       </div>
       <div><br></br><br></br>
       <Link href="/">

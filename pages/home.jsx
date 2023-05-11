@@ -81,11 +81,11 @@ const LandingPage = () => {
     <div className="min-h-screen flex flex-col" style={{backgroundColor:'rgb(22, 6, 71)'}}>
       <nav className="w-full px-4 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-white">Vioniko</h2>
+          <h2 className="text-2xl font-bold text-white" style={{fontFamily:'monospace',fontSize:'30px'}}></h2>
           <div>
           <Link href="/login">
 
-            <button className="bg-transparent border border-white text-white font-semibold px-6 py-2 rounded hover:bg-black hover:text-white-600 transition-colors duration-300">
+            <button className="bg-transparent border border-white text-white font-semibold px-6 py-2 rounded hover:bg-black hover:text-white-600 transition-colors duration-300" style={{fontFamily:'monospace',fontSize:'20px'}}>
             {language === "en"
                       ?"Login" :
                       "Iniciar sesión"
@@ -98,8 +98,8 @@ const LandingPage = () => {
           onClick={() =>
             language === "sp" ? setLanguage("en") : setLanguage("sp")
           }
-          style={{marginLeft:'20px'}}
-        
+          style={{marginLeft:'20px',fontFamily:'monospace',fontSize:'20px'}}
+       
         >
          <LanguageIcon /> {language === "sp" ? "English" : "Spanish"}
         </button>
@@ -109,20 +109,22 @@ const LandingPage = () => {
       </nav>
       <div className="flex-grow flex items-center justify-center">
         <div className="text-center space-y-6">
-          <h1 className="text-5xl font-bold text-white">
+          <br></br>
+          <img src="./e.png" alt="" width="220px" style={{margin:'auto'}}/>
+          <h1 className="text-5xl font-bold text-white" style={{fontFamily:'monospace',fontSize:'50px'}}>
           {language === "en"
                       ?"Revolutionize Your Content with Vioniko" :
                       "TUTOR VIONIKO I.A. "
                        }
             
-          </h1>
-          <p className="text-xl text-white">
+          </h1><br></br><br></br>
+          <p className="text-xl text-white" sstyle={{fontFamily:'monospace',fontSize:'50px'}}>
           {language === "en"
-                      ?"    Unleash the power of AI copywriting and boost your content strategy with our advanced subscription service." :
+                      ?"Unleash the power of AI copywriting and boost your content strategy with our advanced subscription service." :
                       "Lleva tu marketing al siguiente nivel con Tutoría Avanzada usando la Inteligencia Artificial "
                        }
         
-          </p>
+          </p><br></br>
           <div className="space-x-4">
             <Link href="/signup">
               <button className="bg-white  font-semibold px-6 py-2 rounded shadow hover:bg-white hover:text-white-600 transition-colors duration-300" style={{color:'rgb(22, 6, 71)',fontFamily:'monospace',fontSize:'24px'}}>
@@ -133,7 +135,7 @@ const LandingPage = () => {
                
               </button>
             </Link>
-
+            <br></br>
             {/* <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-white hover:text-white-600 transition-colors duration-300" style={{color:'rgb(22, 6, 71)'}}>
             {language === "en"
                       ?"Learn More" :
@@ -148,6 +150,7 @@ const LandingPage = () => {
      
       <div className="bg-white py-8">
       <div className="max-w-7xl mx-auto text-center">
+         <br></br>
         {/* <h1 style={{fontFamily:'monospace',color:'black',fontSize:'18px'}}>
         {language === "en"
                       ?"Get your " :
@@ -164,8 +167,9 @@ const LandingPage = () => {
           </h1> */}
         <br></br>
       <div style={{display:'flex',justifyContent:'center'}}>
+      <br></br> <br></br>
       <Link href="/login">
-        <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginRight:'30px',fontFamily:'monospace',fontSize:'18px'}}>
+        <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginRight:'30px',fontFamily:'monospace',fontSize:'20px'}}>
            <GoogleIcon style={{marginRight:'10px'}} />
             {language === "en"
                       ?"Sign Up with Google" :
@@ -181,20 +185,20 @@ const LandingPage = () => {
                        }
               </p>
             <Link href="/login">
-            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginLeft:'30px',fontFamily:'monospace',fontSize:'18px'}}>
+            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginLeft:'30px',fontFamily:'monospace',fontSize:'20px'}}>
             {language === "en"
                       ?"Sign Up with Email →" :
                       "Ingresa con e-mail → "
                        }
              
             </button>   </Link>     </div>     <br></br>
-            <p style={{fontFamily:'monospace',fontSize:'18px'}}>
+            <p style={{fontFamily:'monospace',fontSize:'22px'}}>
             {language === "en"
                       ?"No Credit Card Required" :
                       "No se requiere tarjeta de crédito"
                        }
               
-              </p>  <br></br>
+              </p>  <br></br> <br></br> <br></br>
       </div>
       <h1 style={{textAlign:'center',fontSize:'35px',fontFamily:'monospace'}}>
       {language === "en"
@@ -215,7 +219,8 @@ const LandingPage = () => {
         {/* <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe> */}
         <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{width:'100%'}}></iframe>
       </div>
-    </div><br></br><br></br><br></br>
+    </div><br></br><br></br><br></br><hr></hr>
+    <Card sx={{ maxWidth: '100%' }}><br></br><br></br>
     <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'140px',borderRadius:'40px',padding:'20px 0px',}}>
                        <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'30px'}}>
                        {language === "en"
@@ -232,7 +237,7 @@ const LandingPage = () => {
                         
    
     </div><br></br>
-    <Card sx={{ maxWidth: '100%' }}>
+   
                    
                    
   <img src='./d.png' alt="" style={{width:'50%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
@@ -347,9 +352,9 @@ const LandingPage = () => {
                         
                        </div>
              </div>
-              <br></br>
-      </div>
-      <br></br> <br></br>
+              <br></br><br></br> <br></br>
+      </div><hr></hr><hr></hr>
+      <br></br> <br></br><br></br> <br></br>
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-8">
           {language === "en"
@@ -359,13 +364,13 @@ const LandingPage = () => {
             
             </h2>
 
-          <p className="text-xl mb-8">
+          {/* <p className="text-xl mb-8">
           {language === "en"
                       ?" Become an affiliate marketer and earn commission by sharing our website link." :
                       "Conviértase en un comercializador afiliado y gane una comisión compartiendo el enlace de nuestro sitio web."
                        }
            
-          </p>
+          </p> */}
 
           <div className="w-full md:w-1/2 mx-auto">
             <form className="space-y-6" onSubmit={handleSubmit}>
@@ -375,27 +380,27 @@ const LandingPage = () => {
                   name="firstName"
                   placeholder="
                   Nombre"
-                  className="flex-1 px-4 py-2 border border-black-600 rounded"
+                  className="flex-1 px-4 py-2 border border-black rounded"
                  
                 />
                 <input
                   type="text"
                   name="lastName"
                   placeholder="Apellido"
-                  className="flex-1 px-4 py-2 border border-black-600 rounded"
+                  className="flex-1 px-4 py-2 border border-black rounded"
                 />
               </div>
               <input
                 type="email"
                 name="email"
                 placeholder="Email"
-                className="w-full px-4 py-2 border border-black-600 rounded"
+                className="w-full px-4 py-2 border border-black rounded"
               />
               <textarea
                 name="message"
                 placeholder="Mensaje"
                 rows="4"
-                className="w-full px-4 py-2 border border-black-600 rounded"
+                className="w-full px-4 py-2 border border-black rounded"
               ></textarea>
               <button
                 type="submit"
@@ -407,7 +412,7 @@ const LandingPage = () => {
                       "Enviar"
                        }
               
-              </button>
+              </button><br></br> <br></br><br></br> <br></br>
             </form>
             {submitted && (
               <div
@@ -455,7 +460,7 @@ const LandingPage = () => {
           >
             {language === "en"
                       ?"Affiliates" :
-                      "Convierte en un Afiliado"
+                      "Conviértete en un Afiliado"
                        }
           
           </a>
