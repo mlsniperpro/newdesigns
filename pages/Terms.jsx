@@ -266,7 +266,7 @@ marketing@vioniko.com
 
 
 This website uses cookies. We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners who may combine it with other information that you’ve provided to them or that they’ve collected from your use of their services.
-Cookies are small text files that can be used by websites to make a user's experience more efficient.
+Cookies are small text files that can be used by websites to make a user experience more efficient.
 
 The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission.
 
