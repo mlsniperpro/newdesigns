@@ -199,7 +199,7 @@ const LandingPage = () => {
                        }
               
               </p>  <br></br> <br></br> <br></br>
-      </div>
+      </div><br></br>
       <h1 style={{textAlign:'center',fontSize:'35px',fontFamily:'monospace'}}>
       {language === "en"
                       ?"Discover the Future of Copywriting " :
@@ -212,7 +212,7 @@ const LandingPage = () => {
                       ?"Our AI Tutoring Demo Will Blow Your Mind! " :
                       "¡Nuestra demostración de tutoría de IA te dejará impresionado!"
                        }
-        </h4>
+        </h4><br></br><br></br>
       <div className="container" style={{margin:'auto'}}>
       <div className="embed-responsive embed-responsive-16by9" style={{border:'20px solid rgb(98, 79, 146)',width:'640px',margin:'auto',borderRadius:'35px'}}>
       
@@ -221,14 +221,14 @@ const LandingPage = () => {
       </div>
     </div><br></br><br></br><br></br><hr></hr>
     <Card sx={{ maxWidth: '100%' }}><br></br><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'140px',borderRadius:'40px',padding:'20px 0px',}}>
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'220px',borderRadius:'40px',padding:'20px 0px',}}>
                        <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'30px'}}>
                        {language === "en"
                       ?"Create Persuasive Marketing in an Instant " :
                       "Crea Marketing Persuasivo en un Instante "
                        }
                         </h1>
-                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center'}}> 
+                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'18px'}}> 
                         {language === "en"
                       ?"Whether you need marketing messages for your product, service, or brand, our quick and easy marketing generation tool has you covered. Just enter your target audience, key benefits, desired marketing style, and pitch, and our AI-powered tool will do the rest, delivering impactful marketing messages in minutes.  " :
                       "Ya sea que necesites mensajes de marketing para tu producto, servicio o marca, nuestra  herramienta rápida y fácil de generación de marketing tiene todo lo que necesitas. Solo ingresa tu público objetivo, los beneficios clave, el estilo de marketing deseado y el tono, y nuestra herramienta impulsada por IA hará el resto, entregando mensajes de marketing impactantes en minutos."
@@ -246,14 +246,14 @@ const LandingPage = () => {
                    
 
     </Card><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'140px',borderRadius:'40px',padding:'20px 0px',}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'30px'}}>
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'200px',borderRadius:'40px',padding:'20px 0px',}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px'}}>
                        {language === "en"
                       ?"Your Personal Factory of Ideas with the power of A.I." :
                       "Tu Fábrica Personal de Ideas con el poder de la I.A "
                        }
                         </h1>
-                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center'}}> 
+                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'18px'}}> 
                         {language === "en"
                       ?"Whether you're looking for recommendations, problem-solving tips, or just a good laugh, our AI-powered Idea generator offers endless inspiration for any need. " :
                       " Ya sea que estés buscando recomendaciones, consejos para resolver problemas o simplemente una buena risa, nuestro generador de Ideas impulsado por IA, ofrece inspiración interminable para cualquier necesidad"
@@ -271,14 +271,14 @@ const LandingPage = () => {
                        <br></br>
 
     </Card><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'140px',borderRadius:'40px',padding:'20px 0px',}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'24px'}}>
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'200px',borderRadius:'40px',padding:'20px 0px',}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px'}}>
                        {language === "en"
                       ?" Optimize your content easily with our keyword-based content generation tool" :
                       "Optimiza tu contenido fácilmente con nuestra herramienta de generación de contenido basado en palabras clave"
                        }
                         </h1>
-                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center'}}> 
+                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'18px'}}> 
                         {language === "en"
                       ?"Enter your keyword and get a table with all the important information you need to create effective content. " :
                       " Ingresa tu palabra clave y obtén una tabla con toda la información importante que necesitas para crear contenido efectivo."
