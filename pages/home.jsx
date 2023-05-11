@@ -125,22 +125,22 @@ const LandingPage = () => {
           </p>
           <div className="space-x-4">
             <Link href="/signup">
-              <button className="bg-white  font-semibold px-6 py-2 rounded shadow hover:bg-white hover:text-white-600 transition-colors duration-300" style={{color:'rgb(22, 6, 71)'}}>
+              <button className="bg-white  font-semibold px-6 py-2 rounded shadow hover:bg-white hover:text-white-600 transition-colors duration-300" style={{color:'rgb(22, 6, 71)',fontFamily:'monospace',fontSize:'24px'}}>
               {language === "en"
                       ?" Get Started - It's Free" :
-                      "Comience - Es gratis"
+                      "Comience - es GRATIS!"
                        }
                
               </button>
             </Link>
 
-            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-white hover:text-white-600 transition-colors duration-300" style={{color:'rgb(22, 6, 71)'}}>
+            {/* <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-white hover:text-white-600 transition-colors duration-300" style={{color:'rgb(22, 6, 71)'}}>
             {language === "en"
                       ?"Learn More" :
                       "Aprende más"
                        }
              
-            </button>
+            </button> */}
             <br></br><br></br>
           </div>
         </div>
@@ -148,7 +148,7 @@ const LandingPage = () => {
      
       <div className="bg-white py-8">
       <div className="max-w-7xl mx-auto text-center">
-        <h1 style={{fontFamily:'monospace',color:'black',fontSize:'18px'}}>
+        {/* <h1 style={{fontFamily:'monospace',color:'black',fontSize:'18px'}}>
         {language === "en"
                       ?"Get your " :
                       "conseguir "
@@ -161,7 +161,7 @@ const LandingPage = () => {
                        }
              
           </span>
-          </h1>
+          </h1> */}
         <br></br>
       <div style={{display:'flex',justifyContent:'center'}}>
       <Link href="/login">
@@ -173,7 +173,13 @@ const LandingPage = () => {
                        }
              
             </button></Link>
-            <p style={{marginTop:'auto',marginBottom:'auto',fontFamily:'monospace',fontSize:'18px'}}>Or</p>
+            <p style={{marginTop:'auto',marginBottom:'auto',fontFamily:'monospace',fontSize:'18px'}}>
+             
+              {language === "en"
+                      ?" Or" :
+                      "O "
+                       }
+              </p>
             <Link href="/login">
             <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginLeft:'30px',fontFamily:'monospace',fontSize:'18px'}}>
             {language === "en"
@@ -190,82 +196,102 @@ const LandingPage = () => {
               
               </p>  <br></br>
       </div>
+      <h1 style={{textAlign:'center',fontSize:'35px',fontFamily:'monospace'}}>
+      {language === "en"
+                      ?"Discover the Future of Copywriting " :
+                      "Descubre el futuro de la redacción"
+                       }
+        
+        </h1>
+        <h4 style={{textAlign:'center',fontFamily:'monospace',fontSize:'18px'}}>
+        {language === "en"
+                      ?"Our AI Tutoring Demo Will Blow Your Mind! " :
+                      "¡Nuestra demostración de tutoría de IA te dejará impresionado!"
+                       }
+        </h4>
       <div className="container" style={{margin:'auto'}}>
-      <div className="embed-responsive embed-responsive-16by9" style={{border:'20px solid rgb(22, 6, 71)',width:'640px',margin:'auto',}}>
+      <div className="embed-responsive embed-responsive-16by9" style={{border:'20px solid rgb(98, 79, 146)',width:'640px',margin:'auto',borderRadius:'35px'}}>
+      
         {/* <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe> */}
-        <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen  style={{width:'100%'}}></iframe>
+        <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{width:'100%'}}></iframe>
       </div>
     </div><br></br><br></br><br></br>
-    <Card sx={{ maxWidth: '100%' }}>
-                       <div style={{display:'flex',paddingLeft:'10%',paddingRight:'10%'}}>
-                        <div style={{width:'40%'}}>
-                        <h2 style={{fontFamily:'monospace',fontSize:'20px',color:'rgb(22, 6, 71)'}}>
-                        {language === "en"
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'140px',borderRadius:'40px',padding:'20px 0px',}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'30px'}}>
+                       {language === "en"
                       ?"Create Persuasive Marketing in an Instant " :
-                      "Crea Marketing Persuasivo en un Instante"
-                       }</h2>
-                        <p style={{fontFamily:'monospace',fontSize:'18px'}}>
+                      "Crea Marketing Persuasivo en un Instante "
+                       }
+                        </h1>
+                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center'}}> 
                         {language === "en"
                       ?"Whether you need marketing messages for your product, service, or brand, our quick and easy marketing generation tool has you covered. Just enter your target audience, key benefits, desired marketing style, and pitch, and our AI-powered tool will do the rest, delivering impactful marketing messages in minutes.  " :
                       "Ya sea que necesites mensajes de marketing para tu producto, servicio o marca, nuestra  herramienta rápida y fácil de generación de marketing tiene todo lo que necesitas. Solo ingresa tu público objetivo, los beneficios clave, el estilo de marketing deseado y el tono, y nuestra herramienta impulsada por IA hará el resto, entregando mensajes de marketing impactantes en minutos."
                        }
-                       </p>
-</div><div style={{width:'60%'}}>
-  <img src='./d.png' alt="" style={{width:'100%',height:'500px'}}
+                        </p>
+                        
+   
+    </div><br></br>
+    <Card sx={{ maxWidth: '100%' }}>
+                   
+                   
+  <img src='./d.png' alt="" style={{width:'50%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
       /><br></br>
-</div>
-                       </div>
+
+                   
 
     </Card><br></br>
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'140px',borderRadius:'40px',padding:'20px 0px',}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'30px'}}>
+                       {language === "en"
+                      ?"Your Personal Factory of Ideas with the power of A.I." :
+                      "Tu Fábrica Personal de Ideas con el poder de la I.A "
+                       }
+                        </h1>
+                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center'}}> 
+                        {language === "en"
+                      ?"Whether you're looking for recommendations, problem-solving tips, or just a good laugh, our AI-powered Idea generator offers endless inspiration for any need. " :
+                      " Ya sea que estés buscando recomendaciones, consejos para resolver problemas o simplemente una buena risa, nuestro generador de Ideas impulsado por IA, ofrece inspiración interminable para cualquier necesidad"
+                       }
+                        </p>
+                        
+   
+    </div><br></br>
+    
     <Card sx={{ maxWidth: '100%' }}>
-                       <div style={{display:'flex',paddingLeft:'10%',paddingRight:'10%'}}>
-                       <div style={{width:'60%'}}>
-  <img src='./c.png' alt="" style={{width:'100%',height:'500px'}}
+                 
+    <img src='./b.png' alt="" style={{width:'50%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
       />
-</div>
-                        <div style={{width:'40%'}}>
-                        <h2 style={{fontFamily:'monospace',fontSize:'20px',marginLeft:'20px',color:'rgb(22, 6, 71)'}}>
-                        {language === "en"
-                      ?"Your personal factory of ideas with the power of A.I. " :
-                      "Tu fábrica personal de ideas con el poder de la I.Ae"
-                       }
-                         
-                          </h2>
-                        <p style={{fontFamily:'monospace',fontSize:'18px',marginLeft:'20px'}}> 
-                          
-                        {language === "en"
-                      ?"Enter your keyword and get a table with all the information important thing you need to create effective content." :
-                      " Ya sea que estés buscando recomendaciones, consejos para resolver  problemas o simplemente una buena risa, nuestro generador de ideas impulsado porIA ofrece inspiración interminable para cualquier necesidad .."
-                       }
-                       </p>
-</div>
-                       </div>
+
                        <br></br>
 
     </Card><br></br>
-    <Card sx={{ maxWidth: '100%' }}>
-                       <div style={{display:'flex',paddingLeft:'10%',paddingRight:'10%'}}>
-                        <div style={{width:'40%'}}>
-                        <h2 style={{fontFamily:'monospace',fontSize:'20px',color:'rgb(22, 6, 71)'}}>
-                        {language === "en"
-                      ?"Optimize your content easily with our tool keyword-based content generation" :
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'140px',borderRadius:'40px',padding:'20px 0px',}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'24px'}}>
+                       {language === "en"
+                      ?" Optimize your content easily with our keyword-based content generation tool" :
                       "Optimiza tu contenido fácilmente con nuestra herramienta de generación de contenido basado en palabras clave"
                        }
-                          </h2>
-                        <p style={{fontFamily:'monospace',fontSize:'18px'}}>
+                        </h1>
+                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center'}}> 
                         {language === "en"
-                      ?"Enter your keyword and get a table with all the information important thing you need to create effective content." :
+                      ?"Enter your keyword and get a table with all the important information you need to create effective content. " :
                       " Ingresa tu palabra clave y obtén una tabla con toda la información importante que necesitas para crear contenido efectivo."
                        }
-                       
-</p>
-</div><div style={{width:'60%'}}>
-  <img src='./b.png' alt="" style={{width:'100%',height:'500px'}}
+                        </p>
+                        
+   
+    </div><br></br>
+    
+    <Card sx={{ maxWidth: '100%' }}>
+                 
+    <img src='./c.png' alt="" style={{width:'50%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
       />
-</div> 
-                       </div>
-                       <br></br><br></br><br></br>
-    </Card>
+
+                       <br></br>
+
+    </Card><br></br>
+   
       <div className="max-w-7xl mx-auto text-center">
       <br></br><br></br><br></br>
         <h1 style={{fontFamily:'Monospace',color:'black',fontSize:'40px',color:'rgb(22, 6, 71)',fontWeight:'bolder'}}>
@@ -284,10 +310,10 @@ const LandingPage = () => {
           </p>
         <br></br>
      <Link href="/login">
-            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginLeft:'30px'}}>
+            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',fontSize:'30px',height:'70px'}}>
             {language === "en"
                       ?"Get Started For Free" :
-                      "empezar gratis"
+                      "Empezar Gratis !"
                        }
              
             </button>    </Link>  
@@ -323,11 +349,12 @@ const LandingPage = () => {
              </div>
               <br></br>
       </div>
+      <br></br> <br></br>
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-8">
           {language === "en"
                       ?"Become an affiliate" :
-                      "CONTACTO/SUGERENCIAS "
+                      "CONTACTO / SUGERENCIAS "
                        }
             
             </h2>
@@ -347,14 +374,14 @@ const LandingPage = () => {
                   type="text"
                   name="firstName"
                   placeholder="
-                  First Name"
+                  Nombre"
                   className="flex-1 px-4 py-2 border border-black-600 rounded"
                  
                 />
                 <input
                   type="text"
                   name="lastName"
-                  placeholder="Last Name"
+                  placeholder="Apellido"
                   className="flex-1 px-4 py-2 border border-black-600 rounded"
                 />
               </div>
@@ -366,7 +393,7 @@ const LandingPage = () => {
               />
               <textarea
                 name="message"
-                placeholder="Message"
+                placeholder="Mensaje"
                 rows="4"
                 className="w-full px-4 py-2 border border-black-600 rounded"
               ></textarea>
@@ -377,7 +404,7 @@ const LandingPage = () => {
               >
                 {language === "en"
                       ?"Submit" :
-                      "entregar"
+                      "Enviar"
                        }
               
               </button>
@@ -428,7 +455,7 @@ const LandingPage = () => {
           >
             {language === "en"
                       ?"Affiliates" :
-                      "afiliadas"
+                      "Convierte en un Afiliado"
                        }
           
           </a>
@@ -443,7 +470,7 @@ const LandingPage = () => {
           >
              {language === "en"
                       ?" Privacy Notice" :
-                      "vaviso de Privacidad"
+                      "Aviso de Privacidad"
                        }
            
           </p> </Link> <Link href="Terms"><p
@@ -456,7 +483,7 @@ const LandingPage = () => {
           >
              {language === "en"
                       ?" Terms of Service" :
-                      "términos de servicio"
+                      "Términos de Servicio"
                        }
             
           </p></Link>

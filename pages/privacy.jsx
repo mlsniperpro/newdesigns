@@ -10,13 +10,13 @@ function privacy() {
   return (
     <div style={{height:'100%'}}>
     <div style={{color:'white',width:'75%',margin:'auto'}}><br></br><br></br>
-    <h1 style={{fontSize:'32px',color:'#ec4899'}}>Privacy Notice</h1>
-    <h3 style={{fontSize:'25px',color:'rgb(40, 48, 129)'}}>Last Updated: May 1,  2023VIO</h3><br></br>
+    <h1 style={{fontSize:'32px',color:'rgb(22, 6, 71)'}}>Privacy Notice</h1>
+    <h3 style={{fontSize:'25px',color:'rgb(22, 6, 71)'}}>Last Updated: May 1, 2023</h3><br></br>
     <p style={{fontSize:'16px',color:'rgb(40, 48, 129)'}}>VIONIKO (“VIONIKO,” “we,” “us,” and “our”) provides an AI powered tool to assist our customers in writing copy. This Privacy Notice is designed to help you understand how we collect, use, and share your personal information and to help you understand and exercise your privacy rights.</p>
     <br></br>
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead style={{backgroundColor:'#ec4899'}}>
+        <TableHead style={{backgroundColor:'rgb(22, 6, 71)'}}>
           <TableRow>
             <TableCell style={{color:'white'}}>Title</TableCell>
             <TableCell align="left"style={{color:'white'}}>Details</TableCell>
@@ -26,7 +26,7 @@ function privacy() {
    
             <TableRow
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              style={{backgroundColor:'#c084fc'}}
+              style={{backgroundColor:'rgb(98, 79, 146)'}}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
               1. SCOPE
@@ -35,7 +35,7 @@ function privacy() {
             </TableRow>
             <TableRow
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              style={{backgroundColor:'#c084fc'}}
+              style={{backgroundColor:'rgb(98, 79, 146)'}}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
               2. CHANGES TO OUR PRIVACY NOTICE  
@@ -44,7 +44,7 @@ function privacy() {
             </TableRow>
             <TableRow
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-               style={{backgroundColor:'#c084fc'}}
+               style={{backgroundColor:'rgb(98, 79, 146)'}}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
               3. PERSONAL INFORMATION WE COLLECT
@@ -80,7 +80,7 @@ We may obtain information about you from other sources, including through third-
             
             <TableRow
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              style={{backgroundColor:'#c084fc'}}
+              style={{backgroundColor:'rgb(98, 79, 146)'}}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
               4. WHOW WE USE YOUR INFORMATION
@@ -121,7 +121,7 @@ If you have any questions about our marketing practices or if you would like to 
             </TableRow>
             <TableRow
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              style={{backgroundColor:'#c084fc'}}
+              style={{backgroundColor:'rgb(98, 79, 146)'}}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
               5. HOW WE DISCLOSE YOUR INFORMATION
@@ -142,7 +142,7 @@ If we are involved in a merger, acquisition, financing due diligence, reorganiza
             </TableRow>
             <TableRow
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              style={{backgroundColor:'#c084fc'}}
+              style={{backgroundColor:'rgb(98, 79, 146)'}}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
               6. YOUR PRIVACY CHOICES AND RIGHTS 
@@ -166,7 +166,7 @@ If you would like to exercise any of these rights, please contact us as set fort
             </TableRow>
             <TableRow
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              style={{backgroundColor:'#c084fc'}}
+              style={{backgroundColor:'rgb(98, 79, 146)'}}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
               7. SECURITY OF YOUR INFORMATION
@@ -175,7 +175,7 @@ If you would like to exercise any of these rights, please contact us as set fort
 By using our Services or providing personal information to us, you agree that we may communicate with you electronically regarding security, privacy, and administrative issues relating to your use of our Services. If we learn of a security system’s breach, we may attempt to notify you electronically by posting a notice on our Services, by mail or by sending an email to you.</TableCell>
             </TableRow>
             <TableRow
-             style={{backgroundColor:'#c084fc'}}
+             style={{backgroundColor:'rgb(98, 79, 146)'}}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
@@ -184,7 +184,7 @@ By using our Services or providing personal information to us, you agree that we
               <TableCell align="left" style={{color:"white",fontFamily:'monospace'}}>All information processed by us may be transferred, processed, and stored anywhere in the world, including, but not limited to, the United States or other countries, which may have data protection laws that are different from the laws where you live. We endeavor to safeguard your information consistent with the requirements of applicable laws.</TableCell>
             </TableRow>
             <TableRow
-             style={{backgroundColor:'#c084fc'}}
+             style={{backgroundColor:'rgb(98, 79, 146)'}}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
@@ -193,7 +193,7 @@ By using our Services or providing personal information to us, you agree that we
               <TableCell align="left" style={{color:"white",fontFamily:'monospace'}}>We store the personal information we collect as described in this Privacy Notice for as long as you use our Services or as necessary to fulfill the purpose(s) for which it was collected, provide our Services, resolve disputes, establish legal defenses, conduct audits, pursue legitimate business purposes, enforce our agreements, and comply with applicable laws.</TableCell>
             </TableRow>
             <TableRow
-             style={{backgroundColor:'#c084fc'}}
+             style={{backgroundColor:'rgb(98, 79, 146)'}}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
@@ -207,7 +207,7 @@ If you are a California resident and would like to exercise any of your rights u
 California Shine the Light. The California “Shine the Light” law permits users who are California residents to request and obtain from us once a year, free of charge, a list of the third parties to whom we have disclosed their personal information (if any) for their direct marketing purposes in the prior calendar year, as well as the type of personal information disclosed to those parties.</TableCell>
             </TableRow>
             <TableRow
-             style={{backgroundColor:'#c084fc'}}
+             style={{backgroundColor:'rgb(98, 79, 146)'}}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
@@ -216,7 +216,7 @@ California Shine the Light. The California “Shine the Light” law permits use
               <TableCell align="left" style={{color:"white",fontFamily:'monospace'}}>If you are a resident of Nevada, you have the right to opt-out of the sale of certain personal information to third parties who intend to license or sell that personal information. You can exercise this right by contacting us as set forth below with the subject line “Nevada Do Not Sell Request” and providing us with your name and the email address associated with your account. Please note that we do not currently sell your personal information as sales are defined in Nevada Revised Statutes Chapter 603A.</TableCell>
             </TableRow>
             <TableRow
-             style={{backgroundColor:'#c084fc'}}
+             style={{backgroundColor:'rgb(98, 79, 146)'}}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
@@ -225,7 +225,7 @@ California Shine the Light. The California “Shine the Light” law permits use
               <TableCell align="left" style={{color:"white",fontFamily:'monospace'}}>The Services are not directed to children under 13 (or other age as required by local law), and we do not knowingly collect personal information from children. If you learn that your child has provided us with personal information without your consent, you may contact us as set forth below.  If we learn that we have collected a child’s personal information in violation of applicable law, we will promptly take steps to delete such information.</TableCell>
             </TableRow>
             <TableRow
-             style={{backgroundColor:'#c084fc'}}
+             style={{backgroundColor:'rgb(98, 79, 146)'}}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
@@ -234,7 +234,7 @@ California Shine the Light. The California “Shine the Light” law permits use
               <TableCell align="left" style={{color:"white",fontFamily:'monospace'}}>The Services may contain links to other websites/applications and other websites/applications may reference or link to our Services. These third-party services are not controlled by us. We encourage our users to read the privacy policies of each website and applicationwith which they interact. We do not endorse, screen or approve, and are not responsible for, the privacy practices or content of such other websites or applications. Providing personal information to third-party websites or applications is at your own risk.</TableCell>
             </TableRow>
             <TableRow
-             style={{backgroundColor:'#c084fc'}}
+             style={{backgroundColor:'rgb(98, 79, 146)'}}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}}>
@@ -243,7 +243,7 @@ California Shine the Light. The California “Shine the Light” law permits use
               <TableCell align="left" style={{color:"white",fontFamily:'monospace'}}>If you are located in the European Economic Area, Switzerland, the United Kingdom or Brazil, you have the right to lodge a complaint with a supervisory authority if you believe our processing of your personal information violates applicable law.       THE EXCLUSIONS AND LIMITATIONS OF DAMAGES SET FORTH ABOVE ARE FUNDAMENTAL ELEMENTS OF THE BASIS OF THE BARGAIN BETWEEN VIONIKO AND YOU.</TableCell>
             </TableRow>
             <TableRow
-             style={{backgroundColor:'#c084fc'}}
+             style={{backgroundColor:'rgb(98, 79, 146)'}}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row" style={{width:'150px',color:"white",fontFamily:'monospace'}} >
