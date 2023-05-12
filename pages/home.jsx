@@ -221,11 +221,10 @@ const LandingPage = () => {
                       "→ ¡Nuestra demostración de tutoría de IA te dejará impresionado!"
                        }
         </h4><br></br><br></br>
-      <div className="container" style={{margin:'auto'}}>
-     
+      <div className="container" style={{margin:'auto',height:'100%',width:'100%'}}>
       
         {/* <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe> */}
-        <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="640" height="840" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{borderRadius:'1%',width:'100%',borderTop:'20ox solid green'}}></iframe>
+        <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="1600" height="500" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{borderRadius:'1%',width:'100%'}}></iframe>
 
     </div><br></br><br></br><br></br><hr></hr>
     <Card sx={{ maxWidth: '100%' }}><br></br><br></br>
