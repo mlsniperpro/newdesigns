@@ -84,9 +84,9 @@ const LandingPage = () => {
   }, [submitted]);
 
   return (
-    <div className="min-h-screen flex flex-col" style={{backgroundColor:'rgb(22, 6, 71)'}}>
-      <nav className="w-full px-4 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+    <div className="min-h-screen flex flex-col" style={{backgroundColor:'rgb(22, 6, 71)',width:'100%'}}>
+      <nav className="w-full px-4 py-4" style={{widht:'100%'}}>
+        <div className="max-w-7xl mx-auto flex justify-between items-center"style={{widht:'100%'}}>
           <h2 className="text-2xl font-bold text-white" style={{fontFamily:'monospace',fontSize:'30px'}}></h2>
           <div>
           <Link href="/login">
@@ -176,7 +176,7 @@ const LandingPage = () => {
       <div style={{display:'flex',justifyContent:'center'}}>
       <br></br> <br></br>
       <Link href="/login">
-        <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginRight:'30px',fontFamily:'monospace',fontSize:'20px'}}>
+        <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'100%',textAlign:'center',justifyContent:'center',marginRight:'30px',fontFamily:'monospace',fontSize:'20px'}}>
            <GoogleIcon style={{marginRight:'10px'}} />
             {language === "en"
                       ?"Sign Up with Google" :
@@ -192,7 +192,7 @@ const LandingPage = () => {
                        }
               </p>
             <Link href="/login">
-            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',marginLeft:'30px',fontFamily:'monospace',fontSize:'20px'}}>
+            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'100%',textAlign:'center',justifyContent:'center',marginLeft:'30px',fontFamily:'monospace',fontSize:'20px'}}>
             {language === "en"
                       ?"Sign Up with Email →" :
                       "Ingresa con e-mail → "
@@ -222,22 +222,22 @@ const LandingPage = () => {
                        }
         </h4><br></br><br></br>
       <div className="container" style={{margin:'auto'}}>
-      <div className="embed-responsive embed-responsive-16by9" style={{border:'20px solid rgb(98, 79, 146)',width:'640px',margin:'auto',borderRadius:'35px'}}>
+      <div className="embed-responsive embed-responsive-16by9" style={{border:'20px solid rgb(98, 79, 146)',width:'100%',margin:'auto',borderRadius:'35px'}}>
       
         {/* <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe> */}
         <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{width:'100%'}}></iframe>
       </div>
     </div><br></br><br></br><br></br><hr></hr>
     <Card sx={{ maxWidth: '100%' }}><br></br><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'220px',borderRadius:'40px',padding:'20px 0px',}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'30px',textDecoration:'underline',fontWeight:'bolder'}}>
-                      <AttractionsIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'2rem',textDecoration:'underline',fontWeight:'bolder'}}>
+                      <AttractionsIcon style={{marginRight:'10px',fontSize:'1.5rem',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
                        {language === "en"
                       ?"Create Persuasive Marketing in an Instant " :
                       "Crea Marketing Persuasivo en un Instante "
                        }
                         </h1>
-                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'18px'}}> 
+                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'1.2rem',height:'100%'}}> 
                         {language === "en"
                       ?"Whether you need marketing messages for your product, service, or brand, our quick and easy marketing generation tool has you covered. Just enter your target audience, key benefits, desired marketing style, and pitch, and our AI-powered tool will do the rest, delivering impactful marketing messages in minutes.  " :
                       "Ya sea que necesites mensajes de marketing para tu producto, servicio o marca, nuestra  herramienta rápida y fácil de generación de marketing tiene todo lo que necesitas. Solo ingresa tu público objetivo, los beneficios clave, el estilo de marketing deseado y el tono, y nuestra herramienta impulsada por IA hará el resto, entregando mensajes de marketing impactantes en minutos."
@@ -249,13 +249,13 @@ const LandingPage = () => {
     <br></br>
                    
                    
-  <img src='./d.png' alt="" style={{width:'50%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
+  <img src='./d.png' alt="" style={{width:'80%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
       /><br></br>
 
 <br></br><br></br>
 
     </Card><br></br><br></br><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'200px',borderRadius:'40px',padding:'20px 0px',}}>
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',}}>
                        <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px',textDecoration:'underline',fontWeight:'bolder'}}>
                       <SyncAltIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
                        {language === "en"
@@ -275,13 +275,13 @@ const LandingPage = () => {
     
     <Card sx={{ maxWidth: '100%' }}>
                  
-    <img src='./b.png' alt="" style={{width:'50%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
+    <img src='./b.png' alt="" style={{width:'80%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
       /><br></br><br></br>
 
                        <br></br>
 
     </Card><br></br><br></br><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'200px',borderRadius:'40px',padding:'20px 0px',}}>
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',}}>
                        <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px',fontWeight:'bolder',textDecoration:'underline'}}>
                     <SelectAllIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
                        {language === "en"
@@ -301,7 +301,7 @@ const LandingPage = () => {
     <br></br>
     <Card sx={{ maxWidth: '100%' }}>
                  
-    <img src='./c.png' alt="" style={{width:'50%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
+    <img src='./c.png' alt="" style={{width:'80%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
       />
 
                        <br></br>
