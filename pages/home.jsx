@@ -224,11 +224,11 @@ const LandingPage = () => {
       <div className="container" style={{margin:'auto',height:'100%',width:'100%'}}>
       
         {/* <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe> */}
-        <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="1600" height="500" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{borderRadius:'1%',width:'100%'}}></iframe>
+        <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="1600" height="800" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{borderRadius:'1%',width:'100%'}}></iframe>
 
     </div><br></br><br></br><br></br><hr></hr>
     <Card sx={{ maxWidth: '100%' }}><br></br><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',}}>
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'100%'}}>
                        <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'2rem',textDecoration:'underline',fontWeight:'bolder'}}>
                       <AttractionsIcon style={{marginRight:'10px',fontSize:'1.5rem',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
                        {language === "en"
@@ -248,13 +248,13 @@ const LandingPage = () => {
     <br></br>
                    
                    
-  <img src='./d.png' alt="" style={{width:'80%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
+  <img src='./d.png' alt="" style={{width:'100%',height:'800px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
       /><br></br>
 
 <br></br><br></br>
 
     </Card><br></br><br></br><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',}}>
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'100%'}}>
                        <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px',textDecoration:'underline',fontWeight:'bolder'}}>
                       <SyncAltIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
                        {language === "en"
@@ -274,13 +274,13 @@ const LandingPage = () => {
     
     <Card sx={{ maxWidth: '100%' }}>
                  
-    <img src='./b.png' alt="" style={{width:'80%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
+    <img src='./b.png' alt="" style={{width:'100%',height:'800px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
       /><br></br><br></br>
 
                        <br></br>
 
     </Card><br></br><br></br><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',}}>
+    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'100%'}}>
                        <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px',fontWeight:'bolder',textDecoration:'underline'}}>
                     <SelectAllIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
                        {language === "en"
@@ -300,7 +300,7 @@ const LandingPage = () => {
     <br></br>
     <Card sx={{ maxWidth: '100%' }}>
                  
-    <img src='./c.png' alt="" style={{width:'80%',height:'600px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
+    <img src='./c.png' alt="" style={{width:'100%',height:'800px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
       />
 
                        <br></br>
