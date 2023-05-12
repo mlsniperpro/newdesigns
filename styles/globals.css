@@ -15,6 +15,8 @@
   scroll-behavior: smooth;
 }
 
+
+
 .gradient-01 {
   position: absolute;
   width: 200px;
@@ -32,4 +34,10 @@
   right: 0px;
   background: #7aebfb;
   filter: blur(190px)
+}
+
+@media  screen and (max-width: 1536px) {
+ .display{
+  border:'none';
+ }
 }

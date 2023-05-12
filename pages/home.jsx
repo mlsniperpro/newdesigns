@@ -222,10 +222,10 @@ const LandingPage = () => {
                        }
         </h4><br></br><br></br>
       <div className="container" style={{margin:'auto'}}>
-      <div className="embed-responsive embed-responsive-16by9" style={{border:'20px solid rgb(98, 79, 146)',width:'100%',margin:'auto',borderRadius:'35px'}}>
+      <div style={{border:'20px solid rgb(98, 79, 146)',width:'100%',margin:'auto',borderRadius:'35px'}}>
       
         {/* <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe> */}
-        <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{width:'100%'}}></iframe>
+        <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="640" height="840" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{borderRadius:'1%',width:'100%'}}></iframe>
       </div>
     </div><br></br><br></br><br></br><hr></hr>
     <Card sx={{ maxWidth: '100%' }}><br></br><br></br>
