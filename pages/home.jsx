@@ -221,12 +221,15 @@ const LandingPage = () => {
                       "→ ¡Nuestra demostración de tutoría de IA te dejará impresionado!"
                        }
         </h4><br></br><br></br>
-      <div className="container" style={{margin:'auto',height:'100%',width:'100%'}}>
-      
-        {/* <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/frYuuLmoXGM" allowfullscreen style={{width:'100%',height:'500px'}}></iframe> */}
-        <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="1600" height="800" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{borderRadius:'1%',width:'100%'}}></iframe>
-
-    </div><br></br><br></br><br></br><hr></hr>
+     
+        {/* <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="1600" height="800" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{borderRadius:'1%',width:'100%'}}></iframe> */}
+        
+        <div class="videoWrapper" style={{position:'relative',paddingBottom: '56.25%' ,height: '0'}}>
+  <iframe width="560" height="349" src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" frameborder="0" allowfullscreen style={{  position: 'absolute',top: '0',left: '0',width: '100%', height: '100%'}}>
+    
+  </iframe>
+</div>
+    <br></br><br></br><br></br><hr></hr>
     <Card sx={{ maxWidth: '100%' }}><br></br><br></br>
     <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'100%'}}>
                        <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'2rem',textDecoration:'underline',fontWeight:'bolder'}}>
