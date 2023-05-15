@@ -2,7 +2,7 @@ import { addDoc, collection, onSnapshot } from "firebase/firestore";
 import {db } from "../config/firebase";
 
 export async function createCheckoutSession(uid, priceId) {
-  console.log("The uid is: " + uid);
+  //console.log("The uid is: " + uid);
 
   const docRef = await addDoc(
     collection(db, "users", uid, "checkout_sessions"),
@@ -24,9 +24,9 @@ export async function createCheckoutSession(uid, priceId) {
         // inspect your Cloud Function logs in the Firebase console.
         alert(`An error occurred: ${error.message}`);
       }
-      console.log("I reached here and data is", data);
-      console.log("The url is: ", url);
-      console.log("The error is: ", error);
+      //console.log("I reached here and data is", data);
+      //console.log("The url is: ", url);
+      //console.log("The error is: ", error);
       if (url) {
         // We have a Stripe Checkout URL, let's redirect.
         window.location.assign(url);

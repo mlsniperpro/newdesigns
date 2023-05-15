@@ -41,7 +41,7 @@ useEffect(() => {
     await signOut(auth)
     .then(() => {
       // Sign-out successful.
-      console.log("Sign-out successful.");
+      //console.log("Sign-out successful.");
       router.push("/login")
     }).catch((error) => {
       // An error happened.

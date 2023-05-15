@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { use } from 'react'
 import { useEffect } from 'react'
 import Link from 'next/link';
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -16,7 +16,7 @@ function PlanSelection() {
   const [stripePrices, setStripePrices] = React.useState({}); //Dictionary of prices from stripe
   const [yearly, setYearly] = React.useState(90);
   const [monthly, setMonthly] = React.useState(9);
-  const [referred, setReferred] = React.useState(true); //If the user was referred by a friend
+  const [referred, setReferred] = React.useState(false); //If the user was referred by a friend
   const [language, setLanguage] = React.useState("spanish"); //Language can be english or spanish
 
  const fetchPrices = async () => {
@@ -46,17 +46,25 @@ function PlanSelection() {
   
     retrievePrices();
   }, []);
+  useEffect(() => {
+    console.log("You have landed on the page Plan Selection")
+    console.log("Here is the user", user)
+    console.log("Here is the user id", user.uid)
+    console.log("Here is the stripe prices", stripePrices)
+  }, [])
    useEffect(() => {
      const script = document.createElement("script");
      script.innerHTML = `
       rewardful('ready', function() {
         if (Rewardful.referral) {
+          console.log('The current website visitor is a referral from an affiliate.')
           // The current website visitor is a referral from an affiliate.
           setReferred(true);
         }
       });
     `;
      document.head.appendChild(script);
+     console.log("referred", referred)
      return () => {
        document.head.removeChild(script);
      };
@@ -76,7 +84,7 @@ function PlanSelection() {
 
   return (
     <>
-      {/* This is an example component */}
+      {console.log("referred", referred)}
       <div
         className="flex min-h-screen pt-[30px] px-[40px]"
         style={{ background: "white" }}

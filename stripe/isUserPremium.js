@@ -7,7 +7,7 @@ export default async function isUserPremium() {
   if (currentUser) {
     await getIdToken(currentUser, true);
     const decodedToken = await getIdTokenResult(currentUser);
-    console.log("The decoded token is: ", decodedToken)
+    //console.log("The decoded token is: ", decodedToken)
     return decodedToken.claims.stripeRole ? true : false;
   }
 
