@@ -32,6 +32,12 @@ function PlanSelection() {
 
    return pricesDict;
  };
+ useEffect(() => {
+    if (window.Rewardful && window.Rewardful.referral) {
+      setReferred(true);
+      console.log("We deterine whether user referred ", window.Rewardful.referral)
+    }
+  }, []);
   const retrievePrices = async () => {
     const pricesDoc = await getDocs(collection(db, "Payment"));
     pricesDoc.forEach((doc) => {
@@ -46,29 +52,6 @@ function PlanSelection() {
   
     retrievePrices();
   }, []);
-  useEffect(() => {
-    console.log("You have landed on the page Plan Selection")
-    console.log("Here is the user", user)
-    console.log("Here is the user id", user.uid)
-    console.log("Here is the stripe prices", stripePrices)
-  }, [])
-   useEffect(() => {
-     const script = document.createElement("script");
-     script.innerHTML = `
-      rewardful('ready', function() {
-        if (Rewardful.referral) {
-          console.log('The current website visitor is a referral from an affiliate.')
-          // The current website visitor is a referral from an affiliate.
-          setReferred(true);
-        }
-      });
-    `;
-     document.head.appendChild(script);
-     console.log("referred", referred)
-     return () => {
-       document.head.removeChild(script);
-     };
-   }, []);
    const handleMonthlyClick = () => {
      if (referred) {
       console.log("Here is the monthly price going to strpe ", stripePrices["prod_Njtrgy9W8UwGW7"])
@@ -84,7 +67,7 @@ function PlanSelection() {
 
   return (
     <>
-      {console.log("referred", referred)}
+      {console.log("We deterine whether user referred ", window.Rewardful.referral? window.Rewardful.referral : "No")}
       <div
         className="flex min-h-screen pt-[30px] px-[40px]"
         style={{ background: "white" }}
@@ -567,5 +550,6 @@ function PlanSelection() {
     </>
   );
 }
+
 
 export default PlanSelection
