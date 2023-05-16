@@ -8,7 +8,7 @@ export async function createCheckoutSession(uid, priceId) {
     collection(db, "users", uid, "checkout_sessions"),
     {
       price: priceId,
-      success_url: window.location.origin,
+      success_url: "https://marketing.vioniko.net/thankyou",
       cancel_url: window.location.origin,
     }
   );

@@ -19,11 +19,12 @@ export default function ThankYou() {
     if (typeof window !== "undefined" && window.rewardful) {
       console.log("The window is : ",  window.rewardful)
       window.rewardful("ready", function () {
-        if(window.Rewardful.referral){
+        
           window.rewardful("convert", {
         email: user.email,
-      });
+        
     }
+    );
     });
   }
 
