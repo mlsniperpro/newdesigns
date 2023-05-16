@@ -86,14 +86,6 @@ function Login() {
           //This gives the uid of the user
           const user = result.user;
           console.log(user.email);
-          /*const handleClick = () => {
-            if (window.Rewardful.referral) {
-              console.log("Rewardful referral", window.Rewardful.referral);
-              window.rewardful('convert', { email: user.email });
-            }
-          }
-          handleClick();
-          */
           const addUser = async () => {
             const q = query(
               collection(db, "users"),
@@ -102,6 +94,13 @@ function Login() {
             const docs = await getDocs(q);
 
             if (docs.empty) {
+              const startTracking = () => {
+                if (window.Rewardful.referral) {
+                  console.log("Rewardful referral", window.Rewardful.referral);
+                  window.rewardful('convert', { email: user.email });
+                }
+              }
+              startTracking();
               await addDoc(collection(db, "users"), {
                 userId: user.uid,
                 email: user.email,

@@ -40,14 +40,13 @@ function Signup() {
       email,
       password
     );
-    /*const handleClick = () => {
+    const handleClick = () => {
       if (window.Rewardful.referral) {
         console.log("Rewardful referral", window.Rewardful.referral);
         window.rewardful('convert', { email: user.email });
       }
     }
     handleClick();
-    */
     console.log("The user credentials ", newUserCredentials.user.uid);
     await sendEmailVerification(newUserCredentials.user)
       .then(() => {
