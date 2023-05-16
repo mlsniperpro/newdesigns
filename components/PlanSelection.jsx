@@ -47,6 +47,8 @@ function PlanSelection() {
     retrievePrices();
   }, []);
    const handleMonthlyClick = () => {
+    console.log("Checking if window.Rewardful exists", window.Rewardful)
+    console.log("Checking if window.Rewardful.referral exists", window.Rewardful.referral)
      if (window.Rewardful && window.Rewardful.referral) {
       console.log("Here is the monthly price going to strpe ", stripePrices["prod_Njtrgy9W8UwGW7"])
        createCheckoutSession(user.uid, stripePrices["prod_Njtrgy9W8UwGW7"]);
