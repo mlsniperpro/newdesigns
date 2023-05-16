@@ -34,8 +34,13 @@ function App({ Component, pageProps }) {
 
   if (displayErrorMessage) {
     return (
-      <div>
-        Your browser does not support the required script. Please switch to another browser or enable JavaScript execution.
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="max-w-md p-6 m-4 bg-white rounded shadow-xl">
+          <h2 className="text-2xl font-bold mb-2 text-gray-700">Browser Incompatibility</h2>
+          <p className="text-gray-700">
+            Your browser does not support the required script. Please switch to another browser or enable JavaScript execution.
+          </p>
+        </div>
       </div>
     );
   }
