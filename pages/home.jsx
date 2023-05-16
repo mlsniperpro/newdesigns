@@ -224,8 +224,8 @@ const LandingPage = () => {
      
         {/* <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="1600" height="800" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{borderRadius:'1%',width:'100%'}}></iframe> */}
         
-        <div class="videoWrapper" style={{position:'relative',paddingBottom: '56.25%' ,height: '0'}}>
-  <iframe width="560" height="349" src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" frameborder="0" allowfullscreen style={{  position: 'absolute',top: '0',left: '0',width: '100%', height: '100%'}}>
+        <div className="videoWrapper" style={{position:'relative',paddingBottom: '56.25%' ,height: '0'}}>
+  <iframe width="560" height="349" src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" frameBorder="0" allowFullScreen style={{  position: 'absolute',top: '0',left: '0',width: '100%', height: '100%'}}>
     
   </iframe>
 </div>
