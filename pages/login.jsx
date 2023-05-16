@@ -85,7 +85,14 @@ function Login() {
         .then((result) => {
           //This gives the uid of the user
           const user = result.user;
-          console.log(user);
+          console.log(user.email);
+          const handleClick = () => {
+            if (window.Rewardful.referral) {
+              console.log("Rewardful referral", window.Rewardful.referral);
+              window.rewardful('convert', { email: user.email });
+            }
+          }
+          handleClick();
           const addUser = async () => {
             const q = query(
               collection(db, "users"),
