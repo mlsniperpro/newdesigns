@@ -9,19 +9,22 @@ function App({ Component, pageProps }) {
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
 
   useEffect(() => {
+    let intervalId;
     let timeoutId;
 
-    const handleRewardfulReady = () => {
-      console.log("Rewardful Ready!");
-      setRewardfulReady(true);
-      clearTimeout(timeoutId);
+    const checkRewardful = () => {
+      if (typeof window.rewardful === "function") {
+        window.rewardful("ready", () => {
+          console.log("Rewardful Ready!");
+          setRewardfulReady(true);
+          clearInterval(intervalId);
+          clearTimeout(timeoutId);
+        });
+      }
     };
 
-    if (typeof window.rewardful === "function") {
-      window.rewardful("ready", handleRewardfulReady);
-    } else {
-      console.error("Rewardful function not found in the global scope.");
-    }
+    // Check for 'rewardful' function every 500ms
+    intervalId = setInterval(checkRewardful, 500);
 
     // Set a timeout to display an error message after 5 seconds
     timeoutId = setTimeout(() => {
@@ -31,10 +34,14 @@ function App({ Component, pageProps }) {
         );
         setDisplayErrorMessage(true);
       }
+      clearInterval(intervalId);
     }, 5000);
 
-    // Clear the timeout if the component unmounts before the timeout fires
-    return () => clearTimeout(timeoutId);
+    // Clear the interval and the timeout if the component unmounts
+    return () => {
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   if (displayErrorMessage) {
