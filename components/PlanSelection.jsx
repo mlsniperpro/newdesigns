@@ -47,15 +47,13 @@ function PlanSelection() {
     retrievePrices();
   }, []);
    const handleMonthlyClick = () => {
-    console.log("Checking if window.Rewardful exists", window.Rewardful)
-    console.log("Checking if window.Rewardful.referral exists", window.Rewardful.referral)
-     if (window.Rewardful && window.Rewardful.referral) {
+     if (window?.Rewardful && window.Rewardful?.referral) {
       console.log("Here is the monthly price going to strpe ", stripePrices["prod_Njtrgy9W8UwGW7"])
        createCheckoutSession(user.uid, stripePrices["prod_Njtrgy9W8UwGW7"]);
      }
    };
    const handleYearlyClick = () => {
-     if (window.Rewardful && window.Rewardful.referral) {
+     if (window?.Rewardful && window.Rewardful?.referral) {
       console.log("Here is the yearly price going to strpe ", stripePrices["prod_NjtvxM9XlsH2c6"])
        createCheckoutSession(user.uid, stripePrices["prod_NjtvxM9XlsH2c6"]);
      }
@@ -407,7 +405,7 @@ function PlanSelection() {
                     }}
                     onClick={handleMonthlyClick}
                   >
-                    {window.Rewardful.referral ? (
+                    {window?.Rewardful?.referral ? (
                       <span>
                         {language === "english"
                           ? "Select Plan"
@@ -524,7 +522,7 @@ function PlanSelection() {
                     }}
                     onClick={handleYearlyClick}
                   >
-                    {window.Rewardful.referral ? (
+                    {window?.Rewardful?.referral ? (
                       <span>
                         {language === "english" ? "Upgrade " : "Mejorar "}
                         <UpgradeIcon />
