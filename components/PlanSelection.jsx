@@ -32,12 +32,6 @@ function PlanSelection() {
 
    return pricesDict;
  };
- useEffect(() => {
-    if (window.Rewardful && window.Rewardful.referral) {
-      setReferred(true);
-      console.log("We deterine whether user referred ", window.Rewardful.referral)
-    }
-  }, []);
   const retrievePrices = async () => {
     const pricesDoc = await getDocs(collection(db, "Payment"));
     pricesDoc.forEach((doc) => {
@@ -53,13 +47,13 @@ function PlanSelection() {
     retrievePrices();
   }, []);
    const handleMonthlyClick = () => {
-     if (referred) {
+     if (window.Rewardful && window.Rewardful.referral) {
       console.log("Here is the monthly price going to strpe ", stripePrices["prod_Njtrgy9W8UwGW7"])
        createCheckoutSession(user.uid, stripePrices["prod_Njtrgy9W8UwGW7"]);
      }
    };
    const handleYearlyClick = () => {
-     if (referred) {
+     if (window.Rewardful && window.Rewardful.referral) {
       console.log("Here is the yearly price going to strpe ", stripePrices["prod_NjtvxM9XlsH2c6"])
        createCheckoutSession(user.uid, stripePrices["prod_NjtvxM9XlsH2c6"]);
      }
@@ -67,7 +61,6 @@ function PlanSelection() {
 
   return (
     <>
-      {console.log("We deterine whether user referred ", window.Rewardful.referral? window.Rewardful.referral : "No")}
       <div
         className="flex min-h-screen pt-[30px] px-[40px]"
         style={{ background: "white" }}
@@ -412,7 +405,7 @@ function PlanSelection() {
                     }}
                     onClick={handleMonthlyClick}
                   >
-                    {referred ? (
+                    {window.Rewardful.referral ? (
                       <span>
                         {language === "english"
                           ? "Select Plan"
@@ -529,7 +522,7 @@ function PlanSelection() {
                     }}
                     onClick={handleYearlyClick}
                   >
-                    {referred ? (
+                    {window.Rewardful.referral ? (
                       <span>
                         {language === "english" ? "Upgrade " : "Mejorar "}
                         <UpgradeIcon />
