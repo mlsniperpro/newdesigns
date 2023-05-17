@@ -27,7 +27,7 @@ function Dashboard(props) {
   function checkIfAdmin(){
     if (
     auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-    auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
+    auth.currentUser?.uid === "fcJAePkUVwV7fBR3uiGh5iyt2Tf1"
   ) {
     setAdmin(true);
     return;
@@ -51,7 +51,7 @@ useEffect(() => {
 function onlyAdmins() {
   if (
     auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-    auth.currentUser?.uid === "ow0JkUWdI9f7CTxi93JdyqarLZF3"
+    auth.currentUser?.uid === "fcJAePkUVwV7fBR3uiGh5iyt2Tf1"
   ) {
     setAdmin(true);
     return;
