@@ -1,59 +1,65 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query,where, deleteDoc, doc, addDoc } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  deleteDoc,
+  doc,
+  addDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import Link from "next/link";
 import Router from "next/router";
 
 function Users() {
-   const  [subscribers, setSubscribers] = useState({});
-   const [wordsgen, setWordsgen] = useState({});
-   const [subscriptions, setSubscriptions] = useState({});
-   const [searchTerm, setSearchTerm] = useState("");
-   const [userData, setUserData] = useState([]);
-   const [actions, setActions] = useState({});
-    //Write code to retrieve users from firebase collection users
-    const retrieveUsers=async()=>{
-      console.log("I started running here")
-      const users = [];
-      const q = query(collection(db, "users"));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        users.push(doc.data());
-      });
-      console.log(users)
-      return users;
-    }
-    const getUsers=async()=>{
+  const [subscribers, setSubscribers] = useState({});
+  const [wordsgen, setWordsgen] = useState({});
+  const [subscriptions, setSubscriptions] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [userData, setUserData] = useState([]);
+  const [actions, setActions] = useState({});
+  //Write code to retrieve users from firebase collection users
+  const retrieveUsers = async () => {
+    const users = [];
+    const q = query(collection(db, "users"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      users.push(doc.data());
+    });
+    return users;
+  };
+  const getUsers = async () => {
     const newData = await retrieveUsers();
     setUserData(newData);
-    }
-    useEffect(()=>{
-      console.log("I started running here")
-      getUsers();
-    },[])
+  };
+  useEffect(() => {
+    getUsers();
+  }, []);
 
-    useEffect(() => {
-      const onlyAdmins = () => {
-        if (!auth.currentUser?.uid) {
-          Router.push("/login");
-          return;
-        }
-        if (
-          auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-          auth.currentUser?.uid === "fcJAePkUVwV7fBR3uiGh5iyt2Tf1"
-        ) {
-          return;
-        } else {
-          alert("Admins only!");
-          Router.push("/login");
-        }
-      };
-      onlyAdmins();
-    }, []);
+  useEffect(() => {
+    const onlyAdmins = () => {
+      if (!auth.currentUser?.uid) {
+        Router.push("/login");
+        return;
+      }
+      if (
+        auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
+        auth.currentUser?.uid === "fcJAePkUVwV7fBR3uiGh5iyt2Tf1"
+      ) {
+        return;
+      } else {
+        alert("Admins only!");
+        Router.push("/login");
+      }
+    };
+    onlyAdmins();
+  }, []);
 
-    
   const demoteUsers = async (userId) => {
-    console.log("I am now running demote")
+    
     //Delete all documents in collection subscibers where userId === userId
     try {
       const q = query(
@@ -63,7 +69,7 @@ function Users() {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc_) => {
         const deleteAllDocuments = async () => {
-        await deleteDoc(doc(db, "subscribers", doc_.id));
+          await deleteDoc(doc(db, "subscribers", doc_.id));
         };
         deleteAllDocuments();
       });
@@ -79,12 +85,10 @@ function Users() {
         userId: userId,
       });
       console.log("Document written with ID: ", docRef.id);
-    }
-    catch (e) {
+    } catch (e) {
       console.error("Error adding document: ", e);
     }
-
-  }
+  };
 
   const reactivateUsers = async (userId) => {
     //Delete all documents in collection deactivatedUsers where userId === userId
@@ -96,7 +100,7 @@ function Users() {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc_) => {
         const deleteAllDocuments = async () => {
-        await deleteDoc(doc(db, "deactivatedUsers", doc_.id));
+          await deleteDoc(doc(db, "deactivatedUsers", doc_.id));
         };
         deleteAllDocuments();
       });
@@ -105,104 +109,131 @@ function Users() {
     }
   };
   //Get all the subscribers from the collection subscribers
-const retrieveSubscribers = async () => {
-  try {
-    console.log("User are ", userData)
-    const ids = userData.map((user) => user.userId);
+  const retrieveSubscribers = async () => {
+    try {
+      const stripeProducts = {
+        prod_Njtrgy9W8UwGW7: "Monthly",
+        prod_NjtvxM9XlsH2c6: "Yearly",
+      };
+      const ids = userData.map((user) => user.userId);
 
-    const data = await getDocs(collection(db, "subscribers"));
+      const data = await getDocs(collection(db, "subscribers"));
 
-    const subscribers = {};
-    const subscriptions_ = {};
+      const subscribers = {};
+      const subscriptions_ = {};
 
-    for (const id of ids) {
+      for (const id of ids) {
+        //const subscriptions = data.docs.filter((doc) => doc.data().userId === id);
+        let subscriptions = data.docs
+          .map((doc) => doc.data())
+          .filter((doc) => doc.userId === id);
+        const latestSubscription = subscriptions.reduce(
+          (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
+          { subscriptionEndDate: 0 }
+        );
+        //console.log("Latest Subscription is: ", latestSubscription);
+        subscriptions_[latestSubscription.userId] = latestSubscription;
+        subscribers[id] =
+          latestSubscription.subscriptionEndDate >= Date.now()
+            ? "Subscribed"
+            : "Not Subscribed";
+        //Stripe section
+        const subscriptionsRef = collection(
+          db,
+          "users",
+          id,
+          "subscriptions"
+        );
+        const q = query(
+          subscriptionsRef,
+          where("status", "in", ["trialing", "active"])
+        );
 
-      //const subscriptions = data.docs.filter((doc) => doc.data().userId === id);
-      let subscriptions = data.docs.map((doc) => doc.data()).filter((doc) => doc.userId === id)
-      console.log("Subscriptions are: ", subscriptions)
-      const latestSubscription = subscriptions.reduce(
-        (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
-        { subscriptionEndDate: 0}
-      );
-      subscriptions_[latestSubscription.userId] = latestSubscription; 
-        console.log("Latest subscription is: ", latestSubscription)
-      subscribers[id] =
-        latestSubscription.subscriptionEndDate >= Date.now()
-          ? "Subscribed"
-          : "Not Subscribed";
-    }
-    
-    console.log("The subscribers just before setting are: ", subscribers)
-    setSubscribers(subscribers);
-    setSubscriptions(subscriptions_);
-    console.log("The subscribers just after setting are  are: ", subscribers)
-  } catch (error) {
-    console.error("Error retrieving subscribers:", error);
-  }
-};
-
-    const retrieveWordsGen = async () => {
-      console.log("Now querying words generated")
-      try {
-        const data = await getDocs(collection(db, "wordsgenerated"));
-        const wordsgen = {};
-        data.forEach((doc) => {
-          wordsgen[doc.data().userId] = doc.data().count;
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          const doc = snapshot.docs[0];
+          if (doc) {
+            //setSubscription(doc.data());
+            subscribers[id] = "Subscribed";
+            console.log("The subscription details obtained are ", doc.data());
+            console.log(
+              "The product is ",
+              doc.data().items[0]["plan"]["product"]
+            );
+            subscriptions_[id] = {
+              userId: id,
+              plan: stripeProducts[doc.data().items[0]["plan"]["product"]],
+            }
+          } else {
+            console.log("No active or trialing subscriptions!");
+          }
         });
-        setWordsgen(wordsgen);
-        console.log("The words generated are ", wordsgen)
-      } catch (error) {
-        console.error("Error retrieving wordsGen:", error);
-      }
-    };
-    useEffect(() => {
-      retrieveWordsGen();
-    }, [userData]);
+        setTimeout(unsubscribe, 10000);
+        
+}
 
-    useEffect(()=>{
-      retrieveSubscribers();
-      console.log("Subscribers are: ", subscribers)
-    },[userData])
+      setSubscribers(subscribers);
+      setSubscriptions(subscriptions_);
+
+      // Cleanup function to unsubscribe from the snapshot listener
+    } catch (error) {
+      console.error("Error retrieving subscribers:", error);
+    }
+  };
+
+  const retrieveWordsGen = async () => {
+    try {
+      const data = await getDocs(collection(db, "wordsgenerated"));
+      const wordsgen = {};
+      data.forEach((doc) => {
+        wordsgen[doc.data().userId] = doc.data().count;
+      });
+      setWordsgen(wordsgen);
+    } catch (error) {
+      console.error("Error retrieving wordsGen:", error);
+    }
+  };
+  useEffect(() => {
+    retrieveWordsGen();
+  }, [userData]);
+
+  useEffect(() => {
+    retrieveSubscribers();
+    console.log("Subscribers are: ", subscribers);
+  }, [userData]);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
   const handleConfirm = (id) => {
-    console.log("Confirm Id is: ", id)
+    console.log("Confirm Id is: ", id);
     // Perform action based on selectedAction
     //Delete the action from the actions object
-    console.log("Action is: ", actions[id])
+    console.log("Action is: ", actions[id]);
     if (actions[id] === "Demote") {
-      demoteUsers(id)
+      demoteUsers(id);
     } else if (actions[id] === "Deactivate") {
-      deactivateUsers(id)
+      deactivateUsers(id);
+    } else if (actions[id] === "Reactivate") {
+      reactivateUsers(id);
     }
-    else if (actions[id] === "Reactivate") {
-      reactivateUsers(id)
-    }
-    const updatedActions = {...actions}
-    delete updatedActions[id]
-    setActions(updatedActions)
-    alert(`Action Completed`)
+    const updatedActions = { ...actions };
+    delete updatedActions[id];
+    setActions(updatedActions);
+    alert(`Action Completed`);
   };
- const filteredData = userData.filter((user) => {
-   // Check if the 'name' attribute exists and is a string
-   if (typeof user.name === "string") {
-     return user.name.toLowerCase().includes(searchTerm.toLowerCase());
-   }
-   return false;
- });
-
-  
+  const filteredData = userData.filter((user) => {
+    // Check if the 'name' attribute exists and is a string
+    if (typeof user.name === "string") {
+      return user.name.toLowerCase().includes(searchTerm.toLowerCase());
+    }
+    return false;
+  });
 
   const handleActionChange = (event, id) => {
     //const userToUpdate = userData.find((user) => user.uid === id);
     //userToUpdate.action = event.target.value;
-    setActions({...actions, [id]: event.target.value})
-
+    setActions({ ...actions, [id]: event.target.value });
   };
-  
-
 
   return (
     <div>
@@ -285,9 +316,14 @@ const retrieveSubscribers = async () => {
                         </button>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-sm">{wordsgen[user.userId]?wordsgen[user.userId]:0}</td>
-                    <td className="px-4 py-3 text-sm">{subscriptions[user.userId]?subscriptions[user.userId]["plan"]:"Free"}</td>
-
+                    <td className="px-4 py-3 text-sm">
+                      {wordsgen[user.userId] ? wordsgen[user.userId] : 0}
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      {subscriptions[user.userId]
+                        ? subscriptions[user.userId]["plan"]
+                        : "Free"}
+                    </td>
                   </tr>
                 ))}
               </tbody>

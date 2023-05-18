@@ -97,6 +97,7 @@ function Index() {
 
   return (
     <div>
+      {console.log("Checking if user is premium: ", userIsPremium)}
       <Head>
         <title>Vionko Marketing AI</title>
       </Head>
