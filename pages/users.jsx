@@ -59,7 +59,6 @@ function Users() {
   }, []);
 
   const demoteUsers = async (userId) => {
-    
     //Delete all documents in collection subscibers where userId === userId
     try {
       const q = query(
@@ -138,38 +137,48 @@ function Users() {
             ? "Subscribed"
             : "Not Subscribed";
         //Stripe section
-        const subscriptionsRef = collection(
-          db,
-          "users",
-          id,
-          "subscriptions"
-        );
-        const q = query(
-          subscriptionsRef,
-          where("status", "in", ["trialing", "active"])
-        );
+        try {
+          const subscriptionsRef = collection(db, "users", id, "subscriptions");
+          const q = query(
+            subscriptionsRef,
+            where("status", "in", ["trialing", "active"])
+          );
 
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          const doc = snapshot.docs[0];
-          if (doc) {
-            //setSubscription(doc.data());
-            subscribers[id] = "Subscribed";
-            console.log("The subscription details obtained are ", doc.data());
-            console.log(
-              "The product is ",
-              doc.data().items[0]["plan"]["product"]
-            );
-            subscriptions_[id] = {
-              userId: id,
-              plan: stripeProducts[doc.data().items[0]["plan"]["product"]],
+          const unsubscribe = onSnapshot(
+            q,
+            (snapshot) => {
+              const doc = snapshot.docs[0];
+              if (doc) {
+                //setSubscription(doc.data());
+                subscribers[id] = "Subscribed";
+                console.log(
+                  "The subscription details obtained are ",
+                  doc.data()
+                );
+                console.log(
+                  "The product is ",
+                  doc.data().items[0]["plan"]["product"]
+                );
+                subscriptions_[id] = {
+                  userId: id,
+                  plan: stripeProducts[doc.data().items[0]["plan"]["product"]],
+                };
+              } else {
+                console.log("No active or trialing subscriptions!");
+              }
+            },
+            (error) => {
+              console.error("Snapshot listener error:", error);
+              throw error; // This will propagate the error to the outer try-catch block
             }
-          } else {
-            console.log("No active or trialing subscriptions!");
-          }
-        });
-        setTimeout(unsubscribe, 10000);
-        
-}
+          );
+
+          setTimeout(unsubscribe, 10000);
+        } catch (error) {
+          console.error("Error setting up snapshot listener:", error);
+        }
+
+      }
 
       setSubscribers(subscribers);
       setSubscriptions(subscriptions_);
