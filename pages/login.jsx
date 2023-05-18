@@ -251,7 +251,7 @@ function Login() {
                 </label>
               </div>
               <div>
-                <Link href="/login" className="font-medium text-indigo-600"  style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}>
+                <Link href="/passwordreset" className="font-medium text-indigo-600"  style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}>
                   {language === "sp"
                     ? "¿Olvidaste tu contraseña?"
                     : "Forgot Password?"}
