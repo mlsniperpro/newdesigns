@@ -77,8 +77,8 @@ const LandingPage = () => {
 
             <button className="bg-transparent border border-white text-white font-semibold px-6 py-2 rounded hover:bg-black hover:text-white-600 transition-colors duration-300" style={{fontFamily:'sans-serif',fontSize:'20px'}}>
             {language === "en"
-                      ?"Login" :
-                      "Iniciar sesión"
+                      ?"Login ➶" :
+                      "Iniciar sesión ➶"
                        }
              
             </button>
@@ -91,7 +91,7 @@ const LandingPage = () => {
           style={{marginLeft:'20px',fontFamily:'sans-serif',fontSize:'20px'}}
        
         >
-         <LanguageIcon /> {language === "sp" ? "English" : "Spanish"}
+         <LanguageIcon /> {language === "sp" ? "English"  : "Spanish"}
         </button>
 
         </div>
@@ -118,11 +118,11 @@ const LandingPage = () => {
           <div className="space-x-4">
             <Link href="/signup">
               <button className="bg-white  font-semibold px-6 py-2 rounded shadow hover:bg-white hover:text-white-600 transition-colors duration-300" style={{color:'rgb(22, 6, 71)',fontFamily:'sans-serif',fontSize:'24px',boxShadow:' 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)'}}>
-              <HourglassEmptyIcon style={{margin:'auto',marginRight:'10px',marginBottom:'4px'}}/>
+              {/* <HourglassEmptyIcon style={{margin:'auto',marginRight:'10px',marginBottom:'4px'}}/> */}
               
               {language === "en"
-                      ?" Get Started " :
-                      "Comience "
+                      ?"➯ Get Started " :
+                      "➯ Comience "
                        }
                        <KeyboardArrowRightIcon style={{marginBottom:'4px'}}/>
                        {language === "en"
@@ -166,8 +166,8 @@ const LandingPage = () => {
             <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'white',color:'rgb(22, 6, 71)',height:'100%',textAlign:'center',justifyContent:'center',fontFamily:'sans-serif',fontSize:'20px'}}>
            
             {language === "en"
-                      ?"Sign up with Email" :
-                      "Ingresa con e-mail "
+                      ?"Sign up with Email ➜" :
+                      "Ingresa con E-mail ➜"
                        }
             
             </button>   </Link>     </div>     <br></br>
@@ -200,16 +200,16 @@ const LandingPage = () => {
             padding:'10px'
           }}
         >
-          <CreateIcon
+          {/* <CreateIcon
             style={{
               fontSize: "30px",
               marginTop: "-10px",
               fontFamily:'sans-serif',
             }}
-          />
+          /> */}
           {language === "en"
-            ? "Discover the Future of Copywriting "
-            : "Descubre el futuro de la redacción"}
+            ? "➽ Discover the Future of Copywriting "
+            : "➽ Descubre el futuro de la redacción"}
         </h1>
         <p
           className=" text-sm sm:text-xl "
@@ -219,8 +219,8 @@ const LandingPage = () => {
           }}
         >
           {language === "en"
-            ? " Our AI Tutoring Demo Will Blow Your Mind! "
-            : "¡Nuestra demostración de tutoría de IA te dejará impresionado!"}
+            ? "➥ Our AI Tutoring Demo Will Blow Your Mind! "
+            : "➥ ¡Nuestra demostración de tutoría de IA te dejará impresionado!"}
         </p></div>
         {/* video */}
         <div
@@ -350,14 +350,14 @@ const LandingPage = () => {
     <div style={{margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'70%',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)'}}>
                        <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'sans-serif',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) ',backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)'}}>
                        {language === "en"
-                      ?"Create Persuasive Marketing in an Instant " :
-                      "Crea Marketing Persuasivo en un Instante "
+                      ?"➪ Create Persuasive Marketing in an Instant " :
+                      "➪ Crea Marketing Persuasivo en un Instante "
                        }
                         </h1><br></br>
                         <p style={{color:'white',fontFamily:'sans-serif',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'1.2rem',height:'100%'}}> 
                      <i> {language === "en"
-                      ?"Whether you need marketing messages for your product, service, or brand, our quick and easy marketing generation tool has you covered. Just enter your target audience, key benefits, desired marketing style, and pitch, and our AI-powered tool will do the rest, delivering impactful marketing messages in minutes.  " :
-                      "Ya sea que necesites mensajes de marketing para tu producto, servicio o marca, nuestra  herramienta rápida y fácil de generación de marketing tiene todo lo que necesitas. Solo ingresa tu público objetivo, los beneficios clave, el estilo de marketing deseado y el tono, y nuestra herramienta impulsada por IA hará el resto, entregando mensajes de marketing impactantes en minutos."
+                      ?"➦ Whether you need marketing messages for your product, service, or brand, our quick and easy marketing generation tool has you covered. Just enter your target audience, key benefits, desired marketing style, and pitch, and our AI-powered tool will do the rest, delivering impactful marketing messages in minutes.  " :
+                      "➦ Ya sea que necesites mensajes de marketing para tu producto, servicio o marca, nuestra  herramienta rápida y fácil de generación de marketing tiene todo lo que necesitas. Solo ingresa tu público objetivo, los beneficios clave, el estilo de marketing deseado y el tono, y nuestra herramienta impulsada por IA hará el resto, entregando mensajes de marketing impactantes en minutos."
                        }</i>  
                         </p>
                         
@@ -375,14 +375,14 @@ const LandingPage = () => {
     <div style={{margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'70%',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)'}}>
                        <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'sans-serif',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) ',backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)'}}>
                        {language === "en"
-                      ?"Your Personal Factory of Ideas with the power of A.I." :
-                      "Tu Fábrica Personal de Ideas con el poder de la I.A "
+                      ?"➪ Your Personal Factory of Ideas with the power of A.I." :
+                      "➪ Tu Fábrica Personal de Ideas con el poder de la I.A "
                        }
                         </h1><br></br>
                      <p style={{color:'white',fontFamily:'sans-serif',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'18px'}}> 
                      <i>     {language === "en"
-                      ?"Whether you're looking for recommendations, problem-solving tips, or just a good laugh, our AI-powered Idea generator offers endless inspiration for any need. " :
-                      " Ya sea que estés buscando recomendaciones, consejos para resolver problemas o simplemente una buena risa, nuestro generador de Ideas impulsado por IA, ofrece inspiración interminable para cualquier necesidad"
+                      ?"➦ Whether you're looking for recommendations, problem-solving tips, or just a good laugh, our AI-powered Idea generator offers endless inspiration for any need. " :
+                      "➦ Ya sea que estés buscando recomendaciones, consejos para resolver problemas o simplemente una buena risa, nuestro generador de Ideas impulsado por IA, ofrece inspiración interminable para cualquier necesidad"
                        }</i>  
                         </p>
                         
@@ -401,14 +401,14 @@ const LandingPage = () => {
                        <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'sans-serif',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) ',backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)'}}>
                     {/* <SelectAllIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/> */}
                        {language === "en"
-                      ?" Optimize your content easily with our keyword-based content generation tool" :
-                      "Optimiza tu contenido fácilmente con nuestra herramienta de generación de contenido basado en palabras clave"
+                      ?"➪ Optimize your content easily with our keyword-based content generation tool" :
+                      "➪ Optimiza tu contenido fácilmente con nuestra herramienta de generación de contenido basado en palabras clave"
                        }
                         </h1><br></br>
                         <p style={{color:'white',fontFamily:'sans-serif',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'18px'}}> 
                         <i>     {language === "en"
-                      ?"Enter your keyword and get a table with all the important information you need to create effective content. " :
-                      " Ingresa tu palabra clave y obtén una tabla con toda la información importante que necesitas para crear contenido efectivo."
+                      ?"➦ Enter your keyword and get a table with all the important information you need to create effective content. " :
+                      " ➦ Ingresa tu palabra clave y obtén una tabla con toda la información importante que necesitas para crear contenido efectivo."
                        }</i>
                         </p>
                         
@@ -444,7 +444,7 @@ const LandingPage = () => {
         <br></br> <br></br> <br></br>
      <Link href="/login">
             <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',fontSize:'30px',height:'60px',fontFamily:'sans-serif',backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)'}}>
-          <NotStartedIcon style={{marginRight:'10px',marginBottom:'6px'}}/>
+          {/* <NotStartedIcon style={{marginRight:'10px',marginBottom:'6px'}}/> */}
             {language === "en"
                       ?"Get Started For Free" :
                       "Empezar Gratis !"
@@ -487,8 +487,8 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto text-center" style={{boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)',paddingTop:'60px',backgroundColor:'rgb(22, 6, 71)',borderRadius:'25px'}}>
           <h2 className="text-4xl font-bold mb-8" style={{fontFamily:'sans-serif',color:'white',backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)'}}>
           {language === "en"
-                      ?"Become an Affiliate" :
-                      "CONTACTO / SUGERENCIAS "
+                      ?"➤ Become an Affiliate" :
+                      "➤ CONTACTO / SUGERENCIAS "
                        }
             
             </h2>
