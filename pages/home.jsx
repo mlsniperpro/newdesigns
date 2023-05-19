@@ -25,7 +25,12 @@ import ApprovalIcon from '@mui/icons-material/Approval';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NotStartedIcon from '@mui/icons-material/NotStarted';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
+import LoginIcon from '@mui/icons-material/Login';
 import DrawIcon from '@mui/icons-material/Draw';
+import CreateIcon from '@mui/icons-material/Create';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 // import logo from '../pages/b.png'
 // import logo1 from './c.png'
 // import logo2 from './d.png'
@@ -85,13 +90,15 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col" style={{backgroundColor:'rgb(22, 6, 71)',width:'100%'}}>
-      <nav className="w-full px-4 py-4" style={{widht:'100%'}}>
+      <nav className="w-full px-4 py-4" style={{widht:'100%',borderBottom:'3px solid #fff'}}>
+        
         <div className="max-w-7xl mx-auto flex justify-between items-center"style={{widht:'100%'}}>
-          <h2 className="text-2xl font-bold text-white" style={{fontFamily:'monospace',fontSize:'30px'}}></h2>
+          
+          <h2 className="text-2xl font-bold text-white" style={{fontFamily:'Lato',fontSize:'30px'}}></h2>
           <div>
           <Link href="/login">
 
-            <button className="bg-transparent border border-white text-white font-semibold px-6 py-2 rounded hover:bg-black hover:text-white-600 transition-colors duration-300" style={{fontFamily:'monospace',fontSize:'20px'}}>
+            <button className="bg-transparent border border-white text-white font-semibold px-6 py-2 rounded hover:bg-black hover:text-white-600 transition-colors duration-300" style={{fontFamily:'Lato',fontSize:'20px'}}>
             {language === "en"
                       ?"Login" :
                       "Iniciar sesión"
@@ -104,7 +111,7 @@ const LandingPage = () => {
           onClick={() =>
             language === "sp" ? setLanguage("en") : setLanguage("sp")
           }
-          style={{marginLeft:'20px',fontFamily:'monospace',fontSize:'20px'}}
+          style={{marginLeft:'20px',fontFamily:'Lato',fontSize:'20px'}}
        
         >
          <LanguageIcon /> {language === "sp" ? "English" : "Spanish"}
@@ -117,14 +124,14 @@ const LandingPage = () => {
         <div className="text-center space-y-6">
           <br></br>
           <img src="./e.png" alt="" width="220px" style={{margin:'auto'}}/>
-          <h1 className="text-5xl font-bold text-white" style={{fontFamily:'monospace',fontSize:'50px'}}>
+          <h1 className="text-5xl font-bold text-white" style={{fontFamily:'Lato',fontSize:'50px'}}>
           {language === "en"
                       ?"Revolutionize Your Content with Vioniko" :
                       "TUTOR VIONIKO I.A. "
                        }
             
           </h1><br></br><br></br>
-          <p className="text-xl text-white" sstyle={{fontFamily:'monospace',fontSize:'50px'}}>
+          <p className="text-xl text-white" sstyle={{fontFamily:'Lato',fontSize:'50px'}}>
           {language === "en"
                       ?"Unleash the power of AI copywriting and boost your content strategy with our advanced subscription service." :
                       "Lleva tu marketing al siguiente nivel con Tutoría Avanzada usando la Inteligencia Artificial "
@@ -133,58 +140,44 @@ const LandingPage = () => {
           </p><br></br>
           <div className="space-x-4">
             <Link href="/signup">
-              <button className="bg-white  font-semibold px-6 py-2 rounded shadow hover:bg-white hover:text-white-600 transition-colors duration-300" style={{color:'rgb(22, 6, 71)',fontFamily:'monospace',fontSize:'24px'}}>
+              <button className="bg-white  font-semibold px-6 py-2 rounded shadow hover:bg-white hover:text-white-600 transition-colors duration-300" style={{color:'rgb(22, 6, 71)',fontFamily:'Lato',fontSize:'24px',boxShadow:' 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)'}}>
+              <HourglassEmptyIcon style={{margin:'auto',marginRight:'10px',marginBottom:'4px'}}/>
               
               {language === "en"
-                      ?" Get Started - It's Free" :
-                      "Comience - es GRATIS!"
+                      ?" Get Started " :
+                      "Comience "
+                       }
+                       <KeyboardArrowRightIcon style={{marginBottom:'4px'}}/>
+                       {language === "en"
+                      ?" It's Free" :
+                      " es GRATIS!"
                        }
                
               </button>
             </Link>
             <br></br>
-            {/* <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-white hover:text-white-600 transition-colors duration-300" style={{color:'rgb(22, 6, 71)'}}>
-            {language === "en"
-                      ?"Learn More" :
-                      "Aprende más"
-                       }
-             
-            </button> */}
             <br></br><br></br>
           </div>
         </div>
       </div>
      
       <div className="bg-white py-8">
-      <div className="max-w-7xl mx-auto text-center">
+      <div className="max-w-7xl mx-auto text-center" style={{background:'rgb(22, 6, 71)',height:'100%',borderRadius:'50px'}}>
          <br></br>
-        {/* <h1 style={{fontFamily:'monospace',color:'black',fontSize:'18px'}}>
-        {language === "en"
-                      ?"Get your " :
-                      "conseguir "
-                       }
-          
-          <span style={{color:'rgb(22, 6, 71)',fontWeight:'bolder',fontFamily:'monospace'}}> 
-          {language === "en"
-                      ?" free account today" :
-                      "sucuenta gratis hoy"
-                       }
-             
-          </span>
-          </h1> */}
+       
         <br></br>
-      <div style={{display:'flex',justifyContent:'center'}}>
+      <div style={{display:'flex',justifyContent:'center',padding:'10px'}}>
       <br></br> <br></br>
       <Link href="/login">
-        <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'100%',textAlign:'center',justifyContent:'center',marginRight:'30px',fontFamily:'monospace',fontSize:'20px'}}>
-           <GoogleIcon style={{marginRight:'10px'}} />
+        <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'white',color:'rgb(22, 6, 71)',height:'100%',textAlign:'center',justifyContent:'center',marginRight:'30px',fontFamily:'Lato',fontSize:'20px',display:'flex'}}>
+           <img src={"./g.png"} style={{marginRight:'10px',width:'20px',margin:'auto'}} />
             {language === "en"
-                      ?"Sign Up with Google" :
+                      ?"Sign up with Google" :
                       "registrarse con google"
                        }
              
             </button></Link>
-            <p style={{marginTop:'auto',marginBottom:'auto',fontFamily:'monospace',fontSize:'18px'}}>
+            <p style={{marginTop:'auto',marginBottom:'auto',fontFamily:'Lato',fontSize:'18px',color:'white'}}>
              
               {language === "en"
                       ?" Or" :
@@ -192,58 +185,201 @@ const LandingPage = () => {
                        }
               </p>
             <Link href="/login">
-            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'100%',textAlign:'center',justifyContent:'center',marginLeft:'30px',fontFamily:'monospace',fontSize:'20px'}}>
+            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'white',color:'rgb(22, 6, 71)',height:'100%',textAlign:'center',justifyContent:'center',marginLeft:'30px',fontFamily:'Lato',fontSize:'20px'}}>
             {language === "en"
-                      ?"Sign Up with Email →" :
-                      "Ingresa con e-mail → "
+                      ?"Sign up with Email" :
+                      "Ingresa con e-mail "
                        }
-             
+             <LoginIcon style={{margin:'auto',marginLeft:'12px',marginBottom:'3px'}}/>
             </button>   </Link>     </div>     <br></br>
-            <p style={{fontFamily:'monospace',fontSize:'22px'}}>
+            <p style={{fontFamily:'Lato',fontSize:'22px',color:'white'}}>
             {language === "en"
                       ?"No Credit Card Required" :
                       "No se requiere tarjeta de crédito"
                        }
               
-              </p>  <br></br> <br></br> <br></br>
+              </p>  <br></br> <br></br> 
       </div><br></br>
-      <h1 style={{textAlign:'center',fontSize:'45px',fontFamily:'monospace',fontWeight:'bolder',textDecoration:'underline',color:'rgb(22, 6, 71)'}}>
-        <DrawIcon style={{marginRight:'10px',fontSize:'30px',color:'white',backgroundColor:'rgb(22, 6, 71)',borderRadius:'100%',padding:'2px'}}/>
-      {language === "en"
-                      ?"Discover the Future of Copywriting " :
-                      "Descubre el futuro de la redacción"
-                       }
-        
-        </h1>
-        <h4 style={{textAlign:'center',fontFamily:'monospace',fontSize:'18px'}}>
-        {language === "en"
-                      ?"→ Our AI Tutoring Demo Will Blow Your Mind! " :
-                      "→ ¡Nuestra demostración de tutoría de IA te dejará impresionado!"
-                       }
-        </h4><br></br><br></br>
      
-        {/* <iframe src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" width="1600" height="800" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"   style={{borderRadius:'1%',width:'100%'}}></iframe> */}
-        
-        <div className="videoWrapper" style={{position:'relative',paddingBottom: '56.25%' ,height: '0'}}>
-  <iframe width="560" height="349" src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0" frameBorder="0" allowFullScreen style={{  position: 'absolute',top: '0',left: '0',width: '100%', height: '100%'}}>
-    
-  </iframe>
-</div>
+        <br></br><br></br>
+     
+        <div
+        style={{
+          height: "100%",
+          display: "flex",
+          justifyItems: "center",
+          flexDirection: "column",
+          alignItems: "center",
+         
+        }}
+      ><div style={{boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)',padding:'10px'}}>
+        <h1
+          className="text-xl sm:text-4xl "
+          style={{
+            textAlign: "center",
+            fontFamily:'Lato',
+            padding:'10px'
+          }}
+        >
+          <CreateIcon
+            style={{
+              fontSize: "30px",
+              marginTop: "-10px",
+              fontFamily:'Lato',
+            }}
+          />
+          {language === "en"
+            ? "Discover the Future of Copywriting "
+            : "Descubre el futuro de la redacción"}
+        </h1>
+        <p
+          className=" text-sm sm:text-xl "
+          style={{
+            textAlign: "center",
+            fontFamily:'Lato'
+          }}
+        >
+          {language === "en"
+            ? " Our AI Tutoring Demo Will Blow Your Mind! "
+            : "¡Nuestra demostración de tutoría de IA te dejará impresionado!"}
+        </p></div>
+        {/* video */}
+        <div
+          style={{
+            width: "80vw",
+            marginTop: "30px",
+          }}
+        >
+          <div
+            id="video-top"
+            style={{
+              width: "100%",
+              borderTopRightRadius: "10px",
+              borderTopLeftRadius: "10px",
+              height: "44px",
+              backgroundColor: "#fff",
+              backgroundImage:
+                "linear-gradient(rgba(66,133,156,.3),rgba(66,133,156,.3))",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingLeft: "20px",
+              paddingRight: "20px",
+              display: "flex",
+              position: "static",
+              top: "0%",
+              bottom: "auto",
+              left: "0%",
+              right: "0%",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "18px",
+                color: " #160647",
+                textAlign: "center",
+                display: "grid",
+                gridAutoColumns: "1fr",
+                gridTemplateRows: "auto",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                gridGap: "2px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "18px",
+                  color: " #160647",
+                  textAlign: "center",
+                  width: "8px",
+                  height: "8px",
+                  backgroundColor: "#ff000096",
+                  borderRadius: "100px",
+                }}
+              ></div>
+              <div
+                style={{
+                  fontSize: "18px",
+                  color: " #160647",
+                  textAlign: "center",
+                  width: "8px",
+                  height: "8px",
+                  backgroundColor: "#ffff009c",
+                  borderRadius: "100px",
+                }}
+              ></div>
+              <div
+                style={{
+                  fontSize: "18px",
+                  color: " #160647",
+                  textAlign: "center",
+                  width: "8px",
+                  height: "8px",
+                  backgroundColor: "#008000a6",
+                  borderRadius: "100px",
+                }}
+              ></div>
+            </div>
+            <div
+              style={{
+                width: "60%",
+                height: "24px",
+                color: "#92d9c5",
+                backgroundColor: "rgba(66,133,156,.12)",
+                justifyContent: "center",
+                alignItems: "center",
+                display: "flex",
+              }}
+            ></div>
+            <div
+              style={{
+                width: "24px",
+                height: "24px",
+                backgroundColor: "rgba(66,133,156,.12)",
+                borderRadius: "0.25em",
+              }}
+            ></div>
+          </div>
+          <div id="video">
+            <div
+              className="videoWrapper"
+              style={{
+                position: "relative",
+                paddingBottom: "56.25%",
+                height: "0",
+              }}
+            >
+              <iframe
+                src="https://player.vimeo.com/video/823480360?h=e1846ea744&title=0&byline=0&portrait=0"
+                frameBorder="0"
+                allowFullScreen
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  left: "0",
+                  width: "100%",
+                  height: "100%",
+                  borderBottomRightRadius: "10px",
+                  borderBottomLeftRadius: "10px",
+                }}
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+       
     <br></br><br></br><br></br><hr></hr>
     <Card sx={{ maxWidth: '100%' }}><br></br><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'100%'}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'2rem',textDecoration:'underline',fontWeight:'bolder'}}>
-                      <AttractionsIcon style={{marginRight:'10px',fontSize:'1.5rem',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
+    <div style={{margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'70%',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)'}}>
+                       <h1 style={{color:'rgb(22, 6, 71)',margin:'auto',textAlign:'center',fontFamily:'Lato',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) '}}>
                        {language === "en"
                       ?"Create Persuasive Marketing in an Instant " :
                       "Crea Marketing Persuasivo en un Instante "
                        }
-                        </h1>
-                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'1.2rem',height:'100%'}}> 
-                        {language === "en"
+                        </h1><br></br>
+                        <p style={{color:'white',fontFamily:'Lato',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'1.2rem',height:'100%'}}> 
+                     <i> {language === "en"
                       ?"Whether you need marketing messages for your product, service, or brand, our quick and easy marketing generation tool has you covered. Just enter your target audience, key benefits, desired marketing style, and pitch, and our AI-powered tool will do the rest, delivering impactful marketing messages in minutes.  " :
                       "Ya sea que necesites mensajes de marketing para tu producto, servicio o marca, nuestra  herramienta rápida y fácil de generación de marketing tiene todo lo que necesitas. Solo ingresa tu público objetivo, los beneficios clave, el estilo de marketing deseado y el tono, y nuestra herramienta impulsada por IA hará el resto, entregando mensajes de marketing impactantes en minutos."
-                       }
+                       }</i>  
                         </p>
                         
    
@@ -251,25 +387,24 @@ const LandingPage = () => {
     <br></br>
                    
                    
-  <img src='./d.png' alt="" style={{width:'100%',height:'800px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
+  <img src='./d.png' alt="" style={{width:'80%',height:'800px',margin:'auto',border:'3px solid rgb(98, 79, 146)',borderRadius:'35px',boxShadow:'2px 10px 8px 0 rgba(0,0,0,0.2)',padding:'10px'}}
       /><br></br>
 
 <br></br><br></br>
 
     </Card><br></br><br></br><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'100%'}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px',textDecoration:'underline',fontWeight:'bolder'}}>
-                      <SyncAltIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
+    <div style={{margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'70%',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)'}}>
+                       <h1 style={{color:'rgb(22, 6, 71)',margin:'auto',textAlign:'center',fontFamily:'Lato',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) '}}>
                        {language === "en"
                       ?"Your Personal Factory of Ideas with the power of A.I." :
                       "Tu Fábrica Personal de Ideas con el poder de la I.A "
                        }
-                        </h1>
-                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'18px'}}> 
-                        {language === "en"
+                        </h1><br></br>
+                     <p style={{color:'white',fontFamily:'Lato',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'18px'}}> 
+                     <i>     {language === "en"
                       ?"Whether you're looking for recommendations, problem-solving tips, or just a good laugh, our AI-powered Idea generator offers endless inspiration for any need. " :
                       " Ya sea que estés buscando recomendaciones, consejos para resolver problemas o simplemente una buena risa, nuestro generador de Ideas impulsado por IA, ofrece inspiración interminable para cualquier necesidad"
-                       }
+                       }</i>  
                         </p>
                         
    
@@ -277,50 +412,50 @@ const LandingPage = () => {
     
     <Card sx={{ maxWidth: '100%' }}>
                  
-    <img src='./b.png' alt="" style={{width:'100%',height:'800px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
+    <img src='./b.png' alt="" style={{width:'80%',height:'800px',margin:'auto',border:'3px solid rgb(98, 79, 146)',borderRadius:'35px',boxShadow:'2px 10px 8px 0 rgba(0,0,0,0.2)'}}
       /><br></br><br></br>
 
                        <br></br>
 
     </Card><br></br><br></br><br></br>
-    <div style={{width:'80%',margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'100%'}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'monospace',fontSize:'28px',fontWeight:'bolder',textDecoration:'underline'}}>
-                    <SelectAllIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/>
+    <div style={{margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'70%',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)'}}>
+                       <h1 style={{color:'rgb(22, 6, 71)',margin:'auto',textAlign:'center',fontFamily:'Lato',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) '}}>
+                    {/* <SelectAllIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/> */}
                        {language === "en"
                       ?" Optimize your content easily with our keyword-based content generation tool" :
                       "Optimiza tu contenido fácilmente con nuestra herramienta de generación de contenido basado en palabras clave"
                        }
-                        </h1>
-                        <p style={{color:'white',fontFamily:'monospace',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'18px'}}> 
-                        {language === "en"
+                        </h1><br></br>
+                        <p style={{color:'white',fontFamily:'Lato',marginLeft:'50px',marginRight:'50px',textAlign:'center',fontSize:'18px'}}> 
+                        <i>     {language === "en"
                       ?"Enter your keyword and get a table with all the important information you need to create effective content. " :
                       " Ingresa tu palabra clave y obtén una tabla con toda la información importante que necesitas para crear contenido efectivo."
-                       }
+                       }</i>
                         </p>
                         
    
     </div><br></br>
     <br></br>
-    <Card sx={{ maxWidth: '100%' }}>
+    
                  
-    <img src='./c.png' alt="" style={{width:'100%',height:'800px',margin:'auto',border:'20px solid rgb(98, 79, 146)',borderRadius:'35px'}}
+    <img src='./c.png' alt="" style={{width:'80%',height:'800px',margin:'auto',border:'3px solid rgb(98, 79, 146)',borderRadius:'35px',boxShadow:'2px 10px 8px 0 rgba(0,0,0,0.2)' }}
       />
 
                        <br></br>
                        <br></br>
-    </Card><br></br>
+  <br></br>
    
-      <div className="max-w-7xl mx-auto text-center">
+      <div className="max-w-7xl mx-auto text-center" style={{boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)'}}>
       <br></br><br></br><br></br><br></br><br></br>
-        <h1 style={{fontFamily:'Monospace',color:'black',fontSize:'40px',color:'rgb(22, 6, 71)',fontWeight:'bolder',textDecoration:'underline'}}>
-          <AttractionsIcon  style={{marginRight:'10px',fontSize:'34px',color:'white',backgroundColor:'rgb(22, 6, 71)',borderRadius:'100%',padding:'2px'}}/>
+        <h1 style={{fontFamily:'Lato',color:'black',fontSize:'40px',color:'rgb(22, 6, 71)',fontWeight:'bolder'}}>
+          {/* <AttractionsIcon  style={{marginRight:'10px',fontSize:'34px',color:'white',backgroundColor:'rgb(22, 6, 71)',borderRadius:'100%',padding:'2px'}}/> */}
         {language === "en"
                       ?"Ready to take your Marketing to the next level?" :
                       "¿Listo para llevar tu Marketing al siguiente nivel?"
                        }
          
           </h1><br></br>
-        <p style={{color:'rgb(22, 6, 71)',fontFamily:'monospace',fontSize:'20px'}}>
+        <p style={{color:'rgb(22, 6, 71)',fontFamily:'Lato',fontSize:'20px'}}>
         {language === "en"
                       ?" Write at lightning speeds, captivate your audience and never suffer with the page down again.                      " :
                       "Escribe a velocidad de rayo, cautiva a tu audiencia y nunca vuelvas a sufrir con la página en blanco"
@@ -329,8 +464,8 @@ const LandingPage = () => {
           </p>
         <br></br> <br></br> <br></br>
      <Link href="/login">
-            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',fontSize:'30px',height:'60px'}}>
-          <NotStartedIcon style={{marginRight:'10px'}}/>
+            <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'rgb(22, 6, 71)',color:'white',height:'55px',textAlign:'center',justifyContent:'center',fontSize:'30px',height:'60px',fontFamily:'Lato'}}>
+          <NotStartedIcon style={{marginRight:'10px',marginBottom:'6px'}}/>
             {language === "en"
                       ?"Get Started For Free" :
                       "Empezar Gratis !"
@@ -343,7 +478,7 @@ const LandingPage = () => {
              <br></br>   
              <div style={{display:'flex',justifyContent:'center'}}>
                        <div style={{marginRight:'50px',color:'rgb(22, 6, 71)'}}>
-                        <DoneIcon style={{marginRight:'10px' ,background:'rgb(22, 6, 71)',borderRadius:'100%',height:"30px",width:'30px',color:'white'}} />
+                        <PlayArrowIcon style={{marginRight:'10px' ,background:'rgb(22, 6, 71)',borderRadius:'100%',height:"30px",width:'30px',color:'white',padding:'5px'}} />
                        {language === "en"
                       ?"No credit card required" :
                       "No se ocupa tarjeta de crédito "
@@ -351,7 +486,7 @@ const LandingPage = () => {
 
                        </div>
                        <div style={{marginRight:'50px',color:'rgb(22, 6, 71)'}}>
-                       <DoneIcon style={{marginRight:'10px' ,background:'rgb(22, 6, 71)',borderRadius:'100%',height:"30px",width:'30px',color:'white'}}/>
+                       <PlayArrowIcon style={{marginRight:'10px' ,background:'rgb(22, 6, 71)',borderRadius:'100%',height:"30px",width:'30px',color:'white',padding:'5px'}}/>
                        {language === "en"
                       ?"2000 Free Word Per Month" :
                       "2,000 palabras gratis por mes "
@@ -359,7 +494,7 @@ const LandingPage = () => {
 
                        </div>
                        <div style={{color:'rgb(22, 6, 71)'}} >
-                       <DoneIcon style={{marginRight:'10px' ,background:'rgb(22, 6, 71)',borderRadius:'100%',height:"30px",width:'30px',color:'white'}}/>
+                       <PlayArrowIcon style={{marginRight:'10px' ,background:'rgb(22, 6, 71)',borderRadius:'100%',height:"30px",width:'30px',color:'white',padding:'5px'}}/>
                        {language === "en"
                       ?"Multiple functions available" :
                       "Multiples funciones disponibles"
@@ -368,10 +503,10 @@ const LandingPage = () => {
                        </div>
              </div><br></br>
               <br></br><br></br> <br></br>
-      </div><hr></hr><hr></hr>
+      </div>
       <br></br> <br></br><br></br> <br></br>
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-8">
+        <div className="max-w-7xl mx-auto text-center" style={{boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)',paddingTop:'60px',backgroundColor:'rgb(22, 6, 71)',borderRadius:'25px'}}>
+          <h2 className="text-4xl font-bold mb-8" style={{fontFamily:'Lato',color:'white'}}>
           {language === "en"
                       ?"Become an affiliate" :
                       "CONTACTO / SUGERENCIAS "
@@ -395,21 +530,21 @@ const LandingPage = () => {
                   name="firstName"
                   placeholder="
                   Nombre"
-                  className="flex-1 px-4 py-2 border border-black rounded"
+                  className="flex-1 px-6 py-2 border border-black rounded"
                  
-                />
+                /> <br></br>
                 <input
                   type="text"
                   name="lastName"
                   placeholder="Apellido"
-                  className="flex-1 px-4 py-2 border border-black rounded"
+                  className="flex-1 px-6 py-2 border border-black rounded"
                 />
               </div>
               <input
                 type="email"
                 name="email"
                 placeholder="Email"
-                className="w-full px-4 py-2 border border-black rounded"
+                className="w-full px-6 py-2 border border-black rounded"
               />
               <textarea
                 name="message"
@@ -420,7 +555,7 @@ const LandingPage = () => {
               <button
                 type="submit"
                 className="bg-purple-600 text-white font-semibold px-6 py-2 rounded shadow hover:bg-purple-700 transition-colors duration-300"
-                style={{background:'rgb(22, 6, 71)'}}
+                style={{background:'rgb(22, 6, 71)',backgroundColor:'white',color:'rgb(22, 6, 71)'}}
               >
                 {language === "en"
                       ?"Submit" :
@@ -444,11 +579,11 @@ const LandingPage = () => {
         </div>
       </div>
     
-      <footer className="bg-purple-600 py-6" style={{background:'rgb(22, 6, 71)'}}>
+      <footer className="bg-purple-600 py-6" style={{background:'rgb(22, 6, 71)',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)',}}>
       <p className="max-w-7xl mx-auto flex justify-center" style={{color:'white'}}> VIONIKO 2023. 
       {language === "en"
                       ?" All Rights Reserved" :
-                      " reservados todos los derechos"
+                      " Reservados todos los derechos"
                        }
       
       
