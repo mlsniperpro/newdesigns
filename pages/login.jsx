@@ -220,7 +220,7 @@ function Login() {
                 type="email"
                 className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
                 placeholder="Enter email address"
-                style={{color:'white',fontFamily:'monospace',fontSize:'20px'}}
+                style={{color:'black',fontFamily:'monospace',fontSize:'20px'}}
               />
             </label>
             <label htmlFor="password">

@@ -3,37 +3,14 @@ import Link from 'next/link';
 import axios from 'axios';
 
 import LanguageIcon from '@mui/icons-material/Language';
-import DoneIcon from '@mui/icons-material/Done';
-import GoogleIcon from '@mui/icons-material/Google';
 import { useRouter } from 'next/router';
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import SyncAltIcon from '@mui/icons-material/SyncAlt';
-import AttractionsIcon from '@mui/icons-material/Attractions';
-import ApprovalIcon from '@mui/icons-material/Approval';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NotStartedIcon from '@mui/icons-material/NotStarted';
-import SelectAllIcon from '@mui/icons-material/SelectAll';
 import LoginIcon from '@mui/icons-material/Login';
-import DrawIcon from '@mui/icons-material/Draw';
 import CreateIcon from '@mui/icons-material/Create';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-// import logo from '../pages/b.png'
-// import logo1 from './c.png'
-// import logo2 from './d.png'
 
 
 const LandingPage = () => {
@@ -170,7 +147,7 @@ const LandingPage = () => {
       <br></br> <br></br>
       <Link href="/login">
         <button className="bg-white text-purple-600 font-semibold px-6 py-2 rounded shadow hover:bg-purple-600 hover:text-white transition-colors duration-300" style={{borderRadius:'9999px',background:'white',color:'rgb(22, 6, 71)',height:'100%',textAlign:'center',justifyContent:'center',marginRight:'30px',fontFamily:'Lato',fontSize:'20px',display:'flex'}}>
-           <img src={"./g.png"} style={{marginRight:'10px',width:'20px',margin:'auto'}} />
+           <img src={"./g.png"} style={{marginRight:'12px',width:'20px',margin:'auto'}} />
             {language === "en"
                       ?"Sign up with Google" :
                       "registrarse con google"
