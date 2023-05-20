@@ -139,7 +139,7 @@ const LandingPage = () => {
       </div>
      
       <div className="bg-white py-8">
-      <div className="max-w-xl mx-auto text-center" style={{backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)',height:'100%',borderRadius:'50px'}}>
+      <div className="max-w-xl mx-auto text-center" style={{backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)',height:'100%',borderRadius:'50px',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)'}}>
          <br></br>
        
         <br></br>
@@ -191,7 +191,7 @@ const LandingPage = () => {
           alignItems: "center",
          
         }}
-      ><div style={{boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)',padding:'10px'}}>
+      ><div style={{backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)',padding:'10px',borderRadius:'50px'}}>
         <h1
           className="text-xl sm:text-4xl "
           style={{
@@ -348,7 +348,7 @@ const LandingPage = () => {
     <br></br><br></br><br></br><hr></hr>
     <Card sx={{ maxWidth: '100%' }}><br></br><br></br>
     <div style={{margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'70%',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)'}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'sans-serif',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) ',backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)'}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'sans-serif',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) ',backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)',marginTop:'15px'}}>
                        {language === "en"
                       ?"➪ Create Persuasive Marketing in an Instant " :
                       "➪ Crea Marketing Persuasivo en un Instante "
@@ -373,7 +373,7 @@ const LandingPage = () => {
 
     </Card><br></br><br></br><br></br>
     <div style={{margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'70%',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)'}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'sans-serif',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) ',backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)'}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'sans-serif',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) ',backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)',marginTop:'15px'}}>
                        {language === "en"
                       ?"➪ Your Personal Factory of Ideas with the power of A.I." :
                       "➪ Tu Fábrica Personal de Ideas con el poder de la I.A "
@@ -398,7 +398,7 @@ const LandingPage = () => {
 
     </Card><br></br><br></br><br></br>
     <div style={{margin:'auto',backgroundColor:'rgb(22, 6, 71)',height:'100%',borderRadius:'40px',padding:'20px 0px',width:'70%',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)'}}>
-                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'sans-serif',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) ',backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)'}}>
+                       <h1 style={{color:'white',margin:'auto',textAlign:'center',fontFamily:'sans-serif',fontSize:'24px',fontWeight:'bolder',padding:'10px',backgroundColor:'white',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2) ',backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)',marginTop:'15px'}}>
                     {/* <SelectAllIcon style={{marginRight:'10px',fontSize:'30px',color:'rgb(22, 6, 71)',backgroundColor:'white',borderRadius:'100%',padding:'2px'}}/> */}
                        {language === "en"
                       ?"➪ Optimize your content easily with our keyword-based content generation tool" :
