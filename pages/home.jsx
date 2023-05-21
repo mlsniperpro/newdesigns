@@ -191,7 +191,7 @@ const LandingPage = () => {
           alignItems: "center",
          
         }}
-      ><div style={{backgroundImage: 'linear-gradient(90deg,#47beb9,#ddcd86)',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)',padding:'10px',borderRadius:'50px'}}>
+      ><div style={{background:'rgb(22, 6, 71)',boxShadow:'0 4px 8px 0 rgba(0,0,0,0.2)',padding:'10px',borderRadius:'30px',color:'white'}}>
         <h1
           className="text-xl sm:text-4xl "
           style={{
