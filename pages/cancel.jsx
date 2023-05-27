@@ -80,15 +80,17 @@ const CancelSubscription = () => {
 
   const handlePayPalCancel = async () => {
     const url =
-      "https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelUserSubscriptions";
+     
+  "https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelUserSubscriptions";
     try {
-      const user_id = auth.currentUser.uid;
+      const user_id = auth.currentUser?.uid;
+      console.log("The user id is: ", user_id);
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ user_id, reason: "I am not satisfied" }),
+        body: JSON.stringify({ userId: user_id, reason: "I am not satisfied" }),
       });
       if (!response.ok) {
         throw new Error(`Failed with status: ${response.status}`);
