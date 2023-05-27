@@ -248,7 +248,9 @@ function Signup() {
               style={{color:'rgb(40, 48, 129)',background:'white',border:'none',width:'150px',height:'50px',textAlign:'center',fontFamily:"Monospace",fontSize:'20px'}}
               >
                 <span style={{fontFamily:"Monospace"}}><HowToRegIcon style={{marginRight:'10px'}} />
+                <Link href="/login" style={{fontFamily:"Monospace",fontSize:'20px'}}>
                 {language === "sp" ? "  Inscribirse" : "   Sign Up "}
+                </Link>
                
                 </span>
               </button>
