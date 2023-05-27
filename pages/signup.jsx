@@ -52,7 +52,11 @@ function Signup() {
       console.log("Document written with ID: ", docRef.id);
       router.push("/login");
     } catch (e) {
-      alert(language === "sp"? "Algo salió mal. La contraseña debe tener más de 6 caracteres" : "Something went wrong password must be 6 characters long")
+      alert(
+        language === "sp"
+          ? "Algo salió mal. La contraseña debe tener más de 6 caracteres y deben coincidir."
+          : "Something went wrong password must be 6 characters long and must match"
+      );
       console.error("Error: ", e);
     }
   };
