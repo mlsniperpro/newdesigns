@@ -29,6 +29,13 @@ function Signup() {
       console.error("Passwords do not match");
       return;
     }
+     const handleClick = () => {
+       if (window.Rewardful.referral) {
+         console.log("Rewardful referral", window.Rewardful.referral);
+         window.rewardful("convert", { email: user.email });
+       }
+     };
+     handleClick();
     try {
       const newUserCredentials = await createUserWithEmailAndPassword(
         auth,
