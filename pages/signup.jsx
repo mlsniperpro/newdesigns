@@ -52,6 +52,7 @@ function Signup() {
       console.log("Document written with ID: ", docRef.id);
       router.push("/login");
     } catch (e) {
+      alert(language === "sp" ? "Error: "+e.message : "Error: "+e.message)
       console.error("Error: ", e);
     }
   };
