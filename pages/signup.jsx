@@ -52,7 +52,7 @@ function Signup() {
       console.log("Document written with ID: ", docRef.id);
       router.push("/login");
     } catch (e) {
-      alert(language === "sp" ? "Error: "+e.message : "Error: "+e.message)
+      alert(language === "sp"? "Algo salió mal. La contraseña debe tener más de 6 caracteres" : "Something went wrong password must be 6 characters long")
       console.error("Error: ", e);
     }
   };
@@ -363,12 +363,8 @@ function Signup() {
               >
                 <span style={{ fontFamily: "Monospace" }}>
                   <HowToRegIcon style={{ marginRight: "10px" }} />
-                  <Link
-                    href="/login"
-                    style={{ fontFamily: "Monospace", fontSize: "20px" }}
-                  >
+                
                     {language === "sp" ? "  Inscribirse" : "   Sign Up "}
-                  </Link>
                 </span>
               </button>
             </form>
