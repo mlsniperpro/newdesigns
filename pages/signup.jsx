@@ -27,7 +27,7 @@ function Signup() {
     const handleClick = () => {
       if (window.Rewardful.referral) {
         console.log("Rewardful referral", window.Rewardful.referral);
-        window.rewardful("convert", { email: user.email });
+        window.rewardful("convert", { ['email']: email });
       }
     };
     handleClick();
