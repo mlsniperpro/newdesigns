@@ -215,6 +215,28 @@ function onlyAdmins() {
                   {language === "english" ? "Tutor" : "Tutor"}
                 </span>
               </Link>
+              <Link
+                href="/cancel"
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontFamily: "Monospace",
+                  fontSize: "13px",
+                }}
+                className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
+              >
+                <AccessibilityNewIcon />{" "}
+                <span
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    fontFamily: "Monospace",
+                    fontSize: "13px",
+                  }}
+                >
+                  {language === "english" ? "Cancel" : "Cancelar"}
+                </span>
+              </Link>
             </li>
             {admin ? (
               <li

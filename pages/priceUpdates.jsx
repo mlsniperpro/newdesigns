@@ -3,104 +3,144 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Router from "next/router";
 import Link from "next/link";
-import { collection, getDocs, updateDoc, setDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  setDoc,
+  doc,
+} from "firebase/firestore";
 import { db, auth } from "../config/firebase";
 import axios from "axios";
 
 function Priceupdates() {
-const [price, setPrice] = useState(10.0);
-const [plan, setPlan] = useState("monthly");
+  const [price, setPrice] = useState(10.0);
+  const [plan, setPlan] = useState("monthly");
 
+  async function updatePricingSchemes() {
+    const planId =
+      plan === "monthly"
+        ? "P-5DY729820D282010XMQNAIRI"
+        : "P-8MS40752A79241224MQNAKFY"; // Replace with your plan ID
+    const newPrice = price; // Replace with your new price
+    const firebaseFunctionUrl =
+    "https://us-central1-vioniko-82fcb.cloudfunctions.net/updatePricingSchemes"; // Replace <your-project-id> with your Firebase project ID
 
-const createPrice = async (productId, currency, unitAmount) => {
-  try {
-    const response = await axios.post(
-      "https://us-central1-vioniko-82fcb.cloudfunctions.net/api/create-price",
-      {
-        product_id: productId,
-        currency: currency,
-        unit_amount: unitAmount,
-      }
+    // Log the request data for debugging
+    console.log(
+      `Sending request to ${firebaseFunctionUrl} with planId: ${planId} and newPrice: ${newPrice}`
     );
 
-    return response.data.price;
-  } catch (error) {
-    console.error("Error creating price:", error);
-    throw error;
-  }
-};
-
-const handlePlanChange = (event) => {
-setPlan(event.target.value);
-};
-const handleInptChange = (event) => {
-setPrice(parseFloat(event.target.value));
-};
-
-const handlePriceChange = (event) => {
-setPrice(parseFloat(event.target.textContent.slice(1)));
-};
-const priceUpdater = async () => {
-  console.log("The price is ", price, " and the plan is ", plan);
-  if (!price || !plan) {
-    alert("Please enter a price and select a plan");
-    return;
-  }
-  try {
-    const paymentDocs = await getDocs(collection(db, "Payment"));
-
-    if (!paymentDocs.empty) {
-      console.log(paymentDocs.docs[0].ref)
-      const paymentDocRef = paymentDocs.docs[0].ref; // Get the first document in the Payment collection
-      await updateDoc(paymentDocRef, {
-        [plan]: price, // update the "plan" field with the new price
+    try {
+      const response = await axios.post(firebaseFunctionUrl, {
+        planId,
+        newPrice,
       });
-      if (plan === "monthly") {
-        const monthlyPrice = await createPrice(
-          "prod_Njtrgy9W8UwGW7",
-          "usd",
-          price*100
+
+      // Log response data from Firebase Cloud Function
+      console.log(response.data);
+    } catch (error) {
+      // Check if the error response from the server exists
+      if (error.response) {
+        console.error(
+          `Failed to update pricing schemes: ${error.response.data}`
         );
-        console.log(monthlyPrice);
-      } else if (plan === "yearly") {
-        const yearlyPrice = await createPrice(
-          "prod_NjtvxM9XlsH2c6",
-          "usd",
-          price*100
-        );
-        console.log(yearlyPrice);
+      } else {
+        console.error(`Failed to update pricing schemes: ${error}`);
       }
-    } else {
-      console.log("Empty", paymentDocs)
-      await setDoc(doc(db, "Payment", "payment"),{
-        // remove the .doc() call
-        [plan]: price, // create a new document with the "plan" field set to the new price
-      });
     }
-  } catch (error) {
-    console.log(error);
   }
-  alert("Price updated successfully");
-};
 
-useEffect(() => {
-  const onlyAdmins = () => {
-    if (!auth.currentUser?.uid) {
-      Router.push("/login");
-      return;
-    }
-    if (
-      auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-      auth.currentUser?.uid === "fcJAePkUVwV7fBR3uiGh5iyt2Tf1"
-    ) {
-      return;
-    } else {
-      alert("Admins only!");
-      Router.push("/login");
+  const createPrice = async (productId, currency, unitAmount) => {
+    try {
+      const response = await axios.post(
+        "https://us-central1-vioniko-82fcb.cloudfunctions.net/api/create-price",
+        {
+          product_id: productId,
+          currency: currency,
+          unit_amount: unitAmount,
+        }
+      );
+
+      return response.data.price;
+    } catch (error) {
+      console.error("Error creating price:", error);
+      throw error;
     }
   };
-  onlyAdmins();
-}, []);
+
+  const handlePlanChange = (event) => {
+    setPlan(event.target.value);
+  };
+  const handleInptChange = (event) => {
+    setPrice(parseFloat(event.target.value));
+  };
+
+  const handlePriceChange = (event) => {
+    setPrice(parseFloat(event.target.textContent.slice(1)));
+  };
+  const priceUpdater = async () => {
+    console.log("The price is ", price, " and the plan is ", plan);
+    if (!price || !plan) {
+      alert("Please enter a price and select a plan");
+      return;
+    }
+    try {
+      const paymentDocs = await getDocs(collection(db, "Payment"));
+
+      if (!paymentDocs.empty) {
+        console.log(paymentDocs.docs[0].ref);
+        const paymentDocRef = paymentDocs.docs[0].ref; // Get the first document in the Payment collection
+        await updateDoc(paymentDocRef, {
+          [plan]: price, // update the "plan" field with the new price
+        });
+        updatePricingSchemes();
+        if (plan === "monthly") {
+          const monthlyPrice = await createPrice(
+            "prod_Njtrgy9W8UwGW7",
+            "usd",
+            price * 100
+          );
+          console.log(monthlyPrice);
+        } else if (plan === "yearly") {
+          const yearlyPrice = await createPrice(
+            "prod_NjtvxM9XlsH2c6",
+            "usd",
+            price * 100
+          );
+          console.log(yearlyPrice);
+        }
+      } else {
+        console.log("Empty", paymentDocs);
+        await setDoc(doc(db, "Payment", "payment"), {
+          // remove the .doc() call
+          [plan]: price, // create a new document with the "plan" field set to the new price
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    alert("Price updated successfully");
+  };
+
+  useEffect(() => {
+    const onlyAdmins = () => {
+      if (!auth.currentUser?.uid) {
+        Router.push("/login");
+        return;
+      }
+      if (
+        auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
+        auth.currentUser?.uid === "fcJAePkUVwV7fBR3uiGh5iyt2Tf1"
+      ) {
+        return;
+      } else {
+        alert("Admins only!");
+        Router.push("/login");
+      }
+    };
+    onlyAdmins();
+  }, []);
 
   return (
     <div>
@@ -108,12 +148,7 @@ useEffect(() => {
         <div className="mx-auto box-border w-[365px] border bg-white p-4">
           <div className="flex items-center justify-between">
             <span className="text-[#64748B]">
-              <Link
-                href="/"
-              >
-                Home
-              </Link>
-
+              <Link href="/">Home</Link>
             </span>
             <div className="cursor-pointer border rounded-[4px]">
               <svg
@@ -239,7 +274,10 @@ useEffect(() => {
             </div>
           </div>
           <div className="mt-6">
-            <div onClick={priceUpdater} className="w-full cursor-pointer rounded-[4px] bg-green-700 px-3 py-[6px] text-center font-semibold text-white">
+            <div
+              onClick={priceUpdater}
+              className="w-full cursor-pointer rounded-[4px] bg-green-700 px-3 py-[6px] text-center font-semibold text-white"
+            >
               Change To USD {price}
             </div>
           </div>
