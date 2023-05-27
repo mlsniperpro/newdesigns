@@ -24,13 +24,6 @@ function Signup() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const handleClick = () => {
-      if (window.Rewardful.referral) {
-        console.log("Rewardful referral", window.Rewardful.referral);
-        window.rewardful("convert", { ['email']: email });
-      }
-    };
-    handleClick();
     if (password !== confirmPassword) {
       alert(language === "sp" ? "Las contraseñas no coinciden" : "Passwords do not match")
       console.error("Passwords do not match");
@@ -43,6 +36,13 @@ function Signup() {
         email,
         password
       );
+      const handleClick = () => {
+        if (window.Rewardful.referral) {
+          console.log("Rewardful referral", window.Rewardful.referral);
+          window.rewardful("convert", { ["email"]: email });
+        }
+      };
+      handleClick();
       console.log("The user credentials ", newUserCredentials.user.uid);
       await sendEmailVerification(newUserCredentials.user);
       const docRef = await addDoc(collection(db, "users"), {
