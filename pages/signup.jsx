@@ -24,18 +24,19 @@ function Signup() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    const handleClick = () => {
+      if (window.Rewardful.referral) {
+        console.log("Rewardful referral", window.Rewardful.referral);
+        window.rewardful("convert", { email: user.email });
+      }
+    };
+    handleClick();
     if (password !== confirmPassword) {
       alert(language === "sp" ? "Las contraseñas no coinciden" : "Passwords do not match")
       console.error("Passwords do not match");
       return;
     }
-     const handleClick = () => {
-       if (window.Rewardful.referral) {
-         console.log("Rewardful referral", window.Rewardful.referral);
-         window.rewardful("convert", { email: user.email });
-       }
-     };
-     handleClick();
+     
     try {
       const newUserCredentials = await createUserWithEmailAndPassword(
         auth,
