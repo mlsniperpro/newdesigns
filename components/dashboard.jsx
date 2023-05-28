@@ -10,6 +10,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import LineStyleIcon from '@mui/icons-material/LineStyle';
 import BatchPredictionIcon from '@mui/icons-material/BatchPrediction';
+import CancelIcon from '@mui/icons-material/Cancel';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import UploadIcon from '@mui/icons-material/Upload';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -225,7 +226,7 @@ function onlyAdmins() {
                 }}
                 className="hover:bg-gray-500 hover:bg-opacity-10 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
               >
-                <AccessibilityNewIcon />{" "}
+                <CancelIcon />{" "}
                 <span
                   style={{
                     color: "white",
