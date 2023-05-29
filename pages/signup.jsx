@@ -36,13 +36,7 @@ function Signup() {
         email,
         password
       );
-      const handleClick = () => {
-        if (window.Rewardful.referral) {
-          console.log("Rewardful referral", window.Rewardful.referral);
-          window.rewardful("convert", { ["email"]: email });
-        }
-      };
-      handleClick();
+      
       console.log("The user credentials ", newUserCredentials.user.uid);
       await sendEmailVerification(newUserCredentials.user);
       const docRef = await addDoc(collection(db, "users"), {
@@ -67,6 +61,13 @@ function Signup() {
       );
       console.error("Error: ", e);
     }
+    const handleClick = () => {
+      if (window.Rewardful.referral) {
+        console.log("Rewardful referral", window.Rewardful.referral);
+        window.rewardful("convert", { ["email"]: email });
+      }
+    };
+    handleClick();
   };
 
   return (
