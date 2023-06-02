@@ -3,7 +3,7 @@ import { doc, getDoc, getFirestore, collection } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Avatar from "react-avatar";
-import app from "../firebase"; // path to your firebase config file
+import app from "../config/firebase";
 
 export default function UserProfile() {
   const [user, setUser] = useState(null);
