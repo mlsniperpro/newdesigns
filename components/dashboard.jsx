@@ -14,6 +14,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import UploadIcon from '@mui/icons-material/Upload';
 import LogoutIcon from '@mui/icons-material/Logout';
+import {UserProfile} from "@components/UserProfile"
 
 
 function Dashboard(props) {
@@ -384,7 +385,9 @@ function onlyAdmins() {
           <Keyword language={language} />
         ) : mode === "tutor" ? (
           router.push("/tutor")
-        ) : (
+        ) :mode === "profile"?(
+          <UserProfile/>
+        ) :(
           <Guided language={language} />
         )}
       </div>

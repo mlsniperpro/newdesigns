@@ -24,51 +24,63 @@ function Signup() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
     if (password !== confirmPassword) {
-      alert(language === "sp" ? "Las contraseñas no coinciden" : "Passwords do not match")
+      const message =
+        language === "sp"
+          ? "Las contraseñas no coinciden"
+          : "Passwords do not match";
+      alert(message);
       console.error("Passwords do not match");
       return;
     }
-     
+
     try {
-      const newUserCredentials = await createUserWithEmailAndPassword(
+      const { user } = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      
-      console.log("The user credentials ", newUserCredentials.user.uid);
-      await sendEmailVerification(newUserCredentials.user);
+      await sendEmailVerification(user);
+
+      const date = new Date();
+      const dateSignedUp = `${date.getFullYear()}-${
+        date.getMonth() + 1
+      }-${date.getDate()}`;
+
       const docRef = await addDoc(collection(db, "users"), {
-        userId: newUserCredentials.user.uid,
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
+        userId: user.uid,
+        email,
+        firstName,
+        lastName,
         name: `${firstName} ${lastName}`,
-        phoneNumber: phoneNumber,
-        dateSignedUp: `${new Date().getFullYear()}-${
-          new Date().getMonth() + 1
-        }-${new Date().getDate()}`,
+        phoneNumber,
+        dateSignedUp,
       });
-      alert(language === "sp" ? "Verifique su correo electrónico" : "Please verify your email")
+
+      const alertMessage =
+        language === "sp"
+          ? "Verifique su correo electrónico"
+          : "Please verify your email";
+      alert(alertMessage);
+
       console.log("Document written with ID: ", docRef.id);
       router.push("/login");
     } catch (e) {
-      alert(
+      const errorMessage =
         language === "sp"
           ? "Algo salió mal. La contraseña debe tener más de 6 caracteres y deben coincidir."
-          : "Something went wrong password must be 6 characters long and must match"
-      );
+          : "Something went wrong password must be 6 characters long and must match";
+      alert(errorMessage);
       console.error("Error: ", e);
     }
-    const handleClick = () => {
-      if (window.Rewardful.referral) {
-        console.log("Rewardful referral", window.Rewardful.referral);
-        window.rewardful("convert", { ["email"]: email });
-      }
-    };
-    handleClick();
+
+    if (window.Rewardful?.referral) {
+      console.log("Rewardful referral", window.Rewardful.referral);
+      window.rewardful("convert", { ["email"]: email });
+    }
   };
+
 
   return (
     <section style={{ background: "white", fontFamily: "Monospace" }}>
