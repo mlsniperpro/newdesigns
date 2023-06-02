@@ -14,7 +14,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import UploadIcon from '@mui/icons-material/Upload';
 import LogoutIcon from '@mui/icons-material/Logout';
-import {UserProfile} from "@components/UserProfile"
+import UserProfile from "./UserProfile";
 
 
 function Dashboard(props) {
