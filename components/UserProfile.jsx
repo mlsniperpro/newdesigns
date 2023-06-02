@@ -19,13 +19,17 @@ export default function UserProfile() {
           doc(collection(db, "users"), userAuth.uid)
         );
         if (userDoc.exists()) {
-          console.log("The user data are here: ", userDoc.data())
-          setUser(userDoc.data());
+          const userData = userDoc.data();
+          // Only set the user state if the document doesn't include stripeLink or stripeId
+          if (!("stripeLink" in userData) && !("stripeId" in userData)) {
+            setUser(userData);
+          }
         }
       } else {
         // User is signed out
         setUser(null);
       }
+      setLoading(false);
     });
 
     // Cleanup subscription on unmount
