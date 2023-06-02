@@ -240,6 +240,36 @@ function onlyAdmins() {
                 </span>
               </Link>
             </li>
+            <li
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                fontFamily: "Monospace",
+                fontSize: "13px",
+              }}
+            >
+              <a
+                onClick={() => {
+                  setMode("profile");
+                }}
+                className="hover:bg-gray-500 hover:bg-opacity-30 hover:text-white-600 flex items-center justify-between py-1.5 px-4 rounded cursor-pointer"
+              >
+                <span className="flex items-center space-x-2">
+                  <MenuBookIcon />
+                  <span
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      fontFamily: "Monospace",
+                      fontSize: "13px",
+                    }}
+                  >
+                    {language === "english" ? "Profile" : "Perfil"}
+                  </span>
+                </span>
+              </a>
+            </li>
+
             {admin ? (
               <li
                 style={{
@@ -385,9 +415,9 @@ function onlyAdmins() {
           <Keyword language={language} />
         ) : mode === "tutor" ? (
           router.push("/tutor")
-        ) :mode === "profile"?(
-          <UserProfile/>
-        ) :(
+        ) : mode === "profile" ? (
+          <UserProfile />
+        ) : (
           <Guided language={language} />
         )}
       </div>
