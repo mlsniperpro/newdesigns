@@ -7,6 +7,7 @@ import app from "../config/firebase";
 
 export default function UserProfile() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // add this line
 
   useEffect(() => {
     const auth = getAuth(app);
