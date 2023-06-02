@@ -19,6 +19,7 @@ export default function UserProfile() {
           doc(collection(db, "users"), userAuth.uid)
         );
         if (userDoc.exists()) {
+          console.log("The user data are here: ", userDoc.data())
           setUser(userDoc.data());
         }
       } else {
