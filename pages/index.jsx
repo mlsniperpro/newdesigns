@@ -8,13 +8,14 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import Loader from "@/components/Loader";
 import PlanSelection from "@/components/PlanSelection";
 import usePremiumStatus from "@/stripe/usePremiumStatus";
+
 function Index() {
- 
   const [user, loadingAuth] = useAuthState(auth);
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [limit, setLimit] = useState(20000);
- const [upgrade, setUpgrade] = useState(false);
+  const [upgrade, setUpgrade] = useState(false);
+
   const handleValueChange = (newValue) => {
     setUpgrade(newValue);
   };
@@ -28,24 +29,28 @@ function Index() {
       console.log("Error retrieving prices: ", error);
     }
   };
-   const userIsPremium = usePremiumStatus(user);
+
+  const userIsPremium = usePremiumStatus(user);
+
   useEffect(() => {
-    /*
-    if (!user && !loading) {
-      Router.push("/login");
-      return;
-    }
-    */
-   if(!auth?.currentUser?.uid){
-      Router.push("/home");
-      return;
-   }
-    retrieveWordLimit();
+    const checkAuthStatusAndPrefetchHome = async () => {
+      // Prefetch the "/home" page.
+      await Router.prefetch("/home");
+
+      // Now, perform the auth check and redirect if necessary.
+      if (!auth?.currentUser?.uid) {
+        Router.push("/home");
+        return;
+      }
+
+      retrieveWordLimit();
+    };
+
+    checkAuthStatusAndPrefetchHome();
   }, [user, loading, loadingAuth]);
 
   const checkSubscription = async () => {
     try {
-      // Check if the user is authenticated
       if (!user) {
         setLoading(false);
         return;
@@ -69,8 +74,6 @@ function Index() {
       );
       const wordsGenerated = wordsSnapshot.docs.map((doc) => doc.data());
       const currentUserWords = wordsGenerated[0] || { count: 0 };
-
-      
 
       if (
         Date.now() < latestSubscription.subscriptionEndDate ||
@@ -103,13 +106,13 @@ function Index() {
       </Head>
       <div className="bg-[#1A232E] flex flex-col items-center justify-center min-h-screen py-2">
         <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-          {loading? (
+          {loading ? (
             <Loader />
-          ) : (subscribed && !upgrade)? (
-            <Dashboard onValueChange = {handleValueChange} />
-          ) :(
+          ) : subscribed && !upgrade ? (
+            <Dashboard onValueChange={handleValueChange} />
+          ) : (
             <PlanSelection />
-          ) }
+          )}
         </main>
       </div>
     </div>
@@ -117,4 +120,3 @@ function Index() {
 }
 
 export default Index;
-
