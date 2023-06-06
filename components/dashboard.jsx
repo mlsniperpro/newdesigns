@@ -18,7 +18,7 @@ import UserProfile from "./UserProfile";
 
 
 function Dashboard(props) {
-  const {onValueChange} = props;
+  const { onValueChange } = props;
   const [admin, setAdmin] = React.useState(false);
   const router = useRouter();
   const [language, setLanguage] = React.useState("spanish");
@@ -35,9 +35,6 @@ function Dashboard(props) {
     return;
   }
 }
-useEffect(() => {
-  checkIfAdmin()
-}, [])
 
   const signout = async() => {
     await signOut(auth)
