@@ -59,6 +59,9 @@ function onlyAdmins() {
     Router.push("/login");
   }
 }
+useEffect(() => {
+  checkIfAdmin();
+}, []);
 
   return (
     <div className="w-full bg-white shadow-xl rounded-lg flex overflow-x-auto custom-scrollbar">
