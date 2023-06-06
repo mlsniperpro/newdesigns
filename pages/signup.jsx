@@ -66,6 +66,12 @@ function Signup() {
 
       console.log("Document written with ID: ", docRef.id);
       router.push("/login");
+
+      // Trigger Rewardful conversion event after user account is successfully created.
+      if (window.Rewardful?.referral) {
+        console.log("Rewardful referral", window.Rewardful.referral);
+        window.rewardful("convert", { ["email"]: email });
+      }
     } catch (e) {
       const errorMessage =
         language === "sp"
@@ -73,11 +79,6 @@ function Signup() {
           : "Something went wrong password must be 6 characters long and must match";
       alert(errorMessage);
       console.error("Error: ", e);
-    }
-
-    if (window.Rewardful?.referral) {
-      console.log("Rewardful referral", window.Rewardful.referral);
-      window.rewardful("convert", { ["email"]: email });
     }
   };
 
