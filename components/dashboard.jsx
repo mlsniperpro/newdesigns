@@ -15,7 +15,7 @@ import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import UploadIcon from '@mui/icons-material/Upload';
 import LogoutIcon from '@mui/icons-material/Logout';
 import UserProfile from "./UserProfile";
-
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 function Dashboard(props) {
   const { onValueChange } = props;
@@ -252,7 +252,7 @@ function onlyAdmins() {
                 className="hover:bg-gray-500 hover:bg-opacity-30 hover:text-white-600 flex items-center justify-between py-1.5 px-4 rounded cursor-pointer"
               >
                 <span className="flex items-center space-x-2">
-                  <MenuBookIcon />
+                  <AccountBoxIcon />
                   <span
                     style={{
                       color: "white",
