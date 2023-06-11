@@ -115,6 +115,7 @@ const onSubmit = async (e) => {
 
   return (
     <section style={{ background: "white", fontFamily: "Monospace" }}>
+      <ToastContainer />
       <div className="flex justify-center min-h-screen">
         {/* <div
           className="hidden bg-cover lg:block lg:w-2/5"
@@ -419,8 +420,8 @@ const onSubmit = async (e) => {
               >
                 <span style={{ fontFamily: "Monospace" }}>
                   <HowToRegIcon style={{ marginRight: "10px" }} />
-                
-                    {language === "sp" ? "  Inscribirse" : "   Sign Up "}
+
+                  {language === "sp" ? "  Inscribirse" : "   Sign Up "}
                 </span>
               </button>
             </form>
