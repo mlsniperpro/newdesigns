@@ -100,7 +100,7 @@ function Login() {
                   window.rewardful('convert', { email: user.email });
                 }
               }
-              startTracking();
+              
               await addDoc(collection(db, "users"), {
                 userId: user.uid,
                 email: user.email,
@@ -115,6 +115,7 @@ function Login() {
           };
 
           addUser();
+
           const checkIfDisabled = async () => {
             console.log("Checking if user is disabled");
             const disabledQuery = query(
@@ -136,7 +137,8 @@ function Login() {
                throw new Error("User Disabled from using Vioniko");
             }
           };
-          checkIfDisabled();      
+          checkIfDisabled();
+          startTracking();      
         })
         .catch((error) => {
           const errorCode = error.code;

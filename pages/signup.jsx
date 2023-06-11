@@ -1,5 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { useState } from "react";
 import { auth, db } from "../config/firebase";
 import { useRouter } from "next/router";
@@ -21,66 +24,93 @@ function Signup() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+const onSubmit = async (e) => {
+  e.preventDefault();
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  if (password !== confirmPassword) {
+    const message =
+      language === "sp"
+        ? "Las contraseñas no coinciden"
+        : "Passwords do not match";
+    toast.error(message);
+    return;
+  }
 
-    if (password !== confirmPassword) {
-      const message =
-        language === "sp"
-          ? "Las contraseñas no coinciden"
-          : "Passwords do not match";
-      alert(message);
-      console.error("Passwords do not match");
-      return;
+  try {
+    const { user } = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    await sendEmailVerification(user);
+
+    const date = new Date();
+    const dateSignedUp = `${date.getFullYear()}-${
+      date.getMonth() + 1
+    }-${date.getDate()}`;
+
+    const docRef = await addDoc(collection(db, "users"), {
+      userId: user.uid,
+      email,
+      firstName,
+      lastName,
+      name: `${firstName} ${lastName}`,
+      phoneNumber,
+      dateSignedUp,
+    });
+
+    const toastMessage =
+      language === "sp"
+        ? "Verifique su correo electrónico"
+        : "Please verify your email";
+    toast.success(toastMessage);
+
+    console.log("Document written with ID: ", docRef.id);
+
+    // Trigger Rewardful conversion event after user account is successfully created.
+    if (window.Rewardful?.referral) {
+      console.log("Rewardful referral", window.Rewardful.referral);
+      window.rewardful("convert", { ["email"]: email });
     }
 
-    try {
-      const { user } = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      await sendEmailVerification(user);
-
-      const date = new Date();
-      const dateSignedUp = `${date.getFullYear()}-${
-        date.getMonth() + 1
-      }-${date.getDate()}`;
-
-      const docRef = await addDoc(collection(db, "users"), {
-        userId: user.uid,
-        email,
-        firstName,
-        lastName,
-        name: `${firstName} ${lastName}`,
-        phoneNumber,
-        dateSignedUp,
-      });
-
-      const alertMessage =
-        language === "sp"
-          ? "Verifique su correo electrónico"
-          : "Please verify your email";
-      alert(alertMessage);
-
-      console.log("Document written with ID: ", docRef.id);
-      router.push("/login");
-
-      // Trigger Rewardful conversion event after user account is successfully created.
-      if (window.Rewardful?.referral) {
-        console.log("Rewardful referral", window.Rewardful.referral);
-        window.rewardful("convert", { ["email"]: email });
-      }
-    } catch (e) {
-      const errorMessage =
-        language === "sp"
-          ? "Algo salió mal. La contraseña debe tener más de 6 caracteres y deben coincidir."
-          : "Something went wrong password must be 6 characters long and must match";
-      alert(errorMessage);
-      console.error("Error: ", e);
+    router.push("/login");
+  } catch (e) {
+    let errorMessage;
+    switch (e.code) {
+      case "auth/email-already-in-use":
+        errorMessage =
+          language === "sp"
+            ? "El correo electrónico ya está en uso."
+            : "The email address is already in use.";
+        break;
+      case "auth/invalid-email":
+        errorMessage =
+          language === "sp"
+            ? "El correo electrónico no es válido."
+            : "The email address is not valid.";
+        break;
+      case "auth/operation-not-allowed":
+        errorMessage =
+          language === "sp"
+            ? "La operación no está permitida."
+            : "The operation is not allowed.";
+        break;
+      case "auth/weak-password":
+        errorMessage =
+          language === "sp"
+            ? "La contraseña es demasiado débil."
+            : "The password is too weak.";
+        break;
+      default:
+        errorMessage =
+          language === "sp" ? "Algo salió mal." : "Something went wrong.";
     }
-  };
+    toast.error(errorMessage);
+    console.error("Error: ", e);
+  }
+};
+
+
 
 
   return (
