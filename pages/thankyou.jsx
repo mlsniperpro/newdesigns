@@ -15,7 +15,6 @@ export default function ThankYou() {
     }
     if(user){
       console.log("The user details are : ", user.email);
-      /*
     if (typeof window !== "undefined" && window.rewardful) {
       console.log("The window is : ",  window.rewardful)
       window.rewardful("ready", function () {
@@ -27,7 +26,6 @@ export default function ThankYou() {
     );
     });
   }
-  */
 
     }
     
