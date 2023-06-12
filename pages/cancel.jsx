@@ -15,9 +15,9 @@ import { db, auth } from "../config/firebase";
 const CancelSubscription = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [status, setStatus] = useState("");
-
-  const subs = {
-    sub_1N8YqBIYCytGzqWhCYFRWvdP: "Monthly",
+  const stripeProducts = {
+    prod_Njtrgy9W8UwGW7: "Monthly",
+    prod_NjtvxM9XlsH2c6: "Yearly",
   };
 
   useEffect(() => {
@@ -43,10 +43,7 @@ const CancelSubscription = () => {
             latestSubscription.status = "Inactive";
           }
 
-          setSubscriptions((prevSubscriptions) => [
-            ...prevSubscriptions,
-            latestSubscription,
-          ]);
+          setSubscriptions([latestSubscription]);
         }
       } catch (error) {
         console.error("Error fetching subscriptions: ", error);
@@ -54,7 +51,9 @@ const CancelSubscription = () => {
     };
 
     fetchSubscriptions();
+  }, []);
 
+  useEffect(() => {
     if (!auth.currentUser?.uid) {
       return;
     }
@@ -69,10 +68,7 @@ const CancelSubscription = () => {
         id: doc.id,
         data: doc.data(),
       }));
-      setSubscriptions((prevSubscriptions) => [
-        ...prevSubscriptions,
-        ...newSubscriptions,
-      ]);
+      setSubscriptions(newSubscriptions);
     });
 
     return () => unsubscribe();
@@ -80,8 +76,7 @@ const CancelSubscription = () => {
 
   const handlePayPalCancel = async () => {
     const url =
-     
-  "https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelUserSubscriptions";
+      "https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelUserSubscriptions";
     try {
       const user_id = auth.currentUser?.uid;
       console.log("The user id is: ", user_id);
@@ -163,8 +158,12 @@ const CancelSubscription = () => {
                     className="flex justify-between items-center"
                   >
                     <p>
-                      {subs[subscription.id] || "Yearly"} -{" "}
-                      {subscription.data?.status || subscription.status}
+                      {console.log("The subscription is: ", subscription)}
+                      {stripeProducts[
+                        subscription.data?.items[0]?.plan?.product
+                      ] || "Yearly"}{" "}
+                      - {subscription.data?.status || subscription.status}
+                      {console.log("The subscription is: ", subscription)}
                     </p>
                     <button
                       onClick={() => handleCancelSubscription(subscription.id)}
