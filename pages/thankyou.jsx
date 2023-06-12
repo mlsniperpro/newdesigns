@@ -2,34 +2,40 @@ import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
 import { auth, db } from "../config/firebase";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function ThankYou() {
   const [user, userLoading] = useAuthState(auth);
+
   useEffect(() => {
-    if (!user && !userLoading) {
+    let isMounted = true;
+
+    if (!user && !userLoading && isMounted) {
       Router.push("/login");
       return;
     }
-    if(user){
-      console.log("The user details are : ", user.email);
-    if (typeof window !== "undefined" && window.rewardful) {
-      console.log("The window is : ",  window.rewardful)
-      window.rewardful("ready", function () {
-        
-          window.rewardful("convert", {
-        email: user.email,
-        
-    }
-    );
-    });
-  }
 
+    if (user && isMounted) {
+      console.log("The user details are : ", user.email);
+      if (typeof window !== "undefined" && window.rewardful) {
+        console.log("The window is : ", window.rewardful);
+        window.rewardful("ready", function () {
+          if (isMounted) {
+            console.log("Use is referred now converting")
+            window.rewardful("convert", {
+              email: user.email,
+            });
+          }
+        });
+      }
     }
-    
-  }, []);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user, userLoading]);
+
   const [language, setLanguage] = useState("es");
 
   const toggleLanguage = () => {
