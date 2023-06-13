@@ -111,6 +111,8 @@ function Login() {
                   new Date().getMonth() + 1
                 }-${new Date().getDate()}`,
               });
+
+              startTracking();
             }
           };
 
@@ -138,7 +140,7 @@ function Login() {
             }
           };
           checkIfDisabled();
-          startTracking();      
+                
         })
         .catch((error) => {
           const errorCode = error.code;
