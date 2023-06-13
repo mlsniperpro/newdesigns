@@ -76,7 +76,9 @@ function Index() {
       if (
         Date.now() < latestSubscription.subscriptionEndDate ||
         currentUserWords.count < limit ||
-        userIsPremium
+        userIsPremium ||
+        auth.currentUser.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
+        auth.currentUser.uid === "fcJAePkUVwV7fBR3uiGh5iyt2Tf1"
       ) {
         setSubscribed(true);
       } else {
