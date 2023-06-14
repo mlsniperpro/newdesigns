@@ -7,6 +7,16 @@ import Head from "next/head";
 
 export default function ThankYou() {
   const [user, userLoading] = useAuthState(auth);
+  useEffect(() => {
+    if (!window.localStorage.getItem("refreshed")) {
+      const timer = setTimeout(() => {
+        window.localStorage.setItem("refreshed", "true");
+        window.location.reload(); // Refresh the page
+      }, 2000); // 2000 milliseconds = 2 seconds
+    }
+
+    // No cleanup function needed
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
