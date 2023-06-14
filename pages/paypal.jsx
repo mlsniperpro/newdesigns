@@ -23,7 +23,6 @@ const Subscribe = () => {
   const [showPaypal, setShowPaypal] = useState(false);
 
   const handleSubscriptionChange = (event) => {
-    console.log("I changed the subscription plan!")
     setPlan(event.target.value);
   };
 
@@ -73,7 +72,6 @@ const Subscribe = () => {
                       }}
                       onApprove={(data, actions) => {
                         return actions.order.capture().then((details) => {
-                          console.log("The details are ", details);
                           const addSubscriber = async () => {
                             try {
                               const docRef = await addDoc(
@@ -90,10 +88,6 @@ const Subscribe = () => {
                                   subscriptionEndDate: Date.now() + (plan === 'monthly' ? 30 : 365) * 24 * 60 * 60 * 1000,
                                   ["plan"]: plan,
                                 }
-                              );
-                              console.log(
-                                "Document written with ID: ",
-                                docRef.id
                               );
                             } catch (e) {
                               console.error("Error adding document: ", e);

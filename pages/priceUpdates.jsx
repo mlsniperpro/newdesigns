@@ -27,9 +27,7 @@ function Priceupdates() {
     "https://us-central1-vioniko-82fcb.cloudfunctions.net/updatePricingSchemes"; // Replace <your-project-id> with your Firebase project ID
 
     // Log the request data for debugging
-    console.log(
-      `Sending request to ${firebaseFunctionUrl} with planId: ${planId} and newPrice: ${newPrice}`
-    );
+   
 
     try {
       const response = await axios.post(firebaseFunctionUrl, {
@@ -37,8 +35,6 @@ function Priceupdates() {
         newPrice,
       });
 
-      // Log response data from Firebase Cloud Function
-      console.log(response.data);
     } catch (error) {
       // Check if the error response from the server exists
       if (error.response) {
@@ -80,7 +76,6 @@ function Priceupdates() {
     setPrice(parseFloat(event.target.textContent.slice(1)));
   };
   const priceUpdater = async () => {
-    console.log("The price is ", price, " and the plan is ", plan);
     if (!price || !plan) {
       alert("Please enter a price and select a plan");
       return;
@@ -89,7 +84,6 @@ function Priceupdates() {
       const paymentDocs = await getDocs(collection(db, "Payment"));
 
       if (!paymentDocs.empty) {
-        console.log(paymentDocs.docs[0].ref);
         const paymentDocRef = paymentDocs.docs[0].ref; // Get the first document in the Payment collection
         await updateDoc(paymentDocRef, {
           [plan]: price, // update the "plan" field with the new price
@@ -101,17 +95,14 @@ function Priceupdates() {
             "usd",
             price * 100
           );
-          console.log(monthlyPrice);
         } else if (plan === "yearly") {
           const yearlyPrice = await createPrice(
             "prod_NjtvxM9XlsH2c6",
             "usd",
             price * 100
           );
-          console.log(yearlyPrice);
         }
       } else {
-        console.log("Empty", paymentDocs);
         await setDoc(doc(db, "Payment", "payment"), {
           // remove the .doc() call
           [plan]: price, // create a new document with the "plan" field set to the new price

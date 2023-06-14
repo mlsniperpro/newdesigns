@@ -35,27 +35,21 @@ function Login() {
         const user = userCredential.user;
         //Check if user is disabled
         const checkIfDisabled = async () => {
-          console.log("Checking if user is disabled");
           const disabledQuery = query(
             collection(db, "deactivatedUsers"),
             where("userId", "==", user.uid)
           );
           const disabledDocs = await getDocs(disabledQuery);
-          console.log("DisabledDocs", disabledDocs);
           if (disabledDocs.empty) {
             router.push({
               pathname: "/tutor",
               query: { userId: user.uid },
             });
           } else {
-            console.log("User disabled");
-            console.log("User Disabled from using Vioniko");
             alert("You have been disabled from using Vioniko");
-            console.log("User Disabled from using Vioniko");
             throw new Error("User Disabled from using Vioniko");
           }
         };
-        console.log(user.emailVerified);
         if (!user.emailVerified) {
           language === "en"
             ? alert("Please verify your email address")
@@ -85,7 +79,6 @@ function Login() {
         .then((result) => {
           //This gives the uid of the user
           const user = result.user;
-          console.log(user.email);
           const addUser = async () => {
             const q = query(
               collection(db, "users"),
@@ -96,7 +89,6 @@ function Login() {
             if (docs.empty) {
               const startTracking = () => {
                 if (window.Rewardful.referral) {
-                  console.log("Rewardful referral", window.Rewardful.referral);
                   window.rewardful('convert', { email: user.email });
                 }
               }
@@ -119,23 +111,18 @@ function Login() {
           addUser();
 
           const checkIfDisabled = async () => {
-            console.log("Checking if user is disabled");
             const disabledQuery = query(
               collection(db, "deactivatedUsers"),
               where("userId", "==", user.uid)
             );
             const disabledDocs = await getDocs(disabledQuery);
-            console.log("DisabledDocs", disabledDocs);
             if (disabledDocs.empty) {
               router.push({
                 pathname: "/tutor",
                 query: { userId: user.uid },
               });
             } else {
-              console.log("User disabled");
-               console.log("User Disabled from using Vioniko");
                alert("You have been disabled from using Vioniko");
-               console.log("User Disabled from using Vioniko");
                throw new Error("User Disabled from using Vioniko");
             }
           };

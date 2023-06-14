@@ -19,7 +19,6 @@ const LandingPage = () => {
   const [success, setSuccess] = useState(false);
   const [language, setLanguage] = useState("sp");
   const handleSubmit = async (e) => {
-    console.log("I am submitting");
     e.preventDefault();
     
     const formData = new FormData(e.target);

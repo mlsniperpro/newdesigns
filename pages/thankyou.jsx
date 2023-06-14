@@ -17,12 +17,9 @@ export default function ThankYou() {
     }
 
     if (user && isMounted) {
-      console.log("The user details are : ", user.email);
       if (typeof window !== "undefined" && window.rewardful) {
-        console.log("The window is : ", window.rewardful);
         window.rewardful("ready", function () {
           if (isMounted) {
-            console.log("Use is referred now converting")
             window.rewardful("convert", {
               email: user.email,
             });

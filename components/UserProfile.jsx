@@ -29,7 +29,6 @@ export default function UserProfile() {
           const querySnapshot = await getDocs(q);
           querySnapshot.forEach((doc) => {
             const userData = doc.data();
-            console.log();
             if (!("stripeLink" in userData) || !("stripeId" in userData)) {
               // process the user data as needed
               setUser(userData); // this will overwrite the user state for each matching document
@@ -109,10 +108,6 @@ export default function UserProfile() {
         {}
       );
 
-      console.log(
-        "The end latest subscription according to paypal",
-        latestSubscription
-      );
 
       if (latestSubscription.subscriptionEndDate > Date.now()) {
         setCurrentSubscription(latestSubscription);
@@ -121,10 +116,6 @@ export default function UserProfile() {
 
     checkPayPalSubscribers();
   }, []);
-
-  useEffect(() => {
-    console.log("Current subscription is now: ", currentSubscription);
-  }, [currentSubscription]);
 
   if (loading) {
     return <div>Loading...</div>;

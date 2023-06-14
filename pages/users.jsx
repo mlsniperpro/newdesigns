@@ -17,7 +17,6 @@ function Users(){
       .map((doc) => doc.data())
       .filter((user) => user.name && user.name.trim() !== "");
     setUsers(users);
-    console.log(users);
   };
 
   //Fetch stripe subscriptions

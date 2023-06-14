@@ -79,7 +79,6 @@ const CancelSubscription = () => {
       "https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelUserSubscriptions";
     try {
       const user_id = auth.currentUser?.uid;
-      console.log("The user id is: ", user_id);
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -158,12 +157,10 @@ const CancelSubscription = () => {
                     className="flex justify-between items-center"
                   >
                     <p>
-                      {console.log("The subscription is: ", subscription)}
                       {stripeProducts[
                         subscription.data?.items[0]?.plan?.product
                       ] || "Yearly"}{" "}
                       - {subscription.data?.status || subscription.status}
-                      {console.log("The subscription is: ", subscription)}
                     </p>
                     <button
                       onClick={() => handleCancelSubscription(subscription.id)}

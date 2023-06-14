@@ -21,7 +21,6 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CategoryIcon from '@mui/icons-material/Category';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 function Guided({language}) {
-  {console.log(language)}
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [resNo, setResNo] = useState('res1');
@@ -140,7 +139,6 @@ function Guided({language}) {
         const userDoc = wordsGenerated.find(
           (word) => word.userId === auth.currentUser.uid
         );
-        console.log(userDoc);
         await updateDoc(doc(db, "wordsgenerated", userDoc.id), {
           count: userDoc.count + res.length,
         });
@@ -206,7 +204,6 @@ function Guided({language}) {
         ></div>
         <div className="w-full mx-auto px-20 flex-col items-center space-y-6"   style={{marginTop:'100px'}}>
           <div
-            onClick={() => console.log("Hello")}
             className="overflow-x-auto flex justify-center lg:justify-start mt-12"
           
             

@@ -47,7 +47,6 @@ function Keyword({ language}) {
   if (language === "spanish"){
     prompt += "The results should be in spanish"
   }
-  console.log(prompt);
   const tablify = (data) => {
     let structuredData = [];
     let rows = data.split("|");
@@ -129,7 +128,6 @@ function Keyword({ language}) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         const response = data.choices[0].message.content;
         setResponse(response);
         updateUserWordCount(response);

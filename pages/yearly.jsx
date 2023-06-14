@@ -23,9 +23,7 @@ const style = { layout: "vertical" };
 
 const retrievePrices = async () => {
   const pricesDoc = await getDocs(collection(db, "Payment"));
-  console.log("The prices retrieved are: ", pricesDoc);
   pricesDoc.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
     amount = doc.data().yearly;
   });
 };
@@ -91,7 +89,6 @@ const ButtonWrapper = ({ currency, showSpinner }) => {
                    subscriptionEndDate: Date.now() + 31536000000,
                    plan: "yearly",
                  });
-                 console.log("Document written with ID: ", docRef.id);
                } catch (e) {
                  console.error("Error adding document: ", e);
                }

@@ -65,11 +65,8 @@ const onSubmit = async (e) => {
         : "Please verify your email";
     toast.success(toastMessage);
 
-    console.log("Document written with ID: ", docRef.id);
-
     // Trigger Rewardful conversion event after user account is successfully created.
     if (window.Rewardful?.referral) {
-      console.log("Rewardful referral", window.Rewardful.referral);
       window.rewardful("convert", { ["email"]: email });
     }
 
