@@ -1,9 +1,9 @@
-import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
 import { auth, db } from "../config/firebase";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import Head from "next/head";
 
 export default function ThankYou() {
   const [user, userLoading] = useAuthState(auth);
@@ -17,9 +17,12 @@ export default function ThankYou() {
     }
 
     if (user && isMounted) {
+      console.log("The user details are : ", user.email);
       if (typeof window !== "undefined" && window.rewardful) {
+        console.log("The window is : ", window.rewardful);
         window.rewardful("ready", function () {
           if (isMounted) {
+            console.log("Use is referred now converting");
             window.rewardful("convert", {
               email: user.email,
             });
