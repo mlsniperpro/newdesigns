@@ -68,12 +68,14 @@ function Signup() {
       console.log("Document written with ID: ", docRef.id);
 
       // Trigger Rewardful conversion event after user account is successfully created.
-      if (window.Rewardful?.referral) {
-        console.log("Rewardful referral", window.Rewardful.referral);
-        window.rewardful("convert", { ["email"]: email });
-      }
+      setTimeout(async () => {
+        if (window.Rewardful?.referral) {
+          console.log("Rewardful referral", window.Rewardful.referral);
+          window.rewardful("convert", { ["email"]: email });
+        }
 
-      router.push("/login");
+        router.push("/login");
+      }, 5000);
     } catch (e) {
       let errorMessage;
       switch (e.code) {
