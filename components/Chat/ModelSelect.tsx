@@ -9,7 +9,6 @@ import HomeContext from '@/pages/api/home/home.context';
 
 export const ModelSelect = () => {
   const { t } = useTranslation('chat');
-
   const {
     state: { selectedConversation, models, defaultModelId },
     handleUpdateConversation,
@@ -55,6 +54,7 @@ export const ModelSelect = () => {
         <a
           href="https://platform.openai.com/account/usage"
           target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center"
         >
           <IconExternalLink size={18} className={'inline mr-1'} />
