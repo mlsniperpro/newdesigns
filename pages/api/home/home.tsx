@@ -190,7 +190,7 @@ const Home = ({
 
     const newConversation: Conversation = {
       id: uuidv4(),
-      name: t('New Conversation'),
+      name: 'New Conversation',
       messages: [],
       model: lastConversation?.model || {
         id: OpenAIModels[defaultModelId].id,
@@ -338,7 +338,7 @@ const Home = ({
         field: 'selectedConversation',
         value: {
           id: uuidv4(),
-          name: t('New Conversation'),
+          name: 'New Conversation',
           messages: [],
           model: OpenAIModels[defaultModelId],
           prompt: DEFAULT_SYSTEM_PROMPT,
@@ -429,6 +429,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   };
 };
 
-function t(arg0: string): string {
+/*function t(arg0: string): string {
   throw new Error('Function not implemented.');
 }
+*/
