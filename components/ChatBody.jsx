@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import autoAnimate from "@formkit/auto-animate";
 import { useEffect } from "react";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 const ChatBody = ({ chat }) => {
   const aiStyle =
@@ -31,7 +32,7 @@ const ChatBody = ({ chat }) => {
             style={{background:'#272727'}}
           >
             <pre className="whitespace-pre-wrap" style={{background:'1 1 1 0.2',border:'none'}}>
-              <span style={{color:'white',fontSize:'14px',fontFamily:"Monospace",fontSize:'16px'}}>{message.content}</span>
+              <span style={{color:'white',fontSize:'14px',fontFamily:"Monospace",fontSize:'16px'}}><ReactMarkdown>{message.content}</ReactMarkdown></span>
             </pre>
           </div>
         );

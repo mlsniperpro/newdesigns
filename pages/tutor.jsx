@@ -8,6 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import Link from "next/link";
 import Router from "next/router";
 import React from "react";
+import { ReactMarkdown } from "react-markdown";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 //If API_KEY is none then load the API_KEY from the database
 import HomeIcon from '@mui/icons-material/Home';

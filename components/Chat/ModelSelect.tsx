@@ -29,12 +29,12 @@ export const ModelSelect = () => {
   return (
     <div className="flex flex-col">
       <label className="mb-2 text-left text-neutral-700 dark:text-neutral-400">
-        {t('Model')}
+        {t("Model")}
       </label>
       <div className="w-full rounded-lg border border-neutral-200 bg-transparent pr-2 text-neutral-900 dark:border-neutral-600 dark:text-white">
         <select
           className="w-full bg-transparent p-2"
-          placeholder={t('Select a model') || ''}
+          placeholder={t("Select a model") || ""}
           value={selectedConversation?.model?.id || defaultModelId}
           onChange={handleChange}
         >
@@ -56,9 +56,10 @@ export const ModelSelect = () => {
           href="https://platform.openai.com/account/usage"
           target="_blank"
           className="flex items-center"
+          rel="noopener noreferrer"
         >
-          <IconExternalLink size={18} className={'inline mr-1'} />
-          {t('View Account Usage')}
+          <IconExternalLink size={18} className={"inline mr-1"} />
+          {t("View Account Usage")}
         </a>
       </div>
     </div>
