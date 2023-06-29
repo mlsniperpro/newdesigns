@@ -355,7 +355,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             Welcome to VIONIKO AI
           </div>
           <div className="text-center text-lg text-black dark:text-white">
-            <div className="mb-8">{`Chatbot UI is an open source clone of OpenAI's ChatGPT UI.`}</div>
+            <div className="mb-8">{`Vioniko AI is the market leader when it comes to making the most advanced AI content`}</div>
             <div className="mb-2 font-bold">
               Viniko AI is the market leader when it comes to Copywriting
             </div>
@@ -390,7 +390,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      'Chatbot UI'
+                      'Vioniko AI'
                     )}
                   </div>
 

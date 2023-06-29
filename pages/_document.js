@@ -6,7 +6,7 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="Chatbot UI"></meta>
+        <meta name="apple-mobile-web-app-title" content="Vioniko AI"></meta>
           {/* Preconnect should be used with discretion. Here it is being used to establish early connection to a domain */}
           <link
             rel="preconnect"
