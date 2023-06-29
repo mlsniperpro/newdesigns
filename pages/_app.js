@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+
+
 import "@/styles/globals.css";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { Inter } from '@next/font/google';
+
 
 const queryClient = new QueryClient();
-
+const inter = Inter({ subsets: ['latin'] });
 function App({ Component, pageProps }) {
   const [rewardfulReady, setRewardfulReady] = useState(false);
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
@@ -61,9 +67,12 @@ function App({ Component, pageProps }) {
   }
 
   return (
+    <div className={inter.className}>
+    <Toaster />
     <QueryClientProvider client={queryClient}>
       {rewardfulReady ? <Component {...pageProps} /> : <div>Loading...</div>}
     </QueryClientProvider>
+    </div>
   );
 }
 
