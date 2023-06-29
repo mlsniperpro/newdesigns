@@ -1,32 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 
-
-
 import { GetServerSideProps } from 'next';
-//import { useTranslation } from 'next-i18next';
-//import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 
-
-
 import { useCreateReducer } from '@/hooks/useCreateReducer';
-
-
 
 import useErrorService from '@/services/errorService';
 import useApiService from '@/services/useApiService';
 
-
-
-import { cleanConversationHistory, cleanSelectedConversation } from '@/utils/app/clean';
+import {
+  cleanConversationHistory,
+  cleanSelectedConversation,
+} from '@/utils/app/clean';
 import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from '@/utils/app/const';
-import { saveConversation, saveConversations, updateConversation } from '@/utils/app/conversation';
+import {
+  saveConversation,
+  saveConversations,
+  updateConversation,
+} from '@/utils/app/conversation';
 import { saveFolders } from '@/utils/app/folders';
 import { savePrompts } from '@/utils/app/prompts';
 import { getSettings } from '@/utils/app/settings';
-
-
 
 import { Conversation } from '@/types/chat';
 import { KeyValuePair } from '@/types/data';
@@ -34,22 +31,15 @@ import { FolderInterface, FolderType } from '@/types/folder';
 import { OpenAIModelID, OpenAIModels, fallbackModelID } from '@/types/openai';
 import { Prompt } from '@/types/prompt';
 
-
-
 import { Chat } from '@/components/Chat/Chat';
 import { Chatbar } from '@/components/Chatbar/Chatbar';
 import { Navbar } from '@/components/Mobile/Navbar';
 import Promptbar from '@/components/Promptbar';
 
-
-
 import HomeContext from './home.context';
 import { HomeInitialState, initialState } from './home.state';
 
-
-
 import { v4 as uuidv4 } from 'uuid';
-
 
 interface Props {
   serverSideApiKeyIsSet: boolean;
@@ -62,7 +52,7 @@ const Home = ({
   serverSidePluginKeysSet,
   defaultModelId,
 }: Props) => {
-  //const { t } = useTranslation('chat');
+  const { t } = useTranslation('chat');
   const { getModels } = useApiService();
   const { getModelsError } = useErrorService();
   const [initialRender, setInitialRender] = useState<boolean>(true);
@@ -193,7 +183,7 @@ const Home = ({
 
     const newConversation: Conversation = {
       id: uuidv4(),
-      name: 'New Conversation',
+      name: t('New Conversation'),
       messages: [],
       model: lastConversation?.model || {
         id: OpenAIModels[defaultModelId].id,
@@ -341,7 +331,7 @@ const Home = ({
         field: 'selectedConversation',
         value: {
           id: uuidv4(),
-          name: 'New Conversation',
+          name: t('New Conversation'),
           messages: [],
           model: OpenAIModels[defaultModelId],
           prompt: DEFAULT_SYSTEM_PROMPT,
@@ -370,7 +360,7 @@ const Home = ({
       }}
     >
       <Head>
-        <title>Vioniko AI</title>
+        <title>Chatbot UI</title>
         <meta name="description" content="ChatGPT but better." />
         <meta
           name="viewport"
@@ -405,7 +395,7 @@ const Home = ({
 };
 export default Home;
 
-export const getServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const defaultModelId =
     (process.env.DEFAULT_MODEL &&
       Object.values(OpenAIModelID).includes(
@@ -428,6 +418,14 @@ export const getServerSideProps = async () => {
       serverSideApiKeyIsSet: !!process.env.NEXT_PUBLIC_API_KEY,
       defaultModelId,
       serverSidePluginKeysSet,
+      ...(await serverSideTranslations(locale ?? 'en', [
+        'common',
+        'chat',
+        'sidebar',
+        'markdown',
+        'promptbar',
+        'settings',
+      ])),
     },
   };
 };

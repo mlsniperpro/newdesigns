@@ -10,7 +10,7 @@ import {
 } from 'react';
 import toast from 'react-hot-toast';
 
-//import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 
 import { getEndpoint } from '@/utils/app/api';
 import {
@@ -39,7 +39,7 @@ interface Props {
 }
 
 export const Chat = memo(({ stopConversationRef }: Props) => {
-  //const { t } = useTranslation('chat');
+  const { t } = useTranslation('chat');
 
   const {
     state: {

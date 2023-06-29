@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
+import React, { useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-
-
-import "@/styles/globals.css";
+import '@/styles/globals.css';
 import { Inter } from '@next/font/google';
-
 
 const queryClient = new QueryClient();
 const inter = Inter({ subsets: ['latin'] });
@@ -19,9 +16,9 @@ function App({ Component, pageProps }) {
     let timeoutId;
 
     const checkRewardful = () => {
-      if (typeof window.rewardful === "function") {
-        window.rewardful("ready", () => {
-          console.log("Rewardful Ready!");
+      if (typeof window.rewardful === 'function') {
+        window.rewardful('ready', () => {
+          console.log('Rewardful Ready!');
           setRewardfulReady(true);
           clearInterval(intervalId);
           clearTimeout(timeoutId);
@@ -36,7 +33,7 @@ function App({ Component, pageProps }) {
     timeoutId = setTimeout(() => {
       if (!rewardfulReady) {
         console.log(
-          "Rewardful not ready after 5 seconds. Displaying error message."
+          'Rewardful not ready after 5 seconds. Displaying error message.',
         );
         setDisplayErrorMessage(true);
       }
@@ -68,10 +65,10 @@ function App({ Component, pageProps }) {
 
   return (
     <div className={inter.className}>
-    <Toaster />
-    <QueryClientProvider client={queryClient}>
-      {rewardfulReady ? <Component {...pageProps} /> : <div>Loading...</div>}
-    </QueryClientProvider>
+      <Toaster />
+      <QueryClientProvider client={queryClient}>
+        {rewardfulReady ? <Component {...pageProps} /> : <div>Loading...</div>}
+      </QueryClientProvider>
     </div>
   );
 }
