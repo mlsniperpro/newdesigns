@@ -2,42 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { font-family: 'Inter', sans-serif; }
-@supports (font-variation-settings: normal) {
-  :root { font-family: 'Inter var', sans-serif; }
+::-webkit-scrollbar-track {
+  background-color: transparent;
 }
 
-*{
-  margin: 0;
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
+}
+
+::-webkit-scrollbar-track:hover {
+  background-color: #f2f2f2;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+html {
+  background: #202123;
+}
+
+@media (max-width: 720px) {
+  pre {
+    width: calc(100vw - 110px);
+  }
+}
+
+pre:has(div.codeblock) {
   padding: 0;
-  box-sizing: border-box;
-  font-family: "Eudoxus Sans", sans-serif;
-  scroll-behavior: smooth;
 }
 
-
-
-.gradient-01 {
-  position: absolute;
-  width: 200px;
-  height: 238px;
-  top: 0;
-  background: #ca00ff;
-  filter: blur(175px);
-}
-
-.gradient-02 {
-  position: absolute;
-  width: 200px;
-  height: 238px;
-  top: -6rem;
-  right: 0px;
-  background: #7aebfb;
-  filter: blur(190px)
-}
-
-@media  screen and (max-width: 1536px) {
- .display{
-  border:'none';
- }
-}
