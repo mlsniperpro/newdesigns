@@ -189,8 +189,11 @@ const CreatePrompt = () => {
             </div>
           </section>
           <button className="flex  space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]">
-            <Link href="/chat">Copy & Open ChatGPT</Link>
-            <BsArrowUpRightCircle className="text-2xl" />
+            <Link href="/chat">
+              <p>Copy & Open ChatGPT</p>
+              <BsArrowUpRightCircle className="text-2xl" />
+              </Link>
+            
           </button>
          
         </form>

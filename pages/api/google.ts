@@ -1,21 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-
-
 import { OPENAI_API_HOST } from '@/utils/app/const';
 import { cleanSourceText } from '@/utils/server/google';
-
-
 
 import { Message } from '@/types/chat';
 import { GoogleBody, GoogleSource } from '@/types/google';
 
-
-
 import { Readability } from '@mozilla/readability';
 import endent from 'endent';
 import jsdom, { JSDOM } from 'jsdom';
-
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
@@ -122,7 +115,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const answerRes = await fetch(`${OPENAI_API_HOST}/v1/chat/completions`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${key ? key : process.env.NEXT_PUBLIC_API_KEY}`,
+        Authorization: `Bearer ${key ? key : process.env.OPENAI_API_KEY}`,
         ...(process.env.OPENAI_ORGANIZATION && {
           'OpenAI-Organization': process.env.OPENAI_ORGANIZATION,
         }),
@@ -149,7 +142,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     res.status(200).json({ answer });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error'})
+    res.status(500).json({ error: 'Error' });
   }
 };
 
