@@ -1,6 +1,7 @@
 "use client";
 import { BsArrowUpRightCircle } from "react-icons/bs";
 import { useState } from "react";
+import Link from "next/link";
 import { FiArrowUpCircle } from "react-icons/fi";
 
 const CreatePrompt = () => {
@@ -188,13 +189,10 @@ const CreatePrompt = () => {
             </div>
           </section>
           <button className="flex  space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]">
-            <p>Copy & Open ChatGPT</p>
+            <Link href="/chat">Copy & Open ChatGPT</Link>
             <BsArrowUpRightCircle className="text-2xl" />
           </button>
-          <button className="flex  space-x-6 px-4 py-3 bg-blue-600 text-white font-bold justify-between rounded-[22px]">
-            <p>Copy & Open Bard</p>
-            <BsArrowUpRightCircle className="text-2xl" />
-          </button>
+         
         </form>
       </section>
     </section>
