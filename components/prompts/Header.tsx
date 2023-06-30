@@ -1,68 +1,63 @@
 // pos breakpoint is not part of the tailwind breakpoints - customized in tailwind.config.js file
-'use client';
-
-import { useState } from 'react';
+"use client";
+import Topic, { TopicInterface } from "./Topic";
+import classNames from "classnames";
+import { CiSun } from "react-icons/ci";
+import { RxCaretDown, RxCaretUp } from "react-icons/rx";
 import {
   BsFillBagFill,
   BsFire,
   BsLaptop,
   BsPen,
   BsSearch,
-} from 'react-icons/bs';
-import { CiSun } from 'react-icons/ci';
-import { RxCaretDown, RxCaretUp } from 'react-icons/rx';
-
-import Topic, { TopicInterface } from './Topic';
-
-import classNames from 'classnames';
-
-// pos breakpoint is not part of the tailwind breakpoints - customized in tailwind.config.js file
+} from "react-icons/bs";
+import { useState } from "react";
 
 const trendingTopics: TopicInterface[] = [
   {
     id: 1,
     icon: <BsFire />,
-    title: 'Marketing',
-    backgroundColor: 'bg-orange-200',
-    textColor: 'text-orange-900',
+    title: "Marketing",
+    backgroundColor: "bg-orange-200",
+    textColor: "text-orange-900",
   },
   {
     id: 2,
     icon: <BsFillBagFill />,
-    title: 'Business',
-    backgroundColor: 'bg-blue-200',
-    textColor: 'text-blue-900',
+    title: "Business",
+    backgroundColor: "bg-blue-200",
+    textColor: "text-blue-900",
   },
 
   {
     id: 3,
     icon: <BsSearch />,
-    title: 'SEO',
-    backgroundColor: 'bg-purple-400',
-    textColor: 'text-purple-900',
+    title: "SEO",
+    backgroundColor: "bg-purple-400",
+    textColor: "text-purple-900",
   },
 
   {
     id: 4,
     icon: <BsLaptop />,
-    title: 'Development',
-    backgroundColor: 'bg-green-600',
-    textColor: 'text-green-900',
+    title: "Development",
+    backgroundColor: "bg-green-600",
+    textColor: "text-green-900",
   },
 
   {
     id: 5,
     icon: <BsPen />,
-    title: 'Writing',
-    backgroundColor: 'bg-blue-400',
-    textColor: 'text-blue-900',
+    title: "Writing",
+    backgroundColor: "bg-blue-400",
+    textColor: "text-blue-900",
   },
 ];
 
 const Header = () => {
   const [timePeriodClicked, setTimePeriodClicked] = useState(false);
   const [upvotesClicked, setUpvotesClicked] = useState(false);
-  const [selectedTimePeriod, setSelectedTimePeriod] = useState<string>('');
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState<string>("");
 
   const handleUpvotesClicked = () => {
     setTimePeriodClicked(false);
@@ -105,25 +100,25 @@ const Header = () => {
             <div className="bg-gray-100 text-sm flex items-center rounded-[15px] p-4 space-x-2 lg:space-x-4 absolute bottom-[660px] pos:right-[50px] lg:bottom-[650px] 2xl:bottom-[699px]">
               <p
                 className="hover:underline hover:cursor-pointer"
-                onClick={() => handleTimePeriod('today')}
+                onClick={() => handleTimePeriod("today")}
               >
                 Today
               </p>
               <p
                 className="hover:underline hover:cursor-pointer"
-                onClick={() => handleTimePeriod('thisWeek')}
+                onClick={() => handleTimePeriod("thisWeek")}
               >
                 This Week
               </p>
               <p
                 className="hover:underline hover:cursor-pointer"
-                onClick={() => handleTimePeriod('thisMonth')}
+                onClick={() => handleTimePeriod("thisMonth")}
               >
                 This Month
               </p>
               <p
                 className="hover:underline hover:cursor-pointer"
-                onClick={() => handleTimePeriod('alltime')}
+                onClick={() => handleTimePeriod("alltime")}
               >
                 All time
               </p>

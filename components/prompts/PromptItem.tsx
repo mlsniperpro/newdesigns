@@ -1,14 +1,10 @@
-'use client';
-
-import { useState } from 'react';
-import { BsArrowUpRight, BsBookmark } from 'react-icons/bs';
-import { FiArrowUpCircle } from 'react-icons/fi';
-
-import Link from 'next/link';
-
-import Topic, { TopicInterface } from './Topic';
-
-import classNames from 'classnames';
+"use client";
+import { useState } from "react";
+import { FiArrowUpCircle } from "react-icons/fi";
+import { BsArrowUpRight, BsBookmark } from "react-icons/bs";
+import Topic, { TopicInterface } from "./Topic";
+import classNames from "classnames";
+import Link from "next/link";
 
 export type Prompt = {
   id: number;
@@ -29,7 +25,7 @@ const PromptItem = ({ prompt }: { prompt: Prompt }) => {
     <section className="flex items-start bg-gray-100 rounded-[15px] p-8">
       <div className="xl:basis-3/4 flex flex-col space-y-5">
         <Link
-          href={`prompt/${title.replace(/\s+/g, '-').toLowerCase()}`}
+          href={`/prompt/${title.replace(/\s+/g, "-").toLowerCase()}`}
           className="font-bold text-lg lg:text-2xl"
         >
           {title}
@@ -57,7 +53,7 @@ const PromptItem = ({ prompt }: { prompt: Prompt }) => {
           <div className="flex space-x-2">
             {prompt.daysPast < 30 ? (
               <p>
-                {prompt.daysPast} {prompt.daysPast === 1 ? 'day' : 'days'} ago
+                {prompt.daysPast} {prompt.daysPast === 1 ? "day" : "days"} ago
               </p>
             ) : prompt.daysPast <= 59 ? (
               <p>1 month ago</p>

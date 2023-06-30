@@ -1,12 +1,11 @@
-import classNames from 'classnames';
-
 export type TopicInterface = {
   id: number;
-  icon: React.ReactNode;
+  icon: React.ReactElement;
   title: string;
   backgroundColor: string;
   textColor: string;
 };
+import classNames from "classnames";
 
 const Topic = ({
   topic,
@@ -17,15 +16,15 @@ const Topic = ({
 }) => {
   const { icon, title, backgroundColor, textColor } = topic;
   const containerClasses = classNames(
-    'flex',
-    'space-x-2',
-    'items-center',
+    "flex",
+    "space-x-2",
+    "items-center",
     backgroundColor,
     `border border-${backgroundColor}`,
-    'xl:px-3 px-2',
-    'py-2',
-    'rounded-[16px]',
-    className,
+    "xl:px-3 px-2",
+    "py-2",
+    "rounded-[16px]",
+    className
   );
 
   const textClasses = classNames(`text-${textColor} text-xs xl:text-sm`);

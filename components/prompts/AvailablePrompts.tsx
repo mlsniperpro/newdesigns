@@ -1,13 +1,12 @@
 "use client";
 import {
-  BsFire,
   BsFillBagFill,
-  BsSearch,
+  BsFire,
   BsLaptop,
   BsPen,
+  BsSearch,
 } from "react-icons/bs";
 import PromptItem, { Prompt } from "./PromptItem";
-import { useState } from "react";
 
 const prompts: Prompt[] = [
   {

@@ -1,17 +1,14 @@
 // `pos` breakpoint is not part of the tailwind breakpoints - customized in tailwind.config.js file
-'use client';
-
-import { useState } from 'react';
-import { BsFire } from 'react-icons/bs';
-import { CiSun } from 'react-icons/ci';
-import { RxCaretDown, RxCaretUp } from 'react-icons/rx';
-
-// `pos` breakpoint is not part of the tailwind breakpoints - customized in tailwind.config.js file
+"use client";
+import { useState } from "react";
+import { BsFire } from "react-icons/bs";
+import { CiSun } from "react-icons/ci";
+import { RxCaretDown, RxCaretUp } from "react-icons/rx";
 
 export type TopicPage = {
   id: number;
   slug: string;
-  icon: React.ReactNode;
+  icon: React.ReactElement;
   title: string;
   prompts: number;
   followers: number;

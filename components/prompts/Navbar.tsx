@@ -1,39 +1,36 @@
-'use client';
+"use client";
+import { useState } from "react";
+import { AiOutlineMenu, AiOutlineStar } from "react-icons/ai";
+import { BsArrowUpRight, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from "react-icons/bs";
 
-import { useState } from 'react';
-import { AiOutlineMenu, AiOutlineStar } from 'react-icons/ai';
-import Link from 'next/link';
-import {
-  BsArrowUpRight,
-  BsFillBagFill,
-  BsFire,
-  BsLaptop,
-  BsPen,
-  BsSearch,
-} from 'react-icons/bs';
 
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
-import SearchIcon from '../../public/icon.jpg';
-import { Prompt } from './PromptItem';
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+
+
+import SearchIcon from "../../public/icon.jpg";
+import { Prompt } from "./PromptItem";
+
 
 const prompts: Prompt[] = [
   {
     id: 1,
-    title: 'How to make a good first impression',
+    title: "How to make a good first impression",
     categories: [
       {
         id: 4,
         icon: <BsLaptop />,
-        title: 'Development',
-        backgroundColor: 'bg-green-600',
-        textColor: 'text-green-900',
+        title: "Development",
+        backgroundColor: "bg-green-600",
+        textColor: "text-green-900",
       },
     ],
     description:
-      'Making a good first impression involves being nice and friendly and also being confident in yourself.',
-    owner: 'John Doe',
+      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
+    owner: "John Doe",
     votes: 10,
     bookmarks: 5,
     daysPast: 69,
@@ -41,270 +38,270 @@ const prompts: Prompt[] = [
 
   {
     id: 2,
-    title: 'The dynamics of a good first impression',
+    title: "The dynamics of a good first impression",
     categories: [
       {
         id: 1,
         icon: <BsFire />,
-        title: 'Marketing',
-        backgroundColor: 'bg-orange-200',
-        textColor: 'text-orange-900',
+        title: "Marketing",
+        backgroundColor: "bg-orange-200",
+        textColor: "text-orange-900",
       },
       {
         id: 4,
         icon: <BsLaptop />,
-        title: 'Development',
-        backgroundColor: 'bg-green-600',
-        textColor: 'text-green-900',
+        title: "Development",
+        backgroundColor: "bg-green-600",
+        textColor: "text-green-900",
       },
 
       {
         id: 5,
         icon: <BsPen />,
-        title: 'Writing',
-        backgroundColor: 'bg-blue-400',
-        textColor: 'text-blue-900',
+        title: "Writing",
+        backgroundColor: "bg-blue-400",
+        textColor: "text-blue-900",
       },
     ],
     description:
-      'Making a good first impression involves being nice and friendly and also being confident in yourself.',
-    owner: 'John Doe',
+      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
+    owner: "John Doe",
     votes: 10,
     bookmarks: 5,
     daysPast: 32,
   },
   {
     id: 3,
-    title: 'How to give a great first impression',
+    title: "How to give a great first impression",
     categories: [
       {
         id: 1,
         icon: <BsFire />,
-        title: 'Marketing',
-        backgroundColor: 'bg-orange-200',
-        textColor: 'text-orange-900',
+        title: "Marketing",
+        backgroundColor: "bg-orange-200",
+        textColor: "text-orange-900",
       },
       {
         id: 2,
         icon: <BsFillBagFill />,
-        title: 'Business',
-        backgroundColor: 'bg-blue-200',
-        textColor: 'text-blue-900',
+        title: "Business",
+        backgroundColor: "bg-blue-200",
+        textColor: "text-blue-900",
       },
     ],
     description:
-      'Making a good first impression involves being nice and friendly and also being confident in yourself.',
-    owner: 'John Doe',
+      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
+    owner: "John Doe",
     votes: 10,
     bookmarks: 5,
     daysPast: 1,
   },
   {
     id: 4,
-    title: 'How to get the most out of your first meetup',
+    title: "How to get the most out of your first meetup",
     categories: [
       {
         id: 4,
         icon: <BsLaptop />,
-        title: 'Development',
-        backgroundColor: 'bg-green-600',
-        textColor: 'text-green-900',
+        title: "Development",
+        backgroundColor: "bg-green-600",
+        textColor: "text-green-900",
       },
 
       {
         id: 5,
         icon: <BsPen />,
-        title: 'Writing',
-        backgroundColor: 'bg-blue-400',
-        textColor: 'text-blue-900',
+        title: "Writing",
+        backgroundColor: "bg-blue-400",
+        textColor: "text-blue-900",
       },
     ],
     description:
-      'Making a good first impression involves being nice and friendly and also being confident in yourself.',
-    owner: 'John Doe',
+      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
+    owner: "John Doe",
     votes: 10,
     bookmarks: 5,
     daysPast: 2,
   },
   {
     id: 5,
-    title: 'How to make a good first impression',
+    title: "How to make a good first impression",
     categories: [
       {
         id: 1,
         icon: <BsFire />,
-        title: 'Marketing',
-        backgroundColor: 'bg-orange-200',
-        textColor: 'text-orange-900',
+        title: "Marketing",
+        backgroundColor: "bg-orange-200",
+        textColor: "text-orange-900",
       },
     ],
     description:
-      'Making a good first impression involves being nice and friendly and also being confident in yourself.',
-    owner: 'John Doe',
+      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
+    owner: "John Doe",
     votes: 10,
     bookmarks: 5,
     daysPast: 2,
   },
   {
     id: 6,
-    title: 'How to make a good first impression',
+    title: "How to make a good first impression",
     categories: [
       {
         id: 2,
         icon: <BsFillBagFill />,
-        title: 'Business',
-        backgroundColor: 'bg-blue-200',
-        textColor: 'text-blue-900',
+        title: "Business",
+        backgroundColor: "bg-blue-200",
+        textColor: "text-blue-900",
       },
     ],
     description:
-      'Making a good first impression involves being nice and friendly and also being confident in yourself.',
-    owner: 'John Doe',
+      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
+    owner: "John Doe",
     votes: 10,
     bookmarks: 5,
     daysPast: 2,
   },
   {
     id: 7,
-    title: 'How to make a good first impression',
+    title: "How to make a good first impression",
     categories: [
       {
         id: 1,
         icon: <BsFire />,
-        title: 'Marketing',
-        backgroundColor: 'bg-orange-200',
-        textColor: 'text-orange-900',
+        title: "Marketing",
+        backgroundColor: "bg-orange-200",
+        textColor: "text-orange-900",
       },
       {
         id: 2,
         icon: <BsFillBagFill />,
-        title: 'Business',
-        backgroundColor: 'bg-blue-200',
-        textColor: 'text-blue-900',
+        title: "Business",
+        backgroundColor: "bg-blue-200",
+        textColor: "text-blue-900",
       },
 
       {
         id: 3,
         icon: <BsSearch />,
-        title: 'SEO',
-        backgroundColor: 'bg-purple-400',
-        textColor: 'text-purple-900',
+        title: "SEO",
+        backgroundColor: "bg-purple-400",
+        textColor: "text-purple-900",
       },
 
       {
         id: 4,
         icon: <BsLaptop />,
-        title: 'Development',
-        backgroundColor: 'bg-green-600',
-        textColor: 'text-green-900',
+        title: "Development",
+        backgroundColor: "bg-green-600",
+        textColor: "text-green-900",
       },
 
       {
         id: 5,
         icon: <BsPen />,
-        title: 'Writing',
-        backgroundColor: 'bg-blue-400',
-        textColor: 'text-blue-900',
+        title: "Writing",
+        backgroundColor: "bg-blue-400",
+        textColor: "text-blue-900",
       },
     ],
     description:
-      'Making a good first impression involves being nice and friendly and also being confident in yourself.',
-    owner: 'John Doe',
+      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
+    owner: "John Doe",
     votes: 10,
     bookmarks: 5,
     daysPast: 2,
   },
   {
     id: 8,
-    title: 'How to practice self compassion consistently',
+    title: "How to practice self compassion consistently",
     categories: [
       {
         id: 1,
         icon: <BsFire />,
-        title: 'Marketing',
-        backgroundColor: 'bg-orange-200',
-        textColor: 'text-orange-900',
+        title: "Marketing",
+        backgroundColor: "bg-orange-200",
+        textColor: "text-orange-900",
       },
       {
         id: 2,
         icon: <BsFillBagFill />,
-        title: 'Business',
-        backgroundColor: 'bg-blue-200',
-        textColor: 'text-blue-900',
+        title: "Business",
+        backgroundColor: "bg-blue-200",
+        textColor: "text-blue-900",
       },
 
       {
         id: 4,
         icon: <BsLaptop />,
-        title: 'Development',
-        backgroundColor: 'bg-green-600',
-        textColor: 'text-green-900',
+        title: "Development",
+        backgroundColor: "bg-green-600",
+        textColor: "text-green-900",
       },
 
       {
         id: 5,
         icon: <BsPen />,
-        title: 'Writing',
-        backgroundColor: 'bg-blue-400',
-        textColor: 'text-blue-900',
+        title: "Writing",
+        backgroundColor: "bg-blue-400",
+        textColor: "text-blue-900",
       },
     ],
     description:
-      'Making a good first impression involves being nice and friendly and also being confident in yourself.',
-    owner: 'John Doe',
+      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
+    owner: "John Doe",
     votes: 10,
     bookmarks: 5,
     daysPast: 2,
   },
   {
     id: 9,
-    title: 'How to get the perfect abs in 2 months',
+    title: "How to get the perfect abs in 2 months",
     categories: [
       {
         id: 3,
         icon: <BsSearch />,
-        title: 'SEO',
-        backgroundColor: 'bg-purple-400',
-        textColor: 'text-purple-900',
+        title: "SEO",
+        backgroundColor: "bg-purple-400",
+        textColor: "text-purple-900",
       },
 
       {
         id: 4,
         icon: <BsLaptop />,
-        title: 'Development',
-        backgroundColor: 'bg-green-600',
-        textColor: 'text-green-900',
+        title: "Development",
+        backgroundColor: "bg-green-600",
+        textColor: "text-green-900",
       },
     ],
     description:
-      'Making a good first impression involves being nice and friendly and also being confident in yourself.',
-    owner: 'John Doe',
+      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
+    owner: "John Doe",
     votes: 10,
     bookmarks: 5,
     daysPast: 2,
   },
   {
     id: 10,
-    title: 'How to be a straight A student',
+    title: "How to be a straight A student",
     categories: [
       {
         id: 1,
         icon: <BsFire />,
-        title: 'Marketing',
-        backgroundColor: 'bg-orange-200',
-        textColor: 'text-orange-900',
+        title: "Marketing",
+        backgroundColor: "bg-orange-200",
+        textColor: "text-orange-900",
       },
       {
         id: 5,
         icon: <BsPen />,
-        title: 'Writing',
-        backgroundColor: 'bg-blue-400',
-        textColor: 'text-blue-900',
+        title: "Writing",
+        backgroundColor: "bg-blue-400",
+        textColor: "text-blue-900",
       },
     ],
     description:
-      'Making a good first impression involves being nice and friendly and also being confident in yourself.',
-    owner: 'John Doe',
+      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
+    owner: "John Doe",
     votes: 10,
     bookmarks: 5,
     daysPast: 2,
@@ -313,7 +310,7 @@ const prompts: Prompt[] = [
 
 const Navbar = () => {
   const [isInputFocused, setIsInputFocused] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [filteredPrompts, setFilteredPrompts] = useState<Prompt[]>([]);
 
@@ -324,17 +321,15 @@ const Navbar = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
     setSearchQuery(searchValue);
-    if (searchValue === '') {
+    if (searchValue === "") {
       setFilteredPrompts([]);
     } else {
       setFilteredPrompts(
         prompts.filter(
           (prompt) =>
             prompt.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-            prompt.description
-              .toLowerCase()
-              .includes(searchValue.toLowerCase()),
-        ),
+            prompt.description.toLowerCase().includes(searchValue.toLowerCase())
+        )
       );
     }
   };
@@ -364,20 +359,13 @@ const Navbar = () => {
 
   const MobileMenu = () => (
     <>
-      <a
-        href=""
-        className="bg-white text-black rounded-[22px] px-16 py-2 border border-gray-400"
-      >
-        Log in
-      </a>
-
-      <a
-        href="/prompt/create-a-personalized-workout-routine"
+      <Link
+        href="/prompt/create"
         className="bg-black text-white rounded-[22px] px-12 py-2 flex items-center"
       >
         <AiOutlineStar className="inline-block mr-2" />
         Create
-      </a>
+      </Link>
 
       <a href="" className="hover:text-gray-900 lg:hover:underline">
         Topics
@@ -415,7 +403,7 @@ const Navbar = () => {
                 {filteredPrompts.map((prompt) => (
                   <Link
                     href={`/prompt/${prompt.title
-                      .replace(/\s+/g, '-')
+                      .replace(/\s+/g, "-")
                       .toLowerCase()}`}
                     key={prompt.id}
                   >
@@ -432,8 +420,8 @@ const Navbar = () => {
                         <div className="flex space-x-2">
                           {prompt.daysPast < 30 ? (
                             <p>
-                              {prompt.daysPast}{' '}
-                              {prompt.daysPast === 1 ? 'day' : 'days'} ago
+                              {prompt.daysPast}{" "}
+                              {prompt.daysPast === 1 ? "day" : "days"} ago
                             </p>
                           ) : prompt.daysPast <= 59 ? (
                             <p>1 month ago</p>
@@ -481,19 +469,14 @@ const Navbar = () => {
       </div>
 
       <section className="hidden xl:flex xl:space-x-4">
-        <a
-          href="/prompt/create-a-personalized-workout-routine"
+        <Link
+          href="/prompt/create"
           className="bg-black text-white rounded-[22px] px-4 py-2 flex items-center"
         >
           <AiOutlineStar className="inline-block mr-2" />
           Create
-        </a>
-        <a
-          href=""
-          className="bg-white text-black rounded-[22px] px-2 py-2 border border-gray-400"
-        >
-          Log in
-        </a>
+        </Link>
+        
       </section>
     </nav>
   );

@@ -9,7 +9,7 @@ import { FcMoneyTransfer } from 'react-icons/fc';
 
 import Topic, { TopicInterface } from '@/components/prompts/Topic';
 
-import {AvailablePrompts, Header, Navbar } from '@/components/prompts';
+import { AvailablePrompts, Header, Navbar } from '@/components/prompts';
 import classNames from 'classnames';
 
 const suggestedTopics: TopicInterface[] = [
@@ -60,7 +60,7 @@ const suggestedTopics: TopicInterface[] = [
   },
 ];
 
-export default function Prompts() {
+export default function Home() {
   return (
     <main className="">
       <Navbar />
