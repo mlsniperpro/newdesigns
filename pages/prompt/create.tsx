@@ -1,8 +1,52 @@
-import { Navbar } from "@/components/prompts";
-import { BsArrowUpRightCircle } from "react-icons/bs";
-import { RiStarLine } from "react-icons/ri";
+import { useState } from 'react';
+import { BsArrowUpRightCircle } from 'react-icons/bs';
+import { RiStarLine } from 'react-icons/ri';
+
+import { Navbar } from '@/components/prompts';
+
+import { auth, db } from '@/config/firebase';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
 
 export default function Page() {
+  const [title, setTitle] = useState('');
+  const [type, setType] = useState('');
+  const [description, setDescription] = useState('');
+  const [prompt, setPrompt] = useState('');
+  const [tags, setTags] = useState('');
+  const [bio, setBio] = useState('');
+  const [website, setWebsite] = useState('');
+  const [twitter, setTwitter] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [facebook, setFacebook] = useState('');
+  const [tiktok, setTiktok] = useState('');
+  const [github, setGithub] = useState('');
+  const [topics, setTopics] = useState([]);
+  const [discord, setDiscord] = useState('');
+
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    //Generate the url for the prompt which is the title with dashes instead of spaces
+    const url = title.replace(/\s+/g, '-').toLowerCase();
+    const docRef = await addDoc(collection(db, 'prompt'), {
+      title,
+      type,
+      description,
+      prompt,
+      tags,
+      bio,
+      website,
+      twitter,
+      instagram,
+      facebook,
+      tiktok,
+      github,
+      topics,
+      discord,
+      url,
+    });
+    console.log('Document written with ID: ', docRef.id);
+  };
+
   return (
     <main className="">
       <Navbar />
@@ -10,7 +54,7 @@ export default function Page() {
         <hr className="border border-gray-200" />
       </div>
       <section className="flex flex-col-reverse xl:flex-row xl:space-x-4 px-8 lg:px-16 2xl:px-52 pb-8 pt-8 2xl:pt-16">
-        <form className="p-8 xl:pt-0 xl:basis-3/5 flex flex-col space-y-16">
+        <form className="p-8 xl:pt-0 xl:basis-3/5 flex flex-col space-y-16" onSubmit={handleSubmit}>
           <div className="flex space-x-2">
             <RiStarLine className="text-3xl" />
             <h2 className="font-bold text-2xl">New Prompt</h2>
@@ -24,6 +68,8 @@ export default function Page() {
               <input
                 type="text"
                 id="title"
+                placeholder="Title"
+                onChange={(e) => setTitle(e.target.value)}
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
             </div>
@@ -32,7 +78,11 @@ export default function Page() {
               <p className="text-xs font-light text-gray-600">
                 Which type of LLM is your prompt suitable for?
               </p>
-              <select id="type" className="p-3">
+              <select
+                onChange={(e) => setType(e.target.value)}
+                id="type"
+                className="p-3"
+              >
                 <option value="">Select type</option>
                 <option value="ChatGPT">ChatGPT</option>
                 <option value="Bard">Bard</option>
@@ -55,6 +105,7 @@ export default function Page() {
               </p>
               <textarea
                 id="description"
+                onChange={(e) => setDescription(e.target.value)}
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
             </div>
@@ -66,6 +117,7 @@ export default function Page() {
               </p>
               <textarea
                 id="prompt"
+                onChange={(e) => setPrompt(e.target.value)}
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
             </div>
@@ -78,6 +130,7 @@ export default function Page() {
               </p>
               <textarea
                 id="tags"
+                onChange={(e) => setTags(e.target.value)}
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
             </div>
@@ -107,6 +160,7 @@ export default function Page() {
                 <input
                   type="text"
                   placeholder="Bio"
+                  onChange={(e) => setBio(e.target.value)}
                   className="p-2 border border-gray-200 rounded-[10px]"
                 />
               </div>
@@ -115,6 +169,7 @@ export default function Page() {
                   <label htmlFor="web">WEBSITE</label>
                   <input
                     type="text"
+                    onChange={(e) => setWebsite(e.target.value)}
                     placeholder="Link"
                     className="p-2 border border-gray-200 rounded-[10px]"
                   />
@@ -125,6 +180,7 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
+                      onChange={(e) => setTwitter(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
@@ -133,6 +189,7 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
+                      onChange={(e) => setDiscord(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
@@ -141,6 +198,7 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
+                      onChange={(e) => setGithub(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
@@ -149,6 +207,7 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
+                      onChange={(e) => setFacebook(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
@@ -157,6 +216,7 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
+                      onChange={(e) => setInstagram(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
@@ -165,6 +225,7 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
+                      onChange={(e) => setTiktok(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
