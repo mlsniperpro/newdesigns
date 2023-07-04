@@ -1,60 +1,149 @@
-import { useState } from 'react';
-import { BsArrowUpRightCircle } from 'react-icons/bs';
+'use client';
+
+import { MouseEvent, useEffect, useRef, useState } from 'react';
+import {
+  BsArrowUpRightCircle,
+  BsFillBagFill,
+  BsFire,
+  BsLaptop,
+  BsPen,
+  BsSearch,
+} from 'react-icons/bs';
+import { FcMoneyTransfer } from 'react-icons/fc';
 import { RiStarLine } from 'react-icons/ri';
 
-import { Navbar } from '@/components/prompts';
+import Topic, { TopicInterface } from '@/components/prompts/Topic';
 
+import { DropDownTopic, Navbar } from '@/components/prompts';
 import { auth, db } from '@/config/firebase';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import classNames from 'classnames';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+
+const topics: TopicInterface[] = [
+  {
+    id: 1,
+    icon: <BsFire />,
+    title: 'Marketing',
+    backgroundColor: 'bg-orange-200',
+    textColor: 'text-orange-900',
+  },
+  {
+    id: 2,
+    icon: <BsFillBagFill />,
+    title: 'Business',
+    backgroundColor: 'bg-blue-200',
+    textColor: 'text-blue-900',
+  },
+
+  {
+    id: 3,
+    icon: <BsSearch />,
+    title: 'SEO',
+    backgroundColor: 'bg-purple-400',
+    textColor: 'text-purple-900',
+  },
+
+  {
+    id: 4,
+    icon: <BsLaptop />,
+    title: 'Development',
+    backgroundColor: 'bg-green-600',
+    textColor: 'text-green-900',
+  },
+
+  {
+    id: 5,
+    icon: <BsPen />,
+    title: 'Writing',
+    backgroundColor: 'bg-blue-400',
+    textColor: 'text-blue-900',
+  },
+  {
+    id: 6,
+    icon: <FcMoneyTransfer />,
+    title: 'Financial',
+    backgroundColor: 'bg-green-300',
+    textColor: 'text-green-800',
+  },
+];
 
 export default function Page() {
-  const [title, setTitle] = useState('');
-  const [type, setType] = useState('');
-  const [description, setDescription] = useState('');
-  const [prompt, setPrompt] = useState('');
-  const [tags, setTags] = useState('');
-  const [bio, setBio] = useState('');
-  const [website, setWebsite] = useState('');
-  const [twitter, setTwitter] = useState('');
-  const [instagram, setInstagram] = useState('');
-  const [facebook, setFacebook] = useState('');
-  const [tiktok, setTiktok] = useState('');
-  const [github, setGithub] = useState('');
-  const [topics, setTopics] = useState([]);
-  const [discord, setDiscord] = useState('');
+  const [selectedTopics, setSelectedTopics] = useState<TopicInterface[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showAddButton, setShowAddButton] = useState(true);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const addButtonRef = useRef<HTMLButtonElement>(null);
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    //Generate the url for the prompt which is the title with dashes instead of spaces
-    const url = title.replace(/\s+/g, '-').toLowerCase();
-    const docRef = await addDoc(collection(db, 'prompt'), {
-      title,
-      type,
-      description,
-      prompt,
-      tags,
-      bio,
-      website,
-      twitter,
-      instagram,
-      facebook,
-      tiktok,
-      github,
-      topics,
-      discord,
-      url,
-    });
-    console.log('Document written with ID: ', docRef.id);
+  useEffect(() => {
+    const addButtonElement = addButtonRef.current;
+    const dropdownElement = dropdownRef.current;
+
+    if (addButtonElement && dropdownElement) {
+      const addButtonRect = addButtonElement.getBoundingClientRect();
+      const dropdownRect = dropdownElement.getBoundingClientRect();
+      const addButtonRight = addButtonRect.right;
+
+      if (addButtonRight + dropdownRect.width > window.innerWidth) {
+        dropdownElement.style.left = `${
+          window.innerWidth - dropdownRect.width
+        }px`;
+      } else {
+        dropdownElement.style.left = `${addButtonRight}px`;
+      }
+    }
+  }, [selectedTopics]);
+
+  const handleTopicClick = (topic: TopicInterface) => {
+    if (selectedTopics.some((selectedTopic) => selectedTopic.id === topic.id)) {
+      setSelectedTopics((prevSelectedTopics) =>
+        prevSelectedTopics.filter(
+          (selectedTopic) => selectedTopic.id !== topic.id,
+        ),
+      );
+    } else {
+      if (selectedTopics.length < 5) {
+        setSelectedTopics((prevSelectedTopics) => [
+          ...prevSelectedTopics,
+          topic,
+        ]);
+      }
+    }
+  };
+
+  const handleClickOutside: EventListener = (event) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setShowDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleDropdown = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setShowDropdown(true);
+    if (selectedTopics.length === 5) {
+      setShowDropdown(false);
+      setShowAddButton(false);
+    }
   };
 
   return (
     <main className="">
       <Navbar />
-      <div className="py-4">
+      <div className="">
         <hr className="border border-gray-200" />
       </div>
-      <section className="flex flex-col-reverse xl:flex-row xl:space-x-4 px-8 lg:px-16 2xl:px-52 pb-8 pt-8 2xl:pt-16">
-        <form className="p-8 xl:pt-0 xl:basis-3/5 flex flex-col space-y-16" onSubmit={handleSubmit}>
+      <section className="bg-gray-100 flex flex-col-reverse xl:flex-row xl:space-x-4 px-8 lg:px-16 2xl:px-52 pb-8 pt-8 2xl:pt-16">
+        <form className="p-8 xl:pt-0 xl:basis-3/5 flex flex-col space-y-16">
           <div className="flex space-x-2">
             <RiStarLine className="text-3xl" />
             <h2 className="font-bold text-2xl">New Prompt</h2>
@@ -68,8 +157,6 @@ export default function Page() {
               <input
                 type="text"
                 id="title"
-                placeholder="Title"
-                onChange={(e) => setTitle(e.target.value)}
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
             </div>
@@ -78,11 +165,7 @@ export default function Page() {
               <p className="text-xs font-light text-gray-600">
                 Which type of LLM is your prompt suitable for?
               </p>
-              <select
-                onChange={(e) => setType(e.target.value)}
-                id="type"
-                className="p-3"
-              >
+              <select id="type" className="p-3">
                 <option value="">Select type</option>
                 <option value="ChatGPT">ChatGPT</option>
                 <option value="Bard">Bard</option>
@@ -90,12 +173,61 @@ export default function Page() {
             </div>
             <div className="flex flex-col">
               <label htmlFor="topics">Topics (Up to 5)</label>
-              <p className="text-xs font-light text-gray-600">
+              <p className="text-xs font-light text-gray-600 pb-3">
                 Choose an adequate category.
               </p>
-              <button className="self-start p-2 border-gray-300 border rounded-[15px] text-sm text-gray-600">
-                + Add Topic
-              </button>
+              <div className="flex items-center space-x-1 flex-wrap">
+                {selectedTopics.map((topic) => (
+                  <button
+                    key={topic.id}
+                    onClick={() => handleTopicClick(topic)}
+                    type="button"
+                  >
+                    <DropDownTopic
+                      topic={topic}
+                      className={classNames(
+                        topic.backgroundColor,
+                        topic.textColor,
+                      )}
+                    />
+                  </button>
+                ))}
+                {selectedTopics.length < 5 && showAddButton && (
+                  <button
+                    onClick={handleDropdown}
+                    ref={addButtonRef}
+                    className="self-start p-2 border-gray-300 border rounded-[15px] text-sm text-gray-600"
+                  >
+                    + Add Topic
+                  </button>
+                )}
+
+                {showDropdown && selectedTopics.length < 5 && (
+                  <section>
+                    <div
+                      ref={dropdownRef}
+                      className="flex flex-col max-h-[200px] opacity-100 overflow-auto w-fit p-4 space-y-1 absolute top-[500px] left-[450px] bg-white rounded-[10px]"
+                    >
+                      <h3 className="text-gray-800">Topics</h3>
+                      {topics.map((topic) => (
+                        <button
+                          key={topic.id}
+                          onClick={() => handleTopicClick(topic)}
+                          type="button"
+                        >
+                          <DropDownTopic
+                            topic={topic}
+                            className={classNames(
+                              topic.backgroundColor,
+                              topic.textColor,
+                            )}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </div>
             </div>
             <div className="flex flex-col">
               <label htmlFor="description">Description</label>
@@ -105,7 +237,6 @@ export default function Page() {
               </p>
               <textarea
                 id="description"
-                onChange={(e) => setDescription(e.target.value)}
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
             </div>
@@ -117,7 +248,6 @@ export default function Page() {
               </p>
               <textarea
                 id="prompt"
-                onChange={(e) => setPrompt(e.target.value)}
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
             </div>
@@ -130,7 +260,6 @@ export default function Page() {
               </p>
               <textarea
                 id="tags"
-                onChange={(e) => setTags(e.target.value)}
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
             </div>
@@ -160,7 +289,6 @@ export default function Page() {
                 <input
                   type="text"
                   placeholder="Bio"
-                  onChange={(e) => setBio(e.target.value)}
                   className="p-2 border border-gray-200 rounded-[10px]"
                 />
               </div>
@@ -169,7 +297,6 @@ export default function Page() {
                   <label htmlFor="web">WEBSITE</label>
                   <input
                     type="text"
-                    onChange={(e) => setWebsite(e.target.value)}
                     placeholder="Link"
                     className="p-2 border border-gray-200 rounded-[10px]"
                   />
@@ -180,7 +307,6 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
-                      onChange={(e) => setTwitter(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
@@ -189,7 +315,6 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
-                      onChange={(e) => setDiscord(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
@@ -198,7 +323,6 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
-                      onChange={(e) => setGithub(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
@@ -207,7 +331,6 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
-                      onChange={(e) => setFacebook(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
@@ -216,7 +339,6 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
-                      onChange={(e) => setInstagram(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
@@ -225,7 +347,6 @@ export default function Page() {
                     <input
                       type="text"
                       placeholder="@user"
-                      onChange={(e) => setTiktok(e.target.value)}
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
