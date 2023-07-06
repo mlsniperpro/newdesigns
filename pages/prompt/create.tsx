@@ -1,71 +1,52 @@
 'use client';
 
 import { MouseEvent, useEffect, useRef, useState } from 'react';
-import {
-  BsArrowUpRightCircle,
-  BsFillBagFill,
-  BsFire,
-  BsLaptop,
-  BsPen,
-  BsSearch,
-} from 'react-icons/bs';
+import { BsArrowUpRightCircle, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
 import { FcMoneyTransfer } from 'react-icons/fc';
 import { RiStarLine } from 'react-icons/ri';
+import { ToastContainer, toast } from 'react-toastify';
 
-import Topic, { TopicInterface } from '@/components/prompts/Topic';
+
 
 import { DropDownTopic, Navbar } from '@/components/prompts';
+import Topic, { TopicInterface } from '@/components/prompts/Topic';
+
+
+
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 
-const topics: TopicInterface[] = [
-  {
-    id: 1,
-    icon: <BsFire />,
-    title: 'Marketing',
-    backgroundColor: 'bg-orange-200',
-    textColor: 'text-orange-900',
-  },
-  {
-    id: 2,
-    icon: <BsFillBagFill />,
-    title: 'Business',
-    backgroundColor: 'bg-blue-200',
-    textColor: 'text-blue-900',
-  },
 
-  {
-    id: 3,
-    icon: <BsSearch />,
-    title: 'SEO',
-    backgroundColor: 'bg-purple-400',
-    textColor: 'text-purple-900',
-  },
+const icons = {
+  Marketing: <BsFire />,
+  Business: <BsFillBagFill />,
+  SEO: <BsSearch />,
+  Development: <BsLaptop />,
+  Writing: <BsPen />,
+  Financial: <FcMoneyTransfer />,
+};
 
-  {
-    id: 4,
-    icon: <BsLaptop />,
-    title: 'Development',
-    backgroundColor: 'bg-green-600',
-    textColor: 'text-green-900',
-  },
+const colors = {
+  Marketing: ['bg-orange-200', 'text-orange-900'],
+  Business: ['bg-blue-200', 'text-blue-900'],
+  SEO: ['bg-purple-400', 'text-purple-900'],
+  Development: ['bg-green-600', 'text-green-900'],
+  Writing: ['bg-blue-400', 'text-blue-900'],
+  Financial: ['bg-green-300', 'text-green-800'],
+};
 
-  {
-    id: 5,
-    icon: <BsPen />,
-    title: 'Writing',
-    backgroundColor: 'bg-blue-400',
-    textColor: 'text-blue-900',
-  },
-  {
-    id: 6,
-    icon: <FcMoneyTransfer />,
-    title: 'Financial',
-    backgroundColor: 'bg-green-300',
-    textColor: 'text-green-800',
-  },
-];
+const topics: TopicInterface[] = Object.keys(icons).map((title, index) => ({
+  id: index + 1,
+  icon: icons[title as keyof typeof icons],
+  title,
+  backgroundColor: colors[title as keyof typeof colors][0],
+  textColor: colors[title as keyof typeof colors][1],
+}));
+
+
+
+
 
 export default function Page() {
   const [selectedTopics, setSelectedTopics] = useState<TopicInterface[]>([]);
@@ -73,6 +54,59 @@ export default function Page() {
   const [showAddButton, setShowAddButton] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
+  const [title, setTitle] = useState('');   
+  const [type, setType] = useState(''); 
+  const [description, setDescription] = useState('');
+  const [prompt, setPrompt] = useState('');
+  const [tags, setTags] = useState('');   
+  const [bio, setBio] = useState(''); 
+  const [website, setWebsite] = useState('');
+  const [twitter, setTwitter] = useState('');
+  const [discord, setDiscord] = useState('');
+  const [github, setGithub] = useState('');   
+  const [facebook, setFacebook] = useState('');   
+  const [instagram, setInstagram] = useState(''); 
+  const [tiktok, setTiktok] = useState(''); 
+
+  const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
+    console.log("The tits is: ", title, "description is: ", description, "Prompt is: ", prompt, "Tags is: ", tags)
+    event.preventDefault();
+
+    // Check that no field is missing and then submit to firestore
+    if (title === '' || description === '' || prompt === '' || tags === '') {
+      // Now throw the toast message
+      alert('Please fill in all fields');
+    } else if (!auth.currentUser) {
+      alert('User is not authenticated');
+    } else {
+      try {
+        const docRef = await addDoc(collection(db, 'prompts'), {
+          title: title,
+          type: type,
+          description: description,
+          prompt: prompt,
+          tags: tags,
+          bio: bio,
+          website: website,
+          twitter: twitter,
+          discord: discord,
+          github: github,
+          facebook: facebook,
+          instagram: instagram,
+          tiktok: tiktok,
+          userId: auth.currentUser.uid,
+        });
+
+        // Provide feedback to the user
+        alert('Form submitted successfully');
+      } catch (error) {
+        console.error('Error adding document: ', error);
+        alert('An error occurred while submitting the form');
+      }
+    }
+  };
+
+
 
   useEffect(() => {
     const addButtonElement = addButtonRef.current;
@@ -146,6 +180,7 @@ export default function Page() {
         <form className="p-8 xl:pt-0 xl:basis-3/5 flex flex-col space-y-16">
           <div className="flex space-x-2">
             <RiStarLine className="text-3xl" />
+            <ToastContainer />
             <h2 className="font-bold text-2xl">New Prompt</h2>
           </div>
           <section className="flex flex-col space-y-6">
@@ -156,6 +191,7 @@ export default function Page() {
               </p>
               <input
                 type="text"
+                onChange={(event) => setTitle(event.target.value)}  
                 id="title"
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
@@ -236,6 +272,7 @@ export default function Page() {
                 results users can expect.
               </p>
               <textarea
+                onChange={(event) => setDescription(event.target.value)}
                 id="description"
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
@@ -247,6 +284,7 @@ export default function Page() {
                 results users can expect.
               </p>
               <textarea
+                onChange={(event) => setPrompt(event.target.value)} 
                 id="prompt"
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
@@ -256,9 +294,10 @@ export default function Page() {
               <p className="text-xs font-light text-gray-600">
                 Be mindful we don’t take responsibility for any actions taken by
                 third parties based on the information you decide to disclose.
-                Avoid sharing any sensitive information.
+                Avoid sharing any sensitive information.(Tags should be separated by comma)
               </p>
               <textarea
+                onChange={(event) => setTags(event.target.value)}
                 id="tags"
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
@@ -268,7 +307,7 @@ export default function Page() {
             <button className="self-start px-4 py-3 rounded-[15px] text-lg text-gray-600">
               Cancel
             </button>
-            <button className="flex  space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]">
+            <button onClick={handleSubmit} className="flex  space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]">
               <p>Publish Prompt</p>
               <BsArrowUpRightCircle className="text-2xl" />
             </button>
@@ -287,6 +326,7 @@ export default function Page() {
               <div className="flex flex-col">
                 <label htmlFor="bio">Bio</label>
                 <input
+                  onChange={(event) => setBio(event.target.value)}    
                   type="text"
                   placeholder="Bio"
                   className="p-2 border border-gray-200 rounded-[10px]"
@@ -296,6 +336,7 @@ export default function Page() {
                 <div className="flex flex-col">
                   <label htmlFor="web">WEBSITE</label>
                   <input
+                    onChange={(event) => setWebsite(event.target.value)}
                     type="text"
                     placeholder="Link"
                     className="p-2 border border-gray-200 rounded-[10px]"
@@ -305,6 +346,7 @@ export default function Page() {
                   <div className="flex flex-col">
                     <label htmlFor="twitter">TWITTER</label>
                     <input
+                      onChange={(event) => setTwitter(event.target.value)}
                       type="text"
                       placeholder="@user"
                       className="p-2 border border-gray-200 rounded-[10px]"
@@ -313,6 +355,7 @@ export default function Page() {
                   <div className="flex flex-col">
                     <label htmlFor="discord">DISCORD</label>
                     <input
+                      onChange={(event) => setDiscord(event.target.value)}
                       type="text"
                       placeholder="@user"
                       className="p-2 border border-gray-200 rounded-[10px]"
@@ -321,6 +364,7 @@ export default function Page() {
                   <div className="flex flex-col">
                     <label htmlFor="github">GITHUB</label>
                     <input
+                      onChange={(event) => setGithub(event.target.value)}
                       type="text"
                       placeholder="@user"
                       className="p-2 border border-gray-200 rounded-[10px]"
@@ -329,6 +373,7 @@ export default function Page() {
                   <div className="flex flex-col">
                     <label htmlFor="facebook">FACEBOOK</label>
                     <input
+                      onChange={(event) => setFacebook(event.target.value)}
                       type="text"
                       placeholder="@user"
                       className="p-2 border border-gray-200 rounded-[10px]"
@@ -337,6 +382,7 @@ export default function Page() {
                   <div className="flex flex-col">
                     <label htmlFor="instagram">INSTAGRAM</label>
                     <input
+                      onChange={(event) => setInstagram(event.target.value)}
                       type="text"
                       placeholder="@user"
                       className="p-2 border border-gray-200 rounded-[10px]"
@@ -345,6 +391,7 @@ export default function Page() {
                   <div className="flex flex-col">
                     <label htmlFor="tiktok">TIKTOK</label>
                     <input
+                      onChange={(event) => setTiktok(event.target.value)} 
                       type="text"
                       placeholder="@user"
                       className="p-2 border border-gray-200 rounded-[10px]"
@@ -354,6 +401,7 @@ export default function Page() {
               </section>
               <input
                 type="submit"
+                onClick={() => handleSubmit}
                 value="Update"
                 className="w-full text-center text-gray-700 border border-gray-300  rounded-[15px] p-3"
               />

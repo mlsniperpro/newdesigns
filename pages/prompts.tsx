@@ -7,12 +7,12 @@ import {
 } from 'react-icons/bs';
 import { FcMoneyTransfer } from 'react-icons/fc';
 
-import Topic, { TopicInterface } from '@/components/prompts/Topic';
-
 import { AvailablePrompts, Header, Navbar } from '@/components/prompts';
+import Topic from '@/components/prompts/Topic';
+
 import classNames from 'classnames';
 
-const suggestedTopics: TopicInterface[] = [
+const suggestedTopics = [
   {
     id: 1,
     icon: <BsFire />,
@@ -27,7 +27,6 @@ const suggestedTopics: TopicInterface[] = [
     backgroundColor: 'bg-blue-200',
     textColor: 'text-blue-900',
   },
-
   {
     id: 3,
     icon: <BsSearch />,
@@ -35,7 +34,6 @@ const suggestedTopics: TopicInterface[] = [
     backgroundColor: 'bg-purple-400',
     textColor: 'text-purple-900',
   },
-
   {
     id: 4,
     icon: <BsLaptop />,
@@ -43,7 +41,6 @@ const suggestedTopics: TopicInterface[] = [
     backgroundColor: 'bg-green-600',
     textColor: 'text-green-900',
   },
-
   {
     id: 5,
     icon: <BsPen />,
@@ -62,7 +59,7 @@ const suggestedTopics: TopicInterface[] = [
 
 export default function Home() {
   return (
-    <main className="">
+    <main>
       <Navbar />
       <Header />
       <div className="py-4">
