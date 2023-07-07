@@ -1,11 +1,27 @@
-"use client";
-import { BsArrowUpRightCircle } from "react-icons/bs";
-import { useState } from "react";
-import Link from "next/link";
-import { FiArrowUpCircle } from "react-icons/fi";
+'use client';
 
-const CreatePrompt = () => {
+import { useState } from 'react';
+import { BsArrowUpRightCircle } from 'react-icons/bs';
+import { FiArrowUpCircle } from 'react-icons/fi';
+
+import Link from 'next/link';
+
+interface CreatePromptProps {
+  prompt: string;
+}
+
+const handleCopyClick = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    console.log('Copying to clipboard was successful!');
+  } catch (err) {
+    console.error('Could not copy text: ', err);
+  }
+};
+
+const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt }) => {
   const [upvotes, setUpvotes] = useState<number>(0);
+  console.log(prompt);
   return (
     <section className="p-8">
       <div className="flex justify-center items-center space-x-4 border border-gray-400 py-2 lg:py-3 lg:pl-16 lg:pr-4 rounded-[22px]">
@@ -188,14 +204,12 @@ const CreatePrompt = () => {
               </select>
             </div>
           </section>
-          <button className="flex  space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]">
-            <Link href="/chat">
+          <button onClick={()=>handleCopyClick(prompt)} className="flex  space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]">
+            <Link href={`/chat`}>
               <p>Copy & Open ChatGPT</p>
               <BsArrowUpRightCircle className="text-2xl" />
-              </Link>
-            
+            </Link>
           </button>
-         
         </form>
       </section>
     </section>
