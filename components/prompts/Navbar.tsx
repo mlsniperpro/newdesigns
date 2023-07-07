@@ -1,8 +1,10 @@
 "use client";
+
 import { useState } from "react";
+import { useEffect } from "react";
 import { AiOutlineMenu, AiOutlineStar } from "react-icons/ai";
 import { BsArrowUpRight, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from "react-icons/bs";
-
+import { TopicInterface } from "./Topic";
 
 
 import Image from "next/image";
@@ -15,309 +17,60 @@ import SearchIcon from "../../public/icon.jpg";
 import { Prompt } from "./PromptItem";
 
 
-const prompts: Prompt[] = [
-  {
-    id: 1,
-    title: "How to make a good first impression",
-    categories: [
-      {
-        id: 4,
-        icon: <BsLaptop />,
-        title: "Development",
-        backgroundColor: "bg-green-600",
-        textColor: "text-green-900",
-      },
-    ],
-    description:
-      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
-    owner: "John Doe",
-    votes: 10,
-    bookmarks: 5,
-    daysPast: 69,
-  },
 
-  {
-    id: 2,
-    title: "The dynamics of a good first impression",
-    categories: [
-      {
-        id: 1,
-        icon: <BsFire />,
-        title: "Marketing",
-        backgroundColor: "bg-orange-200",
-        textColor: "text-orange-900",
-      },
-      {
-        id: 4,
-        icon: <BsLaptop />,
-        title: "Development",
-        backgroundColor: "bg-green-600",
-        textColor: "text-green-900",
-      },
+import { db } from "@/config/firebase";
+import { collection, getDocs } from 'firebase/firestore';
 
-      {
-        id: 5,
-        icon: <BsPen />,
-        title: "Writing",
-        backgroundColor: "bg-blue-400",
-        textColor: "text-blue-900",
-      },
-    ],
-    description:
-      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
-    owner: "John Doe",
-    votes: 10,
-    bookmarks: 5,
-    daysPast: 32,
-  },
-  {
-    id: 3,
-    title: "How to give a great first impression",
-    categories: [
-      {
-        id: 1,
-        icon: <BsFire />,
-        title: "Marketing",
-        backgroundColor: "bg-orange-200",
-        textColor: "text-orange-900",
-      },
-      {
-        id: 2,
-        icon: <BsFillBagFill />,
-        title: "Business",
-        backgroundColor: "bg-blue-200",
-        textColor: "text-blue-900",
-      },
-    ],
-    description:
-      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
-    owner: "John Doe",
-    votes: 10,
-    bookmarks: 5,
-    daysPast: 1,
-  },
-  {
-    id: 4,
-    title: "How to get the most out of your first meetup",
-    categories: [
-      {
-        id: 4,
-        icon: <BsLaptop />,
-        title: "Development",
-        backgroundColor: "bg-green-600",
-        textColor: "text-green-900",
-      },
-
-      {
-        id: 5,
-        icon: <BsPen />,
-        title: "Writing",
-        backgroundColor: "bg-blue-400",
-        textColor: "text-blue-900",
-      },
-    ],
-    description:
-      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
-    owner: "John Doe",
-    votes: 10,
-    bookmarks: 5,
-    daysPast: 2,
-  },
-  {
-    id: 5,
-    title: "How to make a good first impression",
-    categories: [
-      {
-        id: 1,
-        icon: <BsFire />,
-        title: "Marketing",
-        backgroundColor: "bg-orange-200",
-        textColor: "text-orange-900",
-      },
-    ],
-    description:
-      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
-    owner: "John Doe",
-    votes: 10,
-    bookmarks: 5,
-    daysPast: 2,
-  },
-  {
-    id: 6,
-    title: "How to make a good first impression",
-    categories: [
-      {
-        id: 2,
-        icon: <BsFillBagFill />,
-        title: "Business",
-        backgroundColor: "bg-blue-200",
-        textColor: "text-blue-900",
-      },
-    ],
-    description:
-      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
-    owner: "John Doe",
-    votes: 10,
-    bookmarks: 5,
-    daysPast: 2,
-  },
-  {
-    id: 7,
-    title: "How to make a good first impression",
-    categories: [
-      {
-        id: 1,
-        icon: <BsFire />,
-        title: "Marketing",
-        backgroundColor: "bg-orange-200",
-        textColor: "text-orange-900",
-      },
-      {
-        id: 2,
-        icon: <BsFillBagFill />,
-        title: "Business",
-        backgroundColor: "bg-blue-200",
-        textColor: "text-blue-900",
-      },
-
-      {
-        id: 3,
-        icon: <BsSearch />,
-        title: "SEO",
-        backgroundColor: "bg-purple-400",
-        textColor: "text-purple-900",
-      },
-
-      {
-        id: 4,
-        icon: <BsLaptop />,
-        title: "Development",
-        backgroundColor: "bg-green-600",
-        textColor: "text-green-900",
-      },
-
-      {
-        id: 5,
-        icon: <BsPen />,
-        title: "Writing",
-        backgroundColor: "bg-blue-400",
-        textColor: "text-blue-900",
-      },
-    ],
-    description:
-      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
-    owner: "John Doe",
-    votes: 10,
-    bookmarks: 5,
-    daysPast: 2,
-  },
-  {
-    id: 8,
-    title: "How to practice self compassion consistently",
-    categories: [
-      {
-        id: 1,
-        icon: <BsFire />,
-        title: "Marketing",
-        backgroundColor: "bg-orange-200",
-        textColor: "text-orange-900",
-      },
-      {
-        id: 2,
-        icon: <BsFillBagFill />,
-        title: "Business",
-        backgroundColor: "bg-blue-200",
-        textColor: "text-blue-900",
-      },
-
-      {
-        id: 4,
-        icon: <BsLaptop />,
-        title: "Development",
-        backgroundColor: "bg-green-600",
-        textColor: "text-green-900",
-      },
-
-      {
-        id: 5,
-        icon: <BsPen />,
-        title: "Writing",
-        backgroundColor: "bg-blue-400",
-        textColor: "text-blue-900",
-      },
-    ],
-    description:
-      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
-    owner: "John Doe",
-    votes: 10,
-    bookmarks: 5,
-    daysPast: 2,
-  },
-  {
-    id: 9,
-    title: "How to get the perfect abs in 2 months",
-    categories: [
-      {
-        id: 3,
-        icon: <BsSearch />,
-        title: "SEO",
-        backgroundColor: "bg-purple-400",
-        textColor: "text-purple-900",
-      },
-
-      {
-        id: 4,
-        icon: <BsLaptop />,
-        title: "Development",
-        backgroundColor: "bg-green-600",
-        textColor: "text-green-900",
-      },
-    ],
-    description:
-      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
-    owner: "John Doe",
-    votes: 10,
-    bookmarks: 5,
-    daysPast: 2,
-  },
-  {
-    id: 10,
-    title: "How to be a straight A student",
-    categories: [
-      {
-        id: 1,
-        icon: <BsFire />,
-        title: "Marketing",
-        backgroundColor: "bg-orange-200",
-        textColor: "text-orange-900",
-      },
-      {
-        id: 5,
-        icon: <BsPen />,
-        title: "Writing",
-        backgroundColor: "bg-blue-400",
-        textColor: "text-blue-900",
-      },
-    ],
-    description:
-      "Making a good first impression involves being nice and friendly and also being confident in yourself.",
-    owner: "John Doe",
-    votes: 10,
-    bookmarks: 5,
-    daysPast: 2,
-  },
-];
+interface PromptInterface {
+  id: string | number;
+  title: string;
+  categories: TopicInterface[]; // change to TopicInterface[] if that's what Prompt expects
+  description: string;
+  owner: string;
+  votes: number;
+  bookmarks: number;
+  daysPast: number;
+  url: string;
+}
 
 const Navbar = () => {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [filteredPrompts, setFilteredPrompts] = useState<Prompt[]>([]);
-
   const handleNavClick = () => {
     setIsNavOpen(!isNavOpen);
   };
+  useEffect(() => {
+    // fetch prompts from Firestore when the component mounts
+    console.log('i am now fetching prompts');
+    const fetchPrompts = async () => {
+      const querySnapshot = await getDocs(collection(db, 'prompts'));
+      const fetchedPrompts: PromptInterface[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        fetchedPrompts.push({
+          id: doc.id,
+          title: data.title,
+          categories: data.categories,
+          description: data.description,
+          owner: data.owner,
+          votes: data.votes,
+          bookmarks: data.bookmarks,
+          daysPast: Math.ceil(
+            Math.abs(
+              new Date().getTime() - new Date(data.dayPosted).getTime(),
+            ) /
+              (1000 * 60 * 60 * 24),
+          ),
+          url: data.url,
+        });
+      });
+      setFilteredPrompts(fetchedPrompts);
+    };
 
+    fetchPrompts();
+  }, []);
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
     setSearchQuery(searchValue);
@@ -325,7 +78,7 @@ const Navbar = () => {
       setFilteredPrompts([]);
     } else {
       setFilteredPrompts(
-        prompts.filter(
+        filteredPrompts.filter(
           (prompt) =>
             prompt.title.toLowerCase().includes(searchValue.toLowerCase()) ||
             prompt.description.toLowerCase().includes(searchValue.toLowerCase())

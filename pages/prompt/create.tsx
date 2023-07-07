@@ -79,6 +79,7 @@ export default function Page() {
     } else if (!auth.currentUser) {
       alert('User is not authenticated');
     } else {
+      //Get url which is title separeted by hyphens
       try {
         const docRef = await addDoc(collection(db, 'prompts'), {
           title: title,
@@ -95,8 +96,10 @@ export default function Page() {
           instagram: instagram,
           tiktok: tiktok,
           userId: auth.currentUser.uid,
+          url: title.toLowerCase().split(' ').join('-'),
+          dayPosted: new Date().toISOString().slice(0, 10),
+          topics : selectedTopics.map((topic) => topic.title),
         });
-
         // Provide feedback to the user
         alert('Form submitted successfully');
       } catch (error) {

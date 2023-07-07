@@ -1,12 +1,19 @@
 'use client';
 
-import { BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
-
-
+import { useEffect, useState } from 'react';
+import {
+  BsFillBagFill,
+  BsFire,
+  BsLaptop,
+  BsPen,
+  BsSearch,
+} from 'react-icons/bs';
 
 import PromptItem, { Prompt } from './PromptItem';
 import { TopicInterface } from './Topic';
 
+import { db } from '@/config/firebase';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 
 interface CategoryInterface {
   id: number;
@@ -16,7 +23,7 @@ interface CategoryInterface {
   textColor: string;
 }
 interface PromptInterface {
-  id: number;
+  id: string | number;
   title: string;
   categories: TopicInterface[]; // change to TopicInterface[] if that's what Prompt expects
   description: string;
@@ -24,8 +31,8 @@ interface PromptInterface {
   votes: number;
   bookmarks: number;
   daysPast: number;
+  url: string;
 }
-
 
 const createPrompt = (
   id: number,
@@ -42,6 +49,7 @@ const createPrompt = (
   votes: 10,
   bookmarks: 5,
   daysPast,
+  url: 'making-a-good-first-impression',
 });
 
 const icons: Record<string, JSX.Element> = {
@@ -72,33 +80,37 @@ const categories: [string, string, string][] = [
   ['Writing', 'bg-blue-400', 'text-blue-900'],
   ['SEO', 'bg-purple-400', 'text-purple-900'],
 ];
-const prompts = [
-  [1, 'How to make a good first impression', [4], 2],
-  [2, 'The dynamics of a good first impression', [1, 4, 5], 2],
-  [3, 'How to give a great first impression', [1, 2], 2],
-  [4, 'How to get the most out of your first meetup', [4, 5], 2],
-  [5, 'How to make a good first impression', [1], 2],
-  [6, 'How to make a good first impression', [2], 30],
-  [7, 'How to make a good first impression', [1, 2, 3, 4, 5], 55],
-  [8, 'How to practice self compassion consistently', [1, 2, 4, 5], 2],
-  [9, 'How to get the perfect abs in 2 months', [3, 4], 232],
-  [10, 'How to be a straight A student', [1, 5], 2],
-].map(([id, title, categoryIds, daysPast]) =>
-  createPrompt(
-    id as number,
-    title as string,
-    (categoryIds as number[]).map((id) =>
-      createCategory(id, ...categories[id - 1]),
-    ),
-    daysPast as number,
-  ),
-);
-
 const AvailablePrompts = ({
   filterByTopic = true,
   selectedTopic = '',
   filteredByDate = true,
 }) => {
+  const [prompts, setPrompts] = useState<PromptInterface[]>([]); // added state for prompts
+  useEffect(() => {
+    // fetch prompts from Firestore when the component mounts
+    console.log('i am now fetching prompts');
+    const fetchPrompts = async () => {
+      const querySnapshot = await getDocs(collection(db, 'prompts'));
+      const fetchedPrompts: PromptInterface[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        fetchedPrompts.push({
+          id: doc.id,
+          title: data.title,
+          categories: data.categories,
+          description: data.description,
+          owner: data.owner,
+          votes: data.votes,
+          bookmarks: data.bookmarks,
+          daysPast: Math.ceil(Math.abs(new Date().getTime() - new Date(data.dayPosted).getTime()) / (1000 * 60 * 60 * 24)),
+          url: data.url,
+        });
+      });
+      setPrompts(fetchedPrompts);
+    };
+
+    fetchPrompts();
+  }, []);
   let timePeriod = '';
   const filteredPrompts = filterByTopic
     ? prompts.filter((prompt) =>
@@ -107,23 +119,15 @@ const AvailablePrompts = ({
         ),
       )
     : prompts;
-
   const filteredPromptsByTimeline = filteredByDate
-    ? filteredPrompts.filter((prompt) => {
-        if (timePeriod === 'today') {
-          return prompt.daysPast <= 1;
-        } else if (timePeriod === 'thisWeek') {
-          return prompt.daysPast <= 7;
-        } else if (timePeriod === 'thisMonth') {
-          return prompt.daysPast <= 30;
-        } else if (timePeriod === 'allTime') {
-          return true;
-        } else {
-          return false;
-        }
-      })
-    : filteredPrompts;
-
+  ? filteredPrompts.filter((prompt) => {
+      return timePeriod === 'today' ? prompt.daysPast <= 1
+           : timePeriod === 'thisWeek' ? prompt.daysPast <= 7
+           : timePeriod === 'thisMonth' ? prompt.daysPast <= 30
+           : timePeriod === 'allTime' ? true
+           : false;
+    })
+  : filteredPrompts;
   if (filteredPrompts.length === 0) {
     return (
       <section>
