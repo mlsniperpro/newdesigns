@@ -1,21 +1,30 @@
 import React, { useEffect } from "react";
+
+
+
 import Link from "next/link";
-import Freestyle from "@/components/Freestyle";
+import { useRouter } from "next/router";
 import Guided from "@/components/Guided";
 import Keyword from "@/components/Keyword";
-import { signOut } from "firebase/auth";
+
+
+
 import { auth } from "../config/firebase";
-import { useRouter } from "next/router";
-import LanguageIcon from '@mui/icons-material/Language';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import LineStyleIcon from '@mui/icons-material/LineStyle';
+import UserProfile from "./UserProfile";
+
+
+
+import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import BatchPredictionIcon from '@mui/icons-material/BatchPrediction';
 import CancelIcon from '@mui/icons-material/Cancel';
-import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
-import UploadIcon from '@mui/icons-material/Upload';
+import LanguageIcon from '@mui/icons-material/Language';
+import LineStyleIcon from '@mui/icons-material/LineStyle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import UserProfile from "./UserProfile";
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import UploadIcon from '@mui/icons-material/Upload';
+import { signOut } from "firebase/auth";
+
 
 function Dashboard(props) {
   const { onValueChange } = props;
@@ -62,6 +71,13 @@ function onlyAdmins() {
 useEffect(() => {
   checkIfAdmin();
 }, []);
+useEffect(() => {
+  if (mode === 'tutor') {
+    router.push('/tutor');
+  } else if (mode === 'chat') {
+    router.push('/chat');
+  }
+}, [mode, router]);
 
   return (
     <div className="w-full bg-white shadow-xl rounded-lg flex overflow-x-auto custom-scrollbar">
@@ -148,11 +164,10 @@ useEffect(() => {
                 </span>
               </a>
             </li>
-
-            <li>
+             <li>
               <a
                 onClick={() => {
-                  setMode("freestyle");
+                  setMode("chat");
                 }}
                 style={{
                   color: "white",
@@ -171,7 +186,7 @@ useEffect(() => {
                     fontSize: "13px",
                   }}
                 >
-                  {language === "english" ? "Freestyle" : "Libre"}
+                  {language === "english" ? "Chat" : "Chat"}
                 </span>
               </a>
             </li>
@@ -409,13 +424,9 @@ useEffect(() => {
       <div>
         {mode === "guided" ? (
           <Guided language={language} />
-        ) : mode === "freestyle" ? (
-          <Freestyle language={language} />
-        ) : mode === "keyword" ? (
+        ): mode === "keyword" ? (
           <Keyword language={language} />
-        ) : mode === "tutor" ? (
-          router.push("/tutor")
-        ) : mode === "profile" ? (
+        ): mode === "profile" ? (
           <UserProfile />
         ) : (
           <Guided language={language} />
