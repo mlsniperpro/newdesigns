@@ -1,5 +1,6 @@
 import { IconFileExport, IconSettings } from '@tabler/icons-react';
 import { useContext, useState } from 'react';
+import Link from 'next/link';
 
 //import { useTranslation } from 'next-i18next';
 
@@ -61,7 +62,11 @@ export const ChatbarSettings = () => {
       ) : null*/}
 
       {/*!serverSidePluginKeysSet ? <PluginKeys /> : null*/}
-
+      <button>
+        <Link href="/">
+        Home
+        </Link>
+      </button>
       <SettingDialog
         open={isSettingDialogOpen}
         onClose={() => {
