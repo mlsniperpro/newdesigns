@@ -128,7 +128,7 @@ const CustomPrompt = () => {
   const PromptId = router.query.promptId;
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState<CommentSectionProps[]>([]);
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const handleCommentSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!newComment.trim()) {
@@ -182,7 +182,10 @@ const CustomPrompt = () => {
 
         // Check if the current user is an admin
         // Replace this with your actual check
-        //setIsAdmin(auth.currentUser?.uid === 'adminUserId');
+        setIsAdmin(
+          auth?.currentUser?.uid === 'M8LwxAfm26SimGbDs4LDwf1HuCb2' ||
+            auth?.currentUser?.uid === 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1',
+        );
       } catch (err) {
         setError((err as Error).message);
         setIsLoading(false);
