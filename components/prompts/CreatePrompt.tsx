@@ -1,27 +1,110 @@
-'use client';
-
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BsArrowUpRightCircle } from 'react-icons/bs';
 import { FiArrowUpCircle } from 'react-icons/fi';
 
+
+
 import Link from 'next/link';
+
+
+
+import { db } from '@/config/firebase';
+import { collection, getDocs, increment, query, updateDoc, where } from 'firebase/firestore';
+
 
 interface CreatePromptProps {
   prompt: string;
+  url: string;
+}
+interface SelectInputProps {
+  label: string;
+  name: string;
+  id: string;
+  options: string[];
 }
 
-const handleCopyClick = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    console.log('Copying to clipboard was successful!');
-  } catch (err) {
-    console.error('Could not copy text: ', err);
-  }
+const SelectInput: React.FC<SelectInputProps> = ({
+  label,
+  name,
+  id,
+  options,
+}) => (
+  <div className="flex items-center justify-between space-x-4">
+    <label htmlFor={id} className="text-gray-700 basis-1/2">
+      {label}
+    </label>
+    <select
+      name={name}
+      id={id}
+      className="px-4 py-2 border border-gray-400 rounded-[15px] w-full basis-1/2"
+    >
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option.charAt(0).toUpperCase() + option.slice(1)}
+        </option>
+      ))}
+    </select>
+  </div>
+);
+const tagColors: { [key: string]: string } = {
+  name: 'yellow',
+  'fitness goal': 'pink',
+  'workout style': 'blue',
+  'muscle group 1': 'green',
+  'muscle group 2': 'yellow',
+  'muscle group 3': 'pink',
+  'list of available equipment': 'blue',
+  'other requirements or preferences': 'green',
+  default: 'gray', // Add a default color
 };
 
-const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt }) => {
+const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
+ const [tags, setTags] = useState<string[]>([]);
+  const [tagValues, setTagValues] = useState<{ [key: string]: string }>({});
   const [upvotes, setUpvotes] = useState<number>(0);
-  console.log(prompt);
+
+  useEffect(() => {
+    const promptTags = prompt.match(/#\w+/g);
+    setTags(promptTags || []);
+  }, [prompt]);
+
+  const handleCopyClick = useCallback(async () => {
+    let updatedPrompt = prompt;
+    for (const tag of tags) {
+      const tagName = tag.slice(1); // Remove the '#' from the start of the tag
+      if (tagValues[tagName]) {
+        // Replace the tag in the prompt with the user's value
+        updatedPrompt = updatedPrompt.replace(tag, tagValues[tagName]);
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(updatedPrompt);
+      console.log('Copying to clipboard was successful!');
+
+      // Query the database for the document with the matching url
+      const q = query(
+        collection(db, 'prompts'),
+        where('url', '==', url),
+      );
+      const querySnapshot = await getDocs(q);
+      const promptDoc = querySnapshot.docs[0]; // Assuming the url is unique, there should only be one matching document
+
+      if (promptDoc) {
+        // Update the 'votes' field of the document
+        await updateDoc(promptDoc.ref, {
+          votes: increment(1),
+        });
+      }
+    } catch (err) {
+      console.error('Could not copy text: ', err);
+    }
+  }, [prompt, tags, tagValues, url]);
+
+const handleTagValueChange = (tag: string, value: string) => {
+  setTagValues((prevValues) => ({ ...prevValues, [tag]: value }));
+};
+
   return (
     <section className="p-8">
       <div className="flex justify-center items-center space-x-4 border border-gray-400 py-2 lg:py-3 lg:pl-16 lg:pr-4 rounded-[22px]">
@@ -36,180 +119,99 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt }) => {
       <section className="flex flex-col pt-10">
         <h3 className="text-xl font-bold pb-4">Edit Tags</h3>
         <form action="" className="flex flex-col space-y-6">
-          <div className="flex flex-col space-y-2">
-            <label
-              htmlFor="name"
-              className="bg-yellow-200 text-yellow-600 w-fit"
-            >
-              #name
-            </label>
-            <input
-              type="text"
-              placeholder="Type something"
-              className="py-3 px-8 border border-gray-400 rounded-[15px]"
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="name" className="bg-pink-200 text-pink-600 w-fit">
-              #fitness goal
-            </label>
-            <input
-              type="text"
-              placeholder="Type something"
-              className="py-3 px-8 border border-gray-400 rounded-[15px]"
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="name" className="bg-blue-200 text-blue-600 w-fit">
-              #workout style
-            </label>
-            <input
-              type="text"
-              placeholder="Type something"
-              className="py-3 px-8 border border-gray-400 rounded-[15px]"
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="name" className="bg-green-200 text-green-600 w-fit">
-              #muscle group 1
-            </label>
-            <input
-              type="text"
-              placeholder="Type something"
-              className="py-3 px-8 border border-gray-400 rounded-[15px]"
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
-            <label
-              htmlFor="name"
-              className="bg-yellow-200 text-yellow-600 w-fit"
-            >
-              #muscle group 2
-            </label>
-            <input
-              type="text"
-              placeholder="Type something"
-              className="py-3 px-8 border border-gray-400 rounded-[15px]"
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="name" className="bg-pink-200 text-pink-600 w-fit">
-              #muscle group 3
-            </label>
-            <input
-              type="text"
-              placeholder="Type something"
-              className="py-3 px-8 border border-gray-400 rounded-[15px]"
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
-            <label
-              htmlFor="name"
-              className="bg-blue-200 text-blue-600 inline-block w-fit"
-            >
-              #list of available equipment
-            </label>
-            <input
-              type="text"
-              placeholder="Type something"
-              className="py-3 px-8 border border-gray-400 rounded-[15px]"
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="name" className="bg-green-200 text-green-600 w-fit">
-              #other requirements or preferences
-            </label>
-            <input
-              type="text"
-              placeholder="Type something"
-              className="py-3 px-8 border border-gray-400 rounded-[15px]"
-            />
-          </div>
-          <section className="flex flex-col space-y-4">
-            <div className="flex items-center justify-between space-x-4">
-              <label htmlFor="language" className="text-gray-700 basis-1/2">
-                Language
-              </label>
-              <select
-                name="languages"
-                id="language"
-                className="px-4 py-2 border border-gray-400 rounded-[15px] w-full basis-1/2"
-              >
-                <option value="default">Default</option>
-                <option value="english">English</option>
-                <option value="spanish">Spanish</option>
-              </select>
-            </div>
-            <div className="flex items-center justify-between space-x-4">
-              <label htmlFor="tone" className="text-gray-700 basis-1/2">
-                Tone
-              </label>
-              <select
-                name="tones"
-                id="tone"
-                className="px-4 py-2 border border-gray-400 w-full rounded-[15px] basis-1/2"
-              >
-                <option value="default">Default</option>
-                <option value="authoritative">Authoritative</option>
-                <option value="clinical">Clinical</option>
-                <option value="cold">Cold</option>
-                <option value="confident">Confident</option>
-                <option value="cynical">Cynical</option>
-                <option value="emotional">Emotional</option>
-                <option value="empathetic">Empathetic</option>
-                <option value="formal">Formal</option>
-                <option value="friendly">Friendly</option>
-                <option value="humorous">Humorous</option>
-                <option value="informal">Informal</option>
-                <option value="ironic">Ironic</option>
-                <option value="optimistic">Optimistic</option>
-                <option value="pessimistic">Pessimistic</option>
-                <option value="playful">Playful</option>
-                <option value="sarcastic">Sarcastic</option>
-                <option value="serious">Serious</option>
-                <option value="sympathetic">Sympathetic</option>
-                <option value="tentative">Tentative</option>
-                <option value="warm">Warm</option>
-              </select>
-            </div>
-            <div className="flex items-center justify-between space-x-4">
-              <label htmlFor="style" className="text-gray-700 basis-1/2">
-                Style
-              </label>
-              <select
-                name="styles"
-                id="style"
-                className="px-4 py-2 border border-gray-400 w-full rounded-[15px] basis-1/2"
-              >
-                <option value="default">Default</option>
-                <option value="academic">Academic</option>
-                <option value="analytical">Analytical</option>
-                <option value="argumentative">Argumentative</option>
-                <option value="conversational">Conversational</option>
-                <option value="creative">Creative</option>
-                <option value="critical">Critical</option>
-                <option value="descriptive">Descriptive</option>
-                <option value="epigrammatic">Epigrammatic</option>
-                <option value="epistolary">Epistolary</option>
-                <option value="expository">Expository</option>
-                <option value="informative">Informative</option>
-                <option value="instructive">Instructive</option>
-                <option value="journalistic">Journalistic</option>
-                <option value="metaphorical">Metaphorical</option>
-                <option value="narrative">Narrative</option>
-                <option value="persuasive">Persuasive</option>
-                <option value="poetic">Poetic</option>
-                <option value="satirical">Satirical</option>
-                <option value="technical">Technical</option>
-              </select>
-            </div>
-          </section>
-          <button onClick={()=>handleCopyClick(prompt)} className="flex  space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]">
+          {tags.map((tag) => {
+            const tagName = tag.slice(1); // Remove the '#' from the start of the tag
+            const tagColor = tagColors[tagName] || tagColors.default; // Use the default color if the tag is not in the dictionary
+
+            return (
+              <div key={tag} className="flex flex-col space-y-2">
+                <label
+                  htmlFor={tag}
+                  className={`bg-${tagColor}-200 text-${tagColor}-600 w-fit`}
+                >
+                  {tag}
+                </label>
+                <input
+                  type="text"
+                  placeholder="Type something"
+                  className="py-3 px-8 border border-gray-400 rounded-[15px]"
+                  onChange={(e) =>
+                    handleTagValueChange(tagName, e.target.value)
+                  }
+                />
+              </div>
+            );
+          })}
+          <button
+            onClick={handleCopyClick}
+            className="flex  space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]"
+          >
             <Link href={`/chat`}>
               <p>Copy & Open ChatGPT</p>
               <BsArrowUpRightCircle className="text-2xl" />
             </Link>
           </button>
+          <SelectInput
+            label="Language"
+            name="languages"
+            id="language"
+            options={['default', 'english', 'spanish']}
+          />
+          <SelectInput
+            label="Tone"
+            name="tones"
+            id="tone"
+            options={[
+              'default',
+              'authoritative',
+              'clinical',
+              'cold',
+              'confident',
+              'cynical',
+              'emotional',
+              'empathetic',
+              'formal',
+              'friendly',
+              'humorous',
+              'informal',
+              'ironic',
+              'optimistic',
+              'pessimistic',
+              'playful',
+              'sarcastic',
+              'serious',
+              'sympathetic',
+              'tentative',
+              'warm',
+            ]}
+          />
+          <SelectInput
+            label="Style"
+            name="styles"
+            id="style"
+            options={[
+              'default',
+              'academic',
+              'analytical',
+              'argumentative',
+              'conversational',
+              'creative',
+              'critical',
+              'descriptive',
+              'epigrammatic',
+              'epistolary',
+              'expository',
+              'informative',
+              'instructive',
+              'journalistic',
+              'metaphorical',
+              'narrative',
+              'persuasive',
+              'poetic',
+              'satirical',
+              'technical',
+            ]}
+          />
         </form>
       </section>
     </section>

@@ -297,7 +297,7 @@ export default function Page() {
               <p className="text-xs font-light text-gray-600">
                 Be mindful we don’t take responsibility for any actions taken by
                 third parties based on the information you decide to disclose.
-                Avoid sharing any sensitive information.(Tags should be separated by comma)
+                Avoid sharing any sensitive information.(Tags should start with # symbol and separated by space)
               </p>
               <textarea
                 onChange={(event) => setTags(event.target.value)}

@@ -113,12 +113,13 @@ const AvailablePrompts = ({
   }, []);
   let timePeriod = '';
   const filteredPrompts = filterByTopic
-    ? prompts.filter((prompt) =>
-        prompt.categories.some(
-          (category) => category.title.toLowerCase() === selectedTopic,
-        ),
-      )
-    : prompts;
+  ? prompts.filter((prompt) =>
+      prompt.categories?.some(
+        (category) => category.title.toLowerCase() === selectedTopic,
+      ),
+    )
+  : prompts;
+
   const filteredPromptsByTimeline = filteredByDate
   ? filteredPrompts.filter((prompt) => {
       return timePeriod === 'today' ? prompt.daysPast <= 1
@@ -141,7 +142,7 @@ const AvailablePrompts = ({
 
   return (
     <section className="flex flex-col space-y-6">
-      {filteredPrompts.map((prompt) => (
+    {filteredPrompts.map((prompt) => (
         <PromptItem prompt={prompt} key={prompt.id} />
       ))}
     </section>

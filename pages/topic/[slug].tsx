@@ -1,71 +1,43 @@
-import {
-  BsFillBagFill,
-  BsFire,
-  BsLaptop,
-  BsPen,
-  BsSearch,
-} from 'react-icons/bs';
+import { BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
+
+
+
 import { useRouter } from 'next/router';
-import {
-  AvailablePrompts,
-  Navbar,
-  Topic,
-  TopicHeader,
-} from '@/components/prompts';
+
+
+
+import { AvailablePrompts, Navbar, Topic, TopicHeader } from '@/components/prompts';
 import { TopicInterface } from '@/components/prompts/Topic';
 import { TopicPage } from '@/components/prompts/TopicHeader';
 
+
+
 import classNames from 'classnames';
 
-const allTopics: TopicPage[] = [
-  {
-    id: 1,
-    slug: 'marketing',
-    icon: <BsFire />,
-    title: 'Marketing',
-    prompts: 10,
-    followers: 100,
-    summary: 'Business is the art of putting your thoughts into words.',
-  },
-  {
-    id: 2,
-    slug: 'business',
-    icon: <BsFillBagFill />,
-    title: 'Business',
-    prompts: 10,
-    followers: 100,
-    summary: 'Business is the art of putting your thoughts into words.',
-  },
 
-  {
-    id: 3,
-    slug: 'seo',
-    icon: <BsSearch />,
-    title: 'SEO',
-    prompts: 10,
-    followers: 100,
-    summary: 'SEO is the art of putting your thoughts into words.',
-  },
+const SUMMARY = 'is the art of putting your thoughts into words.';
 
-  {
-    id: 4,
-    slug: 'development',
-    icon: <BsLaptop />,
-    title: 'Development',
-    prompts: 10,
-    followers: 100,
-    summary: 'Development is the art of putting your thoughts into words.',
-  },
+const createTopic = (
+  id: number,
+  slug: string,
+  icon: JSX.Element,
+  title: string,
+) => ({
+  id,
+  slug,
+  icon,
+  title,
+  prompts: 10,
+  followers: 100,
+  summary: `${title} ${SUMMARY}`,
+});
 
-  {
-    id: 5,
-    slug: 'writing',
-    icon: <BsPen />,
-    title: 'Writing',
-    prompts: 10,
-    followers: 100,
-    summary: 'Writing is the art of putting your thoughts into words.',
-  },
+const allTopics = [
+  createTopic(1, 'marketing', <BsFire />, 'Marketing'),
+  createTopic(2, 'business', <BsFillBagFill />, 'Business'),
+  createTopic(3, 'seo', <BsSearch />, 'SEO'),
+  createTopic(4, 'development', <BsLaptop />, 'Development'),
+  createTopic(5, 'writing', <BsPen />, 'Writing'),
 ];
 
 const suggestedTopics: TopicInterface[] = [
@@ -83,7 +55,6 @@ const suggestedTopics: TopicInterface[] = [
     backgroundColor: 'bg-blue-200',
     textColor: 'text-blue-900',
   },
-
   {
     id: 3,
     icon: <BsSearch />,
@@ -91,7 +62,6 @@ const suggestedTopics: TopicInterface[] = [
     backgroundColor: 'bg-purple-400',
     textColor: 'text-purple-900',
   },
-
   {
     id: 4,
     icon: <BsLaptop />,
@@ -99,7 +69,6 @@ const suggestedTopics: TopicInterface[] = [
     backgroundColor: 'bg-green-600',
     textColor: 'text-green-900',
   },
-
   {
     id: 5,
     icon: <BsPen />,
@@ -109,11 +78,23 @@ const suggestedTopics: TopicInterface[] = [
   },
 ];
 
+const defaultTopic = {
+  id: 0,
+  slug: '',
+  icon: <></>,
+  title: '',
+  prompts: 0,
+  followers: 0,
+  summary: '',
+};
+
 export default function Page({ params }: { params: TopicPage }) {
-    const router = useRouter();
-  const topicData = allTopics.find(
-    (topic) => topic.title.toLowerCase() === router.query.slug,
-  );
+  const router = useRouter();
+  const topicData =
+    allTopics.find(
+      (topic) => topic.title.toLowerCase() === router.query.slug,
+    ) || defaultTopic;
+
   return (
     <main className="">
       <Navbar />
@@ -121,13 +102,13 @@ export default function Page({ params }: { params: TopicPage }) {
         <hr className="border border-gray-200" />
       </div>
       <section></section>
-      <TopicHeader topic={topicData!} />
+      <TopicHeader topic={topicData} />
       <div className="px-8 lg:px-16 2xl:px-52 py-4">
         <hr className="border border-gray-200" />
       </div>
       <section className="flex flex-col-reverse xl:flex-row xl:space-x-4 px-8 lg:px-16 2xl:px-52 pb-8 pt-8 2xl:pt-16">
         <section className="pt-8 xl:pt-0 xl:basis-3/5">
-          <AvailablePrompts selectedTopic={typeof router.query.slug === 'string' ? router.query.slug : undefined} />
+          <AvailablePrompts selectedTopic={router.query.slug?.toString()} />
         </section>
         <section className="xl:basis-2/5 flex space-x-2">
           <div className="border-l-solid border-l-gray-300 border-l-[1px]"></div>

@@ -48,8 +48,6 @@ function Dashboard(props) {
   const signout = async() => {
     await signOut(auth)
     .then(() => {
-      // Sign-out successful.
-      //console.log("Sign-out successful.");
       router.push("/login")
     }).catch((error) => {
       // An error happened.
@@ -76,6 +74,8 @@ useEffect(() => {
     router.push('/tutor');
   } else if (mode === 'chat') {
     router.push('/chat');
+  } else if (mode === 'prompts') {
+    router.push('/prompts');
   }
 }, [mode, router]);
 
@@ -187,6 +187,32 @@ useEffect(() => {
                   }}
                 >
                   {language === "english" ? "Chat" : "Chat"}
+                </span>
+              </a>
+            </li>
+             <li>
+              <a
+                onClick={() => {
+                  setMode("prompts");
+                }}
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontFamily: "Monospace",
+                  fontSize: "13px",
+                }}
+                className="hover:bg-gray-500  hover:bg-opacity-30 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
+              >
+                <LineStyleIcon />{" "}
+                <span
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    fontFamily: "Monospace",
+                    fontSize: "13px",
+                  }}
+                >
+                  {language === "english" ? "Prompts" : "Prompts"}
                 </span>
               </a>
             </li>

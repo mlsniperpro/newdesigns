@@ -1,21 +1,22 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FC } from 'react';
-import {
-  BsArrowUpRight,
-  BsBookmark,
-  BsFire,
-  BsLaptop,
-  BsPen,
-} from 'react-icons/bs';
+import { BsArrowUpRight, BsBookmark, BsFire, BsLaptop, BsPen } from 'react-icons/bs';
+
+
 
 import { useRouter } from 'next/router';
 
+
+
 import { CreatePrompt, Navbar, Topic } from '@/components/prompts';
+
+
 
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { get } from 'http';
+
 
 type Category = {
   id: number;
@@ -46,6 +47,19 @@ const categories: Category[] = [
     style: { backgroundColor: 'bg-blue-400', textColor: 'text-blue-900' },
   },
 ];
+//Fetch the comments data from firestore database collection called comments
+const getCommentsData = async (promptId: string) => {
+  const q = query(
+    collection(db, 'comments'),
+    where('promptId', '==', promptId),
+  );
+  const querySnapshot = await getDocs(q);
+  const commentsData = querySnapshot.docs.map(
+    (doc) => doc.data() as CommentSectionProps,
+  );
+  console.log('Here is the comments data: ', commentsData);
+  return commentsData;
+};
 
 export interface PromptData {
   id: number;
@@ -64,6 +78,7 @@ export interface PromptData {
   url: string;
   categoryIds: number[];
   prompt: string;
+  dayPosted: string;
 }
 //Fetch the data from firestore database collection called prompts
 const getPromptData = async (promptId: string) => {
@@ -78,45 +93,6 @@ const displayDaysPast = (daysPast: number) =>
   daysPast < 30
     ? `${daysPast} ${daysPast === 1 ? 'day' : 'days'} ago`
     : `${Math.floor(daysPast / 30)} months ago`;
-
-const info = [
-  {
-    label: 'Name',
-    value: '#name',
-    bg: 'bg-yellow-200',
-    text: 'text-yellow-600',
-  },
-  {
-    label: 'Fitness Goal',
-    value: '#fitness goal',
-    bg: 'bg-pink-200',
-    text: 'text-pink-600',
-  },
-  {
-    label: 'Preferred Workout Style',
-    value: '#workout style',
-    bg: 'bg-blue-200',
-    text: 'text-blue-600',
-  },
-  {
-    label: 'Targeted Muscle Groups',
-    values: ['#muscle group 1', '#muscle group 2', '#muscle group 3'],
-    bg: 'bg-green-200',
-    text: 'text-green-600',
-  },
-  {
-    label: 'Available Equipment',
-    value: '#list of available equipment',
-    bg: 'bg-blue-200',
-    text: 'text-blue-600',
-  },
-  {
-    label: 'Other Requirements/Preferences',
-    value: '#other requirements or preferences',
-    bg: 'bg-green-200',
-    text: 'text-green-600',
-  },
-];
 interface CommentSectionProps {
   name: string;
   comment: string;
@@ -150,14 +126,63 @@ const CustomPrompt = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const PromptId = router.query.promptId;
+  const [newComment, setNewComment] = useState('');
+  const [comments, setComments] = useState<CommentSectionProps[]>([]);
+  const [isAdmin, setIsAdmin] = useState(true);
+  const handleCommentSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!newComment.trim()) {
+      // Don't submit empty comments
+      return;
+    }
+    try {
+      await addDoc(collection(db, 'comments'), {
+        promptId: PromptId,
+        name: auth?.currentUser?.displayName || 'BullDozer', // Replace with the current user's name
+        comment: newComment,
+        votes: 0,
+        time: new Date().toISOString(), // Replace with the current time
+      });
+      setNewComment('');
+    } catch (err) {
+      console.error('Error adding comment: ', err);
+    }
+  };
+ const handleDelete = async () => {
+   if (typeof PromptId === 'string') {
+     try {
+       const q = query(collection(db, 'prompts'), where('url', '==', PromptId));
+       const querySnapshot = await getDocs(q);
+       if (!querySnapshot.empty) {
+         const docRef = doc(db, 'prompts', querySnapshot.docs[0].id);
+         await deleteDoc(docRef);
+         // Redirect to another page after deleting the prompt
+         router.push('/');
+       } else {
+         console.error('No document found with url: ', PromptId);
+       }
+     } catch (err) {
+       console.error('Error deleting prompt: ', err);
+     }
+   } else {
+     console.error('Invalid PromptId: ', PromptId);
+   }
+ };
+
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         const data = await getPromptData(PromptId as string);
+        const commentsData = await getCommentsData(PromptId as string);
         setPromptData(data[0]);
+        setComments(commentsData);
         setIsLoading(false);
+
+        // Check if the current user is an admin
+        // Replace this with your actual check
+        //setIsAdmin(auth.currentUser?.uid === 'adminUserId');
       } catch (err) {
         setError((err as Error).message);
         setIsLoading(false);
@@ -175,11 +200,10 @@ const CustomPrompt = () => {
   }
 
   const daysPastDisplay = promptData
-    ? displayDaysPast(promptData.daysPast)
+    ? displayDaysPast(Math.floor((new Date().getTime() - new Date(promptData.dayPosted).getTime()) / (1000 * 3600 * 24)))
     : '';
   return (
     <main>
-      <h1>The product id is {PromptId}</h1>
       <Navbar />
       <hr className="border border-gray-200" />
       <section className="flex flex-col-reverse xl:flex-row xl:space-x-4 px-8 lg:px-16 2xl:px-52 py-8 bg-gray-100">
@@ -234,64 +258,60 @@ const CustomPrompt = () => {
             </div>
           </div>
           <div className="bg-white p-8 rounded-[15px]">
-            <h4>
-              {promptData && promptData.description}
-            </h4>
-            <div className="flex flex-col">
-              {/*info.map((item, index) => (
-                <p key={index} className="flex items-center space-x-1">
-                  {item.label}:
-                  {Array.isArray(item.values) ? (
-                    item.values.map((val, idx) => (
-                      <span
-                        key={idx}
-                        className={`${item.bg} ${item.text} w-fit`}
-                      >
-                        {val}
-                      </span>
-                    ))
-                  ) : (
-                    <span className={`${item.bg} ${item.text} w-fit`}>
-                      {item.value}
-                    </span>
-                  )}
-                </p>
-                  ))*/}
-                  {
-                    promptData && promptData.prompt
-                  }
-            </div>
+            <h4>{promptData && promptData.prompt}</h4>
           </div>
           <section className="p-4 flex flex-col">
             <div className="flex justify-between items-center pb-4">
               <div className="flex space-x-6 items-center">
                 <h2 className="text-2xl font-bold">Discussion</h2>
-                <p>2 Comments</p>
+                <p>{comments.length} Comments</p>{' '}
+                {/* Display the number of comments */}
               </div>
               <p className="text-gray-800">Write a comment</p>
             </div>
             <hr className="border border-gray-200" />
+            <form
+              onSubmit={handleCommentSubmit}
+              className="flex space-x-4 items-center mt-4"
+            >
+              <input
+                type="text"
+                value={newComment}
+                onChange={(event) => setNewComment(event.target.value)}
+                placeholder="Write a comment..."
+                className="flex-grow px-4 py-2 border border-gray-400 rounded-[15px]"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white rounded-[15px]"
+              >
+                Submit
+              </button>
+            </form>
+            {isAdmin && (
+        <button onClick={handleDelete} className="px-4 py-2 bg-red-500 text-white rounded-[15px]">
+          Delete Prompt
+        </button>
+      )}
+
             <div className="flex flex-col space-y-6 pt-8">
               <p className="text-gray-800">Top comments</p>
-              <CommentSection
-                name="Ankit Kumar Ghosh"
-                comment="Diet plan and weight loss suggestion"
-                votes={10}
-                time="16 days ago"
-              />
-              <CommentSection
-                name="Glen Spelling"
-                comment="Get personalized daily action plans to achieve your fitness goals directly in your calendar. Get Started on www.getonjourney.com"
-                votes={4}
-                time="6 months ago"
-              />
+              {comments.map((comment, index) => (
+                <CommentSection
+                  key={index}
+                  name={comment.name}
+                  comment={comment.comment}
+                  votes={comment.votes}
+                  time={comment.time}
+                />
+              ))}
             </div>
           </section>
         </section>
 
         <section className="xl:basis-2/5 flex space-x-2">
           <div className="border-l-solid border-l-gray-300 border-l-[1px]"></div>
-          <CreatePrompt prompt={promptData&&promptData.prompt} />
+         <CreatePrompt prompt={promptData && promptData.prompt} url={typeof PromptId === 'string' ? PromptId : ''} />
         </section>
       </section>
     </main>
