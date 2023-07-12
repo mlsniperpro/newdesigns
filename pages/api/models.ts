@@ -37,7 +37,6 @@ const handler = async (req: Request): Promise<Response> => {
           }),
       },
     });
-
     if (response.status === 401) {
       return new Response(response.body, {
         status: 500,

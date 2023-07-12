@@ -17,6 +17,8 @@ export interface ChatBody {
 
 export interface Conversation {
   id: string;
+  userId?: string;
+  timestamp?: number;
   name: string;
   messages: Message[];
   model: OpenAIModel;

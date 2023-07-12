@@ -12,6 +12,10 @@ import { Prompt } from '@/types/prompt';
 
 import { cleanConversationHistory } from './clean';
 
+import { db } from '@/config/firebase';
+import { getAuth } from 'firebase/auth';
+import { collection, doc, getDocs, query, setDoc } from 'firebase/firestore';
+
 export function isExportFormatV1(obj: any): obj is ExportFormatV1 {
   return Array.isArray(obj);
 }
@@ -70,29 +74,25 @@ function currentDate() {
   const day = date.getDate();
   return `${month}-${day}`;
 }
+const auth = getAuth();
+export const exportData = async () => {
+  const historyQuery = query(collection(db, 'conversations'));
+  const historySnapshot = await getDocs(historyQuery);
+  const history = historySnapshot.docs.map((doc) => doc.data());
 
-export const exportData = () => {
-  let history = localStorage.getItem('conversationHistory');
-  let folders = localStorage.getItem('folders');
-  let prompts = localStorage.getItem('prompts');
+  const foldersQuery = query(collection(db, 'folders'));
+  const foldersSnapshot = await getDocs(foldersQuery);
+  const folders = foldersSnapshot.docs.map((doc) => doc.data());
 
-  if (history) {
-    history = JSON.parse(history);
-  }
-
-  if (folders) {
-    folders = JSON.parse(folders);
-  }
-
-  if (prompts) {
-    prompts = JSON.parse(prompts);
-  }
+  const promptsQuery = query(collection(db, 'promptsPrivate'));
+  const promptsSnapshot = await getDocs(promptsQuery);
+  const prompts = promptsSnapshot.docs.map((doc) => doc.data());
 
   const data = {
     version: 4,
-    history: history || [],
-    folders: folders || [],
-    prompts: prompts || [],
+    history,
+    folders,
+    prompts,
   } as LatestExportFormat;
 
   const blob = new Blob([JSON.stringify(data, null, 2)], {
@@ -109,56 +109,34 @@ export const exportData = () => {
   URL.revokeObjectURL(url);
 };
 
-export const importData = (
+export const importData = async (
   data: SupportedExportFormats,
-): LatestExportFormat => {
+): Promise<LatestExportFormat> => {
   const { history, folders, prompts } = cleanData(data);
 
-  const oldConversations = localStorage.getItem('conversationHistory');
-  const oldConversationsParsed = oldConversations
-    ? JSON.parse(oldConversations)
-    : [];
-
-  const newHistory: Conversation[] = [
-    ...oldConversationsParsed,
-    ...history,
-  ].filter(
-    (conversation, index, self) =>
-      index === self.findIndex((c) => c.id === conversation.id),
-  );
-  localStorage.setItem('conversationHistory', JSON.stringify(newHistory));
-  if (newHistory.length > 0) {
-    localStorage.setItem(
-      'selectedConversation',
-      JSON.stringify(newHistory[newHistory.length - 1]),
-    );
-  } else {
-    localStorage.removeItem('selectedConversation');
+  // Save to Firestore
+  for (let conversation of history) {
+    conversation.userId = auth.currentUser?.uid;
+    conversation.timestamp = Date.now();
+    await setDoc(doc(db, 'conversations', conversation.id), conversation);
   }
 
-  const oldFolders = localStorage.getItem('folders');
-  const oldFoldersParsed = oldFolders ? JSON.parse(oldFolders) : [];
-  const newFolders: FolderInterface[] = [
-    ...oldFoldersParsed,
-    ...folders,
-  ].filter(
-    (folder, index, self) =>
-      index === self.findIndex((f) => f.id === folder.id),
-  );
-  localStorage.setItem('folders', JSON.stringify(newFolders));
+  for (let folder of folders) {
+    folder.userId = auth.currentUser?.uid;
+    folder.timestamp = Date.now();
+    await setDoc(doc(db, 'folders', folder.id), folder);
+  }
 
-  const oldPrompts = localStorage.getItem('prompts');
-  const oldPromptsParsed = oldPrompts ? JSON.parse(oldPrompts) : [];
-  const newPrompts: Prompt[] = [...oldPromptsParsed, ...prompts].filter(
-    (prompt, index, self) =>
-      index === self.findIndex((p) => p.id === prompt.id),
-  );
-  localStorage.setItem('prompts', JSON.stringify(newPrompts));
+  for (let prompt of prompts) {
+    prompt.userId = auth.currentUser?.uid;
+    prompt.timestamp = Date.now();
+    await setDoc(doc(db, 'promptsPrivate', prompt.id), prompt);
+  }
 
   return {
     version: 4,
-    history: newHistory,
-    folders: newFolders,
-    prompts: newPrompts,
+    history,
+    folders,
+    prompts,
   };
 };

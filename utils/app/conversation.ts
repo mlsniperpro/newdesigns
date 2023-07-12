@@ -1,5 +1,14 @@
 import { Conversation } from '@/types/chat';
 
+
+
+import { db } from '@/config/firebase';
+import { getAuth } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+
+
+const auth = getAuth();
+
 export const updateConversation = (
   updatedConversation: Conversation,
   allConversations: Conversation[],
@@ -21,10 +30,30 @@ export const updateConversation = (
   };
 };
 
-export const saveConversation = (conversation: Conversation) => {
+export const saveConversation = async (conversation: Conversation) => {
+  // Add userId and timestamp
+  conversation.userId = auth.currentUser?.uid;
+  conversation.timestamp = Date.now();
+
   localStorage.setItem('selectedConversation', JSON.stringify(conversation));
+
+  // Save to Firebase
+  await setDoc(doc(db, 'conversations', conversation.id), conversation);
 };
 
-export const saveConversations = (conversations: Conversation[]) => {
+export const saveConversations = async (conversations: Conversation[]) => {
+  conversations = conversations.map((conversation) => {
+    // Add userId and timestamp
+    conversation.userId = auth.currentUser?.uid;
+    conversation.timestamp = Date.now();
+
+    return conversation;
+  });
+
   localStorage.setItem('conversationHistory', JSON.stringify(conversations));
+
+  // Save to Firebase
+  for (let conversation of conversations) {
+    await setDoc(doc(db, 'conversations', conversation.id), conversation);
+  }
 };
