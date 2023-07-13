@@ -142,6 +142,7 @@ const CustomPrompt = () => {
         comment: newComment,
         votes: 0,
         time: new Date().toISOString(), // Replace with the current time
+        userId: auth.currentUser?.uid || '123456789', // Replace with the current user's id
       });
       setNewComment('');
     } catch (err) {
