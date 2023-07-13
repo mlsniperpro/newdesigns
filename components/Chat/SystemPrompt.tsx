@@ -1,21 +1,20 @@
-import {
-  FC,
-  KeyboardEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { FC, KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
+
+
 
 //import { useTranslation } from 'next-i18next';
-
 import { DEFAULT_SYSTEM_PROMPT } from '@/utils/app/const';
+
+
 
 import { Conversation } from '@/types/chat';
 import { Prompt } from '@/types/prompt';
 
+
+
 import { PromptList } from './PromptList';
 import { VariableModal } from './VariableModal';
+
 
 interface Props {
   conversation: Conversation;
@@ -40,8 +39,10 @@ export const SystemPrompt: FC<Props> = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const promptListRef = useRef<HTMLUListElement | null>(null);
 
-  const filteredPrompts = prompts.filter((prompt) =>
-    prompt.name.toLowerCase().includes(promptInputValue.toLowerCase()),
+  const filteredPrompts = prompts.filter(
+    (prompt) =>
+      prompt.name &&
+      prompt.name.toLowerCase().includes(promptInputValue.toLowerCase()),
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -50,10 +51,7 @@ export const SystemPrompt: FC<Props> = ({
 
     if (value.length > maxLength) {
       alert(
-        (
-          `Prompt limit is ${maxLength} characters. You have entered ${value.length} characters.`
-          
-        ),
+        `Prompt limit is ${maxLength} characters. You have entered ${value.length} characters.`,
       );
       return;
     }

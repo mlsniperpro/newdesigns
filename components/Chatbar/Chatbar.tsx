@@ -1,29 +1,46 @@
 import { useCallback, useContext, useEffect } from 'react';
 
+
+
 //import { useTranslation } from 'next-i18next';
 import { useCreateReducer } from '@/hooks/useCreateReducer';
+
+
 
 import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from '@/utils/app/const';
 import { saveConversation, saveConversations } from '@/utils/app/conversation';
 import { saveFolders } from '@/utils/app/folders';
 import { exportData, importData } from '@/utils/app/importExport';
 
+
+
 import { Conversation } from '@/types/chat';
 import { LatestExportFormat, SupportedExportFormats } from '@/types/export';
 import { OpenAIModels } from '@/types/openai';
 import { PluginKey } from '@/types/plugin';
 
+
+
 import HomeContext from '@/pages/api/home/home.context';
+
+
 
 import { ChatFolders } from './components/ChatFolders';
 import { ChatbarSettings } from './components/ChatbarSettings';
 import { Conversations } from './components/Conversations';
 
+
+
 import Sidebar from '../Sidebar';
 import ChatbarContext from './Chatbar.context';
 import { ChatbarInitialState, initialState } from './Chatbar.state';
 
+
+
+import { auth, db } from '@/config/firebase';
+import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
+
 
 export const Chatbar = () => {
   //const { t } = useTranslation('sidebar');
@@ -110,40 +127,59 @@ export const Chatbar = () => {
     window.location.reload();
   };
 
-  const handleClearConversations = () => {
-    defaultModelId &&
-      homeDispatch({
-        field: 'selectedConversation',
-        value: {
-          id: uuidv4(),
-          name: 'New Conversation',
-          messages: [],
-          model: OpenAIModels[defaultModelId],
-          prompt: DEFAULT_SYSTEM_PROMPT,
-          temperature: DEFAULT_TEMPERATURE,
-          folderId: null,
-        },
-      });
 
-    homeDispatch({ field: 'conversations', value: [] });
 
-    localStorage.removeItem('conversationHistory');
-    localStorage.removeItem('selectedConversation');
+const handleClearConversations = async () => {
+  defaultModelId &&
+    homeDispatch({
+      field: 'selectedConversation',
+      value: {
+        id: uuidv4(),
+        name: 'New Conversation',
+        messages: [],
+        model: OpenAIModels[defaultModelId],
+        prompt: DEFAULT_SYSTEM_PROMPT,
+        temperature: DEFAULT_TEMPERATURE,
+        folderId: null,
+      },
+    });
 
-    const updatedFolders = folders.filter((f) => f.type !== 'chat');
+  homeDispatch({ field: 'conversations', value: [] });
 
-    homeDispatch({ field: 'folders', value: updatedFolders });
-    saveFolders(updatedFolders);
-  };
+  // Delete all conversations from Firestore created by the currently logged-in user
+  const conversationsQuery = query(
+    collection(db, 'conversations'),
+    where('userId', '==', auth.currentUser?.uid),
+  );
+  const conversationsSnapshot = await getDocs(conversationsQuery);
 
-  const handleDeleteConversation = (conversation: Conversation) => {
+  for (let docSnapshot of conversationsSnapshot.docs) {
+    await deleteDoc(doc(db, 'conversations', docSnapshot.id));
+  }
+
+  const updatedFolders = folders.filter((f) => f.type !== 'chat');
+
+  homeDispatch({ field: 'folders', value: updatedFolders });
+  await saveFolders(updatedFolders);
+};
+
+
+  const handleDeleteConversation = async (conversation: Conversation) => {
+    // Check if the user is the creator of the conversation
+    if (conversation.userId !== auth.currentUser?.uid) {
+      throw new Error('You do not have permission to delete this conversation');
+    }
+
     const updatedConversations = conversations.filter(
       (c) => c.id !== conversation.id,
     );
 
     homeDispatch({ field: 'conversations', value: updatedConversations });
     chatDispatch({ field: 'searchTerm', value: '' });
-    saveConversations(updatedConversations);
+    await saveConversations(updatedConversations);
+
+    // Delete the conversation from Firestore
+    await deleteDoc(doc(db, 'conversations', conversation.id));
 
     if (updatedConversations.length > 0) {
       homeDispatch({
@@ -151,7 +187,9 @@ export const Chatbar = () => {
         value: updatedConversations[updatedConversations.length - 1],
       });
 
-      saveConversation(updatedConversations[updatedConversations.length - 1]);
+      await saveConversation(
+        updatedConversations[updatedConversations.length - 1],
+      );
     } else {
       defaultModelId &&
         homeDispatch({
@@ -167,7 +205,8 @@ export const Chatbar = () => {
           },
         });
 
-      localStorage.removeItem('selectedConversation');
+      // Delete the selected conversation from Firestore
+      await deleteDoc(doc(db, 'conversations', conversation.id));
     }
   };
 

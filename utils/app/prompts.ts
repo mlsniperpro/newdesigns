@@ -32,8 +32,6 @@ export const savePrompts = async (prompts: Prompt[]) => {
     return prompt;
   });
 
-  localStorage.setItem('promptsPrivate', JSON.stringify(prompts));
-
   // Save to Firestore
   for (let prompt of prompts) {
     await setDoc(doc(db, 'promptsPrivate', prompt.id), prompt);

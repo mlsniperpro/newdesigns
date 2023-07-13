@@ -39,6 +39,15 @@ import Promptbar from '@/components/Promptbar';
 import HomeContext from './home.context';
 import { HomeInitialState, initialState } from './home.state';
 
+import { auth, db } from '@/config/firebase';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
@@ -292,54 +301,102 @@ const Home = ({
       dispatch({ field: 'showPromptbar', value: showPromptbar === 'true' });
     }
 
-    const folders = localStorage.getItem('folders');
-    if (folders) {
-      dispatch({ field: 'folders', value: JSON.parse(folders) });
-    }
-
-    const prompts = localStorage.getItem('prompts');
-    if (prompts) {
-      dispatch({ field: 'prompts', value: JSON.parse(prompts) });
-    }
-
-    const conversationHistory = localStorage.getItem('conversationHistory');
-    if (conversationHistory) {
-      const parsedConversationHistory: Conversation[] =
-        JSON.parse(conversationHistory);
-      const cleanedConversationHistory = cleanConversationHistory(
-        parsedConversationHistory,
+    const getFolders = async () => {
+      const foldersQuery = query(
+        collection(db, 'folders'),
+        where('userId', '==', auth.currentUser?.uid),
       );
+      const foldersSnapshot = await getDocs(foldersQuery);
+      const folders = foldersSnapshot.docs.map((doc) => doc.data());
+      return folders;
+    };
 
-      dispatch({ field: 'conversations', value: cleanedConversationHistory });
+    // Usage
+    getFolders().then((folders) => {
+      if (folders) {
+        dispatch({ field: 'folders', value: folders });
+      }
+    });
+
+    async function fetchPrompts(userId: string | undefined) {
+      const promptsRef = collection(db, 'prompts');
+      const q = query(promptsRef, where('userId', '==', userId));
+      const querySnapshot = await getDocs(q);
+      const prompts = querySnapshot.docs.map((doc) => doc.data());
+      return prompts;
     }
 
-    const selectedConversation = localStorage.getItem('selectedConversation');
-    if (selectedConversation) {
-      const parsedSelectedConversation: Conversation =
-        JSON.parse(selectedConversation);
-      const cleanedSelectedConversation = cleanSelectedConversation(
-        parsedSelectedConversation,
-      );
+    // Usage
+    const userId = auth.currentUser?.uid; // Replace with actual user ID
+    fetchPrompts(userId)
+      .then((prompts) => {
+        dispatch({ field: 'prompts', value: prompts });
+      })
+      .catch(console.error);
 
-      dispatch({
-        field: 'selectedConversation',
-        value: cleanedSelectedConversation,
-      });
-    } else {
-      const lastConversation = conversations[conversations.length - 1];
-      dispatch({
-        field: 'selectedConversation',
-        value: {
-          id: uuidv4(),
-          name: t('New Conversation'),
-          messages: [],
-          model: OpenAIModels[defaultModelId],
-          prompt: DEFAULT_SYSTEM_PROMPT,
-          temperature: lastConversation?.temperature ?? DEFAULT_TEMPERATURE,
-          folderId: null,
-        },
-      });
-    }
+    const fetchConversationHistory = async () => {
+      if (!userId) {
+        console.log('No user ID!');
+        return;
+      }
+
+      const conversationHistoryRef = collection(db, 'conversationHistory');
+      const q = query(conversationHistoryRef, where('userId', '==', userId));
+      const querySnapshot = await getDocs(q);
+      const conversationHistory = querySnapshot.docs.map((doc) => doc.data());
+
+      if (conversationHistory) {
+        const cleanedConversationHistory =
+          cleanConversationHistory(conversationHistory);
+        dispatch({ field: 'conversations', value: cleanedConversationHistory });
+      }
+    };
+
+    fetchConversationHistory().catch(console.error);
+
+    const fetchSelectedConversation = async (userId: string | undefined) => {
+      const selectedConversationRef = collection(db, 'selectedConversation');
+      const q = query(selectedConversationRef, where('userId', '==', userId));
+      const querySnapshot = await getDocs(q);
+      const selectedConversations = querySnapshot.docs.map((doc) => doc.data());
+
+      if (selectedConversations.length > 0) {
+        // Assuming each user only has one selected conversation,
+        // take the first one from the array.
+        return selectedConversations[0];
+      } else {
+        console.log('No selected conversation for this user!');
+        return null;
+      }
+    };
+
+    fetchSelectedConversation(userId)
+      .then((selectedConversationData) => {
+        if (selectedConversationData) {
+          const selectedConversation = selectedConversationData as Conversation;
+          const cleanedSelectedConversation =
+            cleanSelectedConversation(selectedConversation);
+          dispatch({
+            field: 'selectedConversation',
+            value: cleanedSelectedConversation,
+          });
+        } else {
+          const lastConversation = conversations[conversations.length - 1];
+          dispatch({
+            field: 'selectedConversation',
+            value: {
+              id: uuidv4(),
+              name: t('New Conversation'),
+              messages: [],
+              model: OpenAIModels[defaultModelId],
+              prompt: DEFAULT_SYSTEM_PROMPT,
+              temperature: lastConversation?.temperature ?? DEFAULT_TEMPERATURE,
+              folderId: null,
+            },
+          });
+        }
+      })
+      .catch(console.error);
   }, [
     defaultModelId,
     dispatch,

@@ -15,7 +15,6 @@ export const saveFolders = async (folders: FolderInterface[]) => {
     return folder;
   });
 
-  localStorage.setItem('folders', JSON.stringify(folders));
 
   // Save to Firestore
   for (let folder of folders) {
