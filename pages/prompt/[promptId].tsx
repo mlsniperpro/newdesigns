@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FC } from 'react';
 import { BsArrowUpRight, BsBookmark, BsFire, BsLaptop, BsPen } from 'react-icons/bs';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 
 
@@ -145,30 +147,39 @@ const CustomPrompt = () => {
         userId: auth.currentUser?.uid || '123456789', // Replace with the current user's id
       });
       setNewComment('');
+      toast.success('Comment added successfully!');
+      // Fetch the comments again after a new comment is added
+      const commentsData = await getCommentsData(PromptId as string);
+      setComments(commentsData);
     } catch (err) {
+      toast.error('Error adding comment');
       console.error('Error adding comment: ', err);
     }
   };
- const handleDelete = async () => {
-   if (typeof PromptId === 'string') {
-     try {
-       const q = query(collection(db, 'prompts'), where('url', '==', PromptId));
-       const querySnapshot = await getDocs(q);
-       if (!querySnapshot.empty) {
-         const docRef = doc(db, 'prompts', querySnapshot.docs[0].id);
-         await deleteDoc(docRef);
-         // Redirect to another page after deleting the prompt
-         router.push('/');
-       } else {
-         console.error('No document found with url: ', PromptId);
-       }
-     } catch (err) {
-       console.error('Error deleting prompt: ', err);
-     }
-   } else {
-     console.error('Invalid PromptId: ', PromptId);
-   }
- };
+
+  const handleDelete = async () => {
+    if (typeof PromptId === 'string') {
+      try {
+        const q = query(
+          collection(db, 'prompts'),
+          where('url', '==', PromptId),
+        );
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          const docRef = doc(db, 'prompts', querySnapshot.docs[0].id);
+          await deleteDoc(docRef);
+          // Redirect to another page after deleting the prompt
+          router.push('/');
+        } else {
+          console.error('No document found with url: ', PromptId);
+        }
+      } catch (err) {
+        console.error('Error deleting prompt: ', err);
+      }
+    } else {
+      console.error('Invalid PromptId: ', PromptId);
+    }
+  };
 
 
   useEffect(() => {
@@ -318,6 +329,7 @@ const CustomPrompt = () => {
          <CreatePrompt prompt={promptData && promptData.prompt} url={typeof PromptId === 'string' ? PromptId : ''} />
         </section>
       </section>
+      <ToastContainer />
     </main>
   );
 };
