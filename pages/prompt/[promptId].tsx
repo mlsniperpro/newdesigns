@@ -130,41 +130,34 @@ const CommentSection: FC<CommentSectionProps> = ({
   isPublisher,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedComment, setEditedComment] = useState(comment);
+  const [editCommentText, setEditCommentText] = useState(comment);
 
   const handleEdit = () => {
-    editComment(id, editedComment);
-    setIsEditing(false);
+    setIsEditing(true);
   };
 
-  const handleDelete = () => {
-    deleteComment(id);
+  const handleSave = async () => {
+    if (editCommentText.trim()) {
+      await editComment(id, editCommentText);
+      setIsEditing(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditCommentText(comment);
   };
 
   return (
     <div className="flex flex-col space-y-2">
       <h5 className="font-bold text-black">{name}</h5>
       {isEditing ? (
-        <div className="flex space-x-4 items-center mt-4">
-          <input
-            type="text"
-            value={editedComment}
-            onChange={(event) => setEditedComment(event.target.value)}
-            className="flex-grow px-4 py-2 border border-gray-400 rounded-[15px]"
-          />
-          <button
-            onClick={handleEdit}
-            className="px-4 py-2 bg-blue-500 text-white rounded-[15px]"
-          >
-            Save
-          </button>
-          <button
-            onClick={() => setIsEditing(false)}
-            className="px-4 py-2 bg-red-500 text-white rounded-[15px]"
-          >
-            Cancel
-          </button>
-        </div>
+        <input
+          type="text"
+          value={editCommentText}
+          onChange={(e) => setEditCommentText(e.target.value)}
+          className="px-2 py-1 border border-gray-400 rounded"
+        />
       ) : (
         <h6>{comment}</h6>
       )}
@@ -176,35 +169,44 @@ const CommentSection: FC<CommentSectionProps> = ({
         <p className="text-gray-900 font-bold">Reply</p>
         <p className="text-gray-900 font-bold">Report</p>
         <p>{time}</p>
+        {(isAdmin || isPublisher) && !isEditing && (
+          <button
+            onClick={handleEdit}
+            className="px-2 py-1 bg-blue-500 text-white rounded"
+          >
+            Edit
+          </button>
+        )}
+        {(isAdmin || isPublisher) && isEditing && (
+          <button
+            onClick={handleSave}
+            className="px-2 py-1 bg-green-500 text-white rounded"
+          >
+            Save
+          </button>
+        )}
+        {isEditing && (
+          <button
+            onClick={handleCancel}
+            className="px-2 py-1 bg-gray-500 text-white rounded"
+          >
+            Cancel
+          </button>
+        )}
         {(isAdmin || isPublisher) && (
-          <div className="flex space-x-2">
-            {!isEditing ? (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="px-2 py-1 bg-blue-500 text-white rounded"
-              >
-                Edit
-              </button>
-            ) : (
-              <button
-                onClick={() => setIsEditing(false)}
-                className="px-2 py-1 bg-gray-500 text-white rounded"
-              >
-                Cancel
-              </button>
-            )}
-            <button
-              onClick={handleDelete}
-              className="px-2 py-1 bg-red-500 text-white rounded"
-            >
-              Delete
-            </button>
-          </div>
+          <button
+            onClick={() => deleteComment(id)}
+            className="px-2 py-1 bg-red-500 text-white rounded"
+          >
+            Delete
+          </button>
         )}
       </div>
     </div>
   );
 };
+
+
 
 const CustomPrompt = () => {
   const [promptData, setPromptData] = useState<PromptData | ''>('');
