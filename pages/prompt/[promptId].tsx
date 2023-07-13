@@ -344,9 +344,7 @@ const CustomPrompt = () => {
     }
   };
 
-  /*function handleEditComment(id: string, newComment: string): void {
-    throw new Error('Function not implemented.');
-  }*/
+  
 
   return (
     <main>
