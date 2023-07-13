@@ -1,24 +1,32 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FC } from 'react';
-import { BsArrowUpRight, BsBookmark, BsFire, BsLaptop, BsPen } from 'react-icons/bs';
+import {
+  BsArrowUpRight,
+  BsBookmark,
+  BsFire,
+  BsLaptop,
+  BsPen,
+} from 'react-icons/bs';
 import { ToastContainer, toast } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
-
-
+import 'react-toastify/dist/ReactToastify.css';
 
 import { useRouter } from 'next/router';
 
-
-
 import { CreatePrompt, Navbar, Topic } from '@/components/prompts';
-
-
 
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
-import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import { get } from 'http';
-
 
 type Category = {
   id: number;
@@ -57,7 +65,11 @@ const getCommentsData = async (promptId: string) => {
   );
   const querySnapshot = await getDocs(q);
   const commentsData = querySnapshot.docs.map(
-    (doc) => doc.data() as CommentSectionProps,
+    (doc) =>
+      ({
+        id: doc.id, // Add this line
+        ...doc.data(),
+      } as CommentSectionProps),
   );
   console.log('Here is the comments data: ', commentsData);
   return commentsData;
@@ -82,6 +94,11 @@ export interface PromptData {
   prompt: string;
   dayPosted: string;
 }
+
+const isAdmin =
+  auth.currentUser?.uid == 'ow0JkUWdI9f7CTxi93JdyqarLZF3' ||
+  auth.currentUser?.uid == 'M8LwxAfm26SimGbDs4LDwf1HuCb2';
+
 //Fetch the data from firestore database collection called prompts
 const getPromptData = async (promptId: string) => {
   const q = query(collection(db, 'prompts'), where('url', '==', promptId));
@@ -96,31 +113,106 @@ const displayDaysPast = (daysPast: number) =>
     ? `${daysPast} ${daysPast === 1 ? 'day' : 'days'} ago`
     : `${Math.floor(daysPast / 30)} months ago`;
 interface CommentSectionProps {
+  id: string;
   name: string;
   comment: string;
   votes: number;
   time: string;
+  userId: string;
+  deleteComment: (id: string) => void;
+  editComment: (id: string, newComment: string) => void;
+  isAdmin: boolean;
+  isPublisher: boolean;
 }
+
 const CommentSection: FC<CommentSectionProps> = ({
+  id,
   name,
   comment,
   votes,
   time,
-}) => (
-  <div className="flex flex-col space-y-2">
-    <h5 className="font-bold text-black">{name}</h5>
-    <h6>{comment}</h6>
-    <div className="flex items-center space-between space-x-6 text-xs">
-      <div className="flex space-x-2 items-center">
-        <BsArrowUpRight className="text-gray-400" />
-        <p className="text-gray-900 font-bold">{votes}</p>
+  userId,
+  deleteComment,
+  editComment,
+  isAdmin,
+  isPublisher,
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedComment, setEditedComment] = useState(comment);
+
+  const handleEdit = () => {
+    editComment(id, editedComment);
+    setIsEditing(false);
+  };
+
+  const handleDelete = () => {
+    deleteComment(id);
+  };
+
+  return (
+    <div className="flex flex-col space-y-2">
+      <h5 className="font-bold text-black">{name}</h5>
+      {isEditing ? (
+        <div className="flex space-x-4 items-center mt-4">
+          <input
+            type="text"
+            value={editedComment}
+            onChange={(event) => setEditedComment(event.target.value)}
+            className="flex-grow px-4 py-2 border border-gray-400 rounded-[15px]"
+          />
+          <button
+            onClick={handleEdit}
+            className="px-4 py-2 bg-blue-500 text-white rounded-[15px]"
+          >
+            Save
+          </button>
+          <button
+            onClick={() => setIsEditing(false)}
+            className="px-4 py-2 bg-red-500 text-white rounded-[15px]"
+          >
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <h6>{comment}</h6>
+      )}
+      <div className="flex items-center space-between space-x-6 text-xs">
+        <div className="flex space-x-2 items-center">
+          <BsArrowUpRight className="text-gray-400" />
+          <p className="text-gray-900 font-bold">{votes}</p>
+        </div>
+        <p className="text-gray-900 font-bold">Reply</p>
+        <p className="text-gray-900 font-bold">Report</p>
+        <p>{time}</p>
+        {(isAdmin || isPublisher) && (
+          <div className="flex space-x-2">
+            {!isEditing ? (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="px-2 py-1 bg-blue-500 text-white rounded"
+              >
+                Edit
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-2 py-1 bg-gray-500 text-white rounded"
+              >
+                Cancel
+              </button>
+            )}
+            <button
+              onClick={handleDelete}
+              className="px-2 py-1 bg-red-500 text-white rounded"
+            >
+              Delete
+            </button>
+          </div>
+        )}
       </div>
-      <p className="text-gray-900 font-bold">Reply</p>
-      <p className="text-gray-900 font-bold">Report</p>
-      <p>{time}</p>
     </div>
-  </div>
-);
+  );
+};
 
 const CustomPrompt = () => {
   const [promptData, setPromptData] = useState<PromptData | ''>('');
@@ -130,7 +222,22 @@ const CustomPrompt = () => {
   const PromptId = router.query.promptId;
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState<CommentSectionProps[]>([]);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const editComment = async (id: string, newComment: string) => {
+    // Update the comment in the database
+    const docRef = doc(db, 'comments', id);
+    await updateDoc(docRef, { comment: newComment });
+
+    // Update the comment in the local state
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === id ? { ...comment, comment: newComment } : comment,
+      ),
+    );
+  };
+
+  const deleteComment = (id: string) => {
+    setComments(comments.filter((comment) => comment.id !== id));
+  };
   const handleCommentSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!newComment.trim()) {
@@ -181,7 +288,6 @@ const CustomPrompt = () => {
     }
   };
 
-
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -194,10 +300,6 @@ const CustomPrompt = () => {
 
         // Check if the current user is an admin
         // Replace this with your actual check
-        setIsAdmin(
-          auth?.currentUser?.uid === 'M8LwxAfm26SimGbDs4LDwf1HuCb2' ||
-            auth?.currentUser?.uid === 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1',
-        );
       } catch (err) {
         setError((err as Error).message);
         setIsLoading(false);
@@ -215,8 +317,37 @@ const CustomPrompt = () => {
   }
 
   const daysPastDisplay = promptData
-    ? displayDaysPast(Math.floor((new Date().getTime() - new Date(promptData.dayPosted).getTime()) / (1000 * 3600 * 24)))
+    ? displayDaysPast(
+        Math.floor(
+          (new Date().getTime() - new Date(promptData.dayPosted).getTime()) /
+            (1000 * 3600 * 24),
+        ),
+      )
     : '';
+  const handleEditComment = async (id: string, newComment: string) => {
+  try {
+    const commentRef = doc(db, 'comments', id);
+    await updateDoc(commentRef, {
+      comment: newComment,
+      time: new Date().toISOString(), // Update the time to the current time
+    });
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === id ? { ...comment, comment: newComment } : comment
+      )
+    );
+    toast.success('Comment edited successfully!');
+  } catch (err) {
+    toast.error('Error editing comment');
+    console.error('Error editing comment: ', err);
+  }
+};
+
+
+  /*function handleEditComment(id: string, newComment: string): void {
+    throw new Error('Function not implemented.');
+  }*/
+
   return (
     <main>
       <Navbar />
@@ -304,20 +435,29 @@ const CustomPrompt = () => {
               </button>
             </form>
             {isAdmin && (
-        <button onClick={handleDelete} className="px-4 py-2 bg-red-500 text-white rounded-[15px]">
-          Delete Prompt
-        </button>
-      )}
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-500 text-white rounded-[15px]"
+              >
+                Delete Prompt
+              </button>
+            )}
 
             <div className="flex flex-col space-y-6 pt-8">
               <p className="text-gray-800">Top comments</p>
               {comments.map((comment, index) => (
                 <CommentSection
                   key={index}
+                  id={comment.id}
                   name={comment.name}
                   comment={comment.comment}
                   votes={comment.votes}
                   time={comment.time}
+                  userId={comment.userId}
+                  deleteComment={deleteComment}
+                  editComment={handleEditComment}
+                  isAdmin={isAdmin}
+                  isPublisher={auth?.currentUser?.uid === comment.userId}
                 />
               ))}
             </div>
@@ -326,7 +466,10 @@ const CustomPrompt = () => {
 
         <section className="xl:basis-2/5 flex space-x-2">
           <div className="border-l-solid border-l-gray-300 border-l-[1px]"></div>
-         <CreatePrompt prompt={promptData && promptData.prompt} url={typeof PromptId === 'string' ? PromptId : ''} />
+          <CreatePrompt
+            prompt={promptData && promptData.prompt}
+            url={typeof PromptId === 'string' ? PromptId : ''}
+          />
         </section>
       </section>
       <ToastContainer />
