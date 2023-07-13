@@ -1,24 +1,32 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FC } from 'react';
-import { BsArrowUpRight, BsBookmark, BsFire, BsLaptop, BsPen } from 'react-icons/bs';
+import {
+  BsArrowUpRight,
+  BsBookmark,
+  BsFire,
+  BsLaptop,
+  BsPen,
+} from 'react-icons/bs';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
-
 import { useRouter } from 'next/router';
-
-
 
 import { CreatePrompt, Navbar, Topic } from '@/components/prompts';
 
-
-
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import { get } from 'http';
-
 
 type Category = {
   id: number;
@@ -87,10 +95,6 @@ export interface PromptData {
   dayPosted: string;
 }
 
-const isAdmin =
-  auth.currentUser?.uid == 'ow0JkUWdI9f7CTxi93JdyqarLZF3' ||
-  auth.currentUser?.uid == 'M8LwxAfm26SimGbDs4LDwf1HuCb2';
-
 //Fetch the data from firestore database collection called prompts
 const getPromptData = async (promptId: string) => {
   const q = query(collection(db, 'prompts'), where('url', '==', promptId));
@@ -127,7 +131,7 @@ const CommentSection: FC<CommentSectionProps> = ({
   deleteComment,
   editComment,
   isAdmin,
-  isPublisher,
+  isPublisher=false,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editCommentText, setEditCommentText] = useState(comment);
@@ -206,8 +210,6 @@ const CommentSection: FC<CommentSectionProps> = ({
   );
 };
 
-
-
 const CustomPrompt = () => {
   const [promptData, setPromptData] = useState<PromptData | ''>('');
   const [isLoading, setIsLoading] = useState(false);
@@ -216,18 +218,13 @@ const CustomPrompt = () => {
   const PromptId = router.query.promptId;
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState<CommentSectionProps[]>([]);
-  const editComment = async (id: string, newComment: string) => {
-    // Update the comment in the database
-    const docRef = doc(db, 'comments', id);
-    await updateDoc(docRef, { comment: newComment });
-
-    // Update the comment in the local state
-    setComments((prevComments) =>
-      prevComments.map((comment) =>
-        comment.id === id ? { ...comment, comment: newComment } : comment,
-      ),
-    );
-  };
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    const admin =
+      auth.currentUser?.uid == 'ow0JkUWdI9f7CTxi93JdyqarLZF3' ||
+      auth.currentUser?.uid == 'M8LwxAfm26SimGbDs4LDwf1HuCb2';
+    setIsAdmin(admin);
+  }, []);
 
   const deleteComment = async (id: string) => {
     try {
@@ -346,8 +343,6 @@ const CustomPrompt = () => {
     }
   };
 
-  
-
   return (
     <main>
       <Navbar />
@@ -457,7 +452,7 @@ const CustomPrompt = () => {
                   deleteComment={deleteComment}
                   editComment={handleEditComment}
                   isAdmin={isAdmin}
-                  isPublisher={auth?.currentUser?.uid === comment.userId}
+                  isPublisher={auth.currentUser?.uid === comment.userId}
                 />
               ))}
             </div>
