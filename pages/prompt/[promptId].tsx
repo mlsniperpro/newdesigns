@@ -1,32 +1,24 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FC } from 'react';
-import {
-  BsArrowUpRight,
-  BsBookmark,
-  BsFire,
-  BsLaptop,
-  BsPen,
-} from 'react-icons/bs';
+import { BsArrowUpRight, BsBookmark, BsFire, BsLaptop, BsPen } from 'react-icons/bs';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
+
 import { useRouter } from 'next/router';
+
+
 
 import { CreatePrompt, Navbar, Topic } from '@/components/prompts';
 
+
+
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { get } from 'http';
+
 
 type Category = {
   id: number;
@@ -235,9 +227,18 @@ const CustomPrompt = () => {
     );
   };
 
-  const deleteComment = (id: string) => {
-    setComments(comments.filter((comment) => comment.id !== id));
+  const deleteComment = async (id: string) => {
+    try {
+      const commentRef = doc(db, 'comments', id);
+      await deleteDoc(commentRef);
+      setComments(comments.filter((comment) => comment.id !== id));
+      toast.success('Comment deleted successfully!');
+    } catch (err) {
+      toast.error('Error deleting comment');
+      console.error('Error deleting comment: ', err);
+    }
   };
+
   const handleCommentSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!newComment.trim()) {
@@ -325,24 +326,23 @@ const CustomPrompt = () => {
       )
     : '';
   const handleEditComment = async (id: string, newComment: string) => {
-  try {
-    const commentRef = doc(db, 'comments', id);
-    await updateDoc(commentRef, {
-      comment: newComment,
-      time: new Date().toISOString(), // Update the time to the current time
-    });
-    setComments((prevComments) =>
-      prevComments.map((comment) =>
-        comment.id === id ? { ...comment, comment: newComment } : comment
-      )
-    );
-    toast.success('Comment edited successfully!');
-  } catch (err) {
-    toast.error('Error editing comment');
-    console.error('Error editing comment: ', err);
-  }
-};
-
+    try {
+      const commentRef = doc(db, 'comments', id);
+      await updateDoc(commentRef, {
+        comment: newComment,
+        time: new Date().toISOString(), // Update the time to the current time
+      });
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === id ? { ...comment, comment: newComment } : comment,
+        ),
+      );
+      toast.success('Comment edited successfully!');
+    } catch (err) {
+      toast.error('Error editing comment');
+      console.error('Error editing comment: ', err);
+    }
+  };
 
   /*function handleEditComment(id: string, newComment: string): void {
     throw new Error('Function not implemented.');
