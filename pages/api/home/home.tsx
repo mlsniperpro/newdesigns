@@ -319,7 +319,7 @@ const Home = ({
     });
 
     async function fetchPrompts(userId: string | undefined) {
-      const promptsRef = collection(db, 'prompts');
+      const promptsRef = collection(db, 'promptsPrivate');
       const q = query(promptsRef, where('userId', '==', userId));
       const querySnapshot = await getDocs(q);
       const prompts = querySnapshot.docs.map((doc) => doc.data());
@@ -340,7 +340,7 @@ const Home = ({
         return;
       }
 
-      const conversationHistoryRef = collection(db, 'conversationHistory');
+      const conversationHistoryRef = collection(db, 'conversations');
       const q = query(conversationHistoryRef, where('userId', '==', userId));
       const querySnapshot = await getDocs(q);
       const conversationHistory = querySnapshot.docs.map((doc) => doc.data());
