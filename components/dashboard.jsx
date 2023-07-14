@@ -1,30 +1,21 @@
 import React, { useEffect } from "react";
-
-
-
 import Link from "next/link";
-import { useRouter } from "next/router";
+import Freestyle from "@/components/Freestyle";
 import Guided from "@/components/Guided";
 import Keyword from "@/components/Keyword";
-
-
-
+import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
-import UserProfile from "./UserProfile";
-
-
-
-import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import { useRouter } from "next/router";
+import LanguageIcon from '@mui/icons-material/Language';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import LineStyleIcon from '@mui/icons-material/LineStyle';
 import BatchPredictionIcon from '@mui/icons-material/BatchPrediction';
 import CancelIcon from '@mui/icons-material/Cancel';
-import LanguageIcon from '@mui/icons-material/Language';
-import LineStyleIcon from '@mui/icons-material/LineStyle';
-import LogoutIcon from '@mui/icons-material/Logout';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
+import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import UploadIcon from '@mui/icons-material/Upload';
-import { signOut } from "firebase/auth";
-
+import LogoutIcon from '@mui/icons-material/Logout';
+import UserProfile from "./UserProfile";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 function Dashboard(props) {
   const { onValueChange } = props;
@@ -48,6 +39,8 @@ function Dashboard(props) {
   const signout = async() => {
     await signOut(auth)
     .then(() => {
+      // Sign-out successful.
+      //console.log("Sign-out successful.");
       router.push("/login")
     }).catch((error) => {
       // An error happened.
@@ -69,15 +62,6 @@ function onlyAdmins() {
 useEffect(() => {
   checkIfAdmin();
 }, []);
-useEffect(() => {
-  if (mode === 'tutor') {
-    router.push('/tutor');
-  } else if (mode === 'chat') {
-    router.push('/chat');
-  } else if (mode === 'prompts') {
-    router.push('/prompts');
-  }
-}, [mode, router]);
 
   return (
     <div className="w-full bg-white shadow-xl rounded-lg flex overflow-x-auto custom-scrollbar">
@@ -164,10 +148,11 @@ useEffect(() => {
                 </span>
               </a>
             </li>
-             <li>
+
+            <li>
               <a
                 onClick={() => {
-                  setMode("chat");
+                  setMode("freestyle");
                 }}
                 style={{
                   color: "white",
@@ -186,33 +171,7 @@ useEffect(() => {
                     fontSize: "13px",
                   }}
                 >
-                  {language === "english" ? "Chat" : "Chat"}
-                </span>
-              </a>
-            </li>
-             <li>
-              <a
-                onClick={() => {
-                  setMode("prompts");
-                }}
-                style={{
-                  color: "white",
-                  fontWeight: "bold",
-                  fontFamily: "Monospace",
-                  fontSize: "13px",
-                }}
-                className="hover:bg-gray-500  hover:bg-opacity-30 hover:text-white-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer"
-              >
-                <LineStyleIcon />{" "}
-                <span
-                  style={{
-                    color: "white",
-                    fontWeight: "bold",
-                    fontFamily: "Monospace",
-                    fontSize: "13px",
-                  }}
-                >
-                  {language === "english" ? "Prompts" : "Prompts"}
+                  {language === "english" ? "Freestyle" : "Libre"}
                 </span>
               </a>
             </li>
@@ -450,9 +409,13 @@ useEffect(() => {
       <div>
         {mode === "guided" ? (
           <Guided language={language} />
-        ): mode === "keyword" ? (
+        ) : mode === "freestyle" ? (
+          <Freestyle language={language} />
+        ) : mode === "keyword" ? (
           <Keyword language={language} />
-        ): mode === "profile" ? (
+        ) : mode === "tutor" ? (
+          router.push("/tutor")
+        ) : mode === "profile" ? (
           <UserProfile />
         ) : (
           <Guided language={language} />
