@@ -95,7 +95,7 @@ const Navbar = () => {
 
   const Menu = () => (
     <>
-      <a href="" className="hover:text-gray-900">
+      {/* <a href="" className="hover:text-gray-900">
         Topics
       </a>
       <a href="" className="hover:text-gray-900">
@@ -106,7 +106,7 @@ const Navbar = () => {
       </a>
       <a href="" className="hover:text-gray-900">
         Support
-      </a>
+      </a> */}
     </>
   );
 
@@ -120,7 +120,7 @@ const Navbar = () => {
         Create
       </Link>
 
-      <a href="" className="hover:text-gray-900 lg:hover:underline">
+      {/* <a href="" className="hover:text-gray-900 lg:hover:underline">
         Topics
       </a>
       <a href="" className="hover:text-gray-900 lg:hover:underline">
@@ -131,12 +131,12 @@ const Navbar = () => {
       </a>
       <a href="" className="hover:text-gray-900 lg:hover:underline">
         Support
-      </a>
+      </a> */}
     </>
   );
 
   return (
-    <nav className="flex justify-between space-x-4 lg:px-16 2xl:px-52 px-8 py-8">
+    <nav className="flex justify-between space-x-4 lg:px-16 2xl:px-52 px-8 py-8" style={{backgroundColor:'#160647'}}>
       <section className="flex space-x-4 justify-between">
         <div className="flex space-x-4 justify-between">
           <Link href="/" className="flex items-center">
@@ -225,6 +225,7 @@ const Navbar = () => {
         <Link
           href="/prompt/create"
           className="bg-black text-white rounded-[22px] px-4 py-2 flex items-center"
+          style={{background:'white',color:'#160647'}}
         >
           <AiOutlineStar className="inline-block mr-2" />
           Create
