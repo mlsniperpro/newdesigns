@@ -224,7 +224,7 @@ const CustomPrompt = () => {
       auth.currentUser?.uid == 'ow0JkUWdI9f7CTxi93JdyqarLZF3' ||
       auth.currentUser?.uid == 'M8LwxAfm26SimGbDs4LDwf1HuCb2';
     setIsAdmin(admin);
-  }, []);
+  }, [isLoading, promptData, comments]);
 
   const deleteComment = async (id: string) => {
     try {
