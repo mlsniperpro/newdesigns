@@ -1,32 +1,24 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FC } from 'react';
-import {
-  BsArrowUpRight,
-  BsBookmark,
-  BsFire,
-  BsLaptop,
-  BsPen,
-} from 'react-icons/bs';
+import { BsArrowUpRight, BsBookmark, BsFire, BsLaptop, BsPen } from 'react-icons/bs';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
+
 import { useRouter } from 'next/router';
+
+
 
 import { CreatePrompt, Navbar, Topic } from '@/components/prompts';
 
+
+
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { get } from 'http';
+
 
 type Category = {
   id: number;
@@ -221,7 +213,7 @@ const CustomPrompt = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     const admin =
-      auth.currentUser?.uid == 'ow0JkUWdI9f7CTxi93JdyqarLZF3' ||
+      auth.currentUser?.uid == 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1' ||
       auth.currentUser?.uid == 'M8LwxAfm26SimGbDs4LDwf1HuCb2';
     setIsAdmin(admin);
   }, [isLoading, promptData, comments]);
