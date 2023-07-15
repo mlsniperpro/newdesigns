@@ -42,7 +42,7 @@ function Login() {
           const disabledDocs = await getDocs(disabledQuery);
           if (disabledDocs.empty) {
             router.push({
-              pathname: "/tutor",
+              pathname: "/chat",
               query: { userId: user.uid },
             });
           } else {
@@ -57,11 +57,6 @@ function Login() {
           return;
         } else {
           checkIfDisabled();
-          /*router.push({
-            pathname: "/tutor",
-            query: { userId: user.uid },
-          });
-          */
         }
       })
 
@@ -118,7 +113,7 @@ function Login() {
             const disabledDocs = await getDocs(disabledQuery);
             if (disabledDocs.empty) {
               router.push({
-                pathname: "/tutor",
+                pathname: "/chat",
                 query: { userId: user.uid },
               });
             } else {
