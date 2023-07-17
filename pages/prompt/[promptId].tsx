@@ -29,7 +29,6 @@ const defaultCategory: Category = {
   style: { backgroundColor: 'bg-gray-200', textColor: 'text-gray-900' },
 };
 
-
 type Category = {
   id: number;
   icon: JSX.Element;
@@ -136,6 +135,7 @@ const displayDaysPast = (daysPast: number) =>
   daysPast < 30
     ? `${daysPast} ${daysPast === 1 ? 'day' : 'days'} ago`
     : `${Math.floor(daysPast / 30)} months ago`;
+
 interface CommentSectionProps {
   id: string;
   name: string;
@@ -145,9 +145,12 @@ interface CommentSectionProps {
   userId: string;
   deleteComment: (id: string) => void;
   editComment: (id: string, newComment: string) => void;
+  reportComment: (id: string) => void; // Add this line
   isAdmin: boolean;
   isPublisher: boolean;
+  reported: boolean;
 }
+
 
 const CommentSection: FC<CommentSectionProps> = ({
   id,
@@ -160,6 +163,8 @@ const CommentSection: FC<CommentSectionProps> = ({
   editComment,
   isAdmin,
   isPublisher = false,
+  reported = false, // Add this line
+  reportComment, // Add this line
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editCommentText, setEditCommentText] = useState(comment);
@@ -180,8 +185,14 @@ const CommentSection: FC<CommentSectionProps> = ({
     setEditCommentText(comment);
   };
 
+  const handleReport = async () => {
+    await reportComment(id);
+  };
+
   return (
-    <div className="flex flex-col space-y-2">
+    <div
+      className={`flex flex-col space-y-2 ${reported ? 'bg-red-200' : ''}`} // Add this line
+    >
       <h5 className="font-bold text-black">{name}</h5>
       {isEditing ? (
         <input
@@ -198,8 +209,9 @@ const CommentSection: FC<CommentSectionProps> = ({
           <BsArrowUpRight className="text-gray-400" />
           <p className="text-gray-900 font-bold">{votes}</p>
         </div>
-        <p className="text-gray-900 font-bold">Reply</p>
-        <p className="text-gray-900 font-bold">Report</p>
+        <button onClick={handleReport} className="text-gray-900 font-bold">
+          Report
+        </button>
         <p>{time}</p>
         {(isAdmin || isPublisher) && !isEditing && (
           <button
@@ -250,7 +262,21 @@ const CustomPrompt = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEditingPrompt, setIsEditingPrompt] = useState(false);
   const [editedPrompt, setEditedPrompt] = useState<PromptData | null>(null);
-
+  const reportComment = async (id: string) => {
+    try {
+      const commentRef = doc(db, 'comments', id);
+      await updateDoc(commentRef, { reported: true });
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === id ? { ...comment, reported: true } : comment,
+        ),
+      );
+      toast.success('Comment reported successfully!');
+    } catch (err) {
+      toast.error('Error reporting comment');
+      console.error('Error reporting comment: ', err);
+    }
+  };
   const handleUpdatePrompt = async (event: React.FormEvent) => {
     event.preventDefault();
     if (typeof PromptId === 'string' && editedPrompt !== null) {
@@ -598,6 +624,8 @@ const CustomPrompt = () => {
                   editComment={handleEditComment}
                   isAdmin={isAdmin}
                   isPublisher={auth.currentUser?.uid === comment.userId}
+                  reported={comment.reported} // Add this line
+                  reportComment={reportComment} // Add this line
                 />
               ))}
             </div>
