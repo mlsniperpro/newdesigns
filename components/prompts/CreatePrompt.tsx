@@ -2,15 +2,17 @@ import { useCallback, useEffect, useState } from 'react';
 import { BsArrowUpRightCircle } from 'react-icons/bs';
 import { FiArrowUpCircle } from 'react-icons/fi';
 
-
-
 import Link from 'next/link';
 
-
-
-import { db } from '@/config/firebase';
-import { collection, getDocs, increment, query, updateDoc, where } from 'firebase/firestore';
-
+import { auth, db } from '@/config/firebase';
+import {
+  collection,
+  getDocs,
+  increment,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 
 interface CreatePromptProps {
   prompt: string;
@@ -59,9 +61,59 @@ const tagColors: { [key: string]: string } = {
 };
 
 const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
- const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
   const [tagValues, setTagValues] = useState<{ [key: string]: string }>({});
   const [upvotes, setUpvotes] = useState<number>(0);
+  useEffect(() => {
+    const fetchVotes = async () => {
+      // Query the database for the document with the matching url
+      const q = query(collection(db, 'prompts'), where('url', '==', url));
+      const querySnapshot = await getDocs(q);
+      const promptDoc = querySnapshot.docs[0]; // Assuming the url is unique, there should only be one matching document
+
+      if (promptDoc) {
+        // Get the 'votes' field of the document
+        const promptVotes = promptDoc.data().votes || 0;
+
+        // Update the 'upvotes' state variable
+        setUpvotes(promptVotes);
+      }
+    };
+
+    fetchVotes();
+  }, [url]);
+
+  const handleUpvoteClick = useCallback(async () => {
+    // Check if the user is logged in
+    if (auth.currentUser) {
+      // Query the database for the document with the matching url
+      const q = query(collection(db, 'prompts'), where('url', '==', url));
+      const querySnapshot = await getDocs(q);
+      const promptDoc = querySnapshot.docs[0]; // Assuming the url is unique, there should only be one matching document
+
+      if (promptDoc) {
+        // Get the 'voters' field of the document
+        const promptVoters = promptDoc.data().voters || [];
+
+        // Check if the user has already voted for the prompt
+        if (promptVoters.includes(auth.currentUser.uid)) {
+          console.log('You have already voted for this prompt');
+          return;
+        }
+
+        // Update the 'votes' and 'voters' fields of the document
+        await updateDoc(promptDoc.ref, {
+          votes: increment(1),
+          voters: [...promptVoters, auth.currentUser.uid],
+        });
+
+        // Update the 'upvotes' state variable
+        setUpvotes(upvotes + 1);
+      }
+    } else {
+      console.log('You must be logged in to vote');
+    }
+  }, [upvotes, url]);
 
   useEffect(() => {
     const promptTags = prompt.match(/#\w+/g);
@@ -83,10 +135,7 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
       console.log('Copying to clipboard was successful!');
 
       // Query the database for the document with the matching url
-      const q = query(
-        collection(db, 'prompts'),
-        where('url', '==', url),
-      );
+      const q = query(collection(db, 'prompts'), where('url', '==', url));
       const querySnapshot = await getDocs(q);
       const promptDoc = querySnapshot.docs[0]; // Assuming the url is unique, there should only be one matching document
 
@@ -101,9 +150,9 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
     }
   }, [prompt, tags, tagValues, url]);
 
-const handleTagValueChange = (tag: string, value: string) => {
-  setTagValues((prevValues) => ({ ...prevValues, [tag]: value }));
-};
+  const handleTagValueChange = (tag: string, value: string) => {
+    setTagValues((prevValues) => ({ ...prevValues, [tag]: value }));
+  };
 
   return (
     <section className="p-8">
@@ -112,7 +161,7 @@ const handleTagValueChange = (tag: string, value: string) => {
           <p className="text-gray-700 text-sm">Upvote</p>
           <p className="text-gray-700 text-lg font-light">{upvotes}</p>
         </div>
-        <button onClick={() => setUpvotes(upvotes + 1)} className="self-end">
+        <button onClick={handleUpvoteClick} className="self-end">
           <FiArrowUpCircle className="text-gray-700 text-2xl lg:text-4xl" />
         </button>
       </div>

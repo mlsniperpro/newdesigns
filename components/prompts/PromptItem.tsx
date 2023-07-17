@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import { BsArrowUpRight, BsBookmark } from 'react-icons/bs';
 import { FiArrowUpCircle } from 'react-icons/fi';
@@ -22,17 +20,29 @@ export type Prompt = {
   url: string;
 };
 
-const PromptItem = ({ prompt }: { prompt: Prompt }) => {
-  const { title, categories, description, owner, votes, bookmarks, daysPast, url } =
-    prompt;
-  const [upvotes, setUpvotes] = useState<number>(0);
+const PromptItem = ({
+  prompt,
+  onUpvote,
+}: {
+  prompt: Prompt;
+  onUpvote: (id: string) => Promise<void>;
+}) => {
+  const {
+    id,
+    title,
+    categories,
+    description,
+    owner,
+    votes,
+    bookmarks,
+    daysPast,
+    url,
+  } = prompt;
+
   return (
     <section className="flex items-start bg-gray-100 rounded-[15px] p-8">
       <div className="xl:basis-3/4 flex flex-col space-y-5">
-        <Link
-          href={`/prompt/${url}`}
-          className="font-bold text-lg lg:text-2xl"
-        >
+        <Link href={`/prompt/${url}`} className="font-bold text-lg lg:text-2xl">
           {title}
         </Link>
         <div className="flex items-start flex-wrap gap-2">
@@ -71,8 +81,8 @@ const PromptItem = ({ prompt }: { prompt: Prompt }) => {
       </div>
       <div className="hidden xl:basis-1/4 xl:flex xl:justify-end">
         <div className="flex items-center space-x-4 border border-gray-400 px-3 py-1 rounded-[22px]">
-          <p className="text-gray-700 font-light">{upvotes}</p>
-          <button onClick={() => setUpvotes(upvotes + 1)}>
+          <p className="text-gray-700 font-light">{votes}</p>
+          <button onClick={() => onUpvote(String(id))}>
             <FiArrowUpCircle className="text-gray-700 text-2xl" />
           </button>
         </div>

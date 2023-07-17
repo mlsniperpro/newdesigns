@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import {
   BsFillBagFill,
@@ -12,20 +10,29 @@ import {
 import PromptItem, { Prompt } from './PromptItem';
 import { TopicInterface } from './Topic';
 
-import { db } from '@/config/firebase';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { auth, db } from '@/config/firebase';
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  increment,
+  updateDoc,
+} from 'firebase/firestore';
 
 interface CategoryInterface {
   id: number;
-  icon: JSX.Element; // remove "| null" if TopicInterface does not allow it
+  icon: JSX.Element;
   title: string;
   backgroundColor: string;
   textColor: string;
 }
+
 interface PromptInterface {
   id: string | number;
   title: string;
-  categories: TopicInterface[]; // change to TopicInterface[] if that's what Prompt expects
+  categories: TopicInterface[];
   description: string;
   owner: string;
   votes: number;
@@ -34,61 +41,14 @@ interface PromptInterface {
   url: string;
 }
 
-const createPrompt = (
-  id: number,
-  title: string,
-  categories: CategoryInterface[],
-  daysPast: number,
-): PromptInterface => ({
-  id,
-  title,
-  categories,
-  description:
-    'Making a good first impression involves being nice and friendly and also being confident in yourself.',
-  owner: 'John Doe',
-  votes: 10,
-  bookmarks: 5,
-  daysPast,
-  url: 'making-a-good-first-impression',
-});
-
-const icons: Record<string, JSX.Element> = {
-  Development: <BsLaptop />,
-  Marketing: <BsFire />,
-  Business: <BsFillBagFill />,
-  Writing: <BsPen />,
-  SEO: <BsSearch />,
-};
-
-const createCategory = (
-  id: number,
-  title: string,
-  backgroundColor: string,
-  textColor: string,
-): CategoryInterface => ({
-  id,
-  icon: icons[title] || null,
-  title,
-  backgroundColor,
-  textColor,
-});
-
-const categories: [string, string, string][] = [
-  ['Development', 'bg-green-600', 'text-green-900'],
-  ['Marketing', 'bg-orange-200', 'text-orange-900'],
-  ['Business', 'bg-blue-200', 'text-blue-900'],
-  ['Writing', 'bg-blue-400', 'text-blue-900'],
-  ['SEO', 'bg-purple-400', 'text-purple-900'],
-];
 const AvailablePrompts = ({
   filterByTopic = true,
   selectedTopic = '',
   filteredByDate = true,
 }) => {
-  const [prompts, setPrompts] = useState<PromptInterface[]>([]); // added state for prompts
+  const [prompts, setPrompts] = useState<PromptInterface[]>([]);
+
   useEffect(() => {
-    // fetch prompts from Firestore when the component mounts
-    console.log('i am now fetching prompts');
     const fetchPrompts = async () => {
       const querySnapshot = await getDocs(collection(db, 'prompts'));
       const fetchedPrompts: PromptInterface[] = [];
@@ -100,9 +60,14 @@ const AvailablePrompts = ({
           categories: data.categories,
           description: data.description,
           owner: data.owner,
-          votes: data.votes,
+          votes: data.votes || 0,
           bookmarks: data.bookmarks,
-          daysPast: Math.ceil(Math.abs(new Date().getTime() - new Date(data.dayPosted).getTime()) / (1000 * 60 * 60 * 24)),
+          daysPast: Math.ceil(
+            Math.abs(
+              new Date().getTime() - new Date(data.dayPosted).getTime(),
+            ) /
+              (1000 * 60 * 60 * 24),
+          ),
           url: data.url,
         });
       });
@@ -111,24 +76,67 @@ const AvailablePrompts = ({
 
     fetchPrompts();
   }, []);
+
+  const handleUpvote = async (id: string) => {
+    const user = auth.currentUser;
+    if (!user) {
+      console.log('User is not authenticated');
+      return;
+    }
+
+    const promptDocRef = doc(db, 'prompts', id);
+    const promptDoc = await getDoc(promptDocRef);
+
+    if (promptDoc.exists()) {
+      const promptData = promptDoc.data();
+      const promptVoters = promptData.voters || [];
+
+      // If the user has already voted on this prompt, don't allow another vote
+      if (promptVoters.includes(user.uid)) {
+        console.log('You have already voted on this prompt');
+        return;
+      }
+
+      // Otherwise, add the user's UID to the prompt's list of voters and increment the vote count
+      await updateDoc(promptDocRef, {
+        votes: increment(1),
+        voters: arrayUnion(user.uid),
+      });
+
+      // Update the 'votes' field of the prompt in the 'prompts' state array
+      setPrompts((prevPrompts) =>
+        prevPrompts.map((prompt) =>
+          prompt.id === id ? { ...prompt, votes: prompt.votes + 1 } : prompt,
+        ),
+      );
+    } else {
+      console.log('Prompt does not exist');
+    }
+  };
+
   let timePeriod = '';
   const filteredPrompts = filterByTopic
-  ? prompts.filter((prompt) =>
-      prompt.categories?.some(
-        (category) => category.title.toLowerCase() === selectedTopic,
-      ),
-    )
-  : prompts;
+    ? prompts.filter((prompt) =>
+        prompt.categories?.some(
+          (category) => category.title.toLowerCase() === selectedTopic,
+        ),
+      )
+    : prompts;
 
   const filteredPromptsByTimeline = filteredByDate
-  ? filteredPrompts.filter((prompt) => {
-      return timePeriod === 'today' ? prompt.daysPast <= 1
-           : timePeriod === 'thisWeek' ? prompt.daysPast <= 7
-           : timePeriod === 'thisMonth' ? prompt.daysPast <= 30
-           : timePeriod === 'allTime' ? true
-           : false;
-    })
-  : filteredPrompts;
+    ? filteredPrompts.filter((prompt) => {
+        return timePeriod === 'today'
+          ? prompt.daysPast <= 1
+          : timePeriod === 'thisWeek'
+          ? prompt.daysPast <= 7
+          : timePeriod === 'thisMonth'
+          ? prompt.daysPast <= 30
+          : timePeriod === 'allTime'
+          ? true
+          : false;
+      })
+    : filteredPrompts;
+
   if (filteredPrompts.length === 0) {
     return (
       <section>
@@ -142,8 +150,8 @@ const AvailablePrompts = ({
 
   return (
     <section className="flex flex-col space-y-6">
-    {filteredPrompts.map((prompt) => (
-        <PromptItem prompt={prompt} key={prompt.id} />
+      {filteredPrompts.map((prompt) => (
+        <PromptItem prompt={prompt} key={prompt.id} onUpvote={handleUpvote} />
       ))}
     </section>
   );
