@@ -1,25 +1,24 @@
 'use client';
 
 import { MouseEvent, useEffect, useRef, useState } from 'react';
-import {
-  BsArrowUpRightCircle,
-  BsFillBagFill,
-  BsFire,
-  BsLaptop,
-  BsPen,
-  BsSearch,
-} from 'react-icons/bs';
+import { BsArrowUpRightCircle, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
 import { FcMoneyTransfer } from 'react-icons/fc';
 import { RiStarLine } from 'react-icons/ri';
 import { ToastContainer, toast } from 'react-toastify';
 
+
+
 import { DropDownTopic, Navbar } from '@/components/prompts';
 import Topic, { TopicInterface } from '@/components/prompts/Topic';
+
+
 
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 
+
+/*
 const icons = {
   Marketing: <BsFire />,
   Business: <BsFillBagFill />,
@@ -45,7 +44,7 @@ const topics: TopicInterface[] = Object.keys(icons).map((title, index) => ({
   backgroundColor: colors[title as keyof typeof colors][0],
   textColor: colors[title as keyof typeof colors][1],
 }));
-
+*/
 export default function Page() {
   const [selectedTopics, setSelectedTopics] = useState<TopicInterface[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -65,6 +64,37 @@ export default function Page() {
   const [facebook, setFacebook] = useState('');
   const [instagram, setInstagram] = useState('');
   const [tiktok, setTiktok] = useState('');
+  const [topics, setTopics] = useState<TopicInterface[]>([]);
+  async function fetchTopicsFromFirebase() {
+    const topicsCollection = collection(db, 'topics'); // replace 'topics' with your collection name
+    const topicsSnapshot = await getDocs(topicsCollection);
+    const topicsList = topicsSnapshot.docs.map((doc) => doc.data());
+    return topicsList;
+  }
+  const iconComponents = {
+    BsFire: <BsFire />,
+    BsFillBagFill: <BsFillBagFill />,
+    BsSearch: <BsSearch />,
+    BsLaptop: <BsLaptop />,
+    BsPen: <BsPen />,
+    FcMoneyTransfer: <FcMoneyTransfer />,
+  };
+
+  useEffect(() => {
+    fetchTopicsFromFirebase().then((topicsList) => {
+      const topicsWithIcons = topicsList.map((topic, index) => ({
+        id: index + 1,
+        icon: iconComponents[topic.icon as keyof typeof iconComponents],
+        title: topic.title,
+        backgroundColor: topic.backgroundColor,
+        textColor: topic.textColor,
+      }));
+
+
+      setTopics(topicsWithIcons);
+    });
+  }, []);
+
 
   const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
     console.log(

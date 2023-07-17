@@ -264,6 +264,8 @@ const CustomPrompt = () => {
           const docRef = doc(db, 'prompts', querySnapshot.docs[0].id);
           const updateData = {
             title: editedPrompt.title,
+            description: editedPrompt.description,
+            prompt: editedPrompt.prompt,
             // Add other fields you want to update here
           };
           await updateDoc(docRef, updateData);
@@ -548,17 +550,6 @@ const CustomPrompt = () => {
                 </label>
                 <label className="block">
                   <span className="text-gray-700">Owner:</span>
-                  <input
-                    type="text"
-                    value={editedPrompt.owner}
-                    onChange={(e) =>
-                      setEditedPrompt({
-                        ...editedPrompt,
-                        owner: e.target.value,
-                      })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
                 </label>
                 <label className="block">
                   <span className="text-gray-700">Prompt:</span>

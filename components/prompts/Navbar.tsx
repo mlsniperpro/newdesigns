@@ -20,7 +20,7 @@ import SearchIcon from '../../public/icon.jpg';
 import { Prompt } from './PromptItem';
 import { TopicInterface } from './Topic';
 
-import { db } from '@/config/firebase';
+import { auth, db } from '@/config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
 interface PromptInterface {
@@ -41,60 +41,66 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [filteredPrompts, setFilteredPrompts] = useState<Prompt[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    const admin =
+      auth.currentUser?.uid == 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1' ||
+      auth.currentUser?.uid == 'M8LwxAfm26SimGbDs4LDwf1HuCb2';
+    setIsAdmin(admin);
+  }, [auth.currentUser?.uid]);
+
   const handleNavClick = () => {
     setIsNavOpen(!isNavOpen);
   };
-useEffect(() => {
-  // fetch prompts from Firestore when the component mounts
-  console.log('i am now fetching prompts');
-  const fetchPrompts = async () => {
-    const querySnapshot = await getDocs(collection(db, 'prompts'));
-    const fetchedPrompts: PromptInterface[] = [];
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      fetchedPrompts.push({
-        id: doc.id,
-        title: data.title,
-        categories: data.categories,
-        description: data.description,
-        owner: data.owner,
-        votes: data.votes,
-        bookmarks: data.bookmarks,
-        daysPast: Math.ceil(
-          Math.abs(
-            new Date().getTime() - new Date(data.dayPosted).getTime(),
-          ) /
-            (1000 * 60 * 60 * 24),
-        ),
-        url: data.url,
+  useEffect(() => {
+    // fetch prompts from Firestore when the component mounts
+    console.log('i am now fetching prompts');
+    const fetchPrompts = async () => {
+      const querySnapshot = await getDocs(collection(db, 'prompts'));
+      const fetchedPrompts: PromptInterface[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        fetchedPrompts.push({
+          id: doc.id,
+          title: data.title,
+          categories: data.categories,
+          description: data.description,
+          owner: data.owner,
+          votes: data.votes,
+          bookmarks: data.bookmarks,
+          daysPast: Math.ceil(
+            Math.abs(
+              new Date().getTime() - new Date(data.dayPosted).getTime(),
+            ) /
+              (1000 * 60 * 60 * 24),
+          ),
+          url: data.url,
+        });
       });
-    });
-    setAllPrompts(fetchedPrompts);
-    setFilteredPrompts(fetchedPrompts);
+      setAllPrompts(fetchedPrompts);
+      setFilteredPrompts(fetchedPrompts);
+    };
+
+    fetchPrompts();
+  }, []);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchValue = e.target.value;
+    setSearchQuery(searchValue);
+    if (searchValue === '') {
+      setFilteredPrompts(allPrompts);
+    } else {
+      setFilteredPrompts(
+        allPrompts.filter(
+          (prompt) =>
+            prompt.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+            prompt.description
+              .toLowerCase()
+              .includes(searchValue.toLowerCase()),
+        ),
+      );
+    }
   };
-
-  fetchPrompts();
-}, []);
-
-const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const searchValue = e.target.value;
-  setSearchQuery(searchValue);
-  if (searchValue === '') {
-    setFilteredPrompts(allPrompts);
-  } else {
-    setFilteredPrompts(
-      allPrompts.filter(
-        (prompt) =>
-          prompt.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-          prompt.description
-            .toLowerCase()
-            .includes(searchValue.toLowerCase()),
-      ),
-    );
-  }
-};
-
-
 
   const handleFocus = () => {
     setIsInputFocused(true);
@@ -166,10 +172,7 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             {isInputFocused && (
               <div className="absolute bg-white opacity-100 p-4 top-[100px] flex flex-col space-y-6 max-h-[600px] overflow-auto">
                 {filteredPrompts.map((prompt) => (
-                  <Link
-                    href={`/prompt/${prompt.url}`}
-                    key={prompt.id}
-                  >
+                  <Link href={`/prompt/${prompt.url}`} key={prompt.id}>
                     <div className="flex flex-col space-y-4">
                       <h4 className="font-semibold text-sm">{prompt.title}</h4>
                       <div className="flex items-center text-xs space-x-4">
@@ -239,6 +242,15 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           <AiOutlineStar className="inline-block mr-2" />
           Create
         </Link>
+        {isAdmin && (
+          <Link
+            href="/prompt/createtopics"
+            className="bg-black text-white rounded-[22px] px-4 py-2 flex items-center"
+          >
+            <AiOutlineStar className="inline-block mr-2" />
+            CreateTopic
+          </Link>
+        )}
       </section>
     </nav>
   );
