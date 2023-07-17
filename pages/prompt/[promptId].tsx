@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FC } from 'react';
-import { BsArrowUpRight, BsBookmark, BsFire, BsLaptop, BsPen } from 'react-icons/bs';
+import { BsArrowUpRight, BsBookmark, BsQuestionCircle } from 'react-icons/bs';
+import { BsArrowUpRightCircle, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
+import { FcMoneyTransfer } from 'react-icons/fc';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,6 +22,14 @@ import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } 
 import { get } from 'http';
 
 
+const defaultCategory: Category = {
+  id: 0,
+  icon: <BsQuestionCircle />, // Use an icon of your choice
+  title: 'Unknown',
+  style: { backgroundColor: 'bg-gray-200', textColor: 'text-gray-900' },
+};
+
+
 type Category = {
   id: number;
   icon: JSX.Element;
@@ -29,24 +39,50 @@ type Category = {
     textColor: string;
   };
 };
+const icons = {
+  Marketing: <BsFire />,
+  Business: <BsFillBagFill />,
+  SEO: <BsSearch />,
+  Development: <BsLaptop />,
+  Writing: <BsPen />,
+  Financial: <FcMoneyTransfer />,
+};
 const categories: Category[] = [
   {
     id: 1,
-    icon: <BsFire />,
+    icon: icons.Marketing,
     title: 'Marketing',
     style: { backgroundColor: 'bg-orange-200', textColor: 'text-orange-900' },
   },
   {
+    id: 2,
+    icon: icons.Business,
+    title: 'Business',
+    style: { backgroundColor: 'bg-yellow-200', textColor: 'text-yellow-900' },
+  },
+  {
+    id: 3,
+    icon: icons.SEO,
+    title: 'SEO',
+    style: { backgroundColor: 'bg-red-200', textColor: 'text-red-900' },
+  },
+  {
     id: 4,
-    icon: <BsLaptop />,
+    icon: icons.Development,
     title: 'Development',
     style: { backgroundColor: 'bg-green-600', textColor: 'text-green-900' },
   },
   {
     id: 5,
-    icon: <BsPen />,
+    icon: icons.Writing,
     title: 'Writing',
     style: { backgroundColor: 'bg-blue-400', textColor: 'text-blue-900' },
+  },
+  {
+    id: 6,
+    icon: icons.Financial,
+    title: 'Financial',
+    style: { backgroundColor: 'bg-purple-200', textColor: 'text-purple-900' },
   },
 ];
 //Fetch the comments data from firestore database collection called comments
@@ -77,7 +113,7 @@ export interface PromptData {
   daysPast: number;
   owner: string;
   comments: [];
-  topics: [];
+  topics: string[];
   createdAt: string;
   updatedAt: string;
   userId: string;
@@ -123,7 +159,7 @@ const CommentSection: FC<CommentSectionProps> = ({
   deleteComment,
   editComment,
   isAdmin,
-  isPublisher=false,
+  isPublisher = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editCommentText, setEditCommentText] = useState(comment);
@@ -203,7 +239,8 @@ const CommentSection: FC<CommentSectionProps> = ({
 };
 
 const CustomPrompt = () => {
-  const [promptData, setPromptData] = useState<PromptData | ''>('');
+  const [isPublisher, setIsPublisher] = useState(false);
+  const [promptData, setPromptData] = useState<PromptData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -211,6 +248,40 @@ const CustomPrompt = () => {
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState<CommentSectionProps[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isEditingPrompt, setIsEditingPrompt] = useState(false);
+  const [editedPrompt, setEditedPrompt] = useState<PromptData | null>(null);
+
+  const handleUpdatePrompt = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (typeof PromptId === 'string' && editedPrompt !== null) {
+      try {
+        const q = query(
+          collection(db, 'prompts'),
+          where('url', '==', PromptId),
+        );
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          const docRef = doc(db, 'prompts', querySnapshot.docs[0].id);
+          const updateData = {
+            title: editedPrompt.title,
+            // Add other fields you want to update here
+          };
+          await updateDoc(docRef, updateData);
+          // Fetch the prompt data again after it is updated
+          const data = await getPromptData(PromptId as string);
+          setPromptData(data[0]);
+          setIsEditingPrompt(false);
+        } else {
+          console.error('No document found with url: ', PromptId);
+        }
+      } catch (err) {
+        console.error('Error updating prompt: ', err);
+      }
+    } else {
+      console.error('Invalid PromptId: ', PromptId);
+    }
+  };
+
   useEffect(() => {
     const admin =
       auth.currentUser?.uid == 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1' ||
@@ -256,7 +327,8 @@ const CustomPrompt = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (typeof PromptId === 'string') {
       try {
         const q = query(
@@ -267,8 +339,6 @@ const CustomPrompt = () => {
         if (!querySnapshot.empty) {
           const docRef = doc(db, 'prompts', querySnapshot.docs[0].id);
           await deleteDoc(docRef);
-          // Redirect to another page after deleting the prompt
-          router.push('/');
         } else {
           console.error('No document found with url: ', PromptId);
         }
@@ -290,8 +360,8 @@ const CustomPrompt = () => {
         setComments(commentsData);
         setIsLoading(false);
 
-        // Check if the current user is an admin
-        // Replace this with your actual check
+        // Check if the current user is the publisher of the prompt
+        setIsPublisher(auth.currentUser?.uid === data[0].userId);
       } catch (err) {
         setError((err as Error).message);
         setIsLoading(false);
@@ -317,6 +387,8 @@ const CustomPrompt = () => {
       )
     : '';
   const handleEditComment = async (id: string, newComment: string) => {
+    //Prevent the default behavior of the form
+    //event.preventDefault();
     try {
       const commentRef = doc(db, 'comments', id);
       await updateDoc(commentRef, {
@@ -352,21 +424,22 @@ const CustomPrompt = () => {
               </p>
               <div className="flex items-start flex-wrap gap-2">
                 {promptData &&
-                  promptData.categoryIds &&
-                  promptData.categoryIds.map((id) => {
-                    const category = categories.find(
-                      (category) => category.id === id,
-                    );
-                    return category ? (
+                  promptData.topics &&
+                  promptData.topics.map((topicName, index) => {
+                    const category =
+                      categories.find(
+                        (category) => category.title === topicName,
+                      ) || defaultCategory;
+                    return (
                       <Topic
                         topic={{ ...category, ...category.style }}
-                        key={category.id}
+                        key={category.id + index} // Add index to key to ensure uniqueness
                         className={classNames(
                           category.style.backgroundColor,
                           category.style.textColor,
                         )}
                       />
-                    ) : null;
+                    );
                   })}
               </div>
             </div>
@@ -421,13 +494,102 @@ const CustomPrompt = () => {
                 Submit
               </button>
             </form>
-            {isAdmin && (
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-500 text-white rounded-[15px]"
-              >
-                Delete Prompt
-              </button>
+            {(isAdmin || auth.currentUser?.uid === promptData?.userId) && (
+              <div className="flex space-x-4">
+                {!isEditingPrompt && (
+                  <button
+                    onClick={() => {
+                      setIsEditingPrompt(true);
+                      setEditedPrompt(promptData);
+                    }}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-[15px]"
+                  >
+                    Edit Prompt
+                  </button>
+                )}
+
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 bg-red-500 text-white rounded-[15px]"
+                >
+                  Delete Prompt
+                </button>
+              </div>
+            )}
+
+            {isEditingPrompt && editedPrompt !== null && (
+              <form onSubmit={handleUpdatePrompt} className="space-y-4">
+                <label className="block">
+                  <span className="text-gray-700">Title:</span>
+                  <input
+                    type="text"
+                    value={editedPrompt.title}
+                    onChange={(e) =>
+                      setEditedPrompt({
+                        ...editedPrompt,
+                        title: e.target.value,
+                      })
+                    }
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-gray-700">Description:</span>
+                  <textarea
+                    value={editedPrompt.description}
+                    onChange={(e) =>
+                      setEditedPrompt({
+                        ...editedPrompt,
+                        description: e.target.value,
+                      })
+                    }
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-gray-700">Owner:</span>
+                  <input
+                    type="text"
+                    value={editedPrompt.owner}
+                    onChange={(e) =>
+                      setEditedPrompt({
+                        ...editedPrompt,
+                        owner: e.target.value,
+                      })
+                    }
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-gray-700">Prompt:</span>
+                  <textarea
+                    value={editedPrompt.prompt}
+                    onChange={(e) =>
+                      setEditedPrompt({
+                        ...editedPrompt,
+                        prompt: e.target.value,
+                      })
+                    }
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                </label>
+                {/* You would need a more complex input for categories, topics, and categoryIds if you want to allow editing them */}
+                <div className="flex space-x-4">
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingPrompt(false)}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-md"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             )}
 
             <div className="flex flex-col space-y-6 pt-8">
@@ -454,7 +616,7 @@ const CustomPrompt = () => {
         <section className="xl:basis-2/5 flex space-x-2">
           <div className="border-l-solid border-l-gray-300 border-l-[1px]"></div>
           <CreatePrompt
-            prompt={promptData && promptData.prompt}
+            prompt={promptData?.prompt || ''}
             url={typeof PromptId === 'string' ? PromptId : ''}
           />
         </section>

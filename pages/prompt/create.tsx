@@ -1,22 +1,24 @@
 'use client';
 
 import { MouseEvent, useEffect, useRef, useState } from 'react';
-import { BsArrowUpRightCircle, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
+import {
+  BsArrowUpRightCircle,
+  BsFillBagFill,
+  BsFire,
+  BsLaptop,
+  BsPen,
+  BsSearch,
+} from 'react-icons/bs';
 import { FcMoneyTransfer } from 'react-icons/fc';
 import { RiStarLine } from 'react-icons/ri';
 import { ToastContainer, toast } from 'react-toastify';
 
-
-
 import { DropDownTopic, Navbar } from '@/components/prompts';
 import Topic, { TopicInterface } from '@/components/prompts/Topic';
-
-
 
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
-
 
 const icons = {
   Marketing: <BsFire />,
@@ -44,32 +46,37 @@ const topics: TopicInterface[] = Object.keys(icons).map((title, index) => ({
   textColor: colors[title as keyof typeof colors][1],
 }));
 
-
-
-
-
 export default function Page() {
   const [selectedTopics, setSelectedTopics] = useState<TopicInterface[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showAddButton, setShowAddButton] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
-  const [title, setTitle] = useState('');   
-  const [type, setType] = useState(''); 
+  const [title, setTitle] = useState('');
+  const [type, setType] = useState('');
   const [description, setDescription] = useState('');
   const [prompt, setPrompt] = useState('');
-  const [tags, setTags] = useState('');   
-  const [bio, setBio] = useState(''); 
+  const [tags, setTags] = useState('');
+  const [bio, setBio] = useState('');
   const [website, setWebsite] = useState('');
   const [twitter, setTwitter] = useState('');
   const [discord, setDiscord] = useState('');
-  const [github, setGithub] = useState('');   
-  const [facebook, setFacebook] = useState('');   
-  const [instagram, setInstagram] = useState(''); 
-  const [tiktok, setTiktok] = useState(''); 
+  const [github, setGithub] = useState('');
+  const [facebook, setFacebook] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [tiktok, setTiktok] = useState('');
 
   const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
-    console.log("The tits is: ", title, "description is: ", description, "Prompt is: ", prompt, "Tags is: ", tags)
+    console.log(
+      'The tits is: ',
+      title,
+      'description is: ',
+      description,
+      'Prompt is: ',
+      prompt,
+      'Tags is: ',
+      tags,
+    );
     event.preventDefault();
 
     // Check that no field is missing and then submit to firestore
@@ -98,7 +105,7 @@ export default function Page() {
           userId: auth.currentUser.uid,
           url: title.toLowerCase().split(' ').join('-'),
           dayPosted: new Date().toISOString().slice(0, 10),
-          topics : selectedTopics.map((topic) => topic.title),
+          topics: selectedTopics.map((topic) => topic.title),
         });
         // Provide feedback to the user
         alert('Form submitted successfully');
@@ -108,8 +115,6 @@ export default function Page() {
       }
     }
   };
-
-
 
   useEffect(() => {
     const addButtonElement = addButtonRef.current;
@@ -194,7 +199,7 @@ export default function Page() {
               </p>
               <input
                 type="text"
-                onChange={(event) => setTitle(event.target.value)}  
+                onChange={(event) => setTitle(event.target.value)}
                 id="title"
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
@@ -215,37 +220,40 @@ export default function Page() {
               <p className="text-xs font-light text-gray-600 pb-3">
                 Choose an adequate category.
               </p>
-              <div className="flex items-center space-x-1 flex-wrap">
-                {selectedTopics.map((topic) => (
-                  <button
-                    key={topic.id}
-                    onClick={() => handleTopicClick(topic)}
-                    type="button"
-                  >
-                    <DropDownTopic
-                      topic={topic}
-                      className={classNames(
-                        topic.backgroundColor,
-                        topic.textColor,
-                      )}
-                    />
-                  </button>
-                ))}
-                {selectedTopics.length < 5 && showAddButton && (
-                  <button
-                    onClick={handleDropdown}
-                    ref={addButtonRef}
-                    className="self-start p-2 border-gray-300 border rounded-[15px] text-sm text-gray-600"
-                  >
-                    + Add Topic
-                  </button>
-                )}
+              <div className="relative">
+                <div
+                  className="relative flex items-center space-x-1 flex-wrap"
+                  style={{ width: '300px' }}
+                >
+                  {selectedTopics.map((topic) => (
+                    <button
+                      key={topic.id}
+                      onClick={() => handleTopicClick(topic)}
+                      type="button"
+                    >
+                      <DropDownTopic
+                        topic={topic}
+                        className={classNames(
+                          topic.backgroundColor,
+                          topic.textColor,
+                        )}
+                      />
+                    </button>
+                  ))}
+                  {selectedTopics.length < 5 && showAddButton && (
+                    <button
+                      onClick={handleDropdown}
+                      ref={addButtonRef}
+                      className="self-start p-2 border-gray-300 border rounded-[15px] text-sm text-gray-600"
+                    >
+                      + Add Topic
+                    </button>
+                  )}
 
-                {showDropdown && selectedTopics.length < 5 && (
-                  <section>
+                  {showDropdown && selectedTopics.length < 5 && (
                     <div
                       ref={dropdownRef}
-                      className="flex flex-col max-h-[200px] opacity-100 overflow-auto w-fit p-4 space-y-1 absolute top-[500px] left-[450px] bg-white rounded-[10px]"
+                      className="absolute top-full left-0 mt-2 w-64 p-4 bg-white rounded-[10px] overflow-auto"
                     >
                       <h3 className="text-gray-800">Topics</h3>
                       {topics.map((topic) => (
@@ -264,8 +272,8 @@ export default function Page() {
                         </button>
                       ))}
                     </div>
-                  </section>
-                )}
+                  )}
+                </div>
               </div>
             </div>
             <div className="flex flex-col">
@@ -287,7 +295,7 @@ export default function Page() {
                 results users can expect.
               </p>
               <textarea
-                onChange={(event) => setPrompt(event.target.value)} 
+                onChange={(event) => setPrompt(event.target.value)}
                 id="prompt"
                 className="p-2 border border-gray-200 rounded-[10px]"
               />
@@ -297,7 +305,8 @@ export default function Page() {
               <p className="text-xs font-light text-gray-600">
                 Be mindful we don’t take responsibility for any actions taken by
                 third parties based on the information you decide to disclose.
-                Avoid sharing any sensitive information.(Tags should start with # symbol and separated by space)
+                Avoid sharing any sensitive information.(Tags should start with
+                # symbol and separated by space)
               </p>
               <textarea
                 onChange={(event) => setTags(event.target.value)}
@@ -310,7 +319,10 @@ export default function Page() {
             <button className="self-start px-4 py-3 rounded-[15px] text-lg text-gray-600">
               Cancel
             </button>
-            <button onClick={handleSubmit} className="flex  space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]">
+            <button
+              onClick={handleSubmit}
+              className="flex  space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]"
+            >
               <p>Publish Prompt</p>
               <BsArrowUpRightCircle className="text-2xl" />
             </button>
@@ -329,7 +341,7 @@ export default function Page() {
               <div className="flex flex-col">
                 <label htmlFor="bio">Bio</label>
                 <input
-                  onChange={(event) => setBio(event.target.value)}    
+                  onChange={(event) => setBio(event.target.value)}
                   type="text"
                   placeholder="Bio"
                   className="p-2 border border-gray-200 rounded-[10px]"
@@ -394,7 +406,7 @@ export default function Page() {
                   <div className="flex flex-col">
                     <label htmlFor="tiktok">TIKTOK</label>
                     <input
-                      onChange={(event) => setTiktok(event.target.value)} 
+                      onChange={(event) => setTiktok(event.target.value)}
                       type="text"
                       placeholder="@user"
                       className="p-2 border border-gray-200 rounded-[10px]"

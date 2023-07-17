@@ -2,7 +2,6 @@ import { IconExternalLink } from '@tabler/icons-react';
 import { useContext } from 'react';
 
 //import { useTranslation } from 'next-i18next';
-
 import { OpenAIModel } from '@/types/openai';
 
 import HomeContext from '@/pages/api/home/home.context';
@@ -27,6 +26,7 @@ export const ModelSelect = () => {
 
   return (
     <div className="flex flex-col">
+      
       <label className="mb-2 text-left text-neutral-700 dark:text-neutral-400">
         {'Model'}
       </label>
@@ -49,17 +49,6 @@ export const ModelSelect = () => {
             </option>
           ))}
         </select>
-      </div>
-      <div className="w-full mt-3 text-left text-neutral-700 dark:text-neutral-400 flex items-center">
-        <a
-          href="https://platform.openai.com/account/usage"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center"
-        >
-          <IconExternalLink size={18} className={'inline mr-1'} />
-          {'View Account Usage'}
-        </a>
       </div>
     </div>
   );

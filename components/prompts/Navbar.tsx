@@ -1,24 +1,26 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useEffect } from "react";
-import { AiOutlineMenu, AiOutlineStar } from "react-icons/ai";
-import { BsArrowUpRight, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from "react-icons/bs";
-import { TopicInterface } from "./Topic";
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { AiOutlineMenu, AiOutlineStar } from 'react-icons/ai';
+import {
+  BsArrowUpRight,
+  BsFillBagFill,
+  BsFire,
+  BsLaptop,
+  BsPen,
+  BsSearch,
+} from 'react-icons/bs';
 
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import SearchIcon from '../../public/icon.jpg';
+import { Prompt } from './PromptItem';
+import { TopicInterface } from './Topic';
 
-
-
-import SearchIcon from "../../public/icon.jpg";
-import { Prompt } from "./PromptItem";
-
-
-
-import { db } from "@/config/firebase";
+import { db } from '@/config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
 interface PromptInterface {
@@ -35,7 +37,7 @@ interface PromptInterface {
 
 const Navbar = () => {
   const [isInputFocused, setIsInputFocused] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [filteredPrompts, setFilteredPrompts] = useState<Prompt[]>([]);
   const handleNavClick = () => {
@@ -74,15 +76,17 @@ const Navbar = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
     setSearchQuery(searchValue);
-    if (searchValue === "") {
+    if (searchValue === '') {
       setFilteredPrompts([]);
     } else {
       setFilteredPrompts(
         filteredPrompts.filter(
           (prompt) =>
             prompt.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-            prompt.description.toLowerCase().includes(searchValue.toLowerCase())
-        )
+            prompt.description
+              .toLowerCase()
+              .includes(searchValue.toLowerCase()),
+        ),
       );
     }
   };
@@ -95,16 +99,19 @@ const Navbar = () => {
 
   const Menu = () => (
     <>
-      <a href="" className="hover:text-gray-900">
-        Topics
-      </a>
-      <a href="" className="hover:text-gray-900">
-        Roadmap
-      </a>
-      <a href="" className="hover:text-gray-900">
-        Feature Requests
-      </a>
-      <a href="" className="hover:text-gray-900">
+      <Link href="/prompts" className="hover:text-gray-900">
+        Prompts
+      </Link>
+      <Link href="/chat" className="hover:text-gray-900">
+        Chat
+      </Link>
+      <Link href="/tutor" className="hover:text-gray-900">
+        Tutor
+      </Link>
+      <a
+        href="https://vioniko.com/soporte/index.php"
+        className="hover:text-gray-900"
+      >
         Support
       </a>
     </>
@@ -156,7 +163,7 @@ const Navbar = () => {
                 {filteredPrompts.map((prompt) => (
                   <Link
                     href={`/prompt/${prompt.title
-                      .replace(/\s+/g, "-")
+                      .replace(/\s+/g, '-')
                       .toLowerCase()}`}
                     key={prompt.id}
                   >
@@ -173,8 +180,8 @@ const Navbar = () => {
                         <div className="flex space-x-2">
                           {prompt.daysPast < 30 ? (
                             <p>
-                              {prompt.daysPast}{" "}
-                              {prompt.daysPast === 1 ? "day" : "days"} ago
+                              {prompt.daysPast}{' '}
+                              {prompt.daysPast === 1 ? 'day' : 'days'} ago
                             </p>
                           ) : prompt.daysPast <= 59 ? (
                             <p>1 month ago</p>
@@ -229,7 +236,6 @@ const Navbar = () => {
           <AiOutlineStar className="inline-block mr-2" />
           Create
         </Link>
-        
       </section>
     </nav>
   );
