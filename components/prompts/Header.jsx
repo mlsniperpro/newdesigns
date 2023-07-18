@@ -7,7 +7,6 @@ const TimePeriodDropdown = ({
   selectedTimePeriod,
   setSelectedTimePeriod,
   setTimePeriod,
-  setNewest,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toCamelCase = (str) => {
@@ -24,11 +23,6 @@ const TimePeriodDropdown = ({
     const camelCasePeriod = toCamelCase(period);
     setSelectedTimePeriod(camelCasePeriod);
     setTimePeriod(camelCasePeriod);
-    if (camelCasePeriod === 'newest') {
-      setNewest(true);
-    } else {
-      setNewest(false);
-    }
   };
 
   return (
@@ -47,17 +41,15 @@ const TimePeriodDropdown = ({
       </button>
       {isOpen && (
         <div className="bg-gray-100 text-sm flex flex-col items-start rounded-[15px] p-4 space-y-2 absolute">
-          {['Today', 'This Week', 'This Month', 'All Time'].map(
-            (period) => (
-              <p
-                key={period}
-                className="hover:underline cursor-pointer"
-                onClick={() => handleTimePeriod(period)}
-              >
-                {period}
-              </p>
-            ),
-          )}
+          {['Today', 'This Week', 'This Month', 'All Time'].map((period) => (
+            <p
+              key={period}
+              className="hover:underline cursor-pointer"
+              onClick={() => handleTimePeriod(period)}
+            >
+              {period}
+            </p>
+          ))}
         </div>
       )}
     </div>
@@ -66,22 +58,27 @@ const TimePeriodDropdown = ({
 
 const Header = ({ setTimePeriod, setNewest }) => {
   const [selectedTimePeriod, setSelectedTimePeriod] = useState('thisWeek');
+  const [isNewest, setIsNewest] = useState(false);
+
+  const handleNewestClick = () => {
+    setIsNewest(!isNewest);
+    setNewest(!isNewest);
+  };
 
   return (
     <section className="px-4 lg:px-16 2xl:px-52 py-8 flex flex-col space-y-6 xl:space-y-0 xl:flex-row xl:justify-between">
       <section className="flex space-x-4 items-center">
-        <a
-          href="#"
+        <button
+          onClick={handleNewestClick}
           className="flex space-x-1 lg:space-x-3 items-center border border-gray-400 rounded-[20px] px-5 py-2"
         >
           <CiSun className="text-yellow-500 text-sm lg:text-2xl" />
           <p className="text-sm">New</p>
-        </a>
+        </button>
         <TimePeriodDropdown
           selectedTimePeriod={selectedTimePeriod}
           setSelectedTimePeriod={setSelectedTimePeriod}
           setTimePeriod={setTimePeriod}
-          setNewest={setNewest}
         />
       </section>
     </section>
