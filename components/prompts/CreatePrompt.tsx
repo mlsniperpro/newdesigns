@@ -133,18 +133,6 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
     try {
       await navigator.clipboard.writeText(updatedPrompt);
       console.log('Copying to clipboard was successful!');
-
-      // Query the database for the document with the matching url
-      const q = query(collection(db, 'prompts'), where('url', '==', url));
-      const querySnapshot = await getDocs(q);
-      const promptDoc = querySnapshot.docs[0]; // Assuming the url is unique, there should only be one matching document
-
-      if (promptDoc) {
-        // Update the 'votes' field of the document
-        await updateDoc(promptDoc.ref, {
-          votes: increment(1),
-        });
-      }
     } catch (err) {
       console.error('Could not copy text: ', err);
     }
