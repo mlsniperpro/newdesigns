@@ -1,4 +1,4 @@
-import { BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
+import { useEffect, useState } from 'react';
 
 
 
@@ -7,93 +7,96 @@ import { useRouter } from 'next/router';
 
 
 import { AvailablePrompts, Navbar, Topic, TopicHeader } from '@/components/prompts';
-import { TopicInterface } from '@/components/prompts/Topic';
-import { TopicPage } from '@/components/prompts/TopicHeader';
 
 
 
+import { db } from '@/config/firebase';
 import classNames from 'classnames';
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 
 
-const SUMMARY = 'is the art of putting your thoughts into words.';
-
-const createTopic = (
-  id: number,
-  slug: string,
-  icon: JSX.Element,
-  title: string,
-) => ({
-  id,
-  slug,
-  icon,
-  title,
-  prompts: 10,
-  followers: 100,
-  summary: `${title} ${SUMMARY}`,
-});
-
-const allTopics = [
-  createTopic(1, 'marketing', <BsFire />, 'Marketing'),
-  createTopic(2, 'business', <BsFillBagFill />, 'Business'),
-  createTopic(3, 'seo', <BsSearch />, 'SEO'),
-  createTopic(4, 'development', <BsLaptop />, 'Development'),
-  createTopic(5, 'writing', <BsPen />, 'Writing'),
-];
-
-const suggestedTopics: TopicInterface[] = [
-  {
-    id: 1,
-    icon: <BsFire />,
-    title: 'Marketing',
-    backgroundColor: 'bg-orange-200',
-    textColor: 'text-orange-900',
-  },
-  {
-    id: 2,
-    icon: <BsFillBagFill />,
-    title: 'Business',
-    backgroundColor: 'bg-blue-200',
-    textColor: 'text-blue-900',
-  },
-  {
-    id: 3,
-    icon: <BsSearch />,
-    title: 'SEO',
-    backgroundColor: 'bg-purple-400',
-    textColor: 'text-purple-900',
-  },
-  {
-    id: 4,
-    icon: <BsLaptop />,
-    title: 'Development',
-    backgroundColor: 'bg-green-600',
-    textColor: 'text-green-900',
-  },
-  {
-    id: 5,
-    icon: <BsPen />,
-    title: 'Writing',
-    backgroundColor: 'bg-blue-400',
-    textColor: 'text-blue-900',
-  },
-];
-
-const defaultTopic = {
-  id: 0,
-  slug: '',
-  icon: <></>,
-  title: '',
-  prompts: 0,
-  followers: 0,
-  summary: '',
+// Define your TopicPage type
+export type TopicPage = {
+  id: string;
+  slug: string;
+  icon: JSX.Element;
+  title: string;
+  prompts: number;
+  followers: number;
+  summary: string;
+  backgroundColor: string;
+  textColor: string;
 };
 
-export default function Page({ params }: { params: TopicPage }) {
+// Define your Prompt type
+interface Prompt {
+  id: string | number;
+  title: string;
+  categories: string[];
+  description: string;
+  owner: string;
+  votes: number;
+  bookmarks: number;
+  daysPast: number;
+  url: string;
+}
+
+export default function Page() {
   const router = useRouter();
-  const topicData =
-    allTopics.find(
-      (topic) => topic.title.toLowerCase() === router.query.slug,
-    ) || defaultTopic;
+  const [prompts, setPrompts] = useState<Prompt[]>([]);
+  const [topicData, setTopicData] = useState<TopicPage[] | null>(null);
+
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      const topicSlug = router.query.slug;
+      if (typeof topicSlug === 'string') {
+        const q = query(
+          collection(db, 'prompts'),
+          where('topics', 'array-contains', topicSlug),
+        );
+        const querySnapshot = await getDocs(q);
+        const fetchedPrompts: Prompt[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data() as Prompt; // Cast the data to the Prompt type
+          fetchedPrompts.push({
+            ...data,
+            id: doc.id, // Add the document ID to the data
+          });
+        });
+        setPrompts(fetchedPrompts);
+      }
+    };
+
+    const fetchTopics = async () => {
+      const querySnapshot = await getDocs(collection(db, 'topics'));
+      const topics: TopicPage[] = [];
+      querySnapshot.forEach((doc) => {
+        topics.push({ id: doc.id, ...doc.data() } as TopicPage);
+      });
+      setTopicData(topics);
+    };
+    fetchTopics();
+    fetchPrompts();
+  }, [router.query.slug]);
+
+  if (!topicData) {
+    return <div>Loading...</div>;
+  }
+ 
+
+const slug = router.query.slug as string;
+ const defaultTopic = {
+   id: '',
+   slug: slug,
+   icon: <></>,
+   title: '',
+   prompts: 0,
+   followers: 0,
+   summary: '',
+ };
+const matchingTopic =
+  topicData.find((topic) => topic.title.toLowerCase() === slug.toLowerCase()) ||
+  defaultTopic;
 
   return (
     <main className="">
@@ -102,7 +105,9 @@ export default function Page({ params }: { params: TopicPage }) {
         <hr className="border border-gray-200" />
       </div>
       <section></section>
-      <TopicHeader topic={topicData} />
+
+      <TopicHeader topic={matchingTopic} />
+
       <div className="px-8 lg:px-16 2xl:px-52 py-4">
         <hr className="border border-gray-200" />
       </div>
@@ -115,13 +120,19 @@ export default function Page({ params }: { params: TopicPage }) {
           <div className="flex flex-col">
             <h2 className="text-gray-600 pb-4">Suggested Topics</h2>
             <div className="flex items-center space-x-2 flex-wrap gap-2">
-              {suggestedTopics.map((topic) => (
-                <Topic
-                  topic={topic}
-                  key={topic.id}
-                  className={classNames(topic.backgroundColor, topic.textColor)}
-                />
-              ))}
+              <div className="flex items-center space-x-2 flex-wrap gap-2">
+                {topicData &&
+                  topicData.map((topic) => (
+                    <Topic
+                      topic={topic}
+                      key={topic.id}
+                      className={classNames(
+                        topic.backgroundColor,
+                        topic.textColor,
+                      )}
+                    />
+                  ))}
+              </div>
             </div>
           </div>
         </section>

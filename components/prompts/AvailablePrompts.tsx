@@ -45,6 +45,7 @@ const AvailablePrompts = ({
   filterByTopic = true,
   selectedTopic = '',
   filteredByDate = true,
+  timePeriod = 'allTime', // Add this line
 }) => {
   const [prompts, setPrompts] = useState<PromptInterface[]>([]);
 
@@ -114,7 +115,6 @@ const AvailablePrompts = ({
     }
   };
 
-  let timePeriod = '';
   const filteredPrompts = filterByTopic
     ? prompts.filter((prompt) =>
         prompt.categories?.some(
@@ -150,7 +150,7 @@ const AvailablePrompts = ({
 
   return (
     <section className="flex flex-col space-y-6">
-      {filteredPrompts.map((prompt) => (
+      {filteredPromptsByTimeline.map((prompt) => (
         <PromptItem prompt={prompt} key={prompt.id} onUpvote={handleUpvote} />
       ))}
     </section>

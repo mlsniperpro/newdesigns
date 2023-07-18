@@ -19,6 +19,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/_app.js", "pages/prompt/[promptId].tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/_app.js", "pages/prompt/[promptId].tsx", "pages/prompt/createtopics.jsx"],
   "exclude": ["node_modules"]
 }

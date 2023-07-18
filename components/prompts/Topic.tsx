@@ -1,5 +1,5 @@
 export type TopicInterface = {
-  id: number;
+  id: string | number;
   icon: React.ReactElement;
   title: string;
   backgroundColor: string;
