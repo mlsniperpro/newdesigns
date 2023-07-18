@@ -1,26 +1,35 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FC } from 'react';
 import { BsArrowUpRight, BsBookmark, BsQuestionCircle } from 'react-icons/bs';
-import { BsArrowUpRightCircle, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
+import {
+  BsArrowUpRightCircle,
+  BsFillBagFill,
+  BsFire,
+  BsLaptop,
+  BsPen,
+  BsSearch,
+} from 'react-icons/bs';
 import { FcMoneyTransfer } from 'react-icons/fc';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
-
 import { useRouter } from 'next/router';
-
-
 
 import { CreatePrompt, Navbar, Topic } from '@/components/prompts';
 
-
-
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import { get } from 'http';
-
 
 const defaultCategory: Category = {
   id: 0,
@@ -150,7 +159,6 @@ interface CommentSectionProps {
   isPublisher: boolean;
   reported: boolean;
 }
-
 
 const CommentSection: FC<CommentSectionProps> = ({
   id,
@@ -454,17 +462,20 @@ const CustomPrompt = () => {
                 {promptData &&
                   promptData.topics &&
                   promptData.topics.map((topicName, index) => {
-                    const category =
-                      categories.find(
-                        (category) => category.title === topicName,
-                      ) || defaultCategory;
+                    const category: Category | undefined = categories.find(
+                      (category: Category) => category.title === topicName,
+                    );
+                    const categoryToUse: Category = category || {
+                      ...defaultCategory,
+                      title: topicName, // Use the topic name from Firestore
+                    };
                     return (
                       <Topic
-                        topic={{ ...category, ...category.style }}
-                        key={category.id + index} // Add index to key to ensure uniqueness
+                        topic={{ ...categoryToUse, ...categoryToUse.style }}
+                        key={categoryToUse.id + index} // Add index to key to ensure uniqueness
                         className={classNames(
-                          category.style.backgroundColor,
-                          category.style.textColor,
+                          categoryToUse.style.backgroundColor,
+                          categoryToUse.style.textColor,
                         )}
                       />
                     );

@@ -20,7 +20,6 @@ import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 
-/*
 const icons = {
   Marketing: <BsFire />,
   Business: <BsFillBagFill />,
@@ -30,23 +29,6 @@ const icons = {
   Financial: <FcMoneyTransfer />,
 };
 
-const colors = {
-  Marketing: ['bg-orange-200', 'text-orange-900'],
-  Business: ['bg-blue-200', 'text-blue-900'],
-  SEO: ['bg-purple-400', 'text-purple-900'],
-  Development: ['bg-green-600', 'text-green-900'],
-  Writing: ['bg-blue-400', 'text-blue-900'],
-  Financial: ['bg-green-300', 'text-green-800'],
-};
-
-const topics: TopicInterface[] = Object.keys(icons).map((title, index) => ({
-  id: index + 1,
-  icon: icons[title as keyof typeof icons],
-  title,
-  backgroundColor: colors[title as keyof typeof colors][0],
-  textColor: colors[title as keyof typeof colors][1],
-}));
-*/
 export default function Page() {
   const [selectedTopics, setSelectedTopics] = useState<TopicInterface[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -71,22 +53,16 @@ export default function Page() {
     const topicsCollection = collection(db, 'topics'); // replace 'topics' with your collection name
     const topicsSnapshot = await getDocs(topicsCollection);
     const topicsList = topicsSnapshot.docs.map((doc) => doc.data());
+    console.log('The topic I got are: ', topicsList);
     return topicsList;
   }
-  const iconComponents = {
-    BsFire: <BsFire />,
-    BsFillBagFill: <BsFillBagFill />,
-    BsSearch: <BsSearch />,
-    BsLaptop: <BsLaptop />,
-    BsPen: <BsPen />,
-    FcMoneyTransfer: <FcMoneyTransfer />,
-  };
 
   useEffect(() => {
     fetchTopicsFromFirebase().then((topicsList) => {
       const topicsWithIcons = topicsList.map((topic, index) => ({
         id: index + 1,
-        icon: iconComponents[topic.icon as keyof typeof iconComponents],
+        icon:
+          icons[topic.title as keyof typeof icons] || Object.values(icons)[0],
         title: topic.title,
         backgroundColor: topic.backgroundColor,
         textColor: topic.textColor,
