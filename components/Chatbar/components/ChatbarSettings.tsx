@@ -1,9 +1,9 @@
 import { IconFileExport, IconSettings } from '@tabler/icons-react';
 import { useContext, useState } from 'react';
+
 import Link from 'next/link';
 
 //import { useTranslation } from 'next-i18next';
-
 import HomeContext from '@/pages/api/home/home.context';
 
 import { SettingDialog } from '@/components/Settings/SettingDialog';
@@ -63,9 +63,7 @@ export const ChatbarSettings = () => {
 
       {/*!serverSidePluginKeysSet ? <PluginKeys /> : null*/}
       <button>
-        <Link href="/">
-        Home
-        </Link>
+        <Link href="/">VIONIKO MENU</Link>
       </button>
       <SettingDialog
         open={isSettingDialogOpen}
