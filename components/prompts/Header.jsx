@@ -112,7 +112,7 @@ const Header = ({ setTimePeriod, setNewest, setLanguage }) => {
           className="flex space-x-1 lg:space-x-3 items-center border border-gray-400 rounded-[20px] px-5 py-2"
         >
           <CiSun className="text-yellow-500 text-sm lg:text-2xl" />
-          <p className="text-sm">New</p>
+          <p className="text-sm">Newest/Oldest</p>
         </button>
         <TimePeriodDropdown
           selectedTimePeriod={selectedTimePeriod}

@@ -118,7 +118,7 @@ const matchingTopic =
         <section className="xl:basis-2/5 flex space-x-2">
           <div className="border-l-solid border-l-gray-300 border-l-[1px]"></div>
           <div className="flex flex-col">
-            <h2 className="text-gray-600 pb-4">Suggested Topics</h2>
+            <h2 className="text-gray-600 pb-4">TOPICS/TEMAS</h2>
             <div className="flex items-center space-x-2 flex-wrap gap-2">
               <div className="flex items-center space-x-2 flex-wrap gap-2">
                 {topicData &&
