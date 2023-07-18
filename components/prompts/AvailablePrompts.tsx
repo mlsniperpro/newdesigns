@@ -39,6 +39,8 @@ interface PromptInterface {
   bookmarks: number;
   daysPast: number;
   url: string;
+  topics: string[];
+  userId: string;
 }
 
 const AvailablePrompts = ({
@@ -46,6 +48,7 @@ const AvailablePrompts = ({
   selectedTopic = '',
   filteredByDate = true,
   timePeriod = 'allTime', // Add this line
+  newest = false,
 }) => {
   const [prompts, setPrompts] = useState<PromptInterface[]>([]);
 
@@ -62,7 +65,9 @@ const AvailablePrompts = ({
           description: data.description,
           owner: data.owner,
           votes: data.votes || 0,
+          topics: data.topics,
           bookmarks: data.bookmarks,
+          userId: data.userId,
           daysPast: Math.ceil(
             Math.abs(
               new Date().getTime() - new Date(data.dayPosted).getTime(),
@@ -72,11 +77,17 @@ const AvailablePrompts = ({
           url: data.url,
         });
       });
+      // Sort the prompts by votes in descending order
+      fetchedPrompts.sort((a, b) => b.votes - a.votes);
+      // If newest is true, sort the prompts by daysPast in ascending order
+      if (newest) {
+        fetchedPrompts.sort((a, b) => a.daysPast - b.daysPast);
+      }
       setPrompts(fetchedPrompts);
     };
 
     fetchPrompts();
-  }, []);
+  }, [newest]); // Add newest as a dependency
 
   const handleUpvote = async (id: string) => {
     const user = auth.currentUser;
@@ -116,11 +127,7 @@ const AvailablePrompts = ({
   };
 
   const filteredPrompts = filterByTopic
-    ? prompts.filter((prompt) =>
-        prompt.categories?.some(
-          (category) => category.title.toLowerCase() === selectedTopic,
-        ),
-      )
+    ? prompts.filter((prompt) => prompt.topics?.includes(selectedTopic))
     : prompts;
 
   const filteredPromptsByTimeline = filteredByDate

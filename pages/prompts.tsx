@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   BsFillBagFill,
   BsFire,
@@ -9,8 +10,6 @@ import { FcMoneyTransfer } from 'react-icons/fc';
 
 import { AvailablePrompts, Header, Navbar } from '@/components/prompts';
 import Topic from '@/components/prompts/Topic';
-
-import classNames from 'classnames';
 
 const suggestedTopics = [
   {
@@ -58,22 +57,28 @@ const suggestedTopics = [
 ];
 
 export default function Home() {
+  const [timePeriod, setTimePeriod] = useState('allTime');
+  const [newest, setNewest] = useState(false);
+
+  useEffect(() => {
+    console.log("Here is the time period: ", timePeriod);
+  }, [timePeriod]);
+
   return (
-    <main>
+    <main className="px-4 lg:px-16 2xl:px-52 py-8">
       <Navbar />
-      <Header />
-      <div className="py-4">
-        <hr className="border border-gray-200" />
-      </div>
-      <section className="flex flex-col-reverse xl:flex-row xl:space-x-4 px-8 lg:px-16 2xl:px-52 pb-8 pt-8 2xl:pt-16">
-        <section className="pt-8 xl:pt-0 xl:basis-3/5 flex flex-col">
-          <div className="items-start flex"></div>
-          <div>
-            <AvailablePrompts filterByTopic={false} />
-          </div>
-        </section>
-        <section className="xl:basis-2/5 flex space-x-2">
-          <div className="border-l-solid border-l-gray-300 border-l-[1px]"></div>
+      <Header setTimePeriod={setTimePeriod} setNewest={setNewest} />
+      <hr className="border border-gray-200 my-4" />
+      <div className="flex flex-col-reverse xl:flex-row xl:space-x-4">
+        <main className="xl:flex-grow pt-8 xl:pt-0">
+          <AvailablePrompts
+            filterByTopic={false}
+            timePeriod={timePeriod}
+            newest={newest}
+          />
+        </main>
+        <aside className="xl:w-2/5 pt-8 xl:pt-0 flex space-x-2">
+          <div className="border-l border-gray-300"></div>
           <div className="flex flex-col">
             <h2 className="text-gray-600 pb-4">Suggested Topics</h2>
             <div className="flex items-center space-x-2 flex-wrap gap-2">
@@ -81,13 +86,13 @@ export default function Home() {
                 <Topic
                   topic={topic}
                   key={topic.id}
-                  className={classNames(topic.backgroundColor, topic.textColor)}
+                  className={`${topic.backgroundColor} ${topic.textColor}`}
                 />
               ))}
             </div>
           </div>
-        </section>
-      </section>
+        </aside>
+      </div>
     </main>
   );
 }
