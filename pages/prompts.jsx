@@ -7,67 +7,43 @@ import {
   BsSearch,
 } from 'react-icons/bs';
 import { FcMoneyTransfer } from 'react-icons/fc';
-
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/config/firebase';
 import { AvailablePrompts, Header, Navbar } from '@/components/prompts';
 import Topic from '@/components/prompts/Topic';
-
-const suggestedTopics = [
-  {
-    id: 1,
-    icon: <BsFire />,
-    title: 'Marketing',
-    backgroundColor: 'bg-orange-200',
-    textColor: 'text-orange-900',
-  },
-  {
-    id: 2,
-    icon: <BsFillBagFill />,
-    title: 'Business',
-    backgroundColor: 'bg-blue-200',
-    textColor: 'text-blue-900',
-  },
-  {
-    id: 3,
-    icon: <BsSearch />,
-    title: 'SEO',
-    backgroundColor: 'bg-purple-400',
-    textColor: 'text-purple-900',
-  },
-  {
-    id: 4,
-    icon: <BsLaptop />,
-    title: 'Development',
-    backgroundColor: 'bg-green-600',
-    textColor: 'text-green-900',
-  },
-  {
-    id: 5,
-    icon: <BsPen />,
-    title: 'Writing',
-    backgroundColor: 'bg-blue-400',
-    textColor: 'text-blue-900',
-  },
-  {
-    id: 6,
-    icon: <FcMoneyTransfer />,
-    title: 'Financial',
-    backgroundColor: 'bg-green-300',
-    textColor: 'text-green-800',
-  },
-];
+const icons = {
+  Marketing: <BsFire />,
+  Business: <BsFillBagFill />,
+  SEO: <BsSearch />,
+  Development: <BsLaptop />,
+  Writing: <BsPen />,
+  Financial: <FcMoneyTransfer />,
+};
 
 export default function Home() {
+  const [suggestedTopics, setSuggestedTopics] = useState([]);
   const [timePeriod, setTimePeriod] = useState('allTime');
   const [newest, setNewest] = useState(false);
   const [language, setLanguage] = useState('Spanish');
 
   useEffect(() => {
-    console.log('Here is the Language ', language);
-  }, [language]);
+    const fetchTopics = async () => {
+      const topicsCollection = await getDocs(collection(db, 'topics'));
+      setSuggestedTopics(
+        topicsCollection.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
+      );
+      //Now map over the topics and add the icon
+      setSuggestedTopics((prev) =>
+        prev.map((topic) => ({
+          ...topic,
+          icon: icons[topic.title],
+        })),
+      );
+    };
 
-  useEffect(() => {
-    console.log('Here is the language: ', language);
-  }, [language]);
+    fetchTopics();
+  }, []);
+
 
   return (
     <main className="px-4 lg:px-16 2xl:px-52 py-8">

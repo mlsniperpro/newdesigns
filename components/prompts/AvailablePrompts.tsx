@@ -1,16 +1,25 @@
 import { useEffect, useState } from 'react';
-import { BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
-
-
+import {
+  BsFillBagFill,
+  BsFire,
+  BsLaptop,
+  BsPen,
+  BsSearch,
+} from 'react-icons/bs';
 
 import PromptItem, { Prompt } from './PromptItem';
 import { TopicInterface } from './Topic';
 
-
-
 import { auth, db } from '@/config/firebase';
-import { arrayUnion, collection, doc, getDoc, getDocs, increment, updateDoc } from 'firebase/firestore';
-
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  increment,
+  updateDoc,
+} from 'firebase/firestore';
 
 interface CategoryInterface {
   id: number;
@@ -44,7 +53,9 @@ const AvailablePrompts = ({
   language = 'all',
 }) => {
   const [prompts, setPrompts] = useState<PromptInterface[]>([]);
-
+  useEffect(() => {
+    console.log('Here is the current topic selected: ', selectedTopic);
+  }, [selectedTopic]);
   useEffect(() => {
     const fetchPrompts = async () => {
       const querySnapshot = await getDocs(collection(db, 'prompts'));
@@ -131,9 +142,12 @@ const AvailablePrompts = ({
       console.log('Prompt does not exist');
     }
   };
-
   const filteredPrompts = filterByTopic
-    ? prompts.filter((prompt) => prompt.topics?.includes(selectedTopic))
+    ? prompts.filter((prompt) =>
+        prompt.topics
+          ?.map((topic) => topic.toLowerCase())
+          .includes(selectedTopic.toLowerCase()),
+      )
     : prompts;
 
   const filteredPromptsByTimeline = filteredByDate
