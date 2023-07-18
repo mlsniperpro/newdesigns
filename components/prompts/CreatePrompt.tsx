@@ -18,11 +18,13 @@ interface CreatePromptProps {
   prompt: string;
   url: string;
 }
+
 interface SelectInputProps {
   label: string;
   name: string;
   id: string;
   options: string[];
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const SelectInput: React.FC<SelectInputProps> = ({
@@ -30,6 +32,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   name,
   id,
   options,
+  onChange,
 }) => (
   <div className="flex items-center justify-between space-x-4">
     <label htmlFor={id} className="text-gray-700 basis-1/2">
@@ -39,6 +42,8 @@ const SelectInput: React.FC<SelectInputProps> = ({
       name={name}
       id={id}
       className="px-4 py-2 border border-gray-400 rounded-[15px] w-full basis-1/2"
+      value={options[0]} // Set the initial value to the first option
+      onChange={onChange}
     >
       {options.map((option) => (
         <option key={option} value={option}>
@@ -48,6 +53,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
     </select>
   </div>
 );
+
 const tagColors: { [key: string]: string } = {
   name: 'yellow',
   'fitness goal': 'pink',
@@ -57,90 +63,97 @@ const tagColors: { [key: string]: string } = {
   'muscle group 3': 'pink',
   'list of available equipment': 'blue',
   'other requirements or preferences': 'green',
-  default: 'gray', // Add a default color
+  default: 'gray',
 };
 
 const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
   const [tags, setTags] = useState<string[]>([]);
   const [tagValues, setTagValues] = useState<{ [key: string]: string }>({});
   const [upvotes, setUpvotes] = useState<number>(0);
-  useEffect(() => {
-    const fetchVotes = async () => {
-      // Query the database for the document with the matching url
-      const q = query(collection(db, 'prompts'), where('url', '==', url));
-      const querySnapshot = await getDocs(q);
-      const promptDoc = querySnapshot.docs[0]; // Assuming the url is unique, there should only be one matching document
+  const [style, setStyle] = useState<string>('default');
+  const [tone, setTone] = useState<string>('default');
+  const [language, setLanguage] = useState<string>('default');
 
-      if (promptDoc) {
-        // Get the 'votes' field of the document
-        const promptVotes = promptDoc.data().votes || 0;
+  const fetchVotes = useCallback(async () => {
+    const q = query(collection(db, 'prompts'), where('url', '==', url));
+    const querySnapshot = await getDocs(q);
+    const promptDoc = querySnapshot.docs[0];
 
-        // Update the 'upvotes' state variable
-        setUpvotes(promptVotes);
-      }
-    };
-
-    fetchVotes();
+    if (promptDoc) {
+      const promptVotes = promptDoc.data().votes || 0;
+      setUpvotes(promptVotes);
+    }
   }, [url]);
 
-  const handleUpvoteClick = useCallback(async () => {
-    // Check if the user is logged in
-    if (auth.currentUser) {
-      // Query the database for the document with the matching url
-      const q = query(collection(db, 'prompts'), where('url', '==', url));
-      const querySnapshot = await getDocs(q);
-      const promptDoc = querySnapshot.docs[0]; // Assuming the url is unique, there should only be one matching document
+  useEffect(() => {
+    fetchVotes();
+  }, [fetchVotes]);
 
-      if (promptDoc) {
-        // Get the 'voters' field of the document
-        const promptVoters = promptDoc.data().voters || [];
-
-        // Check if the user has already voted for the prompt
-        if (promptVoters.includes(auth.currentUser.uid)) {
-          console.log('You have already voted for this prompt');
-          return;
-        }
-
-        // Update the 'votes' and 'voters' fields of the document
-        await updateDoc(promptDoc.ref, {
-          votes: increment(1),
-          voters: [...promptVoters, auth.currentUser.uid],
-        });
-
-        // Update the 'upvotes' state variable
-        setUpvotes(upvotes + 1);
+  const handleCopyClick = useCallback(async () => {
+    let updatedPrompt = prompt;
+    for (const tag of tags) {
+      const tagName = tag.slice(1);
+      if (tagValues[tagName]) {
+        updatedPrompt = updatedPrompt.replace(tag, tagValues[tagName]);
       }
-    } else {
-      console.log('You must be logged in to vote');
     }
-  }, [upvotes, url]);
+
+    let additionalText = '';
+    if (language !== 'default' || tone !== 'default' || style !== 'default') {
+      additionalText = 'Please give a response to this prompt';
+      if (language !== 'default') {
+        additionalText += ` in ${language}`;
+      }
+      if (tone !== 'default') {
+        additionalText += ` and ${tone} tone`;
+      }
+      if (style !== 'default') {
+        additionalText += ` and in ${style} style`;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(updatedPrompt + ' ' + additionalText);
+      console.log('Copying to clipboard was successful!');
+    } catch (err) {
+      console.error('Could not copy text: ', err);
+    }
+  }, [prompt, tags, tagValues, language, tone, style]);
 
   useEffect(() => {
     const promptTags = prompt.match(/#\w+/g);
     setTags(promptTags || []);
   }, [prompt]);
 
-  const handleCopyClick = useCallback(async () => {
-    let updatedPrompt = prompt;
-    for (const tag of tags) {
-      const tagName = tag.slice(1); // Remove the '#' from the start of the tag
-      if (tagValues[tagName]) {
-        // Replace the tag in the prompt with the user's value
-        updatedPrompt = updatedPrompt.replace(tag, tagValues[tagName]);
+  const handleUpvoteClick = useCallback(async () => {
+    if (auth.currentUser) {
+      const q = query(collection(db, 'prompts'), where('url', '==', url));
+      const querySnapshot = await getDocs(q);
+      const promptDoc = querySnapshot.docs[0];
+
+      if (promptDoc) {
+        const promptVoters = promptDoc.data().voters || [];
+
+        if (promptVoters.includes(auth.currentUser.uid)) {
+          console.log('You have already voted for this prompt');
+          return;
+        }
+
+        await updateDoc(promptDoc.ref, {
+          votes: increment(1),
+          voters: [...promptVoters, auth.currentUser.uid],
+        });
+
+        setUpvotes((prevVotes) => prevVotes + 1);
       }
+    } else {
+      console.log('You must be logged in to vote');
     }
+  }, [url]);
 
-    try {
-      await navigator.clipboard.writeText(updatedPrompt);
-      console.log('Copying to clipboard was successful!');
-    } catch (err) {
-      console.error('Could not copy text: ', err);
-    }
-  }, [prompt, tags, tagValues, url]);
-
-  const handleTagValueChange = (tag: string, value: string) => {
+  const handleTagValueChange = useCallback((tag: string, value: string) => {
     setTagValues((prevValues) => ({ ...prevValues, [tag]: value }));
-  };
+  }, []);
 
   return (
     <section className="p-8">
@@ -157,8 +170,8 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
         <h3 className="text-xl font-bold pb-4">Edit Tags</h3>
         <form action="" className="flex flex-col space-y-6">
           {tags.map((tag) => {
-            const tagName = tag.slice(1); // Remove the '#' from the start of the tag
-            const tagColor = tagColors[tagName] || tagColors.default; // Use the default color if the tag is not in the dictionary
+            const tagName = tag.slice(1);
+            const tagColor = tagColors[tagName] || tagColors.default;
 
             return (
               <div key={tag} className="flex flex-col space-y-2">
@@ -181,7 +194,7 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
           })}
           <button
             onClick={handleCopyClick}
-            className="flex  space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]"
+            className="flex space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]"
           >
             <Link href={`/chat`}>
               <p>Copy & Open ChatGPT</p>
@@ -192,7 +205,8 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
             label="Language"
             name="languages"
             id="language"
-            options={['spanish','english']}
+            options={['default', 'spanish', 'english']}
+            onChange={(e) => setLanguage(e.target.value)}
           />
           <SelectInput
             label="Tone"
@@ -221,6 +235,7 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
               'tentative',
               'warm',
             ]}
+            onChange={(e) => setTone(e.target.value)}
           />
           <SelectInput
             label="Style"
@@ -248,6 +263,7 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
               'satirical',
               'technical',
             ]}
+            onChange={(e) => setStyle(e.target.value)}
           />
         </form>
       </section>
