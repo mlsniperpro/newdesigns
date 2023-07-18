@@ -251,6 +251,15 @@ const Navbar = () => {
             CreateTopic
           </Link>
         )}
+        {isAdmin && (
+          <Link
+            href="/prompt/reportedcomment"
+            className="bg-black text-white rounded-[22px] px-4 py-2 flex items-center"
+          >
+            <AiOutlineStar className="inline-block mr-2" />
+            ReportedComments
+          </Link>
+        )}
       </section>
     </nav>
   );
