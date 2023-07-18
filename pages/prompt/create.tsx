@@ -1,5 +1,3 @@
-'use client';
-
 import { MouseEvent, useEffect, useRef, useState } from 'react';
 import {
   BsArrowUpRightCircle,
@@ -49,11 +47,12 @@ export default function Page() {
   const [instagram, setInstagram] = useState('');
   const [tiktok, setTiktok] = useState('');
   const [topics, setTopics] = useState<TopicInterface[]>([]);
+
   async function fetchTopicsFromFirebase() {
-    const topicsCollection = collection(db, 'topics'); // replace 'topics' with your collection name
+    const topicsCollection = collection(db, 'topics');
     const topicsSnapshot = await getDocs(topicsCollection);
     const topicsList = topicsSnapshot.docs.map((doc) => doc.data());
-    console.log('The topic I got are: ', topicsList);
+    console.log('The topics I got are:', topicsList);
     return topicsList;
   }
 
@@ -73,51 +72,37 @@ export default function Page() {
   }, []);
 
   const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
-    console.log(
-      'The tits is: ',
-      title,
-      'description is: ',
-      description,
-      'Prompt is: ',
-      prompt,
-      'Tags is: ',
-      tags,
-    );
     event.preventDefault();
 
-    // Check that no field is missing and then submit to firestore
     if (title === '' || description === '' || prompt === '' || tags === '') {
-      // Now throw the toast message
-      alert('Please fill in all fields');
+      toast.error('Please fill in all fields');
     } else if (!auth.currentUser) {
-      alert('User is not authenticated');
+      toast.error('User is not authenticated');
     } else {
-      //Get url which is title separeted by hyphens
       try {
         const docRef = await addDoc(collection(db, 'prompts'), {
-          title: title,
-          language: language,
-          description: description,
-          prompt: prompt,
-          tags: tags,
-          bio: bio,
-          website: website,
-          twitter: twitter,
-          discord: discord,
-          github: github,
-          facebook: facebook,
-          instagram: instagram,
-          tiktok: tiktok,
+          title,
+          language,
+          description,
+          prompt,
+          tags,
+          bio,
+          website,
+          twitter,
+          discord,
+          github,
+          facebook,
+          instagram,
+          tiktok,
           userId: auth.currentUser.uid,
           url: title.toLowerCase().split(' ').join('-'),
           dayPosted: new Date().toISOString().slice(0, 10),
           topics: selectedTopics.map((topic) => topic.title),
         });
-        // Provide feedback to the user
-        alert('Form submitted successfully');
+        toast.success('Form submitted successfully');
       } catch (error) {
         console.error('Error adding document: ', error);
-        alert('An error occurred while submitting the form');
+        toast.error('An error occurred while submitting the form');
       }
     }
   };
@@ -213,10 +198,10 @@ export default function Page() {
             <div className="flex flex-col">
               <label htmlFor="language">Language</label>
               <p className="text-xs font-light text-gray-600">
-                In Which Language is your prompt?
+                In which language is your prompt?
               </p>
               <select
-                id="type"
+                id="language"
                 className="p-3"
                 value={language}
                 onChange={(event) => setLanguage(event.target.value)}
@@ -313,10 +298,10 @@ export default function Page() {
             <div className="flex flex-col">
               <label htmlFor="tags">Tags</label>
               <p className="text-xs font-light text-gray-600">
-                Be mindful we don’t take responsibility for any actions taken by
-                third parties based on the information you decide to disclose.
-                Avoid sharing any sensitive information.(Tags should start with
-                # symbol and separated by space)
+                Be mindful that we don’t take responsibility for any actions
+                taken by third parties based on the information you decide to
+                disclose. Avoid sharing any sensitive information. (Tags should
+                start with the # symbol and separated by spaces)
               </p>
               <textarea
                 onChange={(event) => setTags(event.target.value)}
@@ -357,43 +342,13 @@ export default function Page() {
                   className="p-2 border border-gray-200 rounded-[10px]"
                 />
               </div>
-              <section className="flex flex-col space-y-4">
-                <div className="flex flex-col">
-                  <label htmlFor="web">WEBSITE</label>
-                  <input
-                    onChange={(event) => setWebsite(event.target.value)}
-                    type="text"
-                    placeholder="Link"
-                    className="p-2 border border-gray-200 rounded-[10px]"
-                  />
-                </div>
-                <section className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col">
-                    <label htmlFor="twitter">TWITTER</label>
-                    <input
-                      onChange={(event) => setTwitter(event.target.value)}
-                      type="text"
-                      placeholder="@user"
-                      className="p-2 border border-gray-200 rounded-[10px]"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label htmlFor="discord">DISCORD</label>
-                    <input
-                      onChange={(event) => setDiscord(event.target.value)}
-                      type="text"
-                      placeholder="@user"
-                      className="p-2 border border-gray-200 rounded-[10px]"
-                    />
-                  </div>
-                </section>
-              </section>
-              <input
+              <button
                 type="submit"
-                onClick={() => handleSubmit}
-                value="Update"
-                className="w-full text-center text-gray-700 border border-gray-300  rounded-[15px] p-3"
-              />
+                onClick={handleSubmit}
+                className="w-full text-center text-gray-700 border border-gray-300 rounded-[15px] p-3"
+              >
+                Update
+              </button>
             </form>
           </div>
         </section>

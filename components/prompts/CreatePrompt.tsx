@@ -102,15 +102,15 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
 
     let additionalText = '';
     if (language !== 'default' || tone !== 'default' || style !== 'default') {
-      additionalText = ',Please give a response to this prompt';
+      additionalText = ',Please give a response to this prompt in';
       if (language !== 'default') {
-        additionalText += ` in ${language}`;
+        additionalText += ` ${language},`;
       }
       if (tone !== 'default') {
-        additionalText += ` and ${tone} tone`;
+        additionalText += ` ${tone} tone,`;
       }
       if (style !== 'default') {
-        additionalText += ` and in ${style} style`;
+        additionalText += ` ${style} style`;
       }
     }
 
