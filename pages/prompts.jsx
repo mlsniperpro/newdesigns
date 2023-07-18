@@ -66,7 +66,7 @@ export default function Home() {
         <aside className="xl:w-2/5 pt-8 xl:pt-0 flex space-x-2">
           <div className="border-l border-gray-300"></div>
           <div className="flex flex-col">
-            <h2 className="text-gray-600 pb-4">Suggested Topics</h2>
+            <h2 className="text-gray-600 pb-4">TOPICS/TEMAS</h2>
             <div className="flex items-center space-x-2 flex-wrap gap-2">
               {suggestedTopics.map((topic) => (
                 <Topic
