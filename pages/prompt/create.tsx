@@ -52,7 +52,7 @@ export default function Page() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const [title, setTitle] = useState('');
-  const [language, setLanguage] = useState('');
+  const [language, setLanguage] = useState('Spanish');
   const [description, setDescription] = useState('');
   const [prompt, setPrompt] = useState('');
   const [tags, setTags] = useState('');
