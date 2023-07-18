@@ -386,42 +386,6 @@ export default function Page() {
                       className="p-2 border border-gray-200 rounded-[10px]"
                     />
                   </div>
-                  <div className="flex flex-col">
-                    <label htmlFor="github">GITHUB</label>
-                    <input
-                      onChange={(event) => setGithub(event.target.value)}
-                      type="text"
-                      placeholder="@user"
-                      className="p-2 border border-gray-200 rounded-[10px]"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label htmlFor="facebook">FACEBOOK</label>
-                    <input
-                      onChange={(event) => setFacebook(event.target.value)}
-                      type="text"
-                      placeholder="@user"
-                      className="p-2 border border-gray-200 rounded-[10px]"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label htmlFor="instagram">INSTAGRAM</label>
-                    <input
-                      onChange={(event) => setInstagram(event.target.value)}
-                      type="text"
-                      placeholder="@user"
-                      className="p-2 border border-gray-200 rounded-[10px]"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label htmlFor="tiktok">TIKTOK</label>
-                    <input
-                      onChange={(event) => setTiktok(event.target.value)}
-                      type="text"
-                      placeholder="@user"
-                      className="p-2 border border-gray-200 rounded-[10px]"
-                    />
-                  </div>
                 </section>
               </section>
               <input

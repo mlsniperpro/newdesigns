@@ -24,6 +24,7 @@ interface SelectInputProps {
   name: string;
   id: string;
   options: string[];
+  value: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
@@ -32,6 +33,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   name,
   id,
   options,
+  value,
   onChange,
 }) => (
   <div className="flex items-center justify-between space-x-4">
@@ -42,7 +44,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
       name={name}
       id={id}
       className="px-4 py-2 border border-gray-400 rounded-[15px] w-full basis-1/2"
-      value={options[0]} // Set the initial value to the first option
+      value={value}
       onChange={onChange}
     >
       {options.map((option) => (
@@ -100,7 +102,7 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
 
     let additionalText = '';
     if (language !== 'default' || tone !== 'default' || style !== 'default') {
-      additionalText = 'Please give a response to this prompt';
+      additionalText = ',Please give a response to this prompt';
       if (language !== 'default') {
         additionalText += ` in ${language}`;
       }
@@ -206,6 +208,7 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
             name="languages"
             id="language"
             options={['default', 'spanish', 'english']}
+            value={language}
             onChange={(e) => setLanguage(e.target.value)}
           />
           <SelectInput
@@ -235,6 +238,7 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
               'tentative',
               'warm',
             ]}
+            value={tone}
             onChange={(e) => setTone(e.target.value)}
           />
           <SelectInput
@@ -263,6 +267,7 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
               'satirical',
               'technical',
             ]}
+            value={style}
             onChange={(e) => setStyle(e.target.value)}
           />
         </form>
