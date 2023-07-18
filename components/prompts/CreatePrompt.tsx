@@ -204,7 +204,7 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
             label="Language"
             name="languages"
             id="language"
-            options={['default', 'english', 'spanish']}
+            options={['spanish','english']}
           />
           <SelectInput
             label="Tone"

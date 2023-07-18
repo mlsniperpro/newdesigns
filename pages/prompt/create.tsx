@@ -52,7 +52,7 @@ export default function Page() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const [title, setTitle] = useState('');
-  const [type, setType] = useState('');
+  const [language, setLanguage] = useState('');
   const [description, setDescription] = useState('');
   const [prompt, setPrompt] = useState('');
   const [tags, setTags] = useState('');
@@ -120,7 +120,7 @@ export default function Page() {
       try {
         const docRef = await addDoc(collection(db, 'prompts'), {
           title: title,
-          type: type,
+          language: language,
           description: description,
           prompt: prompt,
           tags: tags,
@@ -235,14 +235,13 @@ export default function Page() {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="type">Type</label>
+              <label htmlFor="language">Language</label>
               <p className="text-xs font-light text-gray-600">
-                Which type of LLM is your prompt suitable for?
+                In Which Language is your prompt?
               </p>
-              <select id="type" className="p-3">
-                <option value="">Select type</option>
-                <option value="ChatGPT">ChatGPT</option>
-                <option value="Bard">Bard</option>
+              <select id="type" className="p-3" onChange={(event)=> setLanguage(event.target.value)}>
+                <option value="Spanish">Spanish</option>
+                <option value="English">English</option>
               </select>
             </div>
             <div className="flex flex-col">
