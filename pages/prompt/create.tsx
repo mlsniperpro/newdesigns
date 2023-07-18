@@ -1,22 +1,24 @@
 'use client';
 
 import { MouseEvent, useEffect, useRef, useState } from 'react';
-import { BsArrowUpRightCircle, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
+import {
+  BsArrowUpRightCircle,
+  BsFillBagFill,
+  BsFire,
+  BsLaptop,
+  BsPen,
+  BsSearch,
+} from 'react-icons/bs';
 import { FcMoneyTransfer } from 'react-icons/fc';
 import { RiStarLine } from 'react-icons/ri';
 import { ToastContainer, toast } from 'react-toastify';
 
-
-
 import { DropDownTopic, Navbar } from '@/components/prompts';
 import Topic, { TopicInterface } from '@/components/prompts/Topic';
-
-
 
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
-
 
 /*
 const icons = {
@@ -90,11 +92,9 @@ export default function Page() {
         textColor: topic.textColor,
       }));
 
-
       setTopics(topicsWithIcons);
     });
   }, []);
-
 
   const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
     console.log(
@@ -239,7 +239,12 @@ export default function Page() {
               <p className="text-xs font-light text-gray-600">
                 In Which Language is your prompt?
               </p>
-              <select id="type" className="p-3" onChange={(event)=> setLanguage(event.target.value)}>
+              <select
+                id="type"
+                className="p-3"
+                value={language}
+                onChange={(event) => setLanguage(event.target.value)}
+              >
                 <option value="Spanish">Spanish</option>
                 <option value="English">English</option>
               </select>
