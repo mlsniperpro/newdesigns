@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BsFire } from 'react-icons/bs';
+import { BsFire, BsGlobe } from 'react-icons/bs';
 import { CiSun } from 'react-icons/ci';
 import { RxCaretDown, RxCaretUp } from 'react-icons/rx';
 
@@ -56,8 +56,47 @@ const TimePeriodDropdown = ({
   );
 };
 
-const Header = ({ setTimePeriod, setNewest }) => {
+const LanguageDropdown = ({ selectedLanguage, setSelectedLanguage }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleLanguageChange = (language) => {
+    setSelectedLanguage(language);
+  };
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex space-x-1 lg:space-x-3 items-center border border-gray-400 rounded-[20px] px-5 py-2 w-fit"
+      >
+        <BsGlobe className="text-blue-600 text-sm lg:text-2xl" />
+        <p className="text-sm">{selectedLanguage || 'Spanish'}</p>
+        {isOpen ? (
+          <RxCaretUp className="text-lg lg:text-2xl" />
+        ) : (
+          <RxCaretDown className="text-lg lg:text-2xl" />
+        )}
+      </button>
+      {isOpen && (
+        <div className="bg-gray-100 text-sm flex flex-col items-start rounded-[15px] p-4 space-y-2 absolute">
+          {['English', 'Spanish', 'all'].map((language) => (
+            <p
+              key={language}
+              className="hover:underline cursor-pointer"
+              onClick={() => handleLanguageChange(language)}
+            >
+              {language}
+            </p>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Header = ({ setTimePeriod, setNewest, setLanguage }) => {
   const [selectedTimePeriod, setSelectedTimePeriod] = useState('thisWeek');
+  const [selectedLanguage, setSelectedLanguage] = useState('Spanish');
   const [isNewest, setIsNewest] = useState(false);
 
   const handleNewestClick = () => {
@@ -79,6 +118,13 @@ const Header = ({ setTimePeriod, setNewest }) => {
           selectedTimePeriod={selectedTimePeriod}
           setSelectedTimePeriod={setSelectedTimePeriod}
           setTimePeriod={setTimePeriod}
+        />
+        <LanguageDropdown
+          selectedLanguage={selectedLanguage}
+          setSelectedLanguage={(language) => {
+            setSelectedLanguage(language);
+            setLanguage(language);
+          }}
         />
       </section>
     </section>

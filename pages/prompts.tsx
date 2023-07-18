@@ -59,15 +59,24 @@ const suggestedTopics = [
 export default function Home() {
   const [timePeriod, setTimePeriod] = useState('allTime');
   const [newest, setNewest] = useState(false);
+  const [language, setLanguage] = useState('Spanish');
 
   useEffect(() => {
-    console.log("Here is the time period: ", timePeriod);
-  }, [timePeriod]);
+    console.log('Here is the Language ', language);
+  }, [language]);
+
+  useEffect(() => {
+    console.log('Here is the language: ', language);
+  }, [language]);
 
   return (
     <main className="px-4 lg:px-16 2xl:px-52 py-8">
       <Navbar />
-      <Header setTimePeriod={setTimePeriod} setNewest={setNewest} />
+      <Header
+        setTimePeriod={setTimePeriod}
+        setNewest={setNewest}
+        setLanguage={setLanguage}
+      />
       <hr className="border border-gray-200 my-4" />
       <div className="flex flex-col-reverse xl:flex-row xl:space-x-4">
         <main className="xl:flex-grow pt-8 xl:pt-0">
@@ -75,6 +84,7 @@ export default function Home() {
             filterByTopic={false}
             timePeriod={timePeriod}
             newest={newest}
+            language={language}
           />
         </main>
         <aside className="xl:w-2/5 pt-8 xl:pt-0 flex space-x-2">

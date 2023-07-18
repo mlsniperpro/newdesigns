@@ -1,25 +1,16 @@
 import { useEffect, useState } from 'react';
-import {
-  BsFillBagFill,
-  BsFire,
-  BsLaptop,
-  BsPen,
-  BsSearch,
-} from 'react-icons/bs';
+import { BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
+
+
 
 import PromptItem, { Prompt } from './PromptItem';
 import { TopicInterface } from './Topic';
 
+
+
 import { auth, db } from '@/config/firebase';
-import {
-  arrayUnion,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  increment,
-  updateDoc,
-} from 'firebase/firestore';
+import { arrayUnion, collection, doc, getDoc, getDocs, increment, updateDoc } from 'firebase/firestore';
+
 
 interface CategoryInterface {
   id: number;
@@ -41,6 +32,7 @@ interface PromptInterface {
   url: string;
   topics: string[];
   userId: string;
+  language: string;
 }
 
 const AvailablePrompts = ({
@@ -49,13 +41,14 @@ const AvailablePrompts = ({
   filteredByDate = true,
   timePeriod = 'allTime', // Add this line
   newest = false,
+  language = 'all',
 }) => {
   const [prompts, setPrompts] = useState<PromptInterface[]>([]);
 
   useEffect(() => {
     const fetchPrompts = async () => {
       const querySnapshot = await getDocs(collection(db, 'prompts'));
-      const fetchedPrompts: PromptInterface[] = [];
+      let fetchedPrompts: PromptInterface[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         fetchedPrompts.push({
@@ -68,6 +61,7 @@ const AvailablePrompts = ({
           topics: data.topics,
           bookmarks: data.bookmarks,
           userId: data.userId,
+          language: data.language,
           daysPast: Math.ceil(
             Math.abs(
               new Date().getTime() - new Date(data.dayPosted).getTime(),
@@ -83,11 +77,23 @@ const AvailablePrompts = ({
       if (newest) {
         fetchedPrompts.sort((a, b) => a.daysPast - b.daysPast);
       }
+      //If language is Spanish, filter the prompts by language
+      if (language === 'Spanish') {
+        fetchedPrompts = fetchedPrompts.filter(
+          (prompt) => prompt.language === 'Spanish',
+        );
+      }
+      //If language is English filter the prompts by language
+      if (language === 'English') {
+        fetchedPrompts = fetchedPrompts.filter(
+          (prompt) => prompt.language === 'English',
+        );
+      }
       setPrompts(fetchedPrompts);
     };
 
     fetchPrompts();
-  }, [newest]); // Add newest as a dependency
+  }, [newest, language]); // Add newest and language as dependencies
 
   const handleUpvote = async (id: string) => {
     const user = auth.currentUser;
