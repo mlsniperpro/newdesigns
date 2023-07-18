@@ -70,7 +70,7 @@ const LanguageDropdown = ({ selectedLanguage, setSelectedLanguage }) => {
         className="flex space-x-1 lg:space-x-3 items-center border border-gray-400 rounded-[20px] px-5 py-2 w-fit"
       >
         <BsGlobe className="text-blue-600 text-sm lg:text-2xl" />
-        <p className="text-sm">{selectedLanguage || 'Spanish'}</p>
+        <p className="text-sm">{selectedLanguage || 'all'}</p>
         {isOpen ? (
           <RxCaretUp className="text-lg lg:text-2xl" />
         ) : (
@@ -96,7 +96,7 @@ const LanguageDropdown = ({ selectedLanguage, setSelectedLanguage }) => {
 
 const Header = ({ setTimePeriod, setNewest, setLanguage }) => {
   const [selectedTimePeriod, setSelectedTimePeriod] = useState('thisWeek');
-  const [selectedLanguage, setSelectedLanguage] = useState('Spanish');
+  const [selectedLanguage, setSelectedLanguage] = useState('all');
   const [isNewest, setIsNewest] = useState(false);
 
   const handleNewestClick = () => {
