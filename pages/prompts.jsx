@@ -24,7 +24,7 @@ export default function Home() {
   const [suggestedTopics, setSuggestedTopics] = useState([]);
   const [timePeriod, setTimePeriod] = useState('allTime');
   const [newest, setNewest] = useState(false);
-  const [language, setLanguage] = useState('Spanish');
+  const [language, setLanguage] = useState('all');
 
   useEffect(() => {
     const fetchTopics = async () => {
