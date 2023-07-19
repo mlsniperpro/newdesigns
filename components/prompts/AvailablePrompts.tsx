@@ -1,26 +1,17 @@
 import { useEffect, useState } from 'react';
-import {
-  BsFillBagFill,
-  BsFire,
-  BsLaptop,
-  BsPen,
-  BsSearch,
-} from 'react-icons/bs';
+import { BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
+
+
 
 import PromptItem from './PromptItem';
 import { TopicInterface } from './Topic';
 
+
+
 import { auth, db } from '@/config/firebase';
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { arrayUnion, increment } from 'firebase/firestore';
+
 
 interface CategoryInterface {
   id: number;
@@ -64,97 +55,95 @@ const AvailablePrompts: React.FC<AvailablePromptsProps> = ({
 }) => {
   const [prompts, setPrompts] = useState<PromptInterface[]>([]);
 
-  useEffect(() => {
-    const fetchPrompts = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'prompts'));
-        let fetchedPrompts: PromptInterface[] = [];
-        for (const doc of querySnapshot.docs) {
-          let username = '';
+ useEffect(() => {
+   const fetchPrompts = async () => {
+     try {
+       const querySnapshot = await getDocs(collection(db, 'prompts'));
+       const fetchPromises: Promise<PromptInterface>[] = querySnapshot.docs.map(
+         async (doc) => {
+           const data = doc.data();
+           const userSnapshot = await getDocs(
+             query(collection(db, 'users'), where('userId', '==', data.userId)),
+           );
+           let username = '';
+           userSnapshot.forEach((doc) => (username = doc.data().name));
+           return {
+             id: doc.id,
+             title: data.title,
+             categories: data.categories,
+             description: data.description,
+             owner: username,
+             votes: data.votes || 0,
+             topics: data.topics,
+             bookmarks: data.bookmarks,
+             userId: data.userId,
+             language: data.language,
+             daysPast: Math.ceil(
+               Math.abs(
+                 new Date().getTime() - new Date(data.dayPosted).getTime(),
+               ) /
+                 (1000 * 60 * 60 * 24),
+             ),
+             url: data.url,
+           };
+         },
+       );
+       let fetchedPrompts = await Promise.all(fetchPromises);
+       fetchedPrompts.sort((a, b) => b.votes - a.votes);
+       if (newest) {
+         fetchedPrompts.sort((a, b) => a.daysPast - b.daysPast);
+       }
+       if (language !== 'all') {
+         fetchedPrompts = fetchedPrompts.filter(
+           (prompt) => prompt.language.toLowerCase() === language.toLowerCase(),
+         );
+       }
+       console.log(
+         'Fetched prompts after sorting and filtering: ',
+         fetchedPrompts,
+       );
+       setPrompts(fetchedPrompts);
+     } catch (error) {
+       console.error('Error fetching prompts: ', error);
+     }
+   };
 
-          const data = doc.data();
-          console.log('Fetched prompt data: ', data);
-          const userSnapshot = await getDocs(
-            query(collection(db, 'users'), where('userId', '==', data.userId)),
-          );
-          userSnapshot.forEach((doc) => (username = doc.data().name));
-          console.log('The Username identified is : ', username);
-          fetchedPrompts.push({
-            id: doc.id,
-            title: data.title,
-            categories: data.categories,
-            description: data.description,
-            owner: username,
-            votes: data.votes || 0,
-            topics: data.topics,
-            bookmarks: data.bookmarks,
-            userId: data.userId,
-            language: data.language,
-            daysPast: Math.ceil(
-              Math.abs(
-                new Date().getTime() - new Date(data.dayPosted).getTime(),
-              ) /
-                (1000 * 60 * 60 * 24),
-            ),
-            url: data.url,
-          });
-        }
-        fetchedPrompts.sort((a, b) => b.votes - a.votes);
-        if (newest) {
-          fetchedPrompts.sort((a, b) => a.daysPast - b.daysPast);
-        }
-        if (language !== 'all') {
-          fetchedPrompts = fetchedPrompts.filter(
-            (prompt) =>
-              prompt.language.toLowerCase() === language.toLowerCase(),
-          );
-        }
-        console.log(
-          'Fetched prompts after sorting and filtering: ',
-          fetchedPrompts,
-        );
-        setPrompts(fetchedPrompts);
-      } catch (error) {
-        console.error('Error fetching prompts: ', error);
-      }
-    };
+   fetchPrompts();
+ }, [newest, language]);
 
-    fetchPrompts();
-  }, [newest, language]);
+ const handleUpvote = async (id: string) => {
+   const user = auth.currentUser;
+   if (!user) {
+     console.log('User is not authenticated');
+     return;
+   }
 
-  const handleUpvote = async (id: string) => {
-    const user = auth.currentUser;
-    if (!user) {
-      console.log('User is not authenticated');
-      return;
-    }
+   const promptDocRef = doc(db, 'prompts', id);
+   const promptDoc = await getDoc(promptDocRef);
 
-    const promptDocRef = doc(db, 'prompts', id);
-    const promptDoc = await getDoc(promptDocRef);
+   if (promptDoc.exists()) {
+     const promptData = promptDoc.data();
+     const promptVoters = promptData.voters || [];
 
-    if (promptDoc.exists()) {
-      const promptData = promptDoc.data();
-      const promptVoters = promptData.voters || [];
+     if (promptVoters.includes(user.uid)) {
+       console.log('You have already voted on this prompt');
+       return;
+     }
 
-      if (promptVoters.includes(user.uid)) {
-        console.log('You have already voted on this prompt');
-        return;
-      }
+     await updateDoc(promptDocRef, {
+       votes: increment(1),
+       voters: arrayUnion(user.uid),
+     });
 
-      await updateDoc(promptDocRef, {
-        votes: increment(1),
-        voters: arrayUnion(user.uid),
-      });
-
-      setPrompts((prevPrompts) =>
-        prevPrompts.map((prompt) =>
-          prompt.id === id ? { ...prompt, votes: prompt.votes + 1 } : prompt,
-        ),
-      );
-    } else {
-      console.log('Prompt does not exist');
-    }
-  };
+     setPrompts((prevPrompts) =>
+       prevPrompts.map((prompt) =>
+         prompt.id === id ? { ...prompt, votes: prompt.votes + 1 } : prompt,
+       ),
+     );
+   } else {
+     console.log('Prompt does not exist');
+   }
+ };
 
   const filteredPrompts = filterByTopic
     ? prompts.filter((prompt) => {
