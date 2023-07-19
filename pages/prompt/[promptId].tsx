@@ -1,26 +1,36 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FC } from 'react';
 import { BsArrowUpRight, BsBookmark, BsQuestionCircle } from 'react-icons/bs';
-import { BsArrowUpRightCircle, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
+import {
+  BsArrowUpRightCircle,
+  BsFillBagFill,
+  BsFire,
+  BsLaptop,
+  BsPen,
+  BsSearch,
+} from 'react-icons/bs';
 import { FcMoneyTransfer } from 'react-icons/fc';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
-
 import { useRouter } from 'next/router';
-
-
 
 import { CreatePrompt, Navbar, Topic } from '@/components/prompts';
 
-
-
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import { get } from 'http';
-
 
 const defaultCategory: Category = {
   id: 0,
@@ -263,42 +273,42 @@ const CustomPrompt = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEditingPrompt, setIsEditingPrompt] = useState(false);
   const [editedPrompt, setEditedPrompt] = useState<PromptData | null>(null);
-   const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState(null);
 
-   useEffect(() => {
-  if (promptData?.userId) {
-    const q = query(
-      collection(db, 'users'),
-      where('userId', '==', promptData.userId),
-    );
+  useEffect(() => {
+    if (promptData?.userId) {
+      const q = query(
+        collection(db, 'users'),
+        where('userId', '==', promptData.userId),
+      );
 
-    getDocs(q)
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          setUsername(doc.data().name); // use 'name' instead of 'username'
+      getDocs(q)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            setUsername(doc.data().name); // use 'name' instead of 'username'
+          });
+        })
+        .catch((error) => {
+          console.log('Error getting documents:', error);
         });
-      })
-      .catch((error) => {
-        console.log('Error getting documents:', error);
-      });
-  }
-}, [promptData?.userId]); // use promptData.userId as the dependency
+    }
+  }, [promptData?.userId]); // use promptData.userId as the dependency
 
-   const reportComment = async (id: string) => {
-     try {
-       const commentRef = doc(db, 'comments', id);
-       await updateDoc(commentRef, { reported: true });
-       setComments((prevComments) =>
-         prevComments.map((comment) =>
-           comment.id === id ? { ...comment, reported: true } : comment,
-         ),
-       );
-       toast.success('Comment reported successfully!');
-     } catch (err) {
-       toast.error('Error reporting comment');
-       console.error('Error reporting comment: ', err);
-     }
-   };
+  const reportComment = async (id: string) => {
+    try {
+      const commentRef = doc(db, 'comments', id);
+      await updateDoc(commentRef, { reported: true });
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === id ? { ...comment, reported: true } : comment,
+        ),
+      );
+      toast.success('Comment reported successfully!');
+    } catch (err) {
+      toast.error('Error reporting comment');
+      console.error('Error reporting comment: ', err);
+    }
+  };
   const handleUpdatePrompt = async (event: React.FormEvent) => {
     event.preventDefault();
     if (typeof PromptId === 'string' && editedPrompt !== null) {
@@ -390,7 +400,9 @@ const CustomPrompt = () => {
           const docRef = doc(db, 'prompts', querySnapshot.docs[0].id);
           await deleteDoc(docRef);
           toast.success('Prompt deleted successfully!');
-          router.push('/prompts');
+          setTimeout(() => {
+            router.push('/prompts');
+          }, 5000); // Redirect after 5 seconds
         } else {
           console.error('No document found with url: ', PromptId);
         }
@@ -472,16 +484,13 @@ const CustomPrompt = () => {
             </h2>
             <p>{promptData && promptData.description}</p>
             <div className="flex items-center space-x-4">
-              <p className="text-black font-bold"
-              onClick={() => setShowInfo(!showInfo)}
+              <p
+                className="text-black font-bold"
+                onClick={() => setShowInfo(!showInfo)}
               >
                 {promptData && username}
               </p>
-              {showInfo && (
-        <div>
-          {promptData?.bio}
-        </div>
-      )}
+              {showInfo && <div>{promptData?.bio}</div>}
               <div className="flex items-start flex-wrap gap-2">
                 {promptData &&
                   promptData.topics &&
