@@ -1,17 +1,26 @@
 import { useEffect, useState } from 'react';
-import { BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
-
-
+import {
+  BsFillBagFill,
+  BsFire,
+  BsLaptop,
+  BsPen,
+  BsSearch,
+} from 'react-icons/bs';
 
 import PromptItem from './PromptItem';
 import { TopicInterface } from './Topic';
 
-
-
 import { auth, db } from '@/config/firebase';
-import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import { arrayUnion, increment } from 'firebase/firestore';
-
 
 interface CategoryInterface {
   id: number;
@@ -60,15 +69,22 @@ const AvailablePrompts: React.FC<AvailablePromptsProps> = ({
       try {
         const querySnapshot = await getDocs(collection(db, 'prompts'));
         let fetchedPrompts: PromptInterface[] = [];
-        querySnapshot.forEach((doc) => {
+        for (const doc of querySnapshot.docs) {
+          let username = '';
+
           const data = doc.data();
           console.log('Fetched prompt data: ', data);
+          const userSnapshot = await getDocs(
+            query(collection(db, 'users'), where('userId', '==', data.userId)),
+          );
+          userSnapshot.forEach((doc) => (username = doc.data().name));
+          console.log('The Username identified is : ', username);
           fetchedPrompts.push({
             id: doc.id,
             title: data.title,
             categories: data.categories,
             description: data.description,
-            owner: data.owner,
+            owner: username,
             votes: data.votes || 0,
             topics: data.topics,
             bookmarks: data.bookmarks,
@@ -82,7 +98,7 @@ const AvailablePrompts: React.FC<AvailablePromptsProps> = ({
             ),
             url: data.url,
           });
-        });
+        }
         fetchedPrompts.sort((a, b) => b.votes - a.votes);
         if (newest) {
           fetchedPrompts.sort((a, b) => a.daysPast - b.daysPast);
@@ -142,7 +158,7 @@ const AvailablePrompts: React.FC<AvailablePromptsProps> = ({
 
   const filteredPrompts = filterByTopic
     ? prompts.filter((prompt) => {
-      console.log("The selected topic is ", selectedTopic)
+        console.log('The selected topic is ', selectedTopic);
         console.log('Checking topics for prompt: ', prompt.id, prompt.topics);
         return (
           prompt.topics &&

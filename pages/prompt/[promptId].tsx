@@ -1,35 +1,26 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FC } from 'react';
 import { BsArrowUpRight, BsBookmark, BsQuestionCircle } from 'react-icons/bs';
-import {
-  BsArrowUpRightCircle,
-  BsFillBagFill,
-  BsFire,
-  BsLaptop,
-  BsPen,
-  BsSearch,
-} from 'react-icons/bs';
+import { BsArrowUpRightCircle, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
 import { FcMoneyTransfer } from 'react-icons/fc';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
+
 import { useRouter } from 'next/router';
+
+
 
 import { CreatePrompt, Navbar, Topic } from '@/components/prompts';
 
+
+
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { get } from 'http';
+
 
 const defaultCategory: Category = {
   id: 0,
@@ -129,6 +120,7 @@ export interface PromptData {
   categoryIds: number[];
   prompt: string;
   dayPosted: string;
+  bio: string;
 }
 
 //Fetch the data from firestore database collection called prompts
@@ -259,6 +251,7 @@ const CommentSection: FC<CommentSectionProps> = ({
 };
 
 const CustomPrompt = () => {
+  const [showInfo, setShowInfo] = useState(false);
   const [isPublisher, setIsPublisher] = useState(false);
   const [promptData, setPromptData] = useState<PromptData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -270,21 +263,42 @@ const CustomPrompt = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEditingPrompt, setIsEditingPrompt] = useState(false);
   const [editedPrompt, setEditedPrompt] = useState<PromptData | null>(null);
-  const reportComment = async (id: string) => {
-    try {
-      const commentRef = doc(db, 'comments', id);
-      await updateDoc(commentRef, { reported: true });
-      setComments((prevComments) =>
-        prevComments.map((comment) =>
-          comment.id === id ? { ...comment, reported: true } : comment,
-        ),
-      );
-      toast.success('Comment reported successfully!');
-    } catch (err) {
-      toast.error('Error reporting comment');
-      console.error('Error reporting comment: ', err);
-    }
-  };
+   const [username, setUsername] = useState(null);
+
+   useEffect(() => {
+  if (promptData?.userId) {
+    const q = query(
+      collection(db, 'users'),
+      where('userId', '==', promptData.userId),
+    );
+
+    getDocs(q)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          setUsername(doc.data().name); // use 'name' instead of 'username'
+        });
+      })
+      .catch((error) => {
+        console.log('Error getting documents:', error);
+      });
+  }
+}, [promptData?.userId]); // use promptData.userId as the dependency
+
+   const reportComment = async (id: string) => {
+     try {
+       const commentRef = doc(db, 'comments', id);
+       await updateDoc(commentRef, { reported: true });
+       setComments((prevComments) =>
+         prevComments.map((comment) =>
+           comment.id === id ? { ...comment, reported: true } : comment,
+         ),
+       );
+       toast.success('Comment reported successfully!');
+     } catch (err) {
+       toast.error('Error reporting comment');
+       console.error('Error reporting comment: ', err);
+     }
+   };
   const handleUpdatePrompt = async (event: React.FormEvent) => {
     event.preventDefault();
     if (typeof PromptId === 'string' && editedPrompt !== null) {
@@ -455,9 +469,16 @@ const CustomPrompt = () => {
             </h2>
             <p>{promptData && promptData.description}</p>
             <div className="flex items-center space-x-4">
-              <p className="text-black font-bold">
-                {promptData && promptData.owner}
+              <p className="text-black font-bold"
+              onClick={() => setShowInfo(!showInfo)}
+              >
+                {promptData && username}
               </p>
+              {showInfo && (
+        <div>
+          {promptData?.bio}
+        </div>
+      )}
               <div className="flex items-start flex-wrap gap-2">
                 {promptData &&
                   promptData.topics &&
