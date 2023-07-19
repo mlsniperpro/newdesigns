@@ -389,10 +389,13 @@ const CustomPrompt = () => {
         if (!querySnapshot.empty) {
           const docRef = doc(db, 'prompts', querySnapshot.docs[0].id);
           await deleteDoc(docRef);
+          toast.success('Prompt deleted successfully!');
+          router.push('/prompts');
         } else {
           console.error('No document found with url: ', PromptId);
         }
       } catch (err) {
+        toast.error('Error deleting prompt');
         console.error('Error deleting prompt: ', err);
       }
     } else {
