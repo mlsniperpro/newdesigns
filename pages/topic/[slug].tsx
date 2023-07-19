@@ -15,7 +15,6 @@ import classNames from 'classnames';
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 
 
-// Define your TopicPage type
 export type TopicPage = {
   id: string;
   slug: string;
@@ -28,7 +27,6 @@ export type TopicPage = {
   textColor: string;
 };
 
-// Define your Prompt type
 interface Prompt {
   id: string | number;
   title: string;
@@ -46,57 +44,68 @@ export default function Page() {
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [topicData, setTopicData] = useState<TopicPage[] | null>(null);
 
+  const fetchData = async (
+    collectionName: string,
+    condition?: any,
+  ): Promise<any[]> => {
+    try {
+      const q = condition
+        ? query(
+            collection(db, collectionName),
+            where('topics', 'array-contains', condition),
+          )
+        : collection(db, collectionName);
+      const querySnapshot = await getDocs(q);
+      const data: any[] = [];
+      querySnapshot.forEach((doc) => {
+        data.push({
+          ...doc.data(),
+          id: doc.id,
+        });
+      });
+      return data;
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+      return []; // Return an empty array in case of error
+    }
+  };
+
   useEffect(() => {
-    const fetchPrompts = async () => {
+    const fetchPromptsAndTopics = async () => {
       const topicSlug = router.query.slug;
       if (typeof topicSlug === 'string') {
-        const q = query(
-          collection(db, 'prompts'),
-          where('topics', 'array-contains', topicSlug),
-        );
-        const querySnapshot = await getDocs(q);
-        const fetchedPrompts: Prompt[] = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data() as Prompt; // Cast the data to the Prompt type
-          fetchedPrompts.push({
-            ...data,
-            id: doc.id, // Add the document ID to the data
-          });
-        });
+        const fetchedPrompts = await fetchData('prompts', topicSlug);
+        const fetchedTopics = await fetchData('topics');
         setPrompts(fetchedPrompts);
+        setTopicData(fetchedTopics);
       }
     };
+    fetchPromptsAndTopics();
+  }, []);
 
-    const fetchTopics = async () => {
-      const querySnapshot = await getDocs(collection(db, 'topics'));
-      const topics: TopicPage[] = [];
-      querySnapshot.forEach((doc) => {
-        topics.push({ id: doc.id, ...doc.data() } as TopicPage);
-      });
-      setTopicData(topics);
-    };
-    fetchTopics();
-    fetchPrompts();
-  }, [router.query.slug]);
+
+  useEffect(() => {
+    console.log('The fetched prompts are ', prompts);
+  }, [prompts]);
 
   if (!topicData) {
     return <div>Loading...</div>;
   }
- 
 
-const slug = router.query.slug as string;
- const defaultTopic = {
-   id: '',
-   slug: slug,
-   icon: <></>,
-   title: '',
-   prompts: 0,
-   followers: 0,
-   summary: '',
- };
-const matchingTopic =
-  topicData.find((topic) => topic.title.toLowerCase() === slug.toLowerCase()) ||
-  defaultTopic;
+  const slug = router.query.slug as string;
+  const defaultTopic = {
+    id: '',
+    slug: slug,
+    icon: <></>,
+    title: '',
+    prompts: 0,
+    followers: 0,
+    summary: '',
+  };
+  const matchingTopic =
+    topicData.find(
+      (topic) => topic.title.toLowerCase() === slug.toLowerCase(),
+    ) || defaultTopic;
 
   return (
     <main className="">
