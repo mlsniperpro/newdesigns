@@ -1,22 +1,19 @@
 import { MouseEvent, useEffect, useRef, useState } from 'react';
-import {
-  BsArrowUpRightCircle,
-  BsFillBagFill,
-  BsFire,
-  BsLaptop,
-  BsPen,
-  BsSearch,
-} from 'react-icons/bs';
+import { BsArrowUpRightCircle, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
 import { FcMoneyTransfer } from 'react-icons/fc';
 import { RiStarLine } from 'react-icons/ri';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { DropDownTopic, Navbar } from '@/components/prompts';
 import Topic, { TopicInterface } from '@/components/prompts/Topic';
 
+
+
 import { auth, db } from '@/config/firebase';
 import classNames from 'classnames';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+
 
 const icons = {
   Marketing: <BsFire />,
