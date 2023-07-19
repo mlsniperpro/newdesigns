@@ -1,38 +1,42 @@
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
-import {
-  MutableRefObject,
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { MutableRefObject, memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+
+
 
 import { useTranslation } from 'next-i18next';
 
+
+
 import { getEndpoint } from '@/utils/app/api';
-import {
-  saveConversation,
-  saveConversations,
-  updateConversation,
-} from '@/utils/app/conversation';
+import { saveConversation, saveConversations, updateConversation } from '@/utils/app/conversation';
 import { throttle } from '@/utils/data/throttle';
+
+
 
 import { ChatBody, Conversation, Message } from '@/types/chat';
 import { Plugin } from '@/types/plugin';
 
+
+
 import HomeContext from '@/pages/api/home/home.context';
+
+
 
 import Spinner from '../Spinner';
 import { ChatInput } from './ChatInput';
 import { ChatLoader } from './ChatLoader';
 import { ErrorMessageDiv } from './ErrorMessageDiv';
+import { MemoizedChatMessage } from './MemoizedChatMessage';
 import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
-import { MemoizedChatMessage } from './MemoizedChatMessage';
+
+
+
+import { auth, db } from "@/config/firebase";
+import { collection, doc, getDocs, setDoc, updateDoc, where } from 'firebase/firestore';
+
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -197,6 +201,45 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               });
             }
           }
+          if (done){
+          const wordCount = text.split(' ').length;
+
+          interface WordsGeneratedDoc {
+            id: string;
+            userId: string;
+            count: number;
+          }
+          // Update the word count in Firebase
+          const docRef = await getDocs(collection(db, 'wordsgenerated'));
+          const wordsGenerated: WordsGeneratedDoc[] = docRef.docs.map(
+            (doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }),
+          ) as WordsGeneratedDoc[];
+
+          if (auth.currentUser && auth.currentUser.uid) {
+            const userId = auth.currentUser.uid;
+
+            if (wordsGenerated.some((word) => word.userId === userId)) {
+              const userDoc = wordsGenerated.find(
+                (word) => word.userId === userId,
+              );
+              if (userDoc && userDoc.id) {
+                await updateDoc(doc(db, 'wordsgenerated', userDoc.id), {
+                  count: userDoc.count + wordCount,
+                });
+              }
+            } else {
+              await setDoc(doc(db, 'wordsgenerated', userId), {
+                userId: userId,
+                count: wordCount,
+              });
+            }
+          } else {
+            console.error('No authenticated user');
+          }
+        }
           saveConversation(updatedConversation);
           const updatedConversations: Conversation[] = conversations.map(
             (conversation) => {
