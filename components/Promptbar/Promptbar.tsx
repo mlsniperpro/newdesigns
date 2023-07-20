@@ -1,24 +1,39 @@
 import { useContext, useEffect, useState } from 'react';
-//import { useTranslation } from 'react-i18next';
+import {doc, deleteDoc} from 'firebase/firestore';
+import { db } from '@/config/firebase';
 
+//import { useTranslation } from 'react-i18next';
 import { useCreateReducer } from '@/hooks/useCreateReducer';
 
+
+
 import { savePrompts } from '@/utils/app/prompts';
+
+
 
 import { OpenAIModels } from '@/types/openai';
 import { Prompt } from '@/types/prompt';
 
+
+
 import HomeContext from '@/pages/api/home/home.context';
+
+
 
 import { PromptFolders } from './components/PromptFolders';
 import { PromptbarSettings } from './components/PromptbarSettings';
 import { Prompts } from './components/Prompts';
 
+
+
 import Sidebar from '../Sidebar';
 import PromptbarContext from './PromptBar.context';
 import { PromptbarInitialState, initialState } from './Promptbar.state';
 
+
+
 import { v4 as uuidv4 } from 'uuid';
+
 
 const Promptbar = () => {
   //const { t } = useTranslation('promptbar');
@@ -62,11 +77,17 @@ const Promptbar = () => {
     }
   };
 
-  const handleDeletePrompt = (prompt: Prompt) => {
+  const handleDeletePrompt = async (prompt: Prompt) => {
     const updatedPrompts = prompts.filter((p) => p.id !== prompt.id);
 
     homeDispatch({ field: 'prompts', value: updatedPrompts });
     savePrompts(updatedPrompts);
+
+    // Get a document reference
+    const docRef = doc(db, 'promptsPrivate', prompt.id);
+
+    // Delete the document
+    await deleteDoc(docRef);
   };
 
   const handleUpdatePrompt = (prompt: Prompt) => {
