@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
+import { deleteDoc } from 'firebase/firestore';
 
 import { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
@@ -134,39 +135,48 @@ const Home = ({
     saveFolders(updatedFolders);
   };
 
-  const handleDeleteFolder = (folderId: string) => {
-    const updatedFolders = folders.filter((f) => f.id !== folderId);
-    dispatch({ field: 'folders', value: updatedFolders });
-    saveFolders(updatedFolders);
+ 
 
-    const updatedConversations: Conversation[] = conversations.map((c) => {
-      if (c.folderId === folderId) {
-        return {
-          ...c,
-          folderId: null,
-        };
-      }
+const handleDeleteFolder = async (folderId: string) => {
+  const updatedFolders = folders.filter((f) => f.id !== folderId);
+  dispatch({ field: 'folders', value: updatedFolders });
+  saveFolders(updatedFolders);
+  console.log("The Id of the folder deleted is: " + folderId)
 
-      return c;
-    });
+  const updatedConversations: Conversation[] = conversations.map((c) => {
+    if (c.folderId === folderId) {
+      return {
+        ...c,
+        folderId: null,
+      };
+    }
 
-    dispatch({ field: 'conversations', value: updatedConversations });
-    saveConversations(updatedConversations);
+    return c;
+  });
 
-    const updatedPrompts: Prompt[] = prompts.map((p) => {
-      if (p.folderId === folderId) {
-        return {
-          ...p,
-          folderId: null,
-        };
-      }
+  dispatch({ field: 'conversations', value: updatedConversations });
+  saveConversations(updatedConversations);
 
-      return p;
-    });
+  const updatedPrompts: Prompt[] = prompts.map((p) => {
+    if (p.folderId === folderId) {
+      return {
+        ...p,
+        folderId: null,
+      };
+    }
 
-    dispatch({ field: 'prompts', value: updatedPrompts });
-    savePrompts(updatedPrompts);
-  };
+    return p;
+  });
+
+  dispatch({ field: 'prompts', value: updatedPrompts });
+  savePrompts(updatedPrompts);
+
+  // Get a document reference
+  const docRef = doc(db, "folders", folderId);
+
+  // Delete the document
+  await deleteDoc(docRef);
+};
 
   const handleUpdateFolder = (folderId: string, name: string) => {
     const updatedFolders = folders.map((f) => {
