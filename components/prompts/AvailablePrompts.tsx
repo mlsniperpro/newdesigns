@@ -54,62 +54,82 @@ const AvailablePrompts: React.FC<AvailablePromptsProps> = ({
   language = 'all',
 }) => {
   const [prompts, setPrompts] = useState<PromptInterface[]>([]);
+   const [isAdmin, setIsAdmin] = useState(false);
+   useEffect(() => {
+     const admin =
+       auth.currentUser?.uid == 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1' ||
+       auth.currentUser?.uid == 'M8LwxAfm26SimGbDs4LDwf1HuCb2';
+     setIsAdmin(admin);
+   }, [auth.currentUser?.uid]);
 
- useEffect(() => {
-   const fetchPrompts = async () => {
-     try {
-       const querySnapshot = await getDocs(collection(db, 'prompts'));
-       const fetchPromises: Promise<PromptInterface>[] = querySnapshot.docs.map(
-         async (doc) => {
-           const data = doc.data();
-           const userSnapshot = await getDocs(
-             query(collection(db, 'users'), where('userId', '==', data.userId)),
-           );
-           let username = '';
-           userSnapshot.forEach((doc) => (username = doc.data().name));
-           return {
-             id: doc.id,
-             title: data.title,
-             categories: data.categories,
-             description: data.description,
-             owner: username,
-             votes: data.votes || 0,
-             topics: data.topics,
-             bookmarks: data.bookmarks,
-             userId: data.userId,
-             language: data.language,
-             daysPast: Math.ceil(
-               Math.abs(
-                 new Date().getTime() - new Date(data.dayPosted).getTime(),
-               ) /
-                 (1000 * 60 * 60 * 24),
-             ),
-             url: data.url,
-           };
-         },
-       );
-       let fetchedPrompts = await Promise.all(fetchPromises);
-       fetchedPrompts.sort((a, b) => b.votes - a.votes);
-       if (newest) {
-         fetchedPrompts.sort((a, b) => a.daysPast - b.daysPast);
-       }
-       if (language !== 'all') {
-         fetchedPrompts = fetchedPrompts.filter(
-           (prompt) => prompt.language.toLowerCase() === language.toLowerCase(),
-         );
-       }
-       console.log(
-         'Fetched prompts after sorting and filtering: ',
-         fetchedPrompts,
-       );
-       setPrompts(fetchedPrompts);
-     } catch (error) {
-       console.error('Error fetching prompts: ', error);
-     }
-   };
+useEffect(() => {
+  const fetchPrompts = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'prompts'));
+      const fetchPromises: Promise<PromptInterface | null>[] =
+        querySnapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          if (
+            !data.approved &&
+            ![
+              'M8LwxAfm26SimGbDs4LDwf1HuCb2',
+              'fcJAePkUVwV7fBR3uiGh5iyt2Tf1',
+            ].includes(data.userId)
+          ) {
+            return null;
+          }
+          const userSnapshot = await getDocs(
+            query(collection(db, 'users'), where('userId', '==', data.userId)),
+          );
+          let username = '';
+          userSnapshot.forEach((doc) => (username = doc.data().name));
+          return {
+            id: doc.id,
+            title: data.title,
+            categories: data.categories,
+            description: data.description,
+            owner: username,
+            votes: data.votes || 0,
+            topics: data.topics,
+            bookmarks: data.bookmarks,
+            userId: data.userId,
+            language: data.language,
+            daysPast: Math.ceil(
+              Math.abs(
+                new Date().getTime() - new Date(data.dayPosted).getTime(),
+              ) /
+                (1000 * 60 * 60 * 24),
+            ),
+            url: data.url,
+          };
+        });
+      let fetchedPrompts = (await Promise.all(fetchPromises)).filter(
+        Boolean,
+      ) as PromptInterface[];
+      fetchedPrompts.sort((a, b) => b.votes - a.votes);
+      if (newest) {
+        fetchedPrompts.sort((a, b) => a.daysPast - b.daysPast);
+      }
+      if (language !== 'all') {
+        fetchedPrompts = fetchedPrompts.filter(
+          (prompt) => prompt.language.toLowerCase() === language.toLowerCase(),
+        );
+      }
+      console.log(
+        'Fetched prompts after sorting and filtering: ',
+        fetchedPrompts,
+      );
+      setPrompts(fetchedPrompts);
+    } catch (error) {
+      console.error('Error fetching prompts: ', error);
+    }
+  };
 
-   fetchPrompts();
- }, [newest, language]);
+  fetchPrompts();
+}, [newest, language]);
+
+
+
 
  const handleUpvote = async (id: string) => {
    const user = auth.currentUser;
