@@ -260,6 +260,15 @@ const Navbar = () => {
             ReportedComments
           </Link>
         )}
+        {isAdmin && (
+          <Link
+            href="/prompt/approve"
+            className="bg-black text-white rounded-[22px] px-4 py-2 flex items-center"
+          >
+            <AiOutlineStar className="inline-block mr-2" />
+            Approve
+          </Link>
+        )}
       </section>
     </nav>
   );

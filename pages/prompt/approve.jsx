@@ -12,7 +12,16 @@ function ApprovePromptsPage() {
     const fetchPrompts = async () => {
       const promptsCollection = await getDocs(collection(db, 'prompts'));
       setPrompts(
-        promptsCollection.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
+        promptsCollection.docs
+          .map((doc) => ({ ...doc.data(), id: doc.id }))
+          .filter(
+            (prompt) =>
+              !prompt.approved &&
+              ![
+                'M8LwxAfm26SimGbDs4LDwf1HuCb2',
+                'fcJAePkUVwV7fBR3uiGh5iyt2Tf1',
+              ].includes(prompt.userId),
+          ),
       );
     };
 
@@ -22,11 +31,7 @@ function ApprovePromptsPage() {
   const handleApprove = async (id) => {
     try {
       await updateDoc(doc(db, 'prompts', id), { approved: true });
-      setPrompts(
-        prompts.map((prompt) =>
-          prompt.id === id ? { ...prompt, approved: true } : prompt,
-        ),
-      );
+      setPrompts(prompts.filter((prompt) => prompt.id !== id));
       alert('Prompt approved successfully');
     } catch (error) {
       console.error('Error approving prompt: ', error);
@@ -43,18 +48,12 @@ function ApprovePromptsPage() {
           <div key={prompt.id} className="border p-4 rounded mt-4">
             <h2 className="text-xl font-bold">{prompt.title}</h2>
             <p className="mt-2">{prompt.description}</p>
-            {!prompt.approved &&
-              ![
-                'M8LwxAfm26SimGbDs4LDwf1HuCb2',
-                'fcJAePkUVwV7fBR3uiGh5iyt2Tf1',
-              ].includes(prompt.userId) && (
-                <button
-                  onClick={() => handleApprove(prompt.id)}
-                  className="mt-4 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                >
-                  Approve
-                </button>
-              )}
+            <button
+              onClick={() => handleApprove(prompt.id)}
+              className="mt-4 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
+              Approve
+            </button>
           </div>
         ))}
       </main>
