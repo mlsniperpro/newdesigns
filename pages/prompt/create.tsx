@@ -92,7 +92,7 @@ export default function Page() {
           instagram,
           tiktok,
           userId: auth.currentUser.uid,
-          url: title.toLowerCase().split(' ').join('-'),
+          url: title.toLowerCase().trim().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '-'),
           dayPosted: new Date().toISOString().slice(0, 10),
           topics: selectedTopics.map((topic) => topic.title),
         });
