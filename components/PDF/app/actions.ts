@@ -62,7 +62,7 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
 
   await deleteDoc(chatDoc);
 
-  window.location.href = '/';
+  window.location.href = '/pdf';
 }
 
 export async function clearChats() {
@@ -78,13 +78,13 @@ export async function clearChats() {
   const querySnapshot = await getDocs(q);
 
   if (querySnapshot.empty) {
-    window.location.href = '/';
+    window.location.href = '/pdf';
     return;
   }
 
   querySnapshot.forEach((doc) => deleteDoc(doc.ref));
 
-  window.location.href = '/';
+  window.location.href = '/pdf';
 }
 
 export async function getSharedChat(id: string) {
