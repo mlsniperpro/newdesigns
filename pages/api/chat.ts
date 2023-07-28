@@ -12,8 +12,12 @@ import wasm from '../../node_modules/@dqbd/tiktoken/lite/tiktoken_bg.wasm?module
 
 
 
+import { db } from '@/config/firebase';
 import tiktokenModel from '@dqbd/tiktoken/encoders/cl100k_base.json';
 import { Tiktoken, init } from '@dqbd/tiktoken/lite/init';
+import { doc, setDoc } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
+import { nanoid } from 'nanoid';
 
 
 export const config = {
@@ -22,15 +26,47 @@ export const config = {
 
 const DEFAULT_MODEL = {
   id: 'gpt-3.5-turbo-16k',
-  tokenLimit: 16384, // Assuming the token limit for this model is 16384
-  name: 'GPT-3.5 Turbo', // You may need to adjust this based on your model's name
-  maxLength: 16384, // Assuming the max length for this model is 16384, adjust as needed
+  tokenLimit: 16384,
+  name: 'GPT-3.5 Turbo',
+  maxLength: 16384,
 };
+
+// Save chat data function
+// Save chat data function
+// Save chat data function
+// Save chat data function
+
+// Save chat data function
+async function saveChatData(userId: string, payload: any) {
+  console.log('Saving chat data to Firestore');
+  try {
+    // Log the payload to see what's being sent to Firestore
+    console.log('Payload to Firestore:', JSON.stringify(payload, null, 2));
+    
+    // Check that payload.id is defined and not an empty string
+    if (!payload.id || payload.id === '') {
+      console.error('Payload ID is not correctly defined:', payload.id);
+      return;
+    }
+
+    const docRef = doc(db, `chat`, payload.id);
+
+    // Log the document reference to see if it's being constructed correctly
+    console.log('Document reference:', JSON.stringify(docRef, null, 2));
+
+    await setDoc(docRef, payload);
+
+    console.log('Document written with ID: ', payload.id);
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
+}
+
 
 const handler = async (req: Request): Promise<Response> => {
   try {
-    let { model, messages, key, prompt, temperature } =
-      (await req.json()) as ChatBody;
+    const json = await req.json();
+    let { model, messages, key, prompt, temperature } = json as ChatBody;
 
     console.log('Received model:', model);
 
@@ -86,6 +122,25 @@ const handler = async (req: Request): Promise<Response> => {
       key,
       messagesToSend,
     );
+
+    if (model === DEFAULT_MODEL) {
+      console.log('The request received is , ', json);
+      const userId = json.userId ?? nanoid();
+      const title = messagesToSend[0].content.substring(0, 100);
+      const id = json.id ?? nanoid();
+      const createdAt = Date.now();
+      const path = `/chatpdf/${id}`;
+      const payload = {
+        id,
+        title,
+        userId,
+        createdAt,
+        path,
+        messages: messagesToSend,
+      };
+
+      await saveChatData(userId, payload); // make sure to await here*/
+    }
 
     return new Response(stream);
   } catch (error) {

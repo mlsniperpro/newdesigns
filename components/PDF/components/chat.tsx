@@ -2,6 +2,7 @@
 
 import { type Message, useChat } from 'ai/react';
 import { toast } from 'react-hot-toast';
+import {auth} from "@/config/firebase";
 
 import { ChatList } from './chat-list';
 import { ChatPanel } from './chat-panel';
@@ -16,13 +17,14 @@ export interface ChatProps extends React.ComponentProps<'div'> {
   id?: string;
 }
 
-export function Chat({ id, initialMessages, className }: ChatProps) {
+export function Chat({ id,initialMessages, className }: ChatProps) {
   let { messages, append, reload, stop, isLoading, input, setInput } =
     useChat({
       initialMessages,
       id,
       body: {
         id,
+        userId: auth.currentUser?.uid,
       },
       onResponse(response) {
         if (response.status === 401) {

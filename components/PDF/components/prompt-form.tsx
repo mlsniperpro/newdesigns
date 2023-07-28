@@ -57,7 +57,7 @@ export function PromptForm({
               onClick={e => {
                 e.preventDefault()
                 router.refresh()
-                router.push('/')
+                router.push('/pdf')
               }}
               className={cn(
                 buttonVariants({ size: 'sm', variant: 'outline' }),
@@ -95,6 +95,7 @@ export function PromptForm({
             </TooltipTrigger>
             <TooltipContent>Send message</TooltipContent>
           </Tooltip>
+              
         </div>
       </div>
     </form>

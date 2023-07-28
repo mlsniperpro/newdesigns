@@ -27,7 +27,7 @@ export class OpenAIError extends Error {
 export const OpenAIStream = async (
   model: OpenAIModel,
   systemPrompt: string,
-  temperature : number,
+  temperature: number,
   key: string,
   messages: Message[],
 ) => {
@@ -92,7 +92,13 @@ export const OpenAIStream = async (
         if (event.type === 'event') {
           const data = event.data;
 
+          if (data === '[DONE]') {
+            console.log('Stream ended with [DONE]');
+            return;
+          }
+
           try {
+            console.log('Parsing data:', data);
             const json = JSON.parse(data);
             if (json.choices[0].finish_reason != null) {
               controller.close();
@@ -102,6 +108,7 @@ export const OpenAIStream = async (
             const queue = encoder.encode(text);
             controller.enqueue(queue);
           } catch (e) {
+            console.error('Error parsing data:', data);
             controller.error(e);
           }
         }
