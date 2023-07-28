@@ -17,10 +17,6 @@ export interface ChatProps extends React.ComponentProps<'div'> {
 }
 
 export function Chat({ id, initialMessages, className }: ChatProps) {
-  /*initialMessages =  [{id : '1', 'role':'user', 'content':'tell me a joke'}, 
-{id:'2','role':'assistant', 'content':'why did the chicken cross the road'}, 
-{id: '3','role':'user', 'content':'I dont know, why did the chicken cross the road'}];
-*/
   let { messages, append, reload, stop, isLoading, input, setInput } =
     useChat({
       initialMessages,
