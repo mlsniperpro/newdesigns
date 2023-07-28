@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
-import {Chat} from '../lib/types';
 import { SidebarActions } from '../components/sidebar-actions';
 import { SidebarItem } from '../components/sidebar-item';
 
 import { getChats, removeChat, shareChat } from '../app/actions';
+import { Chat } from '../lib/types';
 
 export interface SidebarListProps {
   userId?: string;
@@ -24,6 +24,13 @@ export function SidebarList({ userId }: SidebarListProps) {
     fetchChats();
   }, [userId]);
 
+  const handleRemoveChat = async (chat: Chat) => {
+    await removeChat({ id: chat.id, path: chat.path });
+    // After removing chat, refetch chats to update the list
+    const updatedChats = await getChats(userId);
+    setChats(updatedChats);
+  };
+
   if (!chats) {
     return null; // or a loading spinner, etc.
   }
@@ -38,7 +45,7 @@ export function SidebarList({ userId }: SidebarListProps) {
                 <SidebarItem key={chat.id} chat={chat}>
                   <SidebarActions
                     chat={chat}
-                    removeChat={removeChat}
+                    removeChat={() => handleRemoveChat(chat)}
                     shareChat={shareChat}
                   />
                 </SidebarItem>

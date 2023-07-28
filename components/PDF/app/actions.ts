@@ -1,16 +1,12 @@
+"use client";
+
 import { Chat } from '../lib/types';
 
-import { auth,db } from '@/config/firebase';
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from 'firebase/firestore';
+
+
+import { auth, db } from '@/config/firebase';
+import { collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+
 
 // Replace this with the path to your `Chat` type
 
@@ -82,7 +78,11 @@ export async function clearChats() {
     return;
   }
 
-  querySnapshot.forEach((doc) => deleteDoc(doc.ref));
+  // Create an array to hold all delete promises
+  const deletePromises = querySnapshot.docs.map((doc) => deleteDoc(doc.ref));
+
+  // Wait for all delete operations to complete
+  await Promise.all(deletePromises);
 
   window.location.href = '/pdf';
 }
