@@ -19,6 +19,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/_app.js", "pages/prompt/[promptId].tsx", "pages/prompt/createtopics.jsx", "components/prompts/Header.jsx", "pages/prompts.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/_app.js", "pages/prompt/[promptId].tsx", "pages/prompt/createtopics.jsx", "components/prompts/Header.jsx", "pages/prompts.jsx", "components/PDF/app/actions.ts"],
   "exclude": ["node_modules"]
 }

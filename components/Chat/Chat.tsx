@@ -1,27 +1,29 @@
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
-import { MutableRefObject, memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import {
+  MutableRefObject,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import toast from 'react-hot-toast';
-
-
 
 import { useTranslation } from 'next-i18next';
 
-
-
 import { getEndpoint } from '@/utils/app/api';
-import { saveConversation, saveConversations, updateConversation } from '@/utils/app/conversation';
+import {
+  saveConversation,
+  saveConversations,
+  updateConversation,
+} from '@/utils/app/conversation';
 import { throttle } from '@/utils/data/throttle';
-
-
 
 import { ChatBody, Conversation, Message } from '@/types/chat';
 import { Plugin } from '@/types/plugin';
 
-
-
 import HomeContext from '@/pages/api/home/home.context';
-
-
 
 import Spinner from '../Spinner';
 import { ChatInput } from './ChatInput';
@@ -32,11 +34,15 @@ import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
 
-
-
-import { auth, db } from "@/config/firebase";
-import { collection, doc, getDocs, setDoc, updateDoc, where } from 'firebase/firestore';
-
+import { auth, db } from '@/config/firebase';
+import {
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -201,45 +207,45 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               });
             }
           }
-          if (done){
-          const wordCount = text.split(' ').length;
+          if (done) {
+            const wordCount = text.split(' ').length;
 
-          interface WordsGeneratedDoc {
-            id: string;
-            userId: string;
-            count: number;
-          }
-          // Update the word count in Firebase
-          const docRef = await getDocs(collection(db, 'wordsgenerated'));
-          const wordsGenerated: WordsGeneratedDoc[] = docRef.docs.map(
-            (doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            }),
-          ) as WordsGeneratedDoc[];
+            interface WordsGeneratedDoc {
+              id: string;
+              userId: string;
+              count: number;
+            }
+            // Update the word count in Firebase
+            const docRef = await getDocs(collection(db, 'wordsgenerated'));
+            const wordsGenerated: WordsGeneratedDoc[] = docRef.docs.map(
+              (doc) => ({
+                id: doc.id,
+                ...doc.data(),
+              }),
+            ) as WordsGeneratedDoc[];
 
-          if (auth.currentUser && auth.currentUser.uid) {
-            const userId = auth.currentUser.uid;
+            if (auth.currentUser && auth.currentUser.uid) {
+              const userId = auth.currentUser.uid;
 
-            if (wordsGenerated.some((word) => word.userId === userId)) {
-              const userDoc = wordsGenerated.find(
-                (word) => word.userId === userId,
-              );
-              if (userDoc && userDoc.id) {
-                await updateDoc(doc(db, 'wordsgenerated', userDoc.id), {
-                  count: userDoc.count + wordCount,
+              if (wordsGenerated.some((word) => word.userId === userId)) {
+                const userDoc = wordsGenerated.find(
+                  (word) => word.userId === userId,
+                );
+                if (userDoc && userDoc.id) {
+                  await updateDoc(doc(db, 'wordsgenerated', userDoc.id), {
+                    count: userDoc.count + wordCount,
+                  });
+                }
+              } else {
+                await setDoc(doc(db, 'wordsgenerated', userId), {
+                  userId: userId,
+                  count: wordCount,
                 });
               }
             } else {
-              await setDoc(doc(db, 'wordsgenerated', userId), {
-                userId: userId,
-                count: wordCount,
-              });
+              console.error('No authenticated user');
             }
-          } else {
-            console.error('No authenticated user');
           }
-        }
           saveConversation(updatedConversation);
           const updatedConversations: Conversation[] = conversations.map(
             (conversation) => {
@@ -396,7 +402,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         <div className="mx-auto flex h-full w-[300px] flex-col justify-center space-y-6 sm:w-[600px]">
           <div className="text-center text-4xl font-bold text-black dark:text-white">
             Welcome to VIONIKO AI
+            <img src="/vioniko_chat.jpeg" alt="Vioniko Chat" />
           </div>
+
           <div className="text-center text-lg text-black dark:text-white">
             <div className="mb-8">{`Vioniko AI is the market leader when it comes to making the most advanced AI content`}</div>
             <div className="mb-2 font-bold">
@@ -407,7 +415,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             <div className="mb-2">
               Dive into the world of quality copies with Vioniko
             </div>
-            
+
             <div className="mb-2">
               {
                 'Please set your OpenAI API key in the bottom left of the sidebar.'
@@ -433,7 +441,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      'Vioniko AI'
+                      <div className="text-center text-4xl font-bold text-black dark:text-white">
+                        <img src="/vioniko_chat.jpeg" alt="Vioniko Chat" />
+                      </div>
                     )}
                   </div>
 
@@ -468,8 +478,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             ) : (
               <>
                 <div className="sticky top-0 z-10 flex justify-center border border-b-neutral-300 bg-neutral-100 py-2 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
-                  {'Temp'}
-                  : {selectedConversation?.temperature} |
+                  {'Temp'}: {selectedConversation?.temperature} |
                   <button
                     className="ml-2 cursor-pointer hover:opacity-50"
                     onClick={handleSettings}

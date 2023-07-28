@@ -76,7 +76,7 @@ useEffect(() => {
     router.push('/chat');
   } else if (mode === 'prompts') {
     router.push('/prompts');
-  }
+  } (mode === "pdf") ? router.push("/pdf"): null;
 }, [mode, router]);
 
   return (
@@ -306,6 +306,35 @@ useEffect(() => {
                     }}
                   >
                     {language === "english" ? "Profile" : "Perfil"}
+                  </span>
+                </span>
+              </a>
+            </li>
+             <li
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                fontFamily: "Monospace",
+                fontSize: "13px",
+              }}
+            >
+              <a
+                onClick={() => {
+                  setMode("pdf");
+                }}
+                className="hover:bg-gray-500 hover:bg-opacity-30 hover:text-white-600 flex items-center justify-between py-1.5 px-4 rounded cursor-pointer"
+              >
+                <span className="flex items-center space-x-2">
+                  <AccountBoxIcon />
+                  <span
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      fontFamily: "Monospace",
+                      fontSize: "13px",
+                    }}
+                  >
+                    {language === "english" ? "PDF" : "PDF"}
                   </span>
                 </span>
               </a>
