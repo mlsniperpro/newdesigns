@@ -22,7 +22,7 @@ export function Header() {
           <Sidebar>
             <React.Suspense fallback={<div className="flex-1 overflow-auto" />}>
               {/* @ts-ignore */}
-              {auth.currentUser && <SidebarList userId={auth.currentUser.uid} />}
+              {auth.currentUser && <SidebarList userId={auth.currentUser?.uid} />}
             </React.Suspense>
             <SidebarFooter>
               <ThemeToggle />
