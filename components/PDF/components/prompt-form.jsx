@@ -32,8 +32,8 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
     confirmedFiles: [],
     extractedText: '',
   });
-  const [extractionCompleted, setExtractionCompleted] = useState(false);
-  const [splittedText, setSplittedText] = useState([]);
+  //const [extractionCompleted, setExtractionCompleted] = useState(false);
+ // const [splittedText, setSplittedText] = useState([]);
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -62,7 +62,7 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
     dispatch({ type: 'confirm', index });
   };
 
-  const handleExtractText = useCallback(async () => {
+  /*const handleExtractText = useCallback(async () => {
     try {
       toast.success('Extracting text from PDF...');
       const pdfJS = dynamic(() => import('pdfjs-dist/build/pdf'), {
@@ -93,6 +93,7 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
       setExtractionCompleted(true);
     }
   }, [state.confirmedFiles]);
+  
 
   useEffect(() => {
     if (
@@ -100,6 +101,7 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
       state.confirmedFiles.length > 0 &&
       !extractionCompleted
     ) {
+
       handleExtractText();
     }
   }, [
@@ -112,6 +114,7 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   useEffect(() => {
     console.log('Extracted Text', state.extractedText);
   }, [state.extractedText]);
+  */
 
   return (
     <TooltipProvider>
