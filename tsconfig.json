@@ -19,6 +19,18 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/_app.js", "pages/prompt/[promptId].tsx", "pages/prompt/createtopics.jsx", "components/prompts/Header.jsx", "pages/prompts.jsx", "components/PDF/app/actions.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "pages/_app.js",
+    "pages/prompt/[promptId].tsx",
+    "pages/prompt/createtopics.jsx",
+    "components/prompts/Header.jsx",
+    "pages/prompts.jsx",
+    "components/PDF/app/actions.ts",
+    "pages/uploader.js",
+    "components/PDF/components/prompt-form.jsx"
+  ],
   "exclude": ["node_modules"]
 }

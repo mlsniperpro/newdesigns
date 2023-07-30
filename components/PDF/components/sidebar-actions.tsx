@@ -90,7 +90,7 @@ export function SidebarActions({
               variant="ghost"
               className="h-6 w-6 p-0 hover:bg-background"
               onClick={() => setShareDialogOpen(true)}
-            >
+            >Hello, this is Icon share
               <IconShare />
               <span className="sr-only">Share</span>
             </Button>
