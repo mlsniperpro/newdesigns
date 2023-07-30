@@ -1,4 +1,5 @@
 import { UseChatHelpers } from 'ai/react'
+import Script from 'next/script'
 import * as React from 'react'
 import Textarea from 'react-textarea-autosize'
 
@@ -38,6 +39,8 @@ export function PromptForm({
 
   return (
     <TooltipProvider>
+      <Script src="https://mozilla.github.io/pdf.js/build/pdf.js" strategy="beforeInteractive" />
+      <Script src="https://mozilla.github.io/pdf.js/build/pdf.worker.js" strategy="beforeInteractive" />
     <form
       onSubmit={async e => {
         e.preventDefault()
