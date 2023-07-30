@@ -53,7 +53,11 @@ export function Chat({ id,initialMessages, className }: ChatProps) {
         messages={messages}
         input={input}
         setInput={setInput}
-      />  
+      />
+      <Dialog>
+        <DialogContent>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
