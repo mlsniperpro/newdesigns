@@ -41,6 +41,7 @@
     "eventsource-parser": "^0.1.0",
     "firebase": "^9.17.1",
     "formkit": "^1.0.0-beta.15",
+    "langchain": "^0.0.119",
     "next": "13.1.6",
     "next-i18next": "^13.2.2",
     "next-themes": "^0.2.1",

@@ -155,6 +155,9 @@ const handleExtractText = useCallback(async () => {
 
   useEffect(() => {
     console.log('Extracted Text', state.extractedText); // Log extracted text
+    const chunks = iterativeCharacterTextSplitter(state.extractedText, 2000, 100);
+    setSplittedText(chunks);
+    console.log('Splitted Text', chunks); // Log splitted text
   }, [state.extractedText]);
 
   return (
