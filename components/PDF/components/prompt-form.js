@@ -2,30 +2,24 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Textarea from 'react-textarea-autosize';
 
-
-
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 
-
-
 import { useEnterSubmit } from '../lib/hooks/use-enter-submit';
-
-
 
 import { Button, buttonVariants } from '../components/ui/button';
 import { IconArrowElbow, IconPlus } from '../components/ui/icons';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
-
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../components/ui/tooltip';
 
 import { cn } from '../lib/utils';
 
-
-
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { MemoryVectorStore } from 'langchain/vectorstores/memory';
-
 
 export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   const { formRef, onKeyDown } = useEnterSubmit();
@@ -37,6 +31,7 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   });
   const [extractionCompleted, setExtractionCompleted] = useState(false);
   const [splittedText, setSplittedText] = useState([]);
+  const [context, setContext] = useState('');
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [vectorEmbedding, setVectorEmbedding] = useState(null);
 
@@ -174,13 +169,11 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
     } else {
       let embedding = [];
       for (let i = 0; i < chunks.length; i++) {
-        embedding.push(
-          {id: i}
-        )
+        embedding.push({ id: i });
         console.log('Chunk', i, chunks[i]);
       }
       console.log('Here are the chunks of text', chunks);
-      MemoryVectorStore.fromTexts(chunks,embedding, embedding_model)
+      MemoryVectorStore.fromTexts(chunks, embedding, embedding_model)
         .then((vectorStore) => {
           setVectorEmbedding(vectorStore);
           console.log('Vector Store', vectorStore);
@@ -195,18 +188,26 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
           console.error('Error creating vector store:', error);
         });
     }
-    
 
     setSplittedText(chunks);
   }, [state.extractedText, input]);
 
   useEffect(() => {
     if (vectorEmbedding) {
-      console.log('Vector Embedding', vectorEmbedding);
-      console.log(
-        'Similarity',
-        vectorEmbedding.similarity('Can ChatGPT forecast stock market', 1),
-      );
+      async function similaritySearch() {
+        console.log('Vector Embedding', vectorEmbedding);
+        const docs = await vectorEmbedding.similaritySearch(
+          'Can ChatGPT forecast stock market',
+          4,
+        );
+        let texts = '';
+        for (let i = 0; i < docs.length; i++) {
+          texts += docs[i].pageContent + '\n';
+        }
+        console.log('Similarity', texts);
+        setContext(texts);
+      }
+      similaritySearch();
     }
   }, [vectorEmbedding]);
 
@@ -216,17 +217,26 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
         onSubmit={async (e) => {
           e.preventDefault();
 
-          const vectorStoreString = localStorage.getItem('vectorStore');
-          const vectorStore = JSON.parse(vectorStoreString);
-          console.log('Vector Store', vectorStoreString);
-          console.log('Vector Store', vectorStore);
-
           if (!input?.trim()) {
             toast.error('Please enter a prompt');
             return;
           }
+          let message;
+          if (context) {
+            message = `
+        You're role is to answer the user questions only based on the information they provide and or if you are very sure of the answer and it is
+        not in context provided, you can tell them that it is not available in the context provided and go ahead and answer the question.
+        Question: ${input}
+        Context: ${context}
+          `;
+          } else {
+            toast.error('No document found to answer the question');
+            return;
+          }
+
           setInput('');
-          await onSubmit(input);
+          setContext('');
+          await onSubmit(message);
         }}
         ref={formRef}
       >
