@@ -1,18 +1,27 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Textarea from 'react-textarea-autosize';
-import Script from 'next/script'; // Import the next/script component
 
-import dynamic from 'next/dynamic';
+
+
+// Import the next/script component
 import { useRouter } from 'next/router';
+import Script from 'next/script';
+
+
 
 import { useEnterSubmit } from '../lib/hooks/use-enter-submit';
+
+
 
 import { Button, buttonVariants } from '../components/ui/button';
 import { IconArrowElbow, IconPlus } from '../components/ui/icons';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 
+
+
 import { cn } from '../lib/utils';
+
 
 export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   const { formRef, onKeyDown } = useEnterSubmit();
@@ -26,16 +35,20 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   const [splittedText, setSplittedText] = useState([]);
   const [scriptLoaded, setScriptLoaded] = useState(false);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (window.pdfjsLib) {
-        setScriptLoaded(true);
-        clearInterval(intervalId);
-      }
-    }, 100);
 
-    return () => clearInterval(intervalId);
-  }, []);
+useEffect(() => {
+  const intervalId = setInterval(() => {
+    console.log('Interval running'); // Log when the interval runs
+    console.log('window.pdfjsLib:', window.pdfjsLib); // Log the value of window.pdfjsLib
+    if (window.pdfjsLib) {
+      setScriptLoaded(true);
+      clearInterval(intervalId);
+    }
+  }, 100);
+
+  return () => clearInterval(intervalId);
+}, []);
+
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -46,6 +59,7 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
           state.uploadedFiles.length + files.length
         }`,
       );
+      console.log('Files uploaded:', files); // Log uploaded files
     }
   };
 
@@ -63,65 +77,72 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
 
   const handleConfirmFile = (index) => {
     dispatch({ type: 'confirm', index });
+    console.log('File confirmed:', state.uploadedFiles[index]); // Log confirmed file
   };
 
-  const handleExtractText = useCallback(async () => {
-    if (!scriptLoaded) {
-      return;
-    }
+const handleExtractText = useCallback(async () => {
+  if (!scriptLoaded) {
+    console.log('Script not loaded'); // Log if script is not loaded
+    return;
+  }
 
-    try {
-      toast.success('Extracting text from PDF...');
-      const pdfJS = window.pdfjsLib;
-      pdfJS.GlobalWorkerOptions.workerSrc =
-        'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+  console.log('Starting text extraction...'); // Log start of text extraction
 
-  const extractTextFromPdf = async (file) => {
-    toast.message("The file name is "< file)
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = async function (event) {
-      try {
-        const pdf = await pdfJS.getDocument({
-          data: new Uint8Array(reader.result),
-        }).promise;
-        let text = '';
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const content = await page.getTextContent();
-          const strings = content.items.map(item => item.str);
-          text += strings.join(' ') + ' ';
-        }
-        resolve(text);
-      } catch (error) {
-        reject(error);
-      }
+  try {
+    toast.success('Extracting text from PDF...');
+    const pdfJS = window.pdfjsLib;
+    pdfJS.GlobalWorkerOptions.workerSrc =
+      'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+
+    const extractTextFromPdf = async (file) => {
+      console.log('The file name is', file.name); // Log the file name
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async function (event) {
+          try {
+            const pdf = await pdfJS.getDocument({
+              data: new Uint8Array(reader.result),
+            }).promise;
+            let text = '';
+            for (let i = 1; i <= pdf.numPages; i++) {
+              const page = await pdf.getPage(i);
+              const content = await page.getTextContent();
+              const strings = content.items.map((item) => item.str);
+              text += strings.join(' ') + ' ';
+            }
+            resolve(text);
+          } catch (error) {
+            reject(error);
+          }
+        };
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+      });
     };
-    reader.onerror = reject;
-    reader.readAsArrayBuffer(file);
-  });
-};
 
+    const texts = await Promise.all(
+      state.confirmedFiles.map(extractTextFromPdf),
+    );
 
-      const texts = await Promise.all(
-        state.confirmedFiles.map(extractTextFromPdf)
-      );
+   // console.log('Texts extracted:', texts); // Log extracted texts
 
-      dispatch({ type: 'extract', text: texts.join(' ') });
-    } catch (error) {
-      console.error('Error extracting text from PDF:', error);
-      toast.error('Error extracting text from PDF.', error);
-    } finally {
-      setExtractionCompleted(true);
-    }
-  }, [state.confirmedFiles, scriptLoaded]);
+    dispatch({ type: 'extract', text: texts.join(' ') });
+  } catch (error) {
+    console.error('Error extracting text from PDF:', error);
+  } finally {
+    setExtractionCompleted(true);
+  }
+}, [state.confirmedFiles, scriptLoaded]);
+
 
   useEffect(() => {
     if (
       state.uploadedFiles.length === 0 &&
       state.confirmedFiles.length > 0 &&
-      !extractionCompleted
+      !extractionCompleted &&
+      scriptLoaded // Add this line
     ) {
+      console.log('Starting extraction process...'); // Log start of extraction process
       handleExtractText();
     }
   }, [
@@ -129,10 +150,11 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
     state.confirmedFiles,
     handleExtractText,
     extractionCompleted,
+    scriptLoaded, // Add this line
   ]);
 
   useEffect(() => {
-    console.log('Extracted Text', state.extractedText);
+    console.log('Extracted Text', state.extractedText); // Log extracted text
   }, [state.extractedText]);
 
   return (
@@ -149,7 +171,7 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
         }}
         ref={formRef}
       >
-        <Script src="https://mozilla.github.io/pdf.js/build/pdf.js" strategy="beforeHydrate" />
+        <Script src="https://mozilla.github.io/pdf.js/build/pdf.js"  strategy="lazyOnload" onLoad={() => setScriptLoaded(true)} />
         {/* Include the pdf.js script from the CDN */}
         <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
           <div className="grid grid-cols-4 items-start space-x-4 py-4">
