@@ -1,12 +1,9 @@
-"use client";
-
 import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Textarea from 'react-textarea-autosize';
 
 
 
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
 
@@ -65,9 +62,7 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   const handleExtractText = useCallback(async () => {
     try {
       toast.success('Extracting text from PDF...');
-      const pdfJS = dynamic(() => import('pdfjs-dist/build/pdf'), {
-        ssr: false, // This line is important. It disables server-side rendering for this module
-      });
+      const pdfJS = await import('pdfjs-dist/build/pdf');
       pdfJS.GlobalWorkerOptions.workerSrc =
         window.location.origin + '/pdf.worker.min.js';
       for (const file of state.confirmedFiles) {
