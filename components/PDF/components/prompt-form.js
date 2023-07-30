@@ -4,7 +4,6 @@ import Textarea from 'react-textarea-autosize';
 
 
 
-// Import the next/script component
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 
@@ -23,6 +22,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../com
 import { cn } from '../lib/utils';
 
 
+
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { MemoryVectorStore } from 'langchain/vectorstores/memory';
+
+
 export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   const { formRef, onKeyDown } = useEnterSubmit();
   const router = useRouter();
@@ -34,21 +38,20 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   const [extractionCompleted, setExtractionCompleted] = useState(false);
   const [splittedText, setSplittedText] = useState([]);
   const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [vectorEmbedding, setVectorEmbedding] = useState(null);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      console.log('Interval running');
+      console.log('window.pdfjsLib:', window.pdfjsLib);
+      if (window.pdfjsLib) {
+        setScriptLoaded(true);
+        clearInterval(intervalId);
+      }
+    }, 100);
 
-useEffect(() => {
-  const intervalId = setInterval(() => {
-    console.log('Interval running'); // Log when the interval runs
-    console.log('window.pdfjsLib:', window.pdfjsLib); // Log the value of window.pdfjsLib
-    if (window.pdfjsLib) {
-      setScriptLoaded(true);
-      clearInterval(intervalId);
-    }
-  }, 100);
-
-  return () => clearInterval(intervalId);
-}, []);
-
+    return () => clearInterval(intervalId);
+  }, []);
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -59,7 +62,7 @@ useEffect(() => {
           state.uploadedFiles.length + files.length
         }`,
       );
-      console.log('Files uploaded:', files); // Log uploaded files
+      console.log('Files uploaded:', files);
     }
   };
 
@@ -77,72 +80,69 @@ useEffect(() => {
 
   const handleConfirmFile = (index) => {
     dispatch({ type: 'confirm', index });
-    console.log('File confirmed:', state.uploadedFiles[index]); // Log confirmed file
+    console.log('File confirmed:', state.uploadedFiles[index]);
   };
 
-const handleExtractText = useCallback(async () => {
-  if (!scriptLoaded) {
-    console.log('Script not loaded'); // Log if script is not loaded
-    return;
-  }
+  const handleExtractText = useCallback(async () => {
+    if (!scriptLoaded) {
+      console.log('Script not loaded');
+      return;
+    }
 
-  console.log('Starting text extraction...'); // Log start of text extraction
+    console.log('Starting text extraction...');
 
-  try {
-    toast.success('Extracting text from PDF...');
-    const pdfJS = window.pdfjsLib;
-    pdfJS.GlobalWorkerOptions.workerSrc =
-      'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+    try {
+      toast.success('Extracting text from PDF...');
+      const pdfJS = window.pdfjsLib;
+      pdfJS.GlobalWorkerOptions.workerSrc =
+        'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
 
-    const extractTextFromPdf = async (file) => {
-      console.log('The file name is', file.name); // Log the file name
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = async function (event) {
-          try {
-            const pdf = await pdfJS.getDocument({
-              data: new Uint8Array(reader.result),
-            }).promise;
-            let text = '';
-            for (let i = 1; i <= pdf.numPages; i++) {
-              const page = await pdf.getPage(i);
-              const content = await page.getTextContent();
-              const strings = content.items.map((item) => item.str);
-              text += strings.join(' ') + ' ';
+      const extractTextFromPdf = async (file) => {
+        console.log('The file name is', file.name);
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = async function (event) {
+            try {
+              const pdf = await pdfJS.getDocument({
+                data: new Uint8Array(reader.result),
+              }).promise;
+              let text = '';
+              for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                const strings = content.items.map((item) => item.str);
+                text += strings.join(' ') + ' ';
+              }
+              resolve(text);
+            } catch (error) {
+              reject(error);
             }
-            resolve(text);
-          } catch (error) {
-            reject(error);
-          }
-        };
-        reader.onerror = reject;
-        reader.readAsArrayBuffer(file);
-      });
-    };
+          };
+          reader.onerror = reject;
+          reader.readAsArrayBuffer(file);
+        });
+      };
 
-    const texts = await Promise.all(
-      state.confirmedFiles.map(extractTextFromPdf),
-    );
+      const texts = await Promise.all(
+        state.confirmedFiles.map(extractTextFromPdf),
+      );
 
-   // console.log('Texts extracted:', texts); // Log extracted texts
-
-    dispatch({ type: 'extract', text: texts.join(' ') });
-  } catch (error) {
-    console.error('Error extracting text from PDF:', error);
-  } finally {
-    setExtractionCompleted(true);
-  }
-}, [state.confirmedFiles, scriptLoaded]);
-
+      dispatch({ type: 'extract', text: texts.join(' ') });
+    } catch (error) {
+      console.error('Error extracting text from PDF:', error);
+    } finally {
+      setExtractionCompleted(true);
+    }
+  }, [state.confirmedFiles, scriptLoaded]);
 
   useEffect(() => {
     if (
       state.uploadedFiles.length === 0 &&
       state.confirmedFiles.length > 0 &&
       !extractionCompleted &&
-      scriptLoaded // Add this line
+      scriptLoaded
     ) {
-      console.log('Starting extraction process...'); // Log start of extraction process
+      console.log('Starting extraction process...');
       handleExtractText();
     }
   }, [
@@ -150,21 +150,77 @@ const handleExtractText = useCallback(async () => {
     state.confirmedFiles,
     handleExtractText,
     extractionCompleted,
-    scriptLoaded, // Add this line
+    scriptLoaded,
   ]);
 
   useEffect(() => {
-    console.log('Extracted Text', state.extractedText); // Log extracted text
-    const chunks = iterativeCharacterTextSplitter(state.extractedText, 2000, 100);
+    const chunks = iterativeCharacterTextSplitter(
+      state.extractedText,
+      1000,
+      100,
+    );
+
+    const embedding_model = new OpenAIEmbeddings({
+      openAIApiKey: process.env.NEXT_PUBLIC_API_KEY,
+    });
+
+    //const storedChunks = localStorage.getItem('chunks');
+
+    //if (storedChunks) return;
+
+    if (chunks.length === 0) {
+      console.log('Chunks length is 0');
+      return;
+    } else {
+      let embedding = [];
+      for (let i = 0; i < chunks.length; i++) {
+        embedding.push(
+          {id: i}
+        )
+        console.log('Chunk', i, chunks[i]);
+      }
+      console.log('Here are the chunks of text', chunks);
+      MemoryVectorStore.fromTexts(chunks,embedding, embedding_model)
+        .then((vectorStore) => {
+          setVectorEmbedding(vectorStore);
+          console.log('Vector Store', vectorStore);
+          //console.log("Now performing similarity", vectorStore.similarity('Can ChatGPT forecast stock market', 1));
+          const vectorStoreString = JSON.stringify(vectorStore);
+
+          localStorage.setItem('vectorStore', vectorStoreString);
+
+          localStorage.setItem('chunks', JSON.stringify(chunks));
+        })
+        .catch((error) => {
+          console.error('Error creating vector store:', error);
+        });
+    }
+    
+
     setSplittedText(chunks);
-    console.log('Splitted Text', chunks); // Log splitted text
-  }, [state.extractedText]);
+  }, [state.extractedText, input]);
+
+  useEffect(() => {
+    if (vectorEmbedding) {
+      console.log('Vector Embedding', vectorEmbedding);
+      console.log(
+        'Similarity',
+        vectorEmbedding.similarity('Can ChatGPT forecast stock market', 1),
+      );
+    }
+  }, [vectorEmbedding]);
 
   return (
     <TooltipProvider>
       <form
         onSubmit={async (e) => {
           e.preventDefault();
+
+          const vectorStoreString = localStorage.getItem('vectorStore');
+          const vectorStore = JSON.parse(vectorStoreString);
+          console.log('Vector Store', vectorStoreString);
+          console.log('Vector Store', vectorStore);
+
           if (!input?.trim()) {
             toast.error('Please enter a prompt');
             return;
@@ -174,8 +230,11 @@ const handleExtractText = useCallback(async () => {
         }}
         ref={formRef}
       >
-        <Script src="https://mozilla.github.io/pdf.js/build/pdf.js"  strategy="lazyOnload" onLoad={() => setScriptLoaded(true)} />
-        {/* Include the pdf.js script from the CDN */}
+        <Script
+          src="https://mozilla.github.io/pdf.js/build/pdf.js"
+          strategy="lazyOnload"
+          onLoad={() => setScriptLoaded(true)}
+        />
         <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
           <div className="grid grid-cols-4 items-start space-x-4 py-4">
             <div className="col-span-1 flex flex-col space-y-4">
