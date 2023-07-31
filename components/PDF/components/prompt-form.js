@@ -20,6 +20,7 @@ import { cn } from '../lib/utils';
 
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { MemoryVectorStore } from 'langchain/vectorstores/memory';
+import PropTypes from 'prop-types';
 
 export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   const { formRef, onKeyDown } = useEnterSubmit();
@@ -31,14 +32,16 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   });
   const [extractionCompleted, setExtractionCompleted] = useState(false);
   const [splittedText, setSplittedText] = useState([]);
+  const [contextLoading, setContextLoading] = useState(false);
   const [context, setContext] = useState('');
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [vectorEmbedding, setVectorEmbedding] = useState(null);
+  const [isExtracting, setIsExtracting] = useState(false);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const intervalId = setInterval(() => {
-      console.log('Interval running');
-      console.log('window.pdfjsLib:', window.pdfjsLib);
       if (window.pdfjsLib) {
         setScriptLoaded(true);
         clearInterval(intervalId);
@@ -85,6 +88,7 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
     }
 
     console.log('Starting text extraction...');
+    setIsExtracting(true);
 
     try {
       toast.success('Extracting text from PDF...');
@@ -125,8 +129,10 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
       dispatch({ type: 'extract', text: texts.join(' ') });
     } catch (error) {
       console.error('Error extracting text from PDF:', error);
+      toast.error('Error extracting text from PDF.');
     } finally {
       setExtractionCompleted(true);
+      setIsExtracting(false);
     }
   }, [state.confirmedFiles, scriptLoaded]);
 
@@ -135,7 +141,8 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
       state.uploadedFiles.length === 0 &&
       state.confirmedFiles.length > 0 &&
       !extractionCompleted &&
-      scriptLoaded
+      scriptLoaded &&
+      !isExtracting
     ) {
       console.log('Starting extraction process...');
       handleExtractText();
@@ -146,6 +153,7 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
     handleExtractText,
     extractionCompleted,
     scriptLoaded,
+    isExtracting,
   ]);
 
   useEffect(() => {
@@ -158,10 +166,6 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
     const embedding_model = new OpenAIEmbeddings({
       openAIApiKey: process.env.NEXT_PUBLIC_API_KEY,
     });
-
-    //const storedChunks = localStorage.getItem('chunks');
-
-    //if (storedChunks) return;
 
     if (chunks.length === 0) {
       console.log('Chunks length is 0');
@@ -177,7 +181,6 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
         .then((vectorStore) => {
           setVectorEmbedding(vectorStore);
           console.log('Vector Store', vectorStore);
-          //console.log("Now performing similarity", vectorStore.similarity('Can ChatGPT forecast stock market', 1));
           const vectorStoreString = JSON.stringify(vectorStore);
 
           localStorage.setItem('vectorStore', vectorStoreString);
@@ -193,11 +196,12 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   }, [state.extractedText, input]);
 
   useEffect(() => {
-    if (vectorEmbedding) {
-      async function similaritySearch() {
+    if (vectorEmbedding && input) {
+      async function similarity() {
+        setContextLoading(true);  
         console.log('Vector Embedding', vectorEmbedding);
         const docs = await vectorEmbedding.similaritySearch(
-          'Can ChatGPT forecast stock market',
+          input,
           4,
         );
         let texts = '';
@@ -206,8 +210,9 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
         }
         console.log('Similarity', texts);
         setContext(texts);
+        setContextLoading(false);
       }
-      similaritySearch();
+      similarity();
     }
   }, [vectorEmbedding]);
 
@@ -229,7 +234,9 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
         Question: ${input}
         Context: ${context}
           `;
-          } else {
+          } else if (contextLoading){
+            toast.error('Loading context');
+          }else {
             toast.error('No document found to answer the question');
             return;
           }
@@ -357,6 +364,13 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
     </TooltipProvider>
   );
 }
+
+PromptForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  input: PropTypes.string.isRequired,
+  setInput: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+};
 
 function fileReducer(state, action) {
   switch (action.type) {
