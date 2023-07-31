@@ -32,16 +32,15 @@ export const ChatFolders = ({ searchTerm }: Props) => {
     return (
       conversations &&
       conversations
-        .filter((conversation) => conversation.folderId)
-        .map((conversation, index) => {
-          if (conversation.folderId === currentFolder.id) {
-            return (
-              <div key={index} className="ml-5 gap-2 border-l pl-2">
-                <ConversationComponent conversation={conversation} />
-              </div>
-            );
-          }
-        })
+        .filter((conversation) => conversation.folderId === currentFolder.id)
+        .filter((conversation) =>
+          conversation.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+        .map((conversation, index) => (
+          <div key={index} className="ml-5 gap-2 border-l pl-2">
+            <ConversationComponent conversation={conversation} />
+          </div>
+        ))
     );
   };
 
@@ -50,15 +49,20 @@ export const ChatFolders = ({ searchTerm }: Props) => {
       {folders
         .filter((folder) => folder.type === 'chat')
         .sort((a, b) => a.name.localeCompare(b.name))
-        .map((folder, index) => (
-          <Folder
-            key={index}
-            searchTerm={searchTerm}
-            currentFolder={folder}
-            handleDrop={handleDrop}
-            folderComponent={ChatFolders(folder)}
-          />
-        ))}
+        .map((folder, index) => {
+          const folderConversations = ChatFolders(folder);
+          return (
+            folderConversations.length > 0 && (
+              <Folder
+                key={index}
+                searchTerm={searchTerm}
+                currentFolder={folder}
+                handleDrop={handleDrop}
+                folderComponent={folderConversations}
+              />
+            )
+          );
+        })}
     </div>
   );
 };
