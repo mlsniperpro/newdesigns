@@ -3,25 +3,26 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { AiOutlineMenu, AiOutlineStar } from 'react-icons/ai';
-import {
-  BsArrowUpRight,
-  BsFillBagFill,
-  BsFire,
-  BsLaptop,
-  BsPen,
-  BsSearch,
-} from 'react-icons/bs';
+import { BsArrowUpRight, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
+
+
+
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+
+
 import SearchIcon from '../../public/icon.jpg';
 import { Prompt } from './PromptItem';
 import { TopicInterface } from './Topic';
 
+
+
 import { auth, db } from '@/config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
+
 
 interface PromptInterface {
   id: string | number;
@@ -49,9 +50,9 @@ const Navbar = () => {
     setIsAdmin(admin);
   }, [auth.currentUser?.uid]);
 
-  const handleNavClick = () => {
-    setIsNavOpen(!isNavOpen);
-  };
+   const handleNavClick = () => {
+     setIsNavOpen(!isNavOpen);
+   };
   useEffect(() => {
     // fetch prompts from Firestore when the component mounts
     console.log('i am now fetching prompts');
@@ -128,32 +129,8 @@ const Navbar = () => {
     </>
   );
 
-  const MobileMenu = () => (
-    <>
-      <Link
-        href="/prompt/create"
-        className="bg-black text-white rounded-[22px] px-12 py-2 flex items-center"
-      >
-        <AiOutlineStar className="inline-block mr-2" />
-        Create
-      </Link>
 
-      <a href="" className="hover:text-gray-900 lg:hover:underline">
-        Topics
-      </a>
-      <a href="" className="hover:text-gray-900 lg:hover:underline">
-        Roadmap
-      </a>
-      <a href="" className="hover:text-gray-900 lg:hover:underline">
-        Feature Requests
-      </a>
-      <a href="" className="hover:text-gray-900 lg:hover:underline">
-        Support
-      </a>
-    </>
-  );
-
-  return (
+   return (
     <nav className="flex justify-between space-x-4 lg:px-16 2xl:px-52 px-8 py-8">
       <section className="flex space-x-4 justify-between">
         <div className="flex space-x-4 justify-between">
@@ -206,35 +183,15 @@ const Navbar = () => {
             )}
           </div>
         </div>
-        {isInputFocused && (
-          <div
-            onClick={() => setIsInputFocused(false)}
-            className="hidden xl:grid xl:place-items-center xl:pl-10 cursor-pointer"
-          >
-            <AiOutlineMenu className="text-3xl" />
-          </div>
-        )}
         {/* desktop menu */}
         {!isInputFocused && (
-          <div className="hidden xl:flex xl:space-x-4 xl:items-center text-gray-600">
+          <div className="flex space-x-4 items-center text-gray-600">
             <Menu />
           </div>
         )}
-        {/* mobile menu */}
-        {isNavOpen && (
-          <div className="xl:hidden flex flex-col space-y-4 items-center absolute bg-white h-screen w-full right-2 top-[100px] opacity-100 py-8">
-            <MobileMenu />
-          </div>
-        )}
       </section>
-      <div
-        onClick={handleNavClick}
-        className="grid place-items-center xl:hidden"
-      >
-        <AiOutlineMenu className="text-4xl" />
-      </div>
 
-      <section className="hidden xl:flex xl:space-x-4">
+      <section className="flex space-x-4">
         <Link
           href="/prompt/create"
           className="bg-black text-white rounded-[22px] px-4 py-2 flex items-center"
