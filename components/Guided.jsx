@@ -1,149 +1,147 @@
-import { useState } from "react";
-import ContentCard from "./ContentCard";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { auth, db } from "../config/firebase";
+import { useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
+
+
+import { auth, db } from '../config/firebase';
+import ContentCard from './ContentCard';
+
+
+
+import CategoryIcon from '@mui/icons-material/Category';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Box } from '@mui/system';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+
+
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
-
-
-import {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
-
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import CategoryIcon from '@mui/icons-material/Category';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-function Guided({language}) {
+function Guided({ language }) {
   const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState('');
   const [resNo, setResNo] = useState('res1');
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState('');
   //const [language, setLanguage] = useState("");
-  const [tone, setTone] = useState("");
-  const [copy, setCopy] = useState("");
-  const [audience, setAudience] = useState("");
-  const [response, setResponse] = useState("");
-  const [response2, setResponse2] = useState("")
-  const [response3, setResponse3] = useState("");
+  const [tone, setTone] = useState('');
+  const [copy, setCopy] = useState('');
+  const [audience, setAudience] = useState('');
+  const [response, setResponse] = useState('');
+  const [response2, setResponse2] = useState('');
+  const [response3, setResponse3] = useState('');
 
   const prompt =
-    language === "English" || language === "english" || !language
+    language === 'English' || language === 'english' || !language
       ? `You are an award winning ${copy} copywriter. Write a ${copy} copy ${
-          tone ? `in ${tone} tone` : ""
+          tone ? `in ${tone} tone` : ''
         } 
-   ${title ? `given that the product or service to promote is ${title}` : ""} ${
+   ${title ? `given that the product or service to promote is ${title}` : ''} ${
           description
             ? `and what makes the product or service unique is ${description}`
-            : ""
-        }${audience ? ` and the audience is ${audience}` : ""}`
+            : ''
+        }${audience ? ` and the audience is ${audience}` : ''}`
       : `Eres un galardonado ${copy} copywriter. Escribe un ${copy} copy ${
-          tone ? `en tono ${tone}` : ""
+          tone ? `en tono ${tone}` : ''
         }
         ${
           title
             ? `dado que el producto o servicio a promocionar es ${title}`
-            : ""
+            : ''
         } ${
           description
             ? `y lo que hace único al producto o servicio es ${description}`
-            : ""
-        }${audience ? ` y el público es ${audience}` : ""}`;
+            : ''
+        }${audience ? ` y el público es ${audience}` : ''}`;
 
   const prompt2 =
-    language === "English" || language === "english" || !language
+    language === 'English' || language === 'english' || !language
       ? `You are an award winning ${copy} copywriter. Write a ${copy} copy ${
-          tone ? `in ${tone} tone` : ""
+          tone ? `in ${tone} tone` : ''
         } 
-   ${title ? `write a promotional copy on ${title}` : ""} ${
+   ${title ? `write a promotional copy on ${title}` : ''} ${
           description
             ? `ensuring that you highlight its most remarkable unique characteristics such as ${description}`
-            : ""
+            : ''
         }${
           audience
             ? ` while keeping in mind that your audience are ${audience}`
-            : ""
+            : ''
         }`
       : `Eres un galardonado ${copy} copywriter. Escribe un ${copy} copy ${
-          tone ? `en tono ${tone}` : ""
+          tone ? `en tono ${tone}` : ''
         }
-        ${title ? `escribe un copy promocional sobre ${title}` : ""} ${
+        ${title ? `escribe un copy promocional sobre ${title}` : ''} ${
           description
             ? `asegurándote de resaltar sus características más notables y únicas como ${description}`
-            : ""
+            : ''
         }${
           audience
             ? ` mientras tengas en cuenta que tu público son ${audience}`
-            : ""
+            : ''
         }`;
 
   const prompt3 =
-    language === "English" || language === "english" || !language
+    language === 'English' || language === 'english' || !language
       ? `You are an award winning ${copy} copywriter. Write a ${copy} copy ${
-          tone ? `in ${tone} tone` : ""
+          tone ? `in ${tone} tone` : ''
         }
-        ${title ? `write an exceptional sales copy on ${title}` : ""} ${
+        ${title ? `write an exceptional sales copy on ${title}` : ''} ${
           description
             ? `ensuring that you highlight its most remarkable unique characteristics such as ${description}`
-            : ""
+            : ''
         }${
           audience
             ? ` while keeping in mind that your audience are ${audience}`
-            : ""
+            : ''
         }`
       : `Eres un galardonado ${copy} copywriter. Escribe un ${copy} copy ${
-          tone ? `en tono ${tone}` : ""
+          tone ? `en tono ${tone}` : ''
         }
         ${
-          title ? `escribe un copy de ventas excepcional sobre ${title}` : ""
+          title ? `escribe un copy de ventas excepcional sobre ${title}` : ''
         } ${
           description
             ? `asegurándote de resaltar sus características más notables y únicas como ${description}`
-            : ""
+            : ''
         }${
           audience
             ? ` mientras tengas en cuenta que tu público son ${audience}`
-            : ""
+            : ''
         }`;
-        const setRes = () => {
-          if (resNo === "res1") {
-            setResNo('res2')
-          } else if (resNo === "res2") {
-            setResNo('res3')
-          } else if (resNo === "res3") {
-            setResNo('res1')
-          }
-        }
+  const setRes = () => {
+    if (resNo === 'res1') {
+      setResNo('res2');
+    } else if (resNo === 'res2') {
+      setResNo('res3');
+    } else if (resNo === 'res3') {
+      setResNo('res1');
+    }
+  };
 
   const updateUserWordCount = async (res) => {
     try {
       //Get the document from wordsgenerated collection where userId attribute is equal to the current user's uid and update it by adding 30 to curent count attribute in the same document
-      const docRef = await getDocs(collection(db, "wordsgenerated"));
+      const docRef = await getDocs(collection(db, 'wordsgenerated'));
       const wordsGenerated = docRef.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
       //Check if the any document in wordsgenerated collection has userId attribute equal to the current user's uid if so update the count attribute by adding 30 to it or else create a new document with userId attribute equal to the current user's uid and count attribute equal to 30
       if (wordsGenerated.some((word) => word.userId === auth.currentUser.uid)) {
-        const docRef = await getDocs(collection(db, "wordsgenerated"));
+        const docRef = await getDocs(collection(db, 'wordsgenerated'));
         const wordsGenerated = docRef.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
         const userDoc = wordsGenerated.find(
-          (word) => word.userId === auth.currentUser.uid
+          (word) => word.userId === auth.currentUser.uid,
         );
-        await updateDoc(doc(db, "wordsgenerated", userDoc.id), {
+        await updateDoc(doc(db, 'wordsgenerated', userDoc.id), {
           count: userDoc.count + res.length,
         });
       } else {
-        await setDoc(doc(db, "wordsgenerated", auth.currentUser.uid), {
+        await setDoc(doc(db, 'wordsgenerated', auth.currentUser.uid), {
           userId: auth.currentUser.uid,
           count: res.length,
         });
@@ -153,62 +151,49 @@ function Guided({language}) {
     }
   };
 
- const handleSubmit = async (e) => {
-   e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoading(true);
-   const prompts = [prompt, prompt2, prompt3];
-   const requests = prompts.map((prompt) =>
-     fetch("https://api.openai.com/v1/chat/completions", {
-       method: "POST",
-       headers: {
-         Authorization: `Bearer ${API_KEY}`,
-         "Content-Type": "application/json",
-       },
-       body: JSON.stringify({
-         model: "gpt-3.5-turbo",
-         messages: [
-           {
-             role: "system",
-             content: prompt,
-           },
-         ],
-       }),
-     }).then((res) => res.json())
-   );
+    const prompts = [prompt, prompt2, prompt3];
+    const requests = prompts.map((prompt) =>
+      fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            {
+              role: 'system',
+              content: prompt,
+            },
+          ],
+        }),
+      }).then((res) => res.json()),
+    );
 
-   const responses = await Promise.all(requests);
+    const responses = await Promise.all(requests);
 
-   setResponse(responses[0].choices[0].message.content);
-   setResponse2(responses[1].choices[0].message.content);
-   setResponse3(responses[2].choices[0].message.content);
+    setResponse(responses[0].choices[0].message.content);
+    setResponse2(responses[1].choices[0].message.content);
+    setResponse3(responses[2].choices[0].message.content);
 
-   updateUserWordCount(responses);
-   setLoading(false);
- };
-
+    updateUserWordCount(responses);
+    setLoading(false);
+  };
 
   return (
-    <div className="h-screen flex" >
-      
-      <div
-        className="hidden lg:flex w-full lg:w-1/2 login_img_section
-          justify-around items-center"
-          
-      >
+    <div className="h-screen flex bg-gradient-to-r from-blue-600 to-blue-900">
+      <div className="hidden lg:flex w-full lg:w-1/2 login_img_section justify-around items-center">
+        <div className="bg-black opacity-20 inset-0 z-0"></div>
         <div
-          className=" 
-                  bg-black 
-                  opacity-20 
-                  inset-0 
-                  z-0"
-        ></div>
-        <div className="w-full mx-auto px-20 flex-col items-center space-y-6"   style={{marginTop:'100px'}}>
-          <div
-            className="overflow-x-auto flex justify-center lg:justify-start mt-12"
-          
-            
-          >
-            {resNo === "res1"
+          className="w-full mx-auto px-20 flex-col items-center space-y-6"
+          style={{ marginTop: '100px' }}
+        >
+          <div className="overflow-x-auto flex justify-center lg:justify-start mt-12">
+             {resNo === "res1"
               ? response && (
                   <CopyToClipboard text={response}>
                     <ContentCard content={response} fn={setRes} language={language} />
@@ -228,37 +213,27 @@ function Guided({language}) {
           </div>
         </div>
       </div>
-      <div className="flex w-full justify-center items-center bg-white space-y-8"  style={{background:'white'}}>
-       
-        <div className="w-full px-8 md:px-32 lg:px-24" >
-        {/* <div >
-      <h1 style={{fontFamily:'monospace',color:'#ec4899',fontSize:'18px'}}>
-      {language === "english"
-                ? " Crea Marketing Persuasivo en un Instante"
-                : "  Create Persuasive Marketing in an Instant"}
-                </h1>
-      <p style={{fontFamily:'monospace',color:'#ec4899',fontSize:'12px'}}>
-      {language === "english"
-                ? " Ya sea que necesites mensajes de marketing para tu producto, servicio o marca, nuestra herramienta rápida y fácil de generación de marketing tiene todo lo que necesitas. Solo ingresa tu"
-                : "  Whether you need marketing messages for your product, service or brand, our Quick and easy marketing generation tool has everything you need. just enter your"}
-        <br></br>
-        {language === "english"
-                ? " público objetivo, los beneficios clave, el estilo de marketing deseado y el tono, y nuestra herramienta impulsada por IA hará el resto, entregando mensajes de marketing impactantes en minutos."
-                : "  target audience, key benefits, desired marketing style and tone, and our tool AI-powered will do the rest, delivering impactful marketing messages in minutes."}
-</p>
-      </div> */}
+      <div className="flex w-full justify-center items-center bg-white space-y-8">
+        <div className="w-full px-8 md:px-32 lg:px-24">
           <form
             noValidate
             onSubmit={handleSubmit}
             className="bg-white rounded-md shadow-2xl p-5"
-            style={{background: "rgb(40, 48, 129)"}}
+            style={{ background: 'rgb(40, 48, 129)' }}
           >
-            <h1 className="text-gray-800 font-bold text-2xl mb-1" style={{color:'white',fontFamily:"Monospace",fontSize:'18px',width:'350px'}}>
-              {/*Use appropriate wording based on whether language is english or spanish*/}
-             <MenuBookIcon style={{marginRight:'10px'}}/>
-              {language === "english"
-                ? "AI Content Generator: More Accurate and Efficient than ChatGPT"
-                : "Generador de contenido AI: Mas preciso y eficiente que chatGPT"}
+            <h1
+              className="text-gray-800 font-bold text-2xl mb-1"
+              style={{
+                color: 'white',
+                fontFamily: 'Monospace',
+                fontSize: '18px',
+                width: '350px',
+              }}
+            >
+              <MenuBookIcon style={{ marginRight: '10px' }} />
+              {language === 'english'
+                ? 'AI Content Generator: More Accurate and Efficient than ChatGPT'
+                : 'Generador de contenido AI: Mas preciso y eficiente que chatGPT'}
             </h1>
             <br></br>
             <label htmlFor="product_title" style={{color:'white',fontSize:'18px',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}}>
@@ -457,17 +432,34 @@ function Guided({language}) {
                 </option>
               </select>
             </div>
-
             <button
               type="submit"
               className="block w-full bg-indigo-600 mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
-            style={{color:'#283081',background:'white',fontFamily:"Monospace",fontSize:'16px'}}
+              style={{
+                color: '#283081',
+                background: 'white',
+                fontFamily: 'Monospace',
+                fontSize: '16px',
+              }}
             >
-              <ContentCopyIcon style={{marginRight:'10px'}} />
-              {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language === "english"
-                ? (loading? "Loading...":"Generate Content")
-                : (loading? "Procesando...":"Generar contenido")}
+              {loading ? (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <>
+                  <ContentCopyIcon style={{ marginRight: '10px' }} />
+                  {language === 'english'
+                    ? 'Generate Content'
+                    : 'Generar contenido'}
+                </>
+              )}
             </button>
           </form>
         </div>
