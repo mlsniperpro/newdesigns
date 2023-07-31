@@ -1,31 +1,23 @@
 import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from '@/utils/app/const';
 import { OpenAIError, OpenAIStream } from '@/utils/server';
 
-
-
 import { ChatBody, Message } from '@/types/chat';
-
-
 
 // @ts-expect-error
 import wasm from '../../node_modules/@dqbd/tiktoken/lite/tiktoken_bg.wasm?module';
-
-
 
 import { db } from '@/config/firebase';
 import tiktokenModel from '@dqbd/tiktoken/encoders/cl100k_base.json';
 import { Tiktoken, init } from '@dqbd/tiktoken/lite/init';
 import { doc, setDoc } from 'firebase/firestore';
-import { addDoc, collection } from 'firebase/firestore';
 import { nanoid } from 'nanoid';
-
 
 export const config = {
   runtime: 'edge',
 };
 
 const DEFAULT_MODEL = {
-  id: 'gpt-3.5-turbo-16k',
+  id: 'gpt-3.5-turbo',
   tokenLimit: 16384,
   name: 'GPT-3.5 Turbo',
   maxLength: 16384,
@@ -33,25 +25,9 @@ const DEFAULT_MODEL = {
 
 // Save chat data function
 async function saveChatData(userId: string, payload: any) {
-  console.log('Saving chat data to Firestore');
   try {
-    // Log the payload to see what's being sent to Firestore
-    console.log('Payload to Firestore:', JSON.stringify(payload, null, 2));
-
-    // Check that payload.id is defined and not an empty string
-    if (!payload.id || payload.id === '') {
-      console.error('Payload ID is not correctly defined:', payload.id);
-      return;
-    }
-
     const docRef = doc(db, `chat`, payload.id);
-
-    // Log the document reference to see if it's being constructed correctly
-    console.log('Document reference:', JSON.stringify(docRef, null, 2));
-
     await setDoc(docRef, payload);
-
-    console.log('Document written with ID: ', payload.id);
   } catch (e) {
     console.error('Error adding document: ', e);
   }
@@ -62,15 +38,11 @@ const handler = async (req: Request): Promise<Response> => {
     const json = await req.json();
     let { model, messages, key, prompt, temperature } = json as ChatBody;
 
-    console.log('Received model:', model);
-
     if (!model) {
-      console.log('Model not specified. Using default model:', DEFAULT_MODEL);
       model = DEFAULT_MODEL;
     }
 
     if (model.tokenLimit === undefined) {
-      console.log('Token limit not specified');
       return new Response('Token limit not specified', { status: 400 });
     }
 
@@ -81,18 +53,10 @@ const handler = async (req: Request): Promise<Response> => {
       tiktokenModel.pat_str,
     );
 
-    let promptToSend = prompt;
-    if (!promptToSend) {
-      promptToSend = DEFAULT_SYSTEM_PROMPT;
-    }
-
-    let temperatureToUse = temperature;
-    if (temperatureToUse == null) {
-      temperatureToUse = DEFAULT_TEMPERATURE;
-    }
+    let promptToSend = prompt || DEFAULT_SYSTEM_PROMPT;
+    let temperatureToUse = temperature || DEFAULT_TEMPERATURE;
 
     const prompt_tokens = encoding.encode(promptToSend);
-
     let tokenCount = prompt_tokens.length;
     let messagesToSend: Message[] = [];
 
@@ -118,24 +82,15 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
     if (model === DEFAULT_MODEL) {
-      console.log('The request received is , ', json);
       const userId = json.userId ?? nanoid();
-
-      // Modify the messagesToSend array
       const modifiedMessages = messagesToSend.map((message, index) => {
-        // Check if the index is odd (user message)
         if (index % 2 !== 0) {
-          // Extract the actual question from the message
           const questionMatch = message.content.match(
             /Question: (.*)\nContext:/,
           );
           const question = questionMatch ? questionMatch[1] : message.content;
-
-          // Return a new message object with the modified content
           return { ...message, content: question };
         }
-
-        // If the index is even (model message), return the message as is
         return message;
       });
 
@@ -152,12 +107,11 @@ const handler = async (req: Request): Promise<Response> => {
         messages: modifiedMessages,
       };
 
-      await saveChatData(userId, payload); // make sure to await here*/
+      await saveChatData(userId, payload);
     }
 
     return new Response(stream);
   } catch (error) {
-    console.error('Error caught:', error);
     if (error instanceof OpenAIError) {
       return new Response('Error', { status: 500, statusText: error.message });
     } else {
