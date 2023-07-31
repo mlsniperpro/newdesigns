@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
+
+
 import Link from "next/link";
-import {
-  getFirestore,
-  doc,
-  collection,
-  where,
-  query,
-  getDocs,
-  getDoc,
-  onSnapshot,
-} from "firebase/firestore";
-import { db, auth } from "../config/firebase";
+
+
+
+import { auth, db } from "../config/firebase";
+
+
+
+import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot, query, where } from "firebase/firestore";
+
 
 const CancelSubscription = () => {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -138,42 +139,32 @@ const CancelSubscription = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
-          <div className="max-w-md mx-auto">
-            <div className="flex items-center space-x-5">
-              <div className="block pl-2 font-semibold text-xl self-start text-gray-700">
-                <Link href="/">
-                  <h2 className="leading-relaxed">Home</h2>
-                </Link>
-              </div>
+    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gradient-to-r from-blue-500 to-blue-700">
+      <div className="flex flex-col items-center bg-white p-6 my-4 w-full sm:w-3/4 lg:w-1/2 xl:w-3/8 xxl:w-1/4 rounded-xl shadow-md space-y-4">
+        <div className="text-center space-y-2">
+          <Link href="/">
+            <h2 className="text-2xl font-semibold text-blue-700 cursor-pointer">Home</h2>
+          </Link>
+          {subscriptions.map((subscription) => (
+            <div
+              key={subscription.id || subscription.subscriptionId}
+              className="flex justify-between items-center w-full border-b-2 border-gray-200 py-4"
+            >
+              <p className="text-lg font-medium text-gray-700">
+                {stripeProducts[
+                  subscription.data?.items[0]?.plan?.product
+                ] || "Yearly"}{" "}
+                - {subscription.data?.status || subscription.status}
+              </p>
+              <button
+                onClick={() => handleCancelSubscription(subscription.id)}
+                className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded"
+              >
+                Cancel
+              </button>
             </div>
-            <div className="divide-y divide-gray-200">
-              <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                {subscriptions.map((subscription) => (
-                  <div
-                    key={subscription.id || subscription.subscriptionId}
-                    className="flex justify-between items-center"
-                  >
-                    <p>
-                      {stripeProducts[
-                        subscription.data?.items[0]?.plan?.product
-                      ] || "Yearly"}{" "}
-                      - {subscription.data?.status || subscription.status}
-                    </p>
-                    <button
-                      onClick={() => handleCancelSubscription(subscription.id)}
-                      className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ))}
-                {status && <p className="mt-4 text-green-500">{status}</p>}
-              </div>
-            </div>
-          </div>
+          ))}
+          {status && <p className="mt-4 text-green-500">{status}</p>}
         </div>
       </div>
     </div>

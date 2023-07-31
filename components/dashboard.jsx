@@ -29,6 +29,7 @@ const MODE_TO_ROUTE = {
   chat: '/chat',
   prompts: '/prompts',
   pdf: '/pdf',
+  cancel: '/cancel',
 };
 
 function Dashboard(props) {
@@ -121,6 +122,12 @@ function Dashboard(props) {
               icon={<AccountBoxIcon />}
               text="PDF"
             />
+            <ListItem
+              onClick={() => setMode('cancel')}
+              icon={<CancelIcon />}
+              text="Cancel"
+            />
+
             {admin && (
               <>
                 <ListItem
