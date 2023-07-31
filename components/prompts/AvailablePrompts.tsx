@@ -43,6 +43,7 @@ interface AvailablePromptsProps {
   timePeriod?: string;
   newest?: boolean;
   language?: string;
+  searchQuery?: string;
 }
 
 const AvailablePrompts: React.FC<AvailablePromptsProps> = ({
@@ -52,6 +53,7 @@ const AvailablePrompts: React.FC<AvailablePromptsProps> = ({
   timePeriod = 'allTime',
   newest = false,
   language = 'all',
+  searchQuery = '',
 }) => {
   const [prompts, setPrompts] = useState<PromptInterface[]>([]);
    const [isAdmin, setIsAdmin] = useState(false);
@@ -115,6 +117,11 @@ useEffect(() => {
           (prompt) => prompt.language.toLowerCase() === language.toLowerCase(),
         );
       }
+      if (searchQuery) {
+        fetchedPrompts = fetchedPrompts.filter((prompt) =>
+          prompt.title.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
+      }
       console.log(
         'Fetched prompts after sorting and filtering: ',
         fetchedPrompts,
@@ -126,9 +133,12 @@ useEffect(() => {
   };
 
   fetchPrompts();
-}, [newest, language]);
+}, [newest, language, searchQuery]);
 
+useEffect(() => {
+  console.log("Search query is: ", searchQuery);
 
+}, [searchQuery]);
 
 
  const handleUpvote = async (id: string) => {

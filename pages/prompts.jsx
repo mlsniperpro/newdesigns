@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
-import {
-  BsFillBagFill,
-  BsFire,
-  BsLaptop,
-  BsPen,
-  BsSearch,
-} from 'react-icons/bs';
+import { BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
 import { FcMoneyTransfer } from 'react-icons/fc';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+
+
+
 import { AvailablePrompts, Header, Navbar } from '@/components/prompts';
 import Topic from '@/components/prompts/Topic';
+
+
+
+import { db } from '@/config/firebase';
+import { collection, getDocs } from 'firebase/firestore';
+
+
 const icons = {
   Marketing: <BsFire />,
   Business: <BsFillBagFill />,
@@ -21,6 +23,7 @@ const icons = {
 };
 
 export default function Home() {
+  const [searchQuery, setSearchQuery] = useState('');
   const [suggestedTopics, setSuggestedTopics] = useState([]);
   const [timePeriod, setTimePeriod] = useState('allTime');
   const [newest, setNewest] = useState(false);
@@ -43,11 +46,13 @@ export default function Home() {
 
     fetchTopics();
   }, []);
-
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
 
   return (
     <main className="px-4 lg:px-16 2xl:px-52 py-8">
-      <Navbar />
+      <Navbar onSearch={handleSearch} />
       <Header
         setTimePeriod={setTimePeriod}
         setNewest={setNewest}
@@ -61,6 +66,7 @@ export default function Home() {
             timePeriod={timePeriod}
             newest={newest}
             language={language}
+            searchQuery={searchQuery}
           />
         </main>
         <aside className="xl:w-2/5 pt-8 xl:pt-0 flex space-x-2">

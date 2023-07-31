@@ -1,229 +1,80 @@
-'use client';
-
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlineMenu, AiOutlineStar } from 'react-icons/ai';
-import { BsArrowUpRight, BsFillBagFill, BsFire, BsLaptop, BsPen, BsSearch } from 'react-icons/bs';
-
-
-
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
+import { auth } from '@/config/firebase';
 
-
-import SearchIcon from '../../public/icon.jpg';
-import { Prompt } from './PromptItem';
-import { TopicInterface } from './Topic';
-
-
-
-import { auth, db } from '@/config/firebase';
-import { collection, getDocs } from 'firebase/firestore';
-
-
-interface PromptInterface {
-  id: string | number;
-  title: string;
-  categories: TopicInterface[]; // change to TopicInterface[] if that's what Prompt expects
-  description: string;
-  owner: string;
-  votes: number;
-  bookmarks: number;
-  daysPast: number;
-  url: string;
-}
-
-const Navbar = () => {
-  const [allPrompts, setAllPrompts] = useState<Prompt[]>([]);
-  const [isInputFocused, setIsInputFocused] = useState(false);
+const Navbar = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const [filteredPrompts, setFilteredPrompts] = useState<Prompt[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
+
   useEffect(() => {
     const admin =
-      auth.currentUser?.uid == 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1' ||
-      auth.currentUser?.uid == 'M8LwxAfm26SimGbDs4LDwf1HuCb2';
+      auth.currentUser?.uid === 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1' ||
+      auth.currentUser?.uid === 'M8LwxAfm26SimGbDs4LDwf1HuCb2';
     setIsAdmin(admin);
   }, [auth.currentUser?.uid]);
 
-   const handleNavClick = () => {
-     setIsNavOpen(!isNavOpen);
-   };
-  useEffect(() => {
-    // fetch prompts from Firestore when the component mounts
-    console.log('i am now fetching prompts');
-    const fetchPrompts = async () => {
-      const querySnapshot = await getDocs(collection(db, 'prompts'));
-      const fetchedPrompts: PromptInterface[] = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        fetchedPrompts.push({
-          id: doc.id,
-          title: data.title,
-          categories: data.categories,
-          description: data.description,
-          owner: data.owner,
-          votes: data.votes,
-          bookmarks: data.bookmarks,
-          daysPast: Math.ceil(
-            Math.abs(
-              new Date().getTime() - new Date(data.dayPosted).getTime(),
-            ) /
-              (1000 * 60 * 60 * 24),
-          ),
-          url: data.url,
-        });
-      });
-      setAllPrompts(fetchedPrompts);
-      setFilteredPrompts(fetchedPrompts);
-    };
-
-    fetchPrompts();
-  }, []);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchValue = e.target.value;
-    setSearchQuery(searchValue);
-    if (searchValue === '') {
-      setFilteredPrompts(allPrompts);
-    } else {
-      setFilteredPrompts(
-        allPrompts.filter(
-          (prompt) =>
-            prompt.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-            prompt.description
-              .toLowerCase()
-              .includes(searchValue.toLowerCase()),
-        ),
-      );
-    }
+  const handleNavClick = () => {
+    setIsNavOpen(!isNavOpen);
   };
 
-  const handleFocus = () => {
-    setIsInputFocused(true);
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    onSearch(e.target.value); // Pass the new search query up to the parent component
   };
 
-  const router = useRouter();
-
-  const Menu = () => (
-    <>
-      <Link href="/prompts" className="hover:text-gray-900">
-        Prompts
-      </Link>
-      <Link href="/chat" className="hover:text-gray-900">
-        Chat
-      </Link>
-      <Link href="/tutor" className="hover:text-gray-900">
-        Tutor
-      </Link>
-      <a
-        href="https://vioniko.com/soporte/index.php"
-        className="hover:text-gray-900"
-      >
-        Support
-      </a>
-    </>
-  );
-
-
-   return (
-    <nav className="flex justify-between space-x-4 lg:px-16 2xl:px-52 px-8 py-8">
-      <section className="flex space-x-4 justify-between">
-        <div className="flex space-x-4 justify-between">
-          <Link href="/" className="flex items-center">
-            <Image src={SearchIcon} alt="" />
-          </Link>
-          <div className="">
-            <input
-              type="search"
-              placeholder="Search"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              onFocus={handleFocus}
-              className="border border-gray-400 px-4 py-2 rounded-[10px] w-full"
-            />
-            {isInputFocused && (
-              <div className="absolute bg-white opacity-100 p-4 top-[100px] flex flex-col space-y-6 max-h-[600px] overflow-auto">
-                {filteredPrompts.map((prompt) => (
-                  <Link href={`/prompt/${prompt.url}`} key={prompt.id}>
-                    <div className="flex flex-col space-y-4">
-                      <h4 className="font-semibold text-sm">{prompt.title}</h4>
-                      <div className="flex items-center text-xs space-x-4">
-                        <h4 className="text-black font-light">
-                          {prompt.owner}
-                        </h4>
-                        <div className="flex space-x-2 items-center">
-                          <BsArrowUpRight className="text-pink-400" />
-                          <p className="text-gray-900">{prompt.votes}</p>
-                        </div>
-                        <div className="flex space-x-2">
-                          {prompt.daysPast < 30 ? (
-                            <p>
-                              {prompt.daysPast}{' '}
-                              {prompt.daysPast === 1 ? 'day' : 'days'} ago
-                            </p>
-                          ) : prompt.daysPast <= 59 ? (
-                            <p>1 month ago</p>
-                          ) : (
-                            <p>{Math.floor(prompt.daysPast / 30)} months ago</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="py-4">
-                      <hr className="border border-gray-200" />
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
+  return (
+    <nav className="flex justify-between items-center bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4">
+      <section className="flex items-center space-x-4">
+        <Link href="/">
+          <div className="flex items-center">
+            <Image src="/icon.jpg" alt="" width={50} height={50} />
           </div>
+        </Link>
+        <div className="relative">
+          <input
+            type="search"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="border border-white px-4 py-2 rounded-[10px] w-full bg-white text-black"
+          />
         </div>
-        {/* desktop menu */}
-        {!isInputFocused && (
-          <div className="flex space-x-4 items-center text-gray-600">
-            <Menu />
-          </div>
-        )}
       </section>
 
-      <section className="flex space-x-4">
-        <Link
-          href="/prompt/create"
-          className="bg-black text-white rounded-[22px] px-4 py-2 flex items-center"
-        >
-          <AiOutlineStar className="inline-block mr-2" />
-          Create
+      <section className="flex items-center space-x-4">
+        <Link href="/prompt/create">
+          <div className="bg-white text-black rounded-[22px] px-4 py-2 flex items-center">
+            <AiOutlineStar className="inline-block mr-2" />
+            Create
+          </div>
         </Link>
         {isAdmin && (
-          <Link
-            href="/prompt/createtopics"
-            className="bg-black text-white rounded-[22px] px-4 py-2 flex items-center"
-          >
-            <AiOutlineStar className="inline-block mr-2" />
-            CreateTopic
+          <Link href="/prompt/createtopics">
+            <div className="bg-white text-black rounded-[22px] px-4 py-2 flex items-center">
+              <AiOutlineStar className="inline-block mr-2" />
+              CreateTopic
+            </div>
           </Link>
         )}
         {isAdmin && (
-          <Link
-            href="/prompt/reportedcomment"
-            className="bg-black text-white rounded-[22px] px-4 py-2 flex items-center"
-          >
-            <AiOutlineStar className="inline-block mr-2" />
-            ReportedComments
+          <Link href="/prompt/reportedcomment">
+            <div className="bg-white text-black rounded-[22px] px-4 py-2 flex items-center">
+              <AiOutlineStar className="inline-block mr-2" />
+              ReportedComments
+            </div>
           </Link>
         )}
         {isAdmin && (
-          <Link
-            href="/prompt/approve"
-            className="bg-black text-white rounded-[22px] px-4 py-2 flex items-center"
-          >
-            <AiOutlineStar className="inline-block mr-2" />
-            Approve
+          <Link href="/prompt/approve">
+            <div className="bg-white text-black rounded-[22px] px-4 py-2 flex items-center">
+              <AiOutlineStar className="inline-block mr-2" />
+              Approve
+            </div>
           </Link>
         )}
       </section>
