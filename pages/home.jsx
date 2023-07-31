@@ -11,6 +11,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import Image from 'next/image';
 
 
 const LandingPage = () => {
@@ -30,9 +31,8 @@ const LandingPage = () => {
     };
 
     try {
-      // Replace this URL with the endpoint for your server-side function or API
       const response = await axios.post(
-        " https://us-central1-vioniko-82fcb.cloudfunctions.net/sendEmail",
+        "https://us-central1-vioniko-82fcb.cloudfunctions.net/sendEmail",
         data
       );
 
@@ -65,7 +65,7 @@ const LandingPage = () => {
   }, [submitted]);
 
   return (
-    <div className="min-h-screen flex flex-col" style={{backgroundColor:'rgb(22, 6, 71)',width:'100%'}}>
+     <div className="min-h-screen flex flex-col" style={{backgroundColor:'rgb(22, 6, 71)',width:'100%'}}>
       <nav className="w-full px-4 py-4" style={{widht:'100%',borderBottom:'3px solid #fff'}}>
         
         <div className="max-w-7xl mx-auto flex justify-between items-center"style={{widht:'100%',}}>
@@ -390,7 +390,7 @@ const LandingPage = () => {
     
     <Card sx={{ maxWidth: '100%' }}>
                  
-    <img src='./b.png' alt="" style={{width:'80%',height:'800px',margin:'auto',border:'3px solid rgb(98, 79, 146)',borderRadius:'35px',boxShadow:'2px 10px 8px 0 rgba(0,0,0,0.2)'}}
+    <img src='./b.png'  alt="" style={{width:'80%',height:'800px',margin:'auto',border:'3px solid rgb(98, 79, 146)',borderRadius:'35px',boxShadow:'2px 10px 8px 0 rgba(0,0,0,0.2)'}}
       /><br></br><br></br>
 
                        <br></br>
