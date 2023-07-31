@@ -471,10 +471,11 @@ const CustomPrompt = () => {
       console.error('Error editing comment: ', err);
     }
   };
+  
 
   return (
     <main>
-      <Navbar />
+      <Navbar onSearch={()=>{}}/>
       <hr className="border border-gray-200" />
       <section className="flex flex-col-reverse xl:flex-row xl:space-x-4 px-8 lg:px-16 2xl:px-52 py-8 bg-gray-100">
         <section className="pt-8 xl:pt-0 xl:basis-3/5 flex flex-col space-y-16">

@@ -6,7 +6,11 @@ import Link from 'next/link';
 
 import { auth } from '@/config/firebase';
 
-const Navbar = ({ onSearch }) => {
+interface NavbarProps {
+  onSearch: (searchQuery: string) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -22,11 +26,10 @@ const Navbar = ({ onSearch }) => {
     setIsNavOpen(!isNavOpen);
   };
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     onSearch(e.target.value); // Pass the new search query up to the parent component
   };
-
   return (
     <nav className="flex justify-between items-center bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4">
       <section className="flex items-center space-x-4">

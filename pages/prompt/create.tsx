@@ -168,7 +168,7 @@ export default function Page() {
 
   return (
     <main className="">
-      <Navbar />
+      <Navbar onSearch={()=>{}}/>
       <div className="">
         <hr className="border border-gray-200" />
       </div>

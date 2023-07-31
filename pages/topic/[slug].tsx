@@ -109,7 +109,7 @@ export default function Page() {
 
   return (
     <main className="">
-      <Navbar />
+      <Navbar onSearch={()=>{}}/>
       <div className="py-4">
         <hr className="border border-gray-200" />
       </div>
