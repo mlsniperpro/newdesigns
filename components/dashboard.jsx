@@ -30,6 +30,7 @@ const MODE_TO_ROUTE = {
   prompts: '/prompts',
   pdf: '/pdf',
   cancel: '/cancel',
+  
 };
 
 function Dashboard(props) {
@@ -58,11 +59,12 @@ function Dashboard(props) {
     }
   };
 
-  const onlyAdmins = () => {
+  const onlyAdmins = (route) => {
     if (!ADMIN_UIDS.includes(auth.currentUser?.uid)) {
       alert('Admins only!');
       router.push('/login');
     }
+    router.push(route);
   };
 
   useEffect(() => {
@@ -131,29 +133,29 @@ function Dashboard(props) {
             {admin && (
               <>
                 <ListItem
-                  onClick={onlyAdmins}
+                  onClick={()=>onlyAdmins('/awardSubscriptions')}
                   text="Award Subscriptions"
                   link="/awardSubscriptions"
                 />
                 <ListItem
-                  onClick={onlyAdmins}
+                  onClick={()=>onlyAdmins('/users')}
                   text="Manage Users"
                   link="/users"
                 />
                 <ListItem
-                  onClick={onlyAdmins}
+                  onClick={()=>onlyAdmins('/priceUpdates')}
                   text="Price Updates"
                   link="/priceUpdates"
                 />
                 <ListItem
-                  onClick={onlyAdmins}
+                  onClick={()=>onlyAdmins('/wordlimit')}
                   text="Word Limit"
                   link="/wordlimit"
                 />
               </>
             )}
             <ListItem
-              onClick={signout}
+              onClick={()=>signout()}
               icon={<LogoutIcon />}
               text={language === 'english' ? 'Log Out' : 'Cerrar sesión'}
             />

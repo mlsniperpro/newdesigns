@@ -1,7 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import { db } from '@/config/firebase';
+import React, { useEffect, useState } from 'react';
+
+
+
 import Link from 'next/link';
-import {addDoc, collection, getDocs, query, where,deleteDoc,doc, onSnapshot} from "firebase/firestore";
+
+
+
+import { db } from '@/config/firebase';
+import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, where } from "firebase/firestore";
+
 
 function Users(){
   const [subscribers, setSubscribers] = useState({}); // [1
@@ -114,8 +121,11 @@ function Users(){
     setSearchTerm(event.target.value);
   };
   const filteredUsers = users.filter((user) => {
-    if (searchTerm === "") return user;
-    return user.name.toLowerCase().includes(searchTerm.toLowerCase());
+    if (searchTerm === '') return user;
+    return (
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   });
   // Function to demote users
   const demoteUsers = async (userId) => {
