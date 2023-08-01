@@ -1,99 +1,48 @@
-import React, { useEffect, useState } from "react";
-import Head from "next/head";
-import Router from "next/router";
-import {
-  collection,
-  getDocs,
-  where,
-  query,
-  onSnapshot,
-} from "firebase/firestore";
-import { auth, db } from "../config/firebase";
-import Dashboard from "../components/dashboard";
-import { useAuthState } from "react-firebase-hooks/auth";
-import Loader from "@/components/Loader";
-import PlanSelection from "@/components/PlanSelection";
-import usePremiumStatus from "@/stripe/usePremiumStatus";
+import React, { useEffect , useState} from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
+
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+
+
+
+import useSubscription from '@/hooks/useSubscription';
+
+
+
+import Dashboard from '../components/dashboard';
+import Loader from '@/components/Loader';
+import PlanSelection from '@/components/PlanSelection';
+
+
+
+import { auth } from '../config/firebase';
+
+
+
+import { parseCookies } from 'nookies';
+
 
 function Index() {
   const [user, loadingAuth] = useAuthState(auth);
-  const [subscribed, setSubscribed] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [limit, setLimit] = useState(20000);
   const [upgrade, setUpgrade] = useState(false);
-  const userIsPremium = usePremiumStatus(user);
+  const { loading, subscribed } = useSubscription(user); // use custom hook
+  const router = useRouter();
 
   const handleValueChange = (newValue) => {
     setUpgrade(newValue);
   };
 
-  const retrieveWordLimit = async () => {
-    try {
-      const limitDoc = await getDocs(collection(db, "wordlimit"));
-      const limit = limitDoc.docs[0]?.data()?.limit;
-      if (limit) {
-        setLimit(limit);
-      }
-    } catch (error) {
-      console.error("Error retrieving prices: ", error);
-    }
-  };
   useEffect(() => {
-    const checkAuthStatusAndPrefetchHome = async () => {
-      await Router.prefetch("/home");
-
-      if (!auth?.currentUser?.uid) {
-        Router.push("/home");
-      }
-    };
-
-    checkAuthStatusAndPrefetchHome();
+    if (
+      !auth?.currentUser?.uid &&
+      typeof window !== 'undefined' &&
+      !window.history.state?.fromLink
+    ) {
+      router.replace('/home');
+    }
   }, [user, loadingAuth]);
-
-  const checkSubscription = async () => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const subscribersSnapshot = await getDocs(collection(db, "subscribers"));
-      const subscribers = subscribersSnapshot.docs.map((doc) => doc.data());
-      const userSubscriptions = subscribers.filter(
-        (subscriber) => subscriber.userId === user.uid
-      );
-      const latestSubscription = userSubscriptions.reduce(
-        (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
-        {}
-      );
-
-      const wordsSnapshot = await getDocs(
-        query(collection(db, "wordsgenerated"), where("userId", "==", user.uid))
-      );
-      const wordsGenerated = wordsSnapshot.docs.map((doc) => doc.data());
-      const currentUserWords = wordsGenerated[0] || { count: 0 };
-
-      if (
-        Date.now() < latestSubscription.subscriptionEndDate ||
-        currentUserWords.count < limit ||
-        userIsPremium ||
-        auth.currentUser.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-        auth.currentUser.uid === "fcJAePkUVwV7fBR3uiGh5iyt2Tf1"
-      ) {
-        setSubscribed(true);
-      } else {
-        setSubscribed(false);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    checkSubscription();
-  }, [limit, user, loadingAuth, userIsPremium]);
 
   return (
     <div>
@@ -105,9 +54,7 @@ function Index() {
           {loading ? (
             <Loader />
           ) : subscribed && !upgrade ? (
-            <Dashboard
-              onValueChange={handleValueChange}
-              />
+            <Dashboard onValueChange={handleValueChange} />
           ) : (
             <PlanSelection />
           )}
@@ -118,3 +65,23 @@ function Index() {
 }
 
 export default Index;
+
+
+export async function getServerSideProps(context) {
+  const cookies = parseCookies(context);
+
+  // Check if the user is authenticated
+  if (!cookies.auth) {
+    return {
+      redirect: {
+        destination: '/home',
+        permanent: false,
+      },
+    };
+  }
+
+  // If the user is authenticated, return the default props
+  return {
+    props: {},
+  };
+}

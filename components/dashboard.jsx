@@ -1,13 +1,21 @@
 import React, { useEffect } from 'react';
 
+
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+
+
 
 import Guided from '@/components/Guided';
 import Keyword from '@/components/Keyword';
 
+
+
 import { auth } from '../config/firebase';
 import UserProfile from './UserProfile';
+
+
 
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -19,6 +27,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import UploadIcon from '@mui/icons-material/Upload';
 import { signOut } from 'firebase/auth';
+import { destroyCookie } from 'nookies';
+
 
 const ADMIN_UIDS = [
   'M8LwxAfm26SimGbDs4LDwf1HuCb2',
@@ -53,12 +63,15 @@ function Dashboard(props) {
   const signout = async () => {
     try {
       await signOut(auth);
+
+      // Clear the auth cookie
+      destroyCookie(null, 'auth', { path: '/' });
+
       router.push('/login');
     } catch (error) {
       console.log(error);
     }
   };
-
   const onlyAdmins = (route) => {
     if (!ADMIN_UIDS.includes(auth.currentUser?.uid)) {
       alert('Admins only!');
