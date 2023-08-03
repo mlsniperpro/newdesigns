@@ -133,6 +133,11 @@ function Dashboard(props) {
               text={language === 'english' ? 'Profile' : 'Perfil'}
             />
             <ListItem
+              onClick={() => setMode('tutor')}
+              icon={<AccessibilityNewIcon />}
+              text="Tutor"
+            />
+            <ListItem
               onClick={() => setMode('pdf')}
               icon={<AccountBoxIcon />}
               text="PDF"

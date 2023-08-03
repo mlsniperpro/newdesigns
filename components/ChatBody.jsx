@@ -1,43 +1,54 @@
-import React, { useRef } from "react";
-import autoAnimate from "@formkit/auto-animate";
-import { useEffect } from "react";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import React, { useEffect, useRef } from 'react';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+
+import autoAnimate from '@formkit/auto-animate';
 
 const ChatBody = ({ chat }) => {
-  const aiStyle =
-    "bg-white bg-opacity-40 backdrop-blur-lg dropshadow-md mr-auto";
-
   const parent = useRef(null);
   const bottomRef = useRef(null);
 
-  // only for aut animations
+  const aiStyle =
+    'bg-white bg-opacity-40 backdrop-blur-lg dropshadow-md mr-auto';
+
+  // Auto animations
   useEffect(() => {
-    parent.current && autoAnimate(parent.current);
+    if (parent.current) {
+      autoAnimate(parent.current);
+    }
   }, [parent]);
 
-  //for scrolling bottom
+  // Scroll to bottom
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chat]);
 
   return (
-    <div className="flex flex-col gap-4" ref={parent} >
-      {chat.map((message, i) => {
-        return (
-          <div
-            key={i}
-            className={`border-[#999999] break-words border-2 rounded-xl self-end px-3 py-3 max-w-[80%] ${
-              message.role === "assistant" && aiStyle
-            }`}
-            style={{background:'#272727'}}
+    <div className="flex flex-col gap-4" ref={parent}>
+      {chat.map((message, i) => (
+        <div
+          key={i}
+          className={`border-[#999999] break-words border-2 rounded-xl self-end px-3 py-3 max-w-[80%] ${
+            message.role === 'assistant' ? aiStyle : ''
+          }`}
+          style={{ background: '#272727' }}
+        >
+          <pre
+            className="whitespace-pre-wrap"
+            style={{ background: '1 1 1 0.2', border: 'none' }}
           >
-            <pre className="whitespace-pre-wrap" style={{background:'1 1 1 0.2',border:'none'}}>
-              <span style={{color:'white',fontSize:'14px',fontFamily:"Monospace",fontSize:'16px'}}><ReactMarkdown>{message.content}</ReactMarkdown></span>
-            </pre>
-          </div>
-        );
-      })}
-
+            <span
+              style={{
+                color: 'white',
+                fontSize: '14px',
+                fontFamily: 'Monospace',
+                fontSize: '16px',
+              }}
+            >
+              <ReactMarkdown>{message.content}</ReactMarkdown>
+            </span>
+          </pre>
+        </div>
+      ))}
       <div ref={bottomRef} className="h-3"></div>
     </div>
   );

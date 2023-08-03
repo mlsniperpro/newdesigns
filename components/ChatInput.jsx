@@ -1,13 +1,19 @@
-import React, { useState } from "react";
-import ReactMarkdown from "react-markdown";
+import React, { useState } from 'react';
 
 const ChatInput = ({ sendMessage, loading }) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
 
   const handleSubmit = () => {
-    if (value === "") return;
-    sendMessage({ role: "user", content: value });
-    setValue("");
+    if (value.trim() === '') return;
+    sendMessage({ role: 'user', content: value });
+    setValue('');
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
   };
 
   return (
@@ -17,9 +23,7 @@ const ChatInput = ({ sendMessage, loading }) => {
       ) : (
         <>
           <textarea
-            onKeyDown={(e) => {
-              e.keyCode === 13 && e.shiftKey === false && handleSubmit();
-            }}
+            onKeyDown={handleKeyDown}
             rows={1}
             className="border-0 bg-transparent outline-none w-11/12"
             value={value}
@@ -36,9 +40,6 @@ const ChatInput = ({ sendMessage, loading }) => {
           />
         </>
       )}
-      <div className="mt-2">
-        <ReactMarkdown>{value}</ReactMarkdown>
-      </div>
     </div>
   );
 };
