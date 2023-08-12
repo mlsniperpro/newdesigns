@@ -407,31 +407,35 @@ const LandingPage = () => {
                 }}
               ></div>
             </div>
-            <div id="video">
+            <div id="video" style={{background:'black',borderRadius:'10px'}}>
               <div
                 className="videoWrapper"
                 style={{
                   position: 'relative',
                   paddingBottom: '56.25%',
                   height: '0',
+               
                 }}
               >
+             
                 <iframe
                   src={
                     language === 'en'
-                      ? 'https://player.vimeo.com/video/851615333?h=ac323b2cad&title=0&byline=0&portrait=0d'
+                      ? 'https://player.vimeo.com/video/851615333?h=ac323b2cad&title=0&byline=0&portrait=0'
                       : 'https://player.vimeo.com/video/851456093?h=ac323b2cad&title=0&byline=0&portrait=0'
                   }
                   frameBorder="0"
                   allowFullScreen
+                  
                   style={{
                     position: 'absolute',
                     top: '0',
                     left: '0',
                     width: '100%',
                     height: '100%',
-                    borderBottomRightRadius: '10px',
-                    borderBottomLeftRadius: '10px',
+                    borderBottomRightRadius: '0px',
+                    borderBottomLeftRadius: '20px',
+                   
                   }}
                 ></iframe>
               </div>
