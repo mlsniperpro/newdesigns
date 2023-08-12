@@ -1,28 +1,33 @@
 import React, { useEffect, useState } from 'react';
 
-
-
 import Link from 'next/link';
 
-
-
 import { db } from '@/config/firebase';
-import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from 'firebase/firestore';
 
-
-function Users(){
+function Users() {
   const [subscribers, setSubscribers] = useState({}); // [1
   const [actions, setActions] = useState({});
   const [users, setUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [paypalSubs, setPaypalSubs] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [wordsgen, setWordsgen] = useState([]);
 
   // Function to retrieve users
   const retrieveUsers = async () => {
-    const usersQuerySnapshot = await getDocs(collection(db, "users"));
+    const usersQuerySnapshot = await getDocs(collection(db, 'users'));
     const users = usersQuerySnapshot.docs
       .map((doc) => doc.data())
-      .filter((user) => user.name && user.name.trim() !== "");
+      .filter((user) => user.name && user.name.trim() !== '');
     setUsers(users);
   };
 
@@ -31,7 +36,7 @@ function Users(){
     const userIds = (
       await Promise.all(
         (
-          await getDocs(collection(db, "users"))
+          await getDocs(collection(db, 'users'))
         ).docs
           .map((doc) => doc.data().userId)
           .filter(Boolean)
@@ -39,27 +44,27 @@ function Users(){
             (
               await getDocs(
                 query(
-                  collection(db, "users", id, "subscriptions"),
-                  where("status", "in", ["trialing", "active"])
-                )
+                  collection(db, 'users', id, 'subscriptions'),
+                  where('status', 'in', ['trialing', 'active']),
+                ),
               )
             ).docs.length > 0
               ? id
-              : null
-          )
+              : null,
+          ),
       )
     ).filter(Boolean);
 
     const subscriptionsRefs = userIds.map((id) =>
       query(
-        collection(db, "users", id, "subscriptions"),
-        where("status", "in", ["trialing", "active"])
-      )
+        collection(db, 'users', id, 'subscriptions'),
+        where('status', 'in', ['trialing', 'active']),
+      ),
     );
 
     const stripeProducts = {
-      prod_Njtrgy9W8UwGW7: "Monthly",
-      prod_NjtvxM9XlsH2c6: "Yearly",
+      prod_Njtrgy9W8UwGW7: 'Monthly',
+      prod_NjtvxM9XlsH2c6: 'Yearly',
     };
 
     const subscriptionsData = Object.fromEntries(
@@ -67,26 +72,25 @@ function Users(){
         subscriptionsRefs.map(async (q, index) => {
           const snap = await getDocs(q);
           const productID = snap.docs.map(
-            (doc) => doc.data().items[0]["plan"]["product"]
+            (doc) => doc.data().items[0]['plan']['product'],
           );
           return [userIds[index], stripeProducts[productID]];
-        })
-      )
+        }),
+      ),
     );
     setSubscribers((prevSubscribers) => ({
       ...prevSubscribers,
       ...subscriptionsData,
     }));
   };
-
   //Fetch paypal subscriptions
   const retrievePaypalSubs = async () => {
     const subsData = (
       await getDocs(
         query(
-          collection(db, "subscribers"),
-          where("subscriptionEndDate", ">", Date.now())
-        )
+          collection(db, 'subscribers'),
+          where('subscriptionEndDate', '>', Date.now()),
+        ),
       )
     ).docs.map((doc) => ({
       ...doc.data(),
@@ -100,13 +104,14 @@ function Users(){
       });
       return newSubscribers;
     });
+    setPaypalSubs(subsData);
   };
   // Function to retrieve words generated
   const fetchWordsGenerated = async () => {
-    const wordsSnap = await getDocs(collection(db, "wordsgenerated"));
+    const wordsSnap = await getDocs(collection(db, 'wordsgenerated'));
     const wordsData = wordsSnap.docs.map((doc) => doc.data());
     setWordsgen(
-      Object.fromEntries(wordsData.map((word) => [word.userId, word.count]))
+      Object.fromEntries(wordsData.map((word) => [word.userId, word.count])),
     );
   };
 
@@ -116,39 +121,43 @@ function Users(){
     retrieveStripeSubs();
     fetchWordsGenerated();
   }, []);
-
+  useEffect(() => {
+    console.log("The paypal subs are ", paypalSubs);
+  }, [paypalSubs]);
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
   const filteredUsers = users.filter((user) => {
-    if (searchTerm === '') return user;
-    return (
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  });
+  const trimmedSearchTerm = searchTerm.trim();
+  if (trimmedSearchTerm === '') return true;
+  return (
+    user.name.toLowerCase().includes(trimmedSearchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(trimmedSearchTerm.toLowerCase())
+  );
+});
+
   // Function to demote users
   const demoteUsers = async (userId) => {
     const subscribersQuerySnapshot = await getDocs(
-      query(collection(db, "subscribers"), where("userId", "==", userId))
+      query(collection(db, 'subscribers'), where('userId', '==', userId)),
     );
     subscribersQuerySnapshot.forEach(async (doc_) => {
-      await deleteDoc(doc(db, "subscribers", doc_.id));
+      await deleteDoc(doc(db, 'subscribers', doc_.id));
     });
   };
 
   // Function to deactivate users
   const deactivateUsers = async (userId) => {
-    await addDoc(collection(db, "deactivatedUsers"), { userId });
+    await addDoc(collection(db, 'deactivatedUsers'), { userId });
   };
 
   // Function to reactivate users
   const reactivateUsers = async (userId) => {
     const deactivatedUsersQuerySnapshot = await getDocs(
-      query(collection(db, "deactivatedUsers"), where("userId", "==", userId))
+      query(collection(db, 'deactivatedUsers'), where('userId', '==', userId)),
     );
     deactivatedUsersQuerySnapshot.forEach(async (doc_) => {
-      await deleteDoc(doc(db, "deactivatedUsers", doc_.id));
+      await deleteDoc(doc(db, 'deactivatedUsers', doc_.id));
     });
   };
   // Handler for the action change
@@ -157,11 +166,11 @@ function Users(){
   };
   // Confirm action handler
   const handleConfirm = (userId) => {
-    if (actions[userId] === "Demote") {
+    if (actions[userId] === 'Demote') {
       demoteUsers(userId);
-    } else if (actions[userId] === "Deactivate") {
+    } else if (actions[userId] === 'Deactivate') {
       deactivateUsers(userId);
-    } else if (actions[userId] === "Reactivate") {
+    } else if (actions[userId] === 'Reactivate') {
       reactivateUsers(userId);
     }
     const updatedActions = { ...actions };
@@ -218,15 +227,15 @@ function Users(){
                     <td className="px-4 py-3 text-xs">
                       <span
                         className={`px-2 py-1 font-semibold leading-tight ${
-                          user.status === "approved"
-                            ? "text-green-700 bg-green-100 dark:bg-green-700 dark:text-green-100"
-                            : "text-yellow-700 bg-yellow-100"
+                          user.status === 'approved'
+                            ? 'text-green-700 bg-green-100 dark:bg-green-700 dark:text-green-100'
+                            : 'text-yellow-700 bg-yellow-100'
                         } rounded-full`}
                       >
                         {/*subscribers[user.userId]==="Subscribed" || subscriptions[user.userId]?.plan*/}
                         {subscribers[user.userId]
-                          ? "Subscribed"
-                          : "Not subscribed"}
+                          ? 'Subscribed'
+                          : 'Not subscribed'}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm">{user.dateSignedUp}</td>
@@ -258,7 +267,7 @@ function Users(){
                     <td className="px-4 py-3 text-sm">
                       {subscribers[user.userId]
                         ? subscribers[user.userId]
-                        : "Free"}
+                        : 'Free'}
                     </td>
                   </tr>
                 ))}

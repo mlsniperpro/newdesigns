@@ -1,77 +1,88 @@
-import React, { useEffect, useState } from "react";
-import { auth, db } from "../config/firebase";
-import Router from "next/router";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import React, { useEffect, useMemo, useState } from 'react';
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
+import Router from 'next/router';
+
+import { auth, db } from '../config/firebase';
+
+import { addDoc, collection, getDocs } from 'firebase/firestore';
 
 function Admin() {
   const [emailIdMapper, setEmailIdMapper] = useState({});
-  const [plan, setPlan] = useState("monthly");
-  const [userId, setUserId] = useState("");
+  const [plan, setPlan] = useState('monthly');
+  const [userId, setUserId] = useState('');
+
+  const isAdmin = useMemo(
+    () =>
+      new Set(['M8LwxAfm26SimGbDs4LDwf1HuCb2', 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1']),
+    [],
+  );
 
   useEffect(() => {
     const onlyAdmins = () => {
-      if (!auth.currentUser?.uid) {
-        Router.push("/login");
+      const uid = auth.currentUser?.uid;
+      if (!uid) {
+        Router.push('/login');
         return;
       }
-      //NoW DEFINE THE ADMINS HERE
-      if (
-        auth.currentUser?.uid === "M8LwxAfm26SimGbDs4LDwf1HuCb2" ||
-        auth.currentUser?.uid === "fcJAePkUVwV7fBR3uiGh5iyt2Tf1"
-      ) {
-        return;
-      } else {
-        alert("Admins only!");
-        Router.push("/login");
+      if (!isAdmin.has(uid)) {
+        alert('Admins only!');
+        Router.push('/login');
       }
     };
-    onlyAdmins();
-  }, []);
 
-  useEffect(() => {
     const mapEmailToId = async () => {
-      const querySnapshot = await getDocs(collection(db, "users"));
-      const emailIdMap = querySnapshot.docs.reduce((acc, doc) => {
-        return { ...acc, [doc.data().email]: doc.data().userId};
-      }, {});
+      const querySnapshot = await getDocs(collection(db, 'users'));
+      const emailIdMap = querySnapshot.docs.reduce(
+        (acc, doc) => ({
+          ...acc,
+          [doc.data().email?.toLowerCase()]: doc.data().userId,
+        }),
+        {},
+      );
       setEmailIdMapper(emailIdMap);
     };
+
+    onlyAdmins();
     mapEmailToId();
-  }, []);
+  }, [isAdmin]);
 
   const addSubscriber = async () => {
+    if (!userId) {
+      toast.error('The subscriber not among the users');
+      return;
+    }
+    const subscriptionData = {
+      userId: userId,
+      subscriptionStartDate: Date.now(),
+      subscriptionEndDate:
+        Date.now() + (plan === 'monthly' ? 2592000000 : 31536000000),
+      plan: plan,
+      subscriptionId: Math.floor(Math.random() * 10 ** 10),
+    };
     try {
-      await addDoc(collection(db, "subscribers"), {
-        userId: userId,
-        subscriptionStartDate: Date.now(),
-        subscriptionEndDate:
-          Date.now() + (plan === "monthly" ? 2592000000 : 31536000000),
-        plan: plan,
-        subscriptionId: Math.floor(Math.random() * 10 ** 10),
-      });
-      alert("Subscription added successfully!");
+      await addDoc(collection(db, 'subscribers'), subscriptionData);
+      alert('Subscription added successfully!');
     } catch (e) {
-      alert("The subscriber not among the users")
-      console.error("Error adding document: ", e);
+      alert('The subscriber not among the users');
+      console.error('Error adding document: ', e);
     }
   };
 
-  const handleAward = async () => {
-    try {
-      addSubscriber();
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
+  const handleAward = async () => addSubscriber();
 
-
+  useEffect(() => {
+    console.log(emailIdMapper);
+  }, [emailIdMapper]);
   return (
     <div>
+      <ToastContainer/>
       <>
         {/*Start of the header  Buttons*/}
         <div className="flex items-center justify-center">
           <button
-            onClick={() => Router.push("/")}
+            onClick={() => Router.push('/')}
             className="flex px-3 py-2 bg-blue-400 mr-1 text-white font-semibold rounded"
           >
             <svg
@@ -92,7 +103,7 @@ function Admin() {
           </button>
 
           <button
-            onClick={() => Router.push("/tutor")}
+            onClick={() => Router.push('/tutor')}
             className="flex px-3 py-2 bg-orange-400 text-white font-semibold rounded"
           >
             <svg
@@ -120,7 +131,7 @@ function Admin() {
 
         {/*End of header buttons*/}
         <div className="flex flex-col justify-center items-center h-[100vh]">
-          <div className="!z-5 relative flex flex-col rounded-[20px] max-w-[300px] md:max-w-[400px] bg-white bg-clip-border shadow-3xl shadow-shadow-500 flex flex-col w-full !p-6 3xl:p-![18px] bg-white undefined">
+          <div className="!z-5 relative flex flex-col rounded-[20px] max-w-[300px] md:max-w-[400px bg-clip-border shadow-3xl shadow-shadow-500  w-full !p-6 3xl:p-![18px] bg-white undefined">
             <div className="relative flex flex-row justify-between">
               <h4 className="text-xl font-bold text-navy-700 dark:text-white mb-3">
                 Award Subscription
@@ -134,7 +145,13 @@ function Admin() {
                 userId
               </label>
               <input
-                onChange={(e) => setUserId(emailIdMapper[e.target.value])}
+                onChange={(e) => {
+                  const selectedUserId =
+                    emailIdMapper[e?.target?.value.toLowerCase()];
+                  if (selectedUserId) {
+                    setUserId(selectedUserId);
+                  } 
+                }}
                 type="text"
                 id="email"
                 placeholder="Enter User Email"
@@ -174,5 +191,6 @@ function Admin() {
     </div>
   );
 }
+
 
 export default Admin;

@@ -130,7 +130,7 @@ const Home = ({
     };
 
     const updatedFolders = [...folders, newFolder];
-
+    console.log("The create folder is clicked")
     dispatch({ field: 'folders', value: updatedFolders });
     saveFolders(updatedFolders);
   };

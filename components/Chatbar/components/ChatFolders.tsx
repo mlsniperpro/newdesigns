@@ -51,15 +51,17 @@ export const ChatFolders = ({ searchTerm }: Props) => {
         .sort((a, b) => a.name.localeCompare(b.name))
         .map((folder, index) => {
           const folderConversations = ChatFolders(folder);
+          console.log(folder);
           return (
-            folderConversations.length > 0 && (
+             (
               <Folder
-                key={index}
+                key={folder.id}
                 searchTerm={searchTerm}
                 currentFolder={folder}
                 handleDrop={handleDrop}
                 folderComponent={folderConversations}
               />
+              
             )
           );
         })}
