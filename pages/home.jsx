@@ -449,7 +449,7 @@ const LandingPage = () => {
           <br></br>
           <br></br>   <br></br>
           <br></br>
-        <div style={{border:'1px solid lightgray',width:'100%'}}></div>
+        <div style={{border:'0.5px solid lightgray',width:'100%'}}></div>
         <br></br>
           <br></br>
           <br></br>
@@ -621,7 +621,7 @@ const LandingPage = () => {
         <br></br>
         <br></br>
         <br></br>
-        <hr></hr>
+        <div style={{border:'0.5px solid lightgray',width:'100%'}}></div>
         <Card sx={{ maxWidth: '100%' }}>
           <br></br>
           <br></br>
