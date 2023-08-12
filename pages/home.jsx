@@ -106,6 +106,7 @@ const LandingPage = () => {
           </div>
         </div>
       </nav>
+
       <div className="flex-grow flex items-center justify-center">
         <div className="text-center space-y-6">
           <br></br>
@@ -241,10 +242,29 @@ const LandingPage = () => {
         <br></br>
         <br></br>
         <br></br>
-        <Card sx={{ maxWidth: '100%' }}>
+        {/* <Card sx={{ maxWidth: '100%' }}>
           <br></br>
           <br></br>
-          <div
+         
+          <br></br>
+          <br></br>
+
+          <br></br>
+          <br></br>
+        </Card> */}
+        <br></br>
+        <br></br>
+        <br></br>
+        <div
+          style={{
+            height: '100%',
+            display: 'flex',
+            justifyItems: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+           <div
             style={{
               margin: 'auto',
               backgroundColor: 'rgb(22, 6, 71)',
@@ -294,24 +314,6 @@ const LandingPage = () => {
               </i>
             </p>
           </div>
-          <br></br>
-          <br></br>
-
-          <br></br>
-          <br></br>
-        </Card>
-        <br></br>
-        <br></br>
-        <br></br>
-        <div
-          style={{
-            height: '100%',
-            display: 'flex',
-            justifyItems: 'center',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
           {/* video */}
           <div
             style={{
@@ -422,7 +424,7 @@ const LandingPage = () => {
                   src={
                     language === 'en'
                       ? 'https://player.vimeo.com/video/851615333?h=ac323b2cad&title=0&byline=0&portrait=0'
-                      : 'https://player.vimeo.com/video/851456093?h=ac323b2cad&title=0&byline=0&portrait=0'
+                      : 'https://player.vimeo.com/video/853983939?h=ac323b2cad&title=0&byline=0&portrait=0'
                   }
                   frameBorder="0"
                   allowFullScreen
@@ -443,7 +445,11 @@ const LandingPage = () => {
           </div>
           <br></br>
           <br></br>
-
+          <hr></hr>
+          <br></br>
+          <br></br>   <br></br>
+          <br></br>
+        
           <div
             style={{
               background: 'rgb(22, 6, 71)',
@@ -472,6 +478,7 @@ const LandingPage = () => {
                 ? 'Revolutionize Your Content with Vioniko                      '
                 : 'TUTOR VIONIKO I.A.                      '}
             </h1>
+            
             <p
               className=" text-sm sm:text-xl "
               style={{
@@ -484,6 +491,7 @@ const LandingPage = () => {
                 : 'Lleva tu marketing al siguiente nivel con Tutoría Avanzada usando la Inteligencia Artificial                      '}
             </p>
           </div>
+          <hr></hr>
           {/* video */}
           <div
             style={{
