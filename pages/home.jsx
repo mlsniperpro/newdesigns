@@ -869,9 +869,6 @@ const LandingPage = () => {
         >
           <br></br>
           <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
           <h1
             style={{
               fontFamily: 'sans-serif',
@@ -976,9 +973,7 @@ const LandingPage = () => {
           </div>
           <br></br>
           <br></br>
-          <br></br> <br></br>
         </div>
-        <br></br> <br></br>
         <br></br> <br></br>
         <div
           className="max-w-7xl mx-auto text-center"
