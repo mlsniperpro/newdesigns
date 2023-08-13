@@ -25,6 +25,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import LineStyleIcon from '@mui/icons-material/LineStyle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import UploadIcon from '@mui/icons-material/Upload';
 import { signOut } from 'firebase/auth';
 import { destroyCookie } from 'nookies';
@@ -119,7 +120,7 @@ function Dashboard(props) {
             />
             <ListItem
               onClick={() => setMode('prompts')}
-              icon={<LineStyleIcon />}
+              icon={<QuestionAnswerIcon />}
               text="Prompts"
             />
             <ListItem
