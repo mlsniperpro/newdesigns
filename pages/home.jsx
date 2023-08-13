@@ -446,13 +446,9 @@ const LandingPage = () => {
           <br></br>
           <br></br>
           <hr></hr>
-          <br></br>
-          <br></br>   <br></br>
-          <br></br>
+          <br></br> 
         <div style={{border:'0.5px solid lightgray',width:'100%'}}></div>
         <br></br>
-          <br></br>
-          <br></br>
           <br></br>
           <div
             style={{
