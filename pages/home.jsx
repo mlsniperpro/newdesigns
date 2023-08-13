@@ -696,8 +696,7 @@ const LandingPage = () => {
         <br></br>
         <br></br>
         <Card sx={{ maxWidth: '100%' }}>
-          <br></br>
-          <br></br>
+      
           <div
             style={{
               margin: 'auto',
