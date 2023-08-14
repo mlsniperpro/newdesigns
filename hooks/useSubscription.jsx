@@ -22,13 +22,11 @@ function useSubscription(user) {
       console.error('Error retrieving prices: ', error);
     }
   };
-
+  useEffect(() => {
+    console.log('The subscription status is ', subscribed);
+    console.log("The words limit is ", limit);
+  }, [subscribed, limit]);
   const checkSubscription = async () => {
-   /* if (!user) {
-      setLoading(false);
-      return;
-    }
-    */
 
     try {
       const subscribersSnapshot = await getDocs(collection(db, 'subscribers'));
@@ -49,6 +47,7 @@ function useSubscription(user) {
       );
       const wordsGenerated = wordsSnapshot.docs.map((doc) => doc.data());
       const currentUserWords = wordsGenerated[0] || { count: 0 };
+      console.log('The current user words are ', currentUserWords.count)
 
       if (
         Date.now() < latestSubscription.subscriptionEndDate ||
@@ -71,7 +70,7 @@ function useSubscription(user) {
   useEffect(() => {
     retrieveWordLimit();
     checkSubscription();
-  }, [user, userIsPremium]);
+  }, [user, userIsPremium, limit]);
 
   return { loading, subscribed };
 }

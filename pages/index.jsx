@@ -1,5 +1,6 @@
-import React, { useEffect , useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+
 
 
 import Head from 'next/head';
@@ -33,7 +34,9 @@ function Index() {
   const handleValueChange = (newValue) => {
     setUpgrade(newValue);
   };
-
+  useEffect(() => {
+    console.log('The subscription status is ', subscribed);
+  }, [subscribed]);
   useEffect(() => {
     if (
       !auth?.currentUser?.uid &&
