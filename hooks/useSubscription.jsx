@@ -24,10 +24,11 @@ function useSubscription(user) {
   };
 
   const checkSubscription = async () => {
-    if (!user) {
+   /* if (!user) {
       setLoading(false);
       return;
     }
+    */
 
     try {
       const subscribersSnapshot = await getDocs(collection(db, 'subscribers'));
