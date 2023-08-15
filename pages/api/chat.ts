@@ -24,7 +24,7 @@ export const config = {
 };
 
 const DEFAULT_MODEL = {
-  id: 'gpt-3.5-turbo',
+  id: 'gpt-3.5-turbo-16k',
   tokenLimit: 16384,
   name: 'GPT-3.5 Turbo',
   maxLength: 16384,

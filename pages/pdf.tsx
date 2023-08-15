@@ -35,12 +35,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
   const id = nanoid();
   const [user, userLoading] = useAuthState(auth);
   const {subscribed, loading} = useSubscription(user);
+  /*
   useEffect(() => {
     if (!subscribed && !loading && user) {
       router.push('/');
     }
   }, [loading, userLoading]);
-  
+  */
   return (
     <>
       <Toaster />

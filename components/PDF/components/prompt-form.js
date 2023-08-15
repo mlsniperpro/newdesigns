@@ -2,25 +2,34 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Textarea from 'react-textarea-autosize';
 
+
+
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 
+
+
 import { useEnterSubmit } from '../lib/hooks/use-enter-submit';
+
+
+
+import { getSimilarDocsFromChunks } from '@/utils/similarDocs';
+
+
 
 import { Button, buttonVariants } from '../components/ui/button';
 import { IconArrowElbow, IconPlus } from '../components/ui/icons';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
+
+
 
 import { cn } from '../lib/utils';
 
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { MemoryVectorStore } from 'langchain/vectorstores/memory';
+
+
+import { get } from 'http';
 import PropTypes from 'prop-types';
+
 
 export function PromptForm({ onSubmit, input, setInput, isLoading }) {
   const { formRef, onKeyDown } = useEnterSubmit();
@@ -31,16 +40,12 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
     extractedText: '',
   });
   const [extractionCompleted, setExtractionCompleted] = useState(false);
-  const [splittedText, setSplittedText] = useState([]);
   const [contextLoading, setContextLoading] = useState(false);
-  const [context, setContext] = useState('');
   const [scriptLoaded, setScriptLoaded] = useState(false);
-  const [vectorEmbedding, setVectorEmbedding] = useState(null);
   const [isExtracting, setIsExtracting] = useState(false);
-
+  const [chunks, setChunks] = useState([]);
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
     const intervalId = setInterval(() => {
       if (window.pdfjsLib) {
         setScriptLoaded(true);
@@ -50,7 +55,6 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
 
     return () => clearInterval(intervalId);
   }, []);
-
   const handleFileChange = (e) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
@@ -63,7 +67,6 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
       console.log('Files uploaded:', files);
     }
   };
-
   function iterativeCharacterTextSplitter(inputString, length, overlap) {
     let result = [];
     for (let i = 0; i < inputString.length; i += length - overlap) {
@@ -71,31 +74,25 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
     }
     return result;
   }
-
   const handleRemoveFile = (index) => {
     dispatch({ type: 'remove', index });
   };
-
   const handleConfirmFile = (index) => {
     dispatch({ type: 'confirm', index });
     console.log('File confirmed:', state.uploadedFiles[index]);
   };
-
   const handleExtractText = useCallback(async () => {
     if (!scriptLoaded) {
       console.log('Script not loaded');
       return;
     }
-
     console.log('Starting text extraction...');
     setIsExtracting(true);
-
     try {
       toast.success('Extracting text from PDF...');
       const pdfJS = window.pdfjsLib;
       pdfJS.GlobalWorkerOptions.workerSrc =
         'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
-
       const extractTextFromPdf = async (file) => {
         console.log('The file name is', file.name);
         return new Promise((resolve, reject) => {
@@ -121,11 +118,9 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
           reader.readAsArrayBuffer(file);
         });
       };
-
       const texts = await Promise.all(
         state.confirmedFiles.map(extractTextFromPdf),
       );
-
       dispatch({ type: 'extract', text: texts.join(' ') });
     } catch (error) {
       console.error('Error extracting text from PDF:', error);
@@ -135,7 +130,6 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
       setIsExtracting(false);
     }
   }, [state.confirmedFiles, scriptLoaded]);
-
   useEffect(() => {
     if (
       state.uploadedFiles.length === 0 &&
@@ -155,67 +149,14 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
     scriptLoaded,
     isExtracting,
   ]);
-
   useEffect(() => {
     const chunks = iterativeCharacterTextSplitter(
       state.extractedText,
       1000,
-      100,
+      10,
     );
-
-    const embedding_model = new OpenAIEmbeddings({
-      openAIApiKey: process.env.NEXT_PUBLIC_API_KEY,
-    });
-
-    if (chunks.length === 0) {
-      console.log('Chunks length is 0');
-      return;
-    } else {
-      let embedding = [];
-      for (let i = 0; i < chunks.length; i++) {
-        embedding.push({ id: i });
-        console.log('Chunk', i, chunks[i]);
-      }
-      console.log('Here are the chunks of text', chunks);
-      MemoryVectorStore.fromTexts(chunks, embedding, embedding_model)
-        .then((vectorStore) => {
-          setVectorEmbedding(vectorStore);
-          console.log('Vector Store', vectorStore);
-          const vectorStoreString = JSON.stringify(vectorStore);
-
-          localStorage.setItem('vectorStore', vectorStoreString);
-
-          localStorage.setItem('chunks', JSON.stringify(chunks));
-        })
-        .catch((error) => {
-          console.error('Error creating vector store:', error);
-        });
-    }
-
-    setSplittedText(chunks);
-  }, [state.extractedText, input]);
-
-  useEffect(() => {
-    if (vectorEmbedding && input) {
-      async function similarity() {
-        setContextLoading(true);  
-        console.log('Vector Embedding', vectorEmbedding);
-        const docs = await vectorEmbedding.similaritySearch(
-          input,
-          4,
-        );
-        let texts = '';
-        for (let i = 0; i < docs.length; i++) {
-          texts += docs[i].pageContent + '\n';
-        }
-        console.log('Similarity', texts);
-        setContext(texts);
-        setContextLoading(false);
-      }
-      similarity();
-    }
-  }, [vectorEmbedding]);
-
+    setChunks(chunks);
+  }, [state.extractedText]);
   return (
     <TooltipProvider>
       <form
@@ -227,8 +168,17 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
             return;
           }
           let message;
+          let context;
+          if (chunks.length > 0) {
+            console.log('Chunks:', chunks)
+            console.log('Input:', input)
+            const docs = await getSimilarDocsFromChunks(chunks, input, 4)
+            context= docs.map((d) => d.doc)
+              .join(' ');
+            console.log('Context:', context);
+          }
           if (context) {
-            message = `
+             message = `
         You're role is to answer the user questions only based on the information they provide and or if you are very sure of the answer and it is
         not in context provided, you can tell them that it is not available in the context provided and go ahead and answer the question.
         Question: ${input}
@@ -240,9 +190,7 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }) {
             toast.error('No document found to answer the question');
             return;
           }
-
           setInput('');
-          setContext('');
           await onSubmit(message);
         }}
         ref={formRef}
