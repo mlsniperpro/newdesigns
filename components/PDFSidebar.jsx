@@ -3,6 +3,11 @@ import { useEffect, useRef, useState } from 'react';
 
 
 
+import handleExtractText, { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
+import { getEmbeddings } from '@/utils/similarDocs';
+
+
+
 import { auth, storage } from '@/config/firebase';
 import { listAll, ref, uploadBytes } from 'firebase/storage';
 
@@ -36,6 +41,7 @@ const SidebarItem = ({ icon, text, onClick }) => (
 
 function PDFSidebar({ onDocumentClick }) {
   const [sidebarItems, setSidebarItems] = useState([]);
+  const [pdfUploaded, setPdfUploaded] = useState(false);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -60,14 +66,44 @@ function PDFSidebar({ onDocumentClick }) {
     };
 
     fetchUserPDFs();
-  }, []);
+    setPdfUploaded(false); // Reset the state after fetching
+  }, [pdfUploaded]);
 
   const handleCreateItem = () => {
     fileInputRef.current.click();
   };
-
   const handleFileChange = async (e) => {
-    // ... (same as before) ...
+    const file = e.target.files[0];
+    if (file && auth.currentUser) {
+      const userId = auth.currentUser.uid;
+      const pdfRef = ref(storage, `pdfs/${userId}/${file.name}`);
+      const text = await handleExtractText(file);
+      const chunks = iterativeCharacterTextSplitter(text, 1000, 10);
+      const embeddings = await getEmbeddings(chunks);
+
+      // Upload the PDF file
+      uploadBytes(pdfRef, file).then((snapshot) => {
+        console.log('PDF uploaded successfully:', snapshot);
+      });
+
+      // Convert embeddings to JSON string
+      const embeddingsJSON = JSON.stringify(embeddings);
+
+      // Create a Blob from the JSON string
+      const embeddingsBlob = new Blob([embeddingsJSON], {
+        type: 'application/json',
+      });
+
+      // Define the path for the JSON file in Firebase Storage
+      const jsonFileName = `${file.name.split('.pdf')[0]}.json`; // Assuming the file always has a .pdf extension
+      const jsonRef = ref(storage, `pdfs/${userId}/${jsonFileName}`);
+
+      // Upload the JSON Blob to Firebase Storage
+      uploadBytes(jsonRef, embeddingsBlob).then((snapshot) => {
+        console.log('Embeddings JSON uploaded successfully:', snapshot);
+      });
+    }
+    setPdfUploaded(true);
   };
 
   return (
