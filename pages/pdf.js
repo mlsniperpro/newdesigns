@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
+
+
 
 import PDFChat from '@/components/PDFChat';
 import PDFDisplay from '@/components/PDFDisplay';
 import PDFSidebar from '@/components/PDFSidebar';
-import { useEffect } from 'react';
+
 
 export default function PDF() {
   const [isResizing, setIsResizing] = useState(false);
+  const [documentName, setDocumentName] = useState(''); // State for document name
   const [initialX, setInitialX] = useState(0);
   const [sidebarBasis, setSidebarBasis] = useState('12.5%'); // Initial basis for 1/8
   const [embeddingData, setEmbeddingData] = useState(null); // State for embedding data
-
+  const handleDocumentClick = (documentName) => {
+    console.log('Document clicked:', documentName);
+    // Handle the document name as needed
+    setDocumentName(documentName);
+  };
   const handleMouseDown = (e) => {
     console.log('Mouse down triggered');
     setIsResizing(true);
@@ -51,14 +59,14 @@ export default function PDF() {
         style={{ flexBasis: sidebarBasis }}
         className="flex-none"
       >
-        <PDFSidebar />
+        <PDFSidebar onDocumentClick={handleDocumentClick} />
       </div>
       <div
         className="resize-handle bg-gray-300 w-2 cursor-ew-resize"
         onMouseDown={handleMouseDown}
       />
       <div className="flex-grow flex overflow-hidden">
-        <PDFDisplay onEmbeddingFetched={setEmbeddingData} />
+        <PDFDisplay onEmbeddingFetched={setEmbeddingData} pdfPath={documentName} />
       </div>
       <div
         className="resize-handle bg-gray-300 w-2 cursor-ew-resize z-10"

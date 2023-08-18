@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
-
-
-import { storage } from '@/config/firebase';
+import { auth, storage } from '@/config/firebase';
 import { getDownloadURL, ref } from 'firebase/storage';
-
 
 function PDFViewer({ path, onEmbeddingFetched }) {
   const canvasContainerRef = useRef(null);
@@ -57,6 +54,11 @@ function PDFViewer({ path, onEmbeddingFetched }) {
       }
     };
 
+    // Cleanup: Remove previous canvases before rendering a new PDF
+    if (canvasContainerRef.current) {
+      canvasContainerRef.current.innerHTML = '';
+    }
+
     renderPDF();
   }, [path, onEmbeddingFetched]);
 
@@ -69,9 +71,16 @@ function PDFViewer({ path, onEmbeddingFetched }) {
     </div>
   );
 }
-function PDFDisplay({ onEmbeddingFetched }) {
+
+function PDFDisplay({ onEmbeddingFetched, pdfPath }) {
   const [embeddingData, setEmbeddingData] = useState(null);
-  const pdfPath = 'pdfs/M8LwxAfm26SimGbDs4LDwf1HuCb2/SSRN-id4412788.pdf'; // Path in Firebase Storage
+  const [finalPdfPath, setFinalPdfPath] = useState(pdfPath);
+
+  useEffect(() => {
+    if (auth.currentUser && pdfPath) {
+      setFinalPdfPath('pdfs/' + auth.currentUser.uid + '/' + pdfPath + '.pdf');
+    }
+  }, [pdfPath]);
 
   useEffect(() => {
     if (embeddingData) {
@@ -81,7 +90,7 @@ function PDFDisplay({ onEmbeddingFetched }) {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <PDFViewer path={pdfPath} onEmbeddingFetched={setEmbeddingData} />
+      <PDFViewer path={finalPdfPath} onEmbeddingFetched={setEmbeddingData} />
     </div>
   );
 }
