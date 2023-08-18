@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import Script from 'next/script';
+
 import '@/styles/globals.css';
 import { Inter } from '@next/font/google';
 
@@ -54,6 +56,8 @@ function App({ Component, pageProps }) {
           <h2 className="text-2xl font-bold mb-2 text-gray-700">
             Browser Incompatibility
           </h2>
+         
+
           <p className="text-gray-700">
             Your browser does not support the required script. Please switch to
             another browser or enable JavaScript execution.
@@ -62,11 +66,19 @@ function App({ Component, pageProps }) {
       </div>
     );
   }
+  const handlePDFJSScriptLoad = () => {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+  };
 
   return (
     <div className={inter.className}>
       <Toaster />
       <QueryClientProvider client={queryClient}>
+         <Script
+          src="https://mozilla.github.io/pdf.js/build/pdf.js"
+          onLoad={handlePDFJSScriptLoad}
+        />
         {rewardfulReady ? <Component {...pageProps} /> : <div>Loading...</div>}
       </QueryClientProvider>
     </div>

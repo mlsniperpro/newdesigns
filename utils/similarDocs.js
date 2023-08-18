@@ -1,6 +1,5 @@
 import { pipeline } from '@xenova/transformers';
 
-
 function dotProduct(a, b) {
   a = Array.isArray(a) ? a : Array.from(a);
   b = Array.isArray(b) ? b : Array.from(b);
@@ -13,7 +12,7 @@ function dotProduct(a, b) {
 }
 
 
-async function getEmbeddings(chunks) {
+const getEmbeddings =  async(chunks) =>{
   const embedding_model = await pipeline(
     'feature-extraction',
     'Xenova/all-MiniLM-L6-v2',
@@ -29,7 +28,6 @@ async function getEmbeddings(chunks) {
   );
   return embeddingsWithChunks;
 }
-
 
 function getSimilarity(embeddingsWithChunks, query_embedding) {
   const similarities = embeddingsWithChunks.map(({ embedding }) =>
@@ -56,14 +54,14 @@ function sortSimilarDocs(similarDocs, numDocs) {
   return sortedSimilarDocs.slice(0, numDocs); // Return only the specified number of documents
 }
 
-const getSimilarDocsFromChunks = async (chunks, query, numDocs) => {
-  const embeddingsWithChunks = await getEmbeddings(chunks);
+const getSimilarDocsFromChunks = async (embeddingsWithChunks, query, numDocs) => {
   const [query_embedding_obj] = await getEmbeddings([query]);
   const query_embedding = query_embedding_obj.embedding;
   const similarities = getSimilarity(embeddingsWithChunks, query_embedding);
+  const chunks = embeddingsWithChunks.map(({ chunk }) => chunk);
   const similarDocs = getSimilarDocs(similarities, chunks);
   const sortedSimilarDocs = sortSimilarDocs(similarDocs, numDocs);
   return sortedSimilarDocs;
 };
 
-export { getSimilarDocsFromChunks };
+export { getSimilarDocsFromChunks, getEmbeddings };
