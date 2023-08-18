@@ -1,16 +1,13 @@
 import { IconPlus } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
 
-
-
-import handleExtractText, { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
+import handleExtractText, {
+  iterativeCharacterTextSplitter,
+} from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
-
-
 
 import { auth, storage } from '@/config/firebase';
 import { listAll, ref, uploadBytes } from 'firebase/storage';
-
 
 const SidebarItem = ({ icon, text, onClick }) => (
   <li
@@ -42,6 +39,7 @@ const SidebarItem = ({ icon, text, onClick }) => (
 function PDFSidebar({ onDocumentClick }) {
   const [sidebarItems, setSidebarItems] = useState([]);
   const [pdfUploaded, setPdfUploaded] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -68,6 +66,11 @@ function PDFSidebar({ onDocumentClick }) {
     fetchUserPDFs();
     setPdfUploaded(false); // Reset the state after fetching
   }, [pdfUploaded]);
+  const filteredItems = searchTerm.trim()
+    ? sidebarItems.filter((item) =>
+        item.text.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    : sidebarItems;
 
   const handleCreateItem = () => {
     fileInputRef.current.click();
@@ -130,7 +133,7 @@ function PDFSidebar({ onDocumentClick }) {
 
           <div className="overflow-y-auto h-0 flex-grow">
             <ul className="mt-12">
-              {sidebarItems.map((item, index) => (
+              {filteredItems.map((item, index) => (
                 <SidebarItem
                   key={index}
                   {...item}
@@ -145,6 +148,8 @@ function PDFSidebar({ onDocumentClick }) {
                 className="bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50 pl-10 py-2"
                 type="text"
                 placeholder="Search"
+                value={searchTerm} // Bind the value
+                onChange={(e) => setSearchTerm(e.target.value)} // Update the state on change
               />
             </div>
           </div>
