@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import PDFChat from '@/components/PDFChat';
 import PDFSidebar from '@/components/PDFSidebar';
-import PDFDisplay from '@/components/pdfdisplay';
+import PDFDisplay from '@/components/PDFDisplay';
 
 export default function PDF() {
   const [isResizing, setIsResizing] = React.useState(false);
