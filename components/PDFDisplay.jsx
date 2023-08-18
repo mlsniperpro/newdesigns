@@ -1,62 +1,39 @@
 import { useEffect, useRef, useState } from 'react';
 
+
+
 import { storage } from '@/config/firebase';
 import { getDownloadURL, ref } from 'firebase/storage';
 
-function PDFViewer({ path }) {
+
+function PDFViewer({ path, onEmbeddingFetched }) {
   const canvasContainerRef = useRef(null);
-  const [embedding, setEmbedding] = useState(null); // State to store the JSON embedding
+  const [embedding, setEmbedding] = useState(null);
 
   useEffect(() => {
     const renderPDF = async () => {
       if (!path) return;
 
-      let pdfBlob;
+      // Fetch the PDF from Firebase Storage
+      const pdfRef = ref(storage, path);
+      const pdfURL = await getDownloadURL(pdfRef);
+      const response = await fetch(pdfURL);
+      const pdfBlob = await response.blob();
 
-      // Open (or create) a specific cache
-      const cache = await caches.open('pdf-cache');
+      // Fetch the JSON embedding
+      const embeddingPath = path.replace('.pdf', '.json');
+      const embeddingRef = ref(storage, embeddingPath);
+      const embeddingURL = await getDownloadURL(embeddingRef);
+      const embeddingResponse = await fetch(embeddingURL);
+      const embeddingData = await embeddingResponse.json();
+      setEmbedding(embeddingData);
 
-      // Check if the PDF is in cache
-      const cachedPDFResponse = await cache.match(path);
+      // Propagate the embedding data to the parent component
+      onEmbeddingFetched(embeddingData);
 
-      if (cachedPDFResponse) {
-        // If the PDF is in cache, use it
-        pdfBlob = await cachedPDFResponse.blob();
-      } else {
-        // If not, fetch the PDF from Firebase Storage
-        const pdfRef = ref(storage, path);
-        const pdfURL = await getDownloadURL(pdfRef);
-        const response = await fetch(pdfURL);
-
-        // Store the fetched PDF in cache for future use
-        cache.put(path, response.clone());
-
-        // Use the fetched PDF for rendering
-        pdfBlob = await response.blob();
-      }
-
-      // Fetch and cache the JSON embedding
-      const embeddingPath = `${path}.json`;
-      const cachedEmbeddingResponse = await cache.match(embeddingPath);
-
-      if (!cachedEmbeddingResponse) {
-        const embeddingRef = ref(storage, embeddingPath);
-        const embeddingURL = await getDownloadURL(embeddingRef);
-        const embeddingResponse = await fetch(embeddingURL);
-
-        // Store the fetched embedding in cache for future use
-        cache.put(embeddingPath, embeddingResponse.clone());
-
-        // Set the embedding to state
-        const embeddingData = await embeddingResponse.json();
-        setEmbedding(embeddingData);
-      } else {
-        const embeddingData = await cachedEmbeddingResponse.json();
-        setEmbedding(embeddingData);
-      }
-
-      // Load the PDF document from the blob
-      const loadingTask = window.pdfjsLib.getDocument({ data: pdfBlob });
+      const arrayBuffer = await pdfBlob.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+      const loadingTask = window.pdfjsLib.getDocument({ data: uint8Array });
       const pdf = await loadingTask.promise;
 
       // Render all pages
@@ -81,7 +58,7 @@ function PDFViewer({ path }) {
     };
 
     renderPDF();
-  }, [path]);
+  }, [path, onEmbeddingFetched]);
 
   return (
     <div
@@ -92,13 +69,19 @@ function PDFViewer({ path }) {
     </div>
   );
 }
-
-function PDFDisplay() {
+function PDFDisplay({ onEmbeddingFetched }) {
+  const [embeddingData, setEmbeddingData] = useState(null);
   const pdfPath = 'pdfs/M8LwxAfm26SimGbDs4LDwf1HuCb2/SSRN-id4412788.pdf'; // Path in Firebase Storage
+
+  useEffect(() => {
+    if (embeddingData) {
+      onEmbeddingFetched(embeddingData);
+    }
+  }, [embeddingData, onEmbeddingFetched]);
 
   return (
     <div className="flex flex-col items-center w-full">
-      <PDFViewer path={pdfPath} />
+      <PDFViewer path={pdfPath} onEmbeddingFetched={setEmbeddingData} />
     </div>
   );
 }

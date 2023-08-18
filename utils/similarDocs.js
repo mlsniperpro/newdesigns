@@ -1,11 +1,14 @@
 import { pipeline } from '@xenova/transformers';
 
+
 function dotProduct(a, b) {
   a = Array.isArray(a) ? a : Array.from(a);
   b = Array.isArray(b) ? b : Array.from(b);
 
   if (a.length !== b.length) {
-    throw new Error('Vectors must be of the same length');
+    throw new Error(
+      `Vectors must be of the same length. Received lengths: a=${a.length}, b=${b.length}`,
+    );
   }
 
   return a.map((_, i) => a[i] * b[i]).reduce((m, n) => m + n);
@@ -30,11 +33,28 @@ const getEmbeddings =  async(chunks) =>{
 }
 
 function getSimilarity(embeddingsWithChunks, query_embedding) {
-  const similarities = embeddingsWithChunks.map(({ embedding }) =>
-    dotProduct(embedding.data, query_embedding.data),
+  console.log(
+    'Number of embeddings in embeddingsWithChunks:',
+    embeddingsWithChunks.length,
   );
+  console.log('Query embedding data length:', query_embedding.data.length);
+
+  const similarities = embeddingsWithChunks.map(({ embedding }, index) => {
+    console.log(`Processing embedding #${index + 1}`);
+    console.log('Embedding data length:', embedding.data.length);
+
+    try {
+      return dotProduct(embedding.data, query_embedding.data);
+    } catch (error) {
+      console.error(`Error processing embedding #${index + 1}:`, error.message);
+      return null; // or some default value, or you can rethrow the error if you want the function to fail
+    }
+  });
+
+  console.log('Computed similarities:', similarities);
   return similarities;
 }
+
 
 
 function getSimilarDocs(similarities, docs) { 
@@ -58,6 +78,7 @@ const getSimilarDocsFromChunks = async (embeddingsWithChunks, query, numDocs) =>
   const [query_embedding_obj] = await getEmbeddings([query]);
   const query_embedding = query_embedding_obj.embedding;
   const similarities = getSimilarity(embeddingsWithChunks, query_embedding);
+  console.log('SIMILARITIES ARE: ', similarities)
   const chunks = embeddingsWithChunks.map(({ chunk }) => chunk);
   const similarDocs = getSimilarDocs(similarities, chunks);
   const sortedSimilarDocs = sortSimilarDocs(similarDocs, numDocs);

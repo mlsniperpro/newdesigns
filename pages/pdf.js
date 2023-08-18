@@ -1,18 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 
 import PDFChat from '@/components/PDFChat';
-import PDFSidebar from '@/components/PDFSidebar';
 import PDFDisplay from '@/components/PDFDisplay';
+import PDFSidebar from '@/components/PDFSidebar';
+import { useEffect } from 'react';
 
 export default function PDF() {
-  const [isResizing, setIsResizing] = React.useState(false);
-  const [initialX, setInitialX] = React.useState(0);
-  const [sidebarBasis, setSidebarBasis] = React.useState('12.5%'); // Initial basis for 1/8
+  const [isResizing, setIsResizing] = useState(false);
+  const [initialX, setInitialX] = useState(0);
+  const [sidebarBasis, setSidebarBasis] = useState('12.5%'); // Initial basis for 1/8
+  const [embeddingData, setEmbeddingData] = useState(null); // State for embedding data
 
   const handleMouseDown = (e) => {
     console.log('Mouse down triggered');
     setIsResizing(true);
-    console.log("The resizing has been set to true")
+    console.log('The resizing has been set to true');
     setInitialX(e.clientX);
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
@@ -56,14 +58,14 @@ export default function PDF() {
         onMouseDown={handleMouseDown}
       />
       <div className="flex-grow flex overflow-hidden">
-        <PDFDisplay />
+        <PDFDisplay onEmbeddingFetched={setEmbeddingData} />
       </div>
       <div
         className="resize-handle bg-gray-300 w-2 cursor-ew-resize z-10"
         onMouseDown={handleMouseDown}
       />
       <div className="flex-grow">
-        <PDFChat />
+        <PDFChat embeddingData={embeddingData}/>
       </div>
     </div>
   );

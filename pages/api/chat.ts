@@ -55,7 +55,7 @@ const handler = async (req: Request): Promise<Response> => {
     let promptToSend = prompt || DEFAULT_SYSTEM_PROMPT;
     if (json.context) {
       promptToSend = `
-        You are a search assistant for a company. You are given a question and a context. You have to find the answer to the question in the context. If you cannot find the answer, you have to reply with "No answer in context".
+        Answer the question below using the context below or say "No context" so I know context is not relevant.
         Question: ${messages[messages.length-1].content}
         Context: ${json.context}
           `;
