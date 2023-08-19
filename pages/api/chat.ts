@@ -85,7 +85,8 @@ const handler = async (req: Request): Promise<Response> => {
         Answer the question below using the context below 
         Question: ${messages[messages.length - 1].content}
         Context: ${json.context}
-        If the question and  say "No context" so I know context is not relevant.
+        If Question not related to context say "No context" so I know context is irrelevant and I should not use it
+        Answers should be based only on context and not your general knowledge which may be inaccurate
           `;
     }
 
