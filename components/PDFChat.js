@@ -16,7 +16,7 @@ export default function PDFChat({ theme = 'light', embeddingData }) {
   };
   const contextRetriever = async () => {
     let texts;
-    const docs = await getSimilarDocsFromChunks(embeddingData, input, 4);
+    const docs = await getSimilarDocsFromChunks(embeddingData, input, 10);
     console.log('THE DOCS ARE: ', docs);
     texts = docs.map((doc) => doc.doc);
     texts = texts.join(' ');
