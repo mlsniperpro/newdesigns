@@ -1,13 +1,17 @@
+import { filter } from '@chakra-ui/react';
 import { IconPlus } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
 
-import handleExtractText, {
-  iterativeCharacterTextSplitter,
-} from '@/utils/extractTextFromPdfs';
+
+
+import handleExtractText, { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
+
+
 
 import { auth, storage } from '@/config/firebase';
 import { listAll, ref, uploadBytes } from 'firebase/storage';
+
 
 const SidebarItem = ({ icon, text, onClick }) => (
   <li
@@ -108,6 +112,13 @@ function PDFSidebar({ onDocumentClick }) {
     }
     setPdfUploaded(true);
   };
+ useEffect(() => {
+   if (filteredItems.length > 0) {
+     onDocumentClick(filteredItems[0].text);
+   }
+ }, [filteredItems]);
+
+
 
   return (
     <div className="flex flex-no-wrap h-screen">
