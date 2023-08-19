@@ -1,16 +1,23 @@
 import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from '@/utils/app/const';
 import { OpenAIError, OpenAIStream } from '@/utils/server';
 
+
+
 import { ChatBody, Message } from '@/types/chat';
+
+
 
 // @ts-expect-error
 import wasm from '../../node_modules/@dqbd/tiktoken/lite/tiktoken_bg.wasm?module';
+
+
 
 import { db } from '@/config/firebase';
 import tiktokenModel from '@dqbd/tiktoken/encoders/cl100k_base.json';
 import { Tiktoken, init } from '@dqbd/tiktoken/lite/init';
 import { doc, setDoc } from 'firebase/firestore';
 import { nanoid } from 'nanoid';
+
 
 export const config = {
   runtime: 'edge',
@@ -53,14 +60,7 @@ const handler = async (req: Request): Promise<Response> => {
       tiktokenModel.pat_str,
     );
     let promptToSend = prompt || DEFAULT_SYSTEM_PROMPT;
-    if (json.context) {
-      promptToSend = `
-        Answer the question below using the context below or say "No context" so I know context is not relevant.
-        Question: ${messages[messages.length-1].content}
-        Context: ${json.context}
-          `;
-    }
-    console.log(promptToSend);
+    
     let temperatureToUse = temperature || DEFAULT_TEMPERATURE;
 
     const prompt_tokens = encoding.encode(promptToSend);
@@ -79,6 +79,17 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     encoding.free();
+    console.log("The json is ",json)
+    if (json.context) {
+      messagesToSend[messagesToSend.length - 1].content = `
+        Answer the question below using the context below 
+        Question: ${messages[messages.length - 1].content}
+        Context: ${json.context}
+        If the question and  say "No context" so I know context is not relevant.
+          `;
+    }
+
+    console.log("Here are the messages being sent",messagesToSend[messagesToSend.length - 1]);
 
     const stream = await OpenAIStream(
       model,
