@@ -1,20 +1,15 @@
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
 
-
-
 import Link from 'next/link';
 
-
-
-import handleExtractText, { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
+import handleExtractText, {
+  iterativeCharacterTextSplitter,
+} from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
-
-
 
 import { auth, storage } from '@/config/firebase';
 import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
-
 
 const SidebarItem = ({ icon, text, onClick, onDelete }) => (
   <li
@@ -111,7 +106,6 @@ function PDFSidebar({ onDocumentClick }) {
     }
   };
 
-
   const handleCreateItem = () => {
     fileInputRef.current.click();
   };
@@ -146,14 +140,14 @@ function PDFSidebar({ onDocumentClick }) {
     }
   };
   useEffect(() => {
-    if(sidebarItems.length>0){
-      onDocumentClick(sidebarItems[0].text)
+    if (sidebarItems.length > 0) {
+      onDocumentClick(sidebarItems[0].text);
     }
-  }, [sidebarItems])
+  }, [sidebarItems]);
 
   return (
     <div className="flex flex-no-wrap h-screen">
-      <div className="w-64 absolute sm:relative bg-gray-800 shadow md:h-full flex-col h-full justify-between flex sm:flex">
+      <div className="relative bg-gray-800 shadow md:h-full flex-col h-full justify-between flex sm:flex">
         <div className="px-8 flex-1 flex flex-col justify-between">
           <div className="h-16 w-full flex items-center mt-5">
             <button
@@ -194,7 +188,6 @@ function PDFSidebar({ onDocumentClick }) {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
           </div>
           {/*A link back home */}
           <div className="flex justify-center mt-5 mb-5 w-full">
@@ -204,8 +197,8 @@ function PDFSidebar({ onDocumentClick }) {
                   Back to Home
                 </div>
               </Link>
-              </div>
-              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 
@@ -8,68 +7,113 @@ import PDFDisplay from '@/components/PDFDisplay';
 import PDFSidebar from '@/components/PDFSidebar';
 
 
+const MIN_SIDEBAR_WIDTH = 10; // Percentage
+const MAX_SIDEBAR_WIDTH = 30; // Percentage
+const MIN_DISPLAY_WIDTH = 30; // Percentage
+const MAX_DISPLAY_WIDTH = 70; // Percentage
+
 export default function PDF() {
-  const [isResizing, setIsResizing] = useState(false);
-  const [documentName, setDocumentName] = useState(''); // State for document name
+  const [isResizingSidebar, setIsResizingSidebar] = useState(false);
+  const [isResizingDisplay, setIsResizingDisplay] = useState(false);
+  const [documentName, setDocumentName] = useState('');
   const [initialX, setInitialX] = useState(0);
-  const [sidebarBasis, setSidebarBasis] = useState('12.5%'); // Initial basis for 1/8
-  const [embeddingData, setEmbeddingData] = useState(null); // State for embedding data
+  const [sidebarBasis, setSidebarBasis] = useState('12.5%');
+  const [displayBasis, setDisplayBasis] = useState('43.75%'); // Assuming initial value
+  const [embeddingData, setEmbeddingData] = useState(null);
   const handleDocumentClick = (documentName) => {
     setDocumentName(documentName);
   };
-  const handleMouseDown = (e) => {
-    console.log('Mouse down triggered');
-    setIsResizing(true);
-    console.log('The resizing has been set to true');
+  const handleMouseDownSidebar = (e) => {
+    setIsResizingSidebar(true);
     setInitialX(e.clientX);
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('mousemove', handleMouseMoveSidebar);
+    document.addEventListener('mouseup', handleMouseUpSidebar);
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const handleMouseMove = (e) => {
-    if (!isResizing) return;
-    const delta = e.clientX - initialX;
-    const currentBasisValue = parseFloat(sidebarBasis); // Convert "12.5%" to 12.5
-    const newSidebarWidth =
-      currentBasisValue + (delta / window.innerWidth) * 100;
-    console.log('Calculated width:', newSidebarWidth);
-    setSidebarBasis(`${newSidebarWidth}%`);
-    setInitialX(e.clientX); // Update the initialX for the next movement
+  const handleMouseMoveSidebar = (e) => {
+  if (!isResizingSidebar) return;
+  const delta = e.clientX - initialX;
+  const currentSidebarValue = parseFloat(sidebarBasis.replace('%', ''));
+  const newSidebarWidth = Math.min(Math.max(currentSidebarValue + (delta / window.innerWidth) * 100, MIN_SIDEBAR_WIDTH), MAX_SIDEBAR_WIDTH);
+  const newDisplayWidth = 100 - newSidebarWidth; // Adjust display width
+  setSidebarBasis(`${newSidebarWidth}%`);
+  setDisplayBasis(`${newDisplayWidth}%`);
+  setInitialX(e.clientX);
+};
+ 
 
+  const handleMouseMoveDisplay = (e) => {
+  if (!isResizingDisplay) return;
+  const delta = e.clientX - initialX;
+  const currentDisplayValue = parseFloat(displayBasis.replace('%', ''));
+  const newDisplayWidth = Math.min(Math.max(currentDisplayValue + (delta / window.innerWidth) * 100, MIN_DISPLAY_WIDTH), MAX_DISPLAY_WIDTH);
+  const newSidebarWidth = 100 - newDisplayWidth; // Adjust sidebar width
+  setDisplayBasis(`${newDisplayWidth}%`);
+  setSidebarBasis(`${newSidebarWidth}%`);
+  setInitialX(e.clientX);
+};
+
+  const handleMouseUpSidebar = () => {
+    setIsResizingSidebar(false);
+    document.removeEventListener('mousemove', handleMouseMoveSidebar);
+    document.removeEventListener('mouseup', handleMouseUpSidebar);
+  };
+
+  const handleMouseDownDisplay = (e) => {
+    setIsResizingDisplay(true);
+    setInitialX(e.clientX);
+    document.addEventListener('mousemove', handleMouseMoveDisplay);
+    document.addEventListener('mouseup', handleMouseUpDisplay);
     e.preventDefault();
     e.stopPropagation();
-    console.log('New sidebar basis:', `${newSidebarWidth}%`);
   };
 
-  const handleMouseUp = () => {
-    setIsResizing(false);
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
+  const handleMouseUpDisplay = () => {
+    setIsResizingDisplay(false);
+    document.removeEventListener('mousemove', handleMouseMoveDisplay);
+    document.removeEventListener('mouseup', handleMouseUpDisplay);
   };
+   
+  useEffect(() => {
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMoveSidebar);
+      document.removeEventListener('mouseup', handleMouseUpSidebar);
+      document.removeEventListener('mousemove', handleMouseMoveDisplay);
+      document.removeEventListener('mouseup', handleMouseUpDisplay);
+    };
+  }, []);
+
   return (
     <div className="flex h-screen">
       <div
         key={sidebarBasis}
-        style={{ flexBasis: sidebarBasis }}
+        style={{ flexBasis: sidebarBasis, flexShrink: 0 }}
         className="flex-none"
       >
         <PDFSidebar onDocumentClick={handleDocumentClick} />
       </div>
       <div
         className="resize-handle bg-gray-300 w-2 cursor-ew-resize"
-        onMouseDown={handleMouseDown}
+        onMouseDown={handleMouseDownSidebar}
       />
-      <div className="flex-grow flex overflow-hidden">
-        <PDFDisplay onEmbeddingFetched={setEmbeddingData} pdfPath={documentName} />
+      <div
+        key={displayBasis}
+        style={{ flexBasis: displayBasis, flexShrink: 0 }}
+        className="flex-none overflow-hidden"
+      >
+        <PDFDisplay
+          onEmbeddingFetched={setEmbeddingData}
+          pdfPath={documentName}
+        />
       </div>
       <div
-        className="resize-handle bg-gray-300 w-2 cursor-ew-resize z-10"
-        onMouseDown={handleMouseDown}
+        className="resize-handle bg-gray-300 w-2 cursor-ew-resize"
+        onMouseDown={handleMouseDownDisplay}
       />
       <div className="flex-grow">
-        <PDFChat embeddingData={embeddingData}/>
+        <PDFChat embeddingData={embeddingData} />
       </div>
     </div>
   );
