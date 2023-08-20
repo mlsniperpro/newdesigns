@@ -1,19 +1,16 @@
-import { filter } from '@chakra-ui/react';
-import { IconPlus } from '@tabler/icons-react';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 
-
-
-import handleExtractText, { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
+import handleExtractText, {
+  iterativeCharacterTextSplitter,
+} from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
 
-
-
 import { auth, storage } from '@/config/firebase';
-import { listAll, ref, uploadBytes } from 'firebase/storage';
+import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
 
-
-const SidebarItem = ({ icon, text, onClick }) => (
+const SidebarItem = ({ icon, text, onClick, onDelete }) => (
   <li
     className="flex w-full justify-between text-gray-300 hover:text-gray-500 cursor-pointer items-center mb-6"
     onClick={onClick}
@@ -37,12 +34,21 @@ const SidebarItem = ({ icon, text, onClick }) => (
       </svg>
       <span className="text-sm ml-2">{text}</span>
     </div>
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        onDelete(text);
+      }}
+      className="text-red-500"
+    >
+      <IconTrash size={18} />
+    </button>
   </li>
 );
 
 function PDFSidebar({ onDocumentClick }) {
   const [sidebarItems, setSidebarItems] = useState([]);
-  const [pdfUploaded, setPdfUploaded] = useState(false);
+  const [refreshCounter, setRefreshCounter] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const fileInputRef = useRef(null);
 
@@ -51,13 +57,11 @@ function PDFSidebar({ onDocumentClick }) {
       if (auth.currentUser) {
         const userId = auth.currentUser.uid;
         const userPDFsRef = ref(storage, `pdfs/${userId}`);
-
         try {
           const pdfList = await listAll(userPDFsRef);
           const pdfNames = pdfList.items
             .filter((itemRef) => itemRef.name.endsWith('.pdf'))
             .map((itemRef) => itemRef.name.split('.pdf')[0]);
-
           setSidebarItems(
             pdfNames.map((name) => ({ icon: 'messages', text: name })),
           );
@@ -68,17 +72,32 @@ function PDFSidebar({ onDocumentClick }) {
     };
 
     fetchUserPDFs();
-    setPdfUploaded(false); // Reset the state after fetching
-  }, [pdfUploaded]);
+  }, [refreshCounter]);
+
   const filteredItems = searchTerm.trim()
     ? sidebarItems.filter((item) =>
         item.text.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     : sidebarItems;
 
+  const handleDeleteItem = async (pdfName) => {
+    if (auth.currentUser) {
+      const userId = auth.currentUser.uid;
+      const pdfRef = ref(storage, `pdfs/${userId}/${pdfName}.pdf`);
+      try {
+        await deleteObject(pdfRef);
+        console.log(`PDF ${pdfName} deleted successfully`);
+        setRefreshCounter((prev) => prev + 1);
+      } catch (error) {
+        console.error(`Error deleting PDF ${pdfName}:`, error);
+      }
+    }
+  };
+
   const handleCreateItem = () => {
     fileInputRef.current.click();
   };
+
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file && auth.currentUser) {
@@ -88,37 +107,31 @@ function PDFSidebar({ onDocumentClick }) {
       const chunks = iterativeCharacterTextSplitter(text, 1000, 10);
       const embeddings = await getEmbeddings(chunks);
 
-      // Upload the PDF file
-      uploadBytes(pdfRef, file).then((snapshot) => {
-        console.log('PDF uploaded successfully:', snapshot);
-      });
-
-      // Convert embeddings to JSON string
       const embeddingsJSON = JSON.stringify(embeddings);
-
-      // Create a Blob from the JSON string
       const embeddingsBlob = new Blob([embeddingsJSON], {
         type: 'application/json',
       });
-
-      // Define the path for the JSON file in Firebase Storage
-      const jsonFileName = `${file.name.split('.pdf')[0]}.json`; // Assuming the file always has a .pdf extension
+      const jsonFileName = `${file.name.split('.pdf')[0]}.json`;
       const jsonRef = ref(storage, `pdfs/${userId}/${jsonFileName}`);
 
-      // Upload the JSON Blob to Firebase Storage
-      uploadBytes(jsonRef, embeddingsBlob).then((snapshot) => {
-        console.log('Embeddings JSON uploaded successfully:', snapshot);
-      });
+      Promise.all([
+        uploadBytes(pdfRef, file),
+        uploadBytes(jsonRef, embeddingsBlob),
+      ])
+        .then(() => {
+          console.log('Both PDF and embeddings uploaded successfully');
+          setRefreshCounter((prev) => prev + 1);
+        })
+        .catch((error) => {
+          console.error('Error uploading files:', error);
+        });
     }
-    setPdfUploaded(true);
   };
- useEffect(() => {
-   if (filteredItems.length > 0) {
-     onDocumentClick(filteredItems[0].text);
-   }
- }, [filteredItems]);
-
-
+  useEffect(() => {
+    if(sidebarItems.length>0){
+      onDocumentClick(sidebarItems[0].text)
+    }
+  }, [sidebarItems])
 
   return (
     <div className="flex flex-no-wrap h-screen">
@@ -141,7 +154,6 @@ function PDFSidebar({ onDocumentClick }) {
               style={{ display: 'none' }}
             />
           </div>
-
           <div className="overflow-y-auto h-0 flex-grow">
             <ul className="mt-12">
               {filteredItems.map((item, index) => (
@@ -149,6 +161,7 @@ function PDFSidebar({ onDocumentClick }) {
                   key={index}
                   {...item}
                   onClick={() => onDocumentClick(item.text)}
+                  onDelete={handleDeleteItem}
                 />
               ))}
             </ul>
@@ -159,11 +172,22 @@ function PDFSidebar({ onDocumentClick }) {
                 className="bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50 pl-10 py-2"
                 type="text"
                 placeholder="Search"
-                value={searchTerm} // Bind the value
-                onChange={(e) => setSearchTerm(e.target.value)} // Update the state on change
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
+            
           </div>
+          {/*A link back home */}
+          <div className="flex justify-center mt-5 mb-5 w-full">
+            <div className="relative ">
+              <Link href="/">
+                <div className="bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50 pl-10 py-2">
+                  Back to Home
+                </div>
+              </Link>
+              </div>
+              </div>
         </div>
       </div>
     </div>

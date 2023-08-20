@@ -15,8 +15,6 @@ export default function PDF() {
   const [sidebarBasis, setSidebarBasis] = useState('12.5%'); // Initial basis for 1/8
   const [embeddingData, setEmbeddingData] = useState(null); // State for embedding data
   const handleDocumentClick = (documentName) => {
-    console.log('Document clicked:', documentName);
-    // Handle the document name as needed
     setDocumentName(documentName);
   };
   const handleMouseDown = (e) => {
@@ -31,7 +29,6 @@ export default function PDF() {
   };
 
   const handleMouseMove = (e) => {
-    console.log('Mouse move triggered');
     if (!isResizing) return;
     const delta = e.clientX - initialX;
     const currentBasisValue = parseFloat(sidebarBasis); // Convert "12.5%" to 12.5
@@ -51,7 +48,6 @@ export default function PDF() {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
   };
-
   return (
     <div className="flex h-screen">
       <div

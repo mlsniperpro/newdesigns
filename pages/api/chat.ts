@@ -1,5 +1,6 @@
 import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from '@/utils/app/const';
 import { OpenAIError, OpenAIStream } from '@/utils/server';
+import { contextRetriever } from '@/utils/similarDocs';
 
 
 
@@ -19,9 +20,14 @@ import { doc, setDoc } from 'firebase/firestore';
 import { nanoid } from 'nanoid';
 
 
+
+
+
+
 export const config = {
   runtime: 'edge',
 };
+
 
 const DEFAULT_MODEL = {
   id: 'gpt-3.5-turbo-16k',
@@ -79,12 +85,12 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     encoding.free();
-    console.log("The json is ",json)
-    if (json.context) {
+    if (json.data) {
+      const context = await contextRetriever(json.data, messagesToSend[messagesToSend.length - 1].content);
       messagesToSend[messagesToSend.length - 1].content = `
         Answer the question below using the context below 
         Question: ${messages[messages.length - 1].content}
-        Context: ${json.context}
+        Context: ${context}
         If Question not related to context say "No context" so I know context is irrelevant and I should not use it
         Answers should be based only on context and not your general knowledge which may be inaccurate
           `;

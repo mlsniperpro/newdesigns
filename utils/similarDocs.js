@@ -1,68 +1,73 @@
-import { pipeline } from '@xenova/transformers';
-
-
-function dotProduct(a, b) {
-  a = Array.isArray(a) ? a : Array.from(a);
-  b = Array.isArray(b) ? b : Array.from(b);
-
-  if (a.length !== b.length) {
-    throw new Error(
-      `Vectors must be of the same length. Received lengths: a=${a.length}, b=${b.length}`,
-    );
-  }
-
-  return a.map((_, i) => a[i] * b[i]).reduce((m, n) => m + n);
+function cosineSimilarity(a, b) {
+  console.log('Length of a:', a.length);
+  console.log('Length of b:', b.length);
+  
+  const dotProduct = a.reduce((sum, val, i) => sum + val * b[i], 0);
+  const magnitudeA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0));
+  const magnitudeB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0));
+  return dotProduct / (magnitudeA * magnitudeB);
 }
+export const createEmbeddings = async ({ token, model, input }) => {
+  const response = await fetch('https://api.openai.com/v1/embeddings', {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    method: 'POST',
+    body: JSON.stringify({ input, model }),
+  });
 
+  const { error, data, usage } = await response.json();
 
-const getEmbeddings =  async(chunks) =>{
-  const embedding_model = await pipeline(
-    'feature-extraction',
-    'Xenova/all-MiniLM-L6-v2',
-  );
+  return data;
+};
+const getEmbeddings = async (chunks) => {
+  const model = "text-embedding-ada-002"
   const embeddingsWithChunks = await Promise.all(
     chunks.map(async (chunk) => {
-      const embedding = await embedding_model(chunk, {
-        pooling: 'mean',
-        normalize: true,
+      const embedding = await createEmbeddings({
+        token: process.env.NEXT_PUBLIC_API_KEY,
+        model: 'text-embedding-ada-002',
+        input: chunk,
       });
-      return { chunk, embedding }; // Return both the chunk and its embedding
+
+      return { chunk, embedding };
     }),
   );
   return embeddingsWithChunks;
-}
+};
 
 function getSimilarity(embeddingsWithChunks, query_embedding) {
   console.log(
     'Number of embeddings in embeddingsWithChunks:',
     embeddingsWithChunks.length,
   );
-  console.log('Query embedding data length:', query_embedding.data.length);
+  console.log('Query embedding data length:', query_embedding);
 
   const similarities = embeddingsWithChunks.map(({ embedding }, index) => {
     console.log(`Processing embedding #${index + 1}`);
-    console.log('Embedding data length:', embedding.data.length);
+
+    // Access the embedding data from embeddingsWithChunks
+    const embeddingData = Object.values(embedding);
+    console.log('Embedding data length:', embeddingData);
 
     try {
-      return dotProduct(embedding.data, query_embedding.data);
+      return cosineSimilarity(embeddingData, query_embedding);
     } catch (error) {
       console.error(`Error processing embedding #${index + 1}:`, error.message);
-      return null; // or some default value, or you can rethrow the error if you want the function to fail
+      return null;
     }
   });
-
   console.log('Computed similarities:', similarities);
   return similarities;
 }
 
-
-
-function getSimilarDocs(similarities, docs) { 
+function getSimilarDocs(similarities, docs) {
   const similarDocs = similarities.map((similarity, index) => {
     return {
       similarity: similarity,
       doc: docs[index],
-    }
+    };
   });
   return similarDocs;
 }
@@ -74,15 +79,31 @@ function sortSimilarDocs(similarDocs, numDocs) {
   return sortedSimilarDocs.slice(0, numDocs); // Return only the specified number of documents
 }
 
-const getSimilarDocsFromChunks = async (embeddingsWithChunks, query, numDocs) => {
+const getSimilarDocsFromChunks = async (
+  embeddingsWithChunks,
+  query,
+  numDocs,
+) => {
+  console.log("The embeddingwithChiunks is in similarDocs ", embeddingsWithChunks)
   const [query_embedding_obj] = await getEmbeddings([query]);
   const query_embedding = query_embedding_obj.embedding;
+  console.log('Query embedding:', query_embedding);
+
   const similarities = getSimilarity(embeddingsWithChunks, query_embedding);
-  console.log('SIMILARITIES ARE: ', similarities)
+  
+  console.log('SIMILARITIES ARE:', similarities);
   const chunks = embeddingsWithChunks.map(({ chunk }) => chunk);
   const similarDocs = getSimilarDocs(similarities, chunks);
   const sortedSimilarDocs = sortSimilarDocs(similarDocs, numDocs);
   return sortedSimilarDocs;
 };
+const contextRetriever = async (embeddingData, input) => {
+  let texts;
+  const docs = await getSimilarDocsFromChunks(embeddingData, input, 25);
+  console.log('THE DOCS ARE: ', docs);
+  texts = docs.map((doc) => doc.doc);
+  texts = texts.join(' ');
+  return texts;
+};
 
-export { getSimilarDocsFromChunks, getEmbeddings };
+export { getSimilarDocsFromChunks, getEmbeddings, contextRetriever };
