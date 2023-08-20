@@ -2,16 +2,10 @@ import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from '@/utils/app/const';
 import { OpenAIError, OpenAIStream } from '@/utils/server';
 import { contextRetriever } from '@/utils/similarDocs';
 
-
-
 import { ChatBody, Message } from '@/types/chat';
-
-
 
 // @ts-expect-error
 import wasm from '../../node_modules/@dqbd/tiktoken/lite/tiktoken_bg.wasm?module';
-
-
 
 import { db } from '@/config/firebase';
 import tiktokenModel from '@dqbd/tiktoken/encoders/cl100k_base.json';
@@ -19,15 +13,9 @@ import { Tiktoken, init } from '@dqbd/tiktoken/lite/init';
 import { doc, setDoc } from 'firebase/firestore';
 import { nanoid } from 'nanoid';
 
-
-
-
-
-
 export const config = {
   runtime: 'edge',
 };
-
 
 const DEFAULT_MODEL = {
   id: 'gpt-3.5-turbo-16k',
@@ -66,7 +54,7 @@ const handler = async (req: Request): Promise<Response> => {
       tiktokenModel.pat_str,
     );
     let promptToSend = prompt || DEFAULT_SYSTEM_PROMPT;
-    
+
     let temperatureToUse = temperature || DEFAULT_TEMPERATURE;
 
     const prompt_tokens = encoding.encode(promptToSend);
@@ -85,18 +73,39 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     encoding.free();
-    if (json.data) {
+    /*if (json.data) {
       const context = await contextRetriever(json.data, messagesToSend[messagesToSend.length - 1].content);
       messagesToSend[messagesToSend.length - 1].content = `
-        Answer the question below using the context below 
+        AI assistant is advanced artificial intelligence 
         Question: ${messages[messages.length - 1].content}
         Context: ${context}
         If Question not related to context say "No context" so I know context is irrelevant and I should not use it
         Answers should be based only on context and not your general knowledge which may be inaccurate
           `;
     }
+    */
+    if (json.data) {
+      const context = await contextRetriever(
+        json.data,
+        messagesToSend[messagesToSend.length - 1].content,
+      );
+      messagesToSend[messagesToSend.length - 1].content = `
+  Here is the user question:
+  Question: ${messages[messages.length - 1].content}
+  Search for relevant information in the context below and use it to answer user questions exhaustively and deeply using numbered list and thorough analysis.
+  If the context does not provide relevant answer to the question, mention that PDF provided is not relevant to question and stop answering questions.
+  Context: ${context}
+  `;
+      messagesToSend[messagesToSend.length - 1].content = messagesToSend[
+        messagesToSend.length - 1
+      ].content.replace(/(\r\n|\n|\r)/gm, '');
+      messagesToSend[messagesToSend.length - 1].role = 'system';
+    }
 
-    console.log("Here are the messages being sent",messagesToSend[messagesToSend.length - 1]);
+    console.log(
+      'Here are the messages being sent',
+      messagesToSend[messagesToSend.length - 1],
+    );
 
     const stream = await OpenAIStream(
       model,

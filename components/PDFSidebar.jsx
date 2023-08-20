@@ -122,7 +122,7 @@ function PDFSidebar({ onDocumentClick }) {
       const userId = auth.currentUser.uid;
       const pdfRef = ref(storage, `pdfs/${userId}/${file.name}`);
       const text = await handleExtractText(file);
-      const chunks = iterativeCharacterTextSplitter(text, 1000, 10);
+      const chunks = iterativeCharacterTextSplitter(text, 2000, 100);
       const embeddings = await getEmbeddings(chunks);
 
       const embeddingsJSON = JSON.stringify(embeddings);

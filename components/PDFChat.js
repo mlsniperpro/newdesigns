@@ -1,10 +1,6 @@
 import { useChat } from 'ai/react';
-import { useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-
-
-import { getSimilarDocsFromChunks } from '@/utils/similarDocs';
 
 
 export default function PDFChat({ theme = 'light', embeddingData }) {
