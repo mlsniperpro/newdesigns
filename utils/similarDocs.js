@@ -38,21 +38,14 @@ const getEmbeddings = async (chunks) => {
 };
 
 function getSimilarity(embeddingsWithChunks, query_embedding) {
-  console.log(
-    'Number of embeddings in embeddingsWithChunks:',
-    embeddingsWithChunks.length,
-  );
-  console.log('Query embedding data length:', query_embedding);
 
   const similarities = embeddingsWithChunks.map(({ embedding }, index) => {
     console.log(`Processing embedding #${index + 1}`);
-
     // Access the embedding data from embeddingsWithChunks
-    const embeddingData = Object.values(embedding);
-    console.log('Embedding data length:', embeddingData);
-
+    const embeddingData = embedding[0].embedding;
     try {
       return cosineSimilarity(embeddingData, query_embedding);
+
     } catch (error) {
       console.error(`Error processing embedding #${index + 1}:`, error.message);
       return null;
@@ -84,14 +77,10 @@ const getSimilarDocsFromChunks = async (
   query,
   numDocs,
 ) => {
-  console.log("The embeddingwithChiunks is in similarDocs ", embeddingsWithChunks)
   const [query_embedding_obj] = await getEmbeddings([query]);
-  const query_embedding = query_embedding_obj.embedding;
-  console.log('Query embedding:', query_embedding);
-
+  const query_embedding = query_embedding_obj.embedding[0].embedding;
   const similarities = getSimilarity(embeddingsWithChunks, query_embedding);
-  
-  console.log('SIMILARITIES ARE:', similarities);
+  console.log('SIMILARITIES: ', similarities)
   const chunks = embeddingsWithChunks.map(({ chunk }) => chunk);
   const similarDocs = getSimilarDocs(similarities, chunks);
   const sortedSimilarDocs = sortSimilarDocs(similarDocs, numDocs);

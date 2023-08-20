@@ -1,14 +1,20 @@
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
+
+
+
 import Link from 'next/link';
 
-import handleExtractText, {
-  iterativeCharacterTextSplitter,
-} from '@/utils/extractTextFromPdfs';
+
+
+import handleExtractText, { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
+
+
 
 import { auth, storage } from '@/config/firebase';
 import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
+
 
 const SidebarItem = ({ icon, text, onClick, onDelete }) => (
   <li
@@ -83,16 +89,28 @@ function PDFSidebar({ onDocumentClick }) {
   const handleDeleteItem = async (pdfName) => {
     if (auth.currentUser) {
       const userId = auth.currentUser.uid;
+
+      // Reference to the PDF file
       const pdfRef = ref(storage, `pdfs/${userId}/${pdfName}.pdf`);
+      // Reference to the JSON file
+      const jsonRef = ref(storage, `pdfs/${userId}/${pdfName}.json`);
+
       try {
+        // Delete the PDF
         await deleteObject(pdfRef);
         console.log(`PDF ${pdfName} deleted successfully`);
+
+        // Delete the JSON
+        await deleteObject(jsonRef);
+        console.log(`JSON ${pdfName} deleted successfully`);
+
         setRefreshCounter((prev) => prev + 1);
       } catch (error) {
-        console.error(`Error deleting PDF ${pdfName}:`, error);
+        console.error(`Error deleting files for ${pdfName}:`, error);
       }
     }
   };
+
 
   const handleCreateItem = () => {
     fileInputRef.current.click();
