@@ -73,17 +73,6 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     encoding.free();
-    /*if (json.data) {
-      const context = await contextRetriever(json.data, messagesToSend[messagesToSend.length - 1].content);
-      messagesToSend[messagesToSend.length - 1].content = `
-        AI assistant is advanced artificial intelligence 
-        Question: ${messages[messages.length - 1].content}
-        Context: ${context}
-        If Question not related to context say "No context" so I know context is irrelevant and I should not use it
-        Answers should be based only on context and not your general knowledge which may be inaccurate
-          `;
-    }
-    */
     if (json.data) {
       const context = await contextRetriever(
         json.data,

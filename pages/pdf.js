@@ -108,6 +108,7 @@ export default function PDF() {
           pdfPath={documentName}
         />
       </div>
+      
       <div
         className="resize-handle bg-gray-300 w-2 cursor-ew-resize"
         onMouseDown={handleMouseDownDisplay}

@@ -50,7 +50,10 @@ function PDFViewer({ path, onEmbeddingFetched }) {
 
         await page.render(renderContext);
 
-        canvasContainerRef.current.appendChild(canvas);
+        if (canvasContainerRef.current) {
+          // Check if the reference is not null
+          canvasContainerRef.current.appendChild(canvas);
+        }
       }
     };
 

@@ -1,20 +1,21 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
+
+
 import { auth, db } from "../config/firebase";
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY
-import {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
-import CreateIcon from '@mui/icons-material/Create';
+
+
+
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CreateIcon from '@mui/icons-material/Create';
 import LineStyleIcon from '@mui/icons-material/LineStyle';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
+
+
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY
+
+
 
 function Freestyle({language}) {
   const [loading, setLoading] = useState(false);

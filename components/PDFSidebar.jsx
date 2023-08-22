@@ -52,6 +52,7 @@ function PDFSidebar({ onDocumentClick }) {
   const [refreshCounter, setRefreshCounter] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const fileInputRef = useRef(null);
+  const [fileName, setFileName] = useState('');
 
   useEffect(() => {
     const fetchUserPDFs = async () => {
@@ -124,6 +125,7 @@ function PDFSidebar({ onDocumentClick }) {
         type: 'application/json',
       });
       const jsonFileName = `${file.name.split('.pdf')[0]}.json`;
+      setFileName(file.name.split('.pdf')[0]);
       const jsonRef = ref(storage, `pdfs/${userId}/${jsonFileName}`);
 
       Promise.all([
@@ -142,6 +144,7 @@ function PDFSidebar({ onDocumentClick }) {
   useEffect(() => {
     if (sidebarItems.length > 0) {
       onDocumentClick(sidebarItems[0].text);
+      setFileName(sidebarItems[0].text);
     }
   }, [sidebarItems]);
 
@@ -172,7 +175,8 @@ function PDFSidebar({ onDocumentClick }) {
                 <SidebarItem
                   key={index}
                   {...item}
-                  onClick={() => onDocumentClick(item.text)}
+                  onClick={() => {onDocumentClick(item.text)
+                    setFileName(item.text)}}
                   onDelete={handleDeleteItem}
                 />
               ))}
@@ -191,11 +195,19 @@ function PDFSidebar({ onDocumentClick }) {
           </div>
           {/*A link back home */}
           <div className="flex justify-center mt-5 mb-5 w-full">
-            <div className="relative ">
+            <div className="relative flex">
+              {' '}
+              {/* Added flex here */}
               <Link href="/">
-                <div className="bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50 pl-10 py-2">
-                  Back to Home
-                </div>
+                <span className="bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50 pl-10 py-2 mr-2">
+                  Home
+                </span>
+              </Link>
+              {/* A link to /embed */}
+              <Link href={`/embed?fileName=${fileName}`}>
+                <span className="bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50 pl-10 py-2 ml-2">
+                  Embed
+                </span>
               </Link>
             </div>
           </div>
