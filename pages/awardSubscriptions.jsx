@@ -1,12 +1,19 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {toast, ToastContainer} from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+
+
 
 import Router from 'next/router';
 
+
+
 import { auth, db } from '../config/firebase';
 
+
+
 import { addDoc, collection, getDocs } from 'firebase/firestore';
+
 
 function Admin() {
   const [emailIdMapper, setEmailIdMapper] = useState({});
@@ -34,13 +41,18 @@ function Admin() {
 
     const mapEmailToId = async () => {
       const querySnapshot = await getDocs(collection(db, 'users'));
-      const emailIdMap = querySnapshot.docs.reduce(
-        (acc, doc) => ({
-          ...acc,
-          [doc.data().email?.toLowerCase()]: doc.data().userId,
-        }),
-        {},
-      );
+      //Print them first
+      const emailIdMap = querySnapshot.docs
+        .filter((doc) => doc.data().userId) // This will filter out docs without a userId
+        .reduce(
+          (acc, doc) => ({
+            ...acc,
+            [doc.data().email?.toLowerCase()]: doc.data().userId,
+          }),
+          {},
+        );
+
+      
       setEmailIdMapper(emailIdMap);
     };
 
