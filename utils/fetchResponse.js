@@ -2,9 +2,6 @@ import updateUserWordCount from './updateWordCount';
 
 const fetchResponse = async (chat) => {
   try {
-    console.log('The chat is ', chat);
-    console.log('The last forty messages are ', lastForty);
-
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -13,7 +10,7 @@ const fetchResponse = async (chat) => {
       },
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
-        messages: lastForty,
+        messages: chat,
       }),
     });
 

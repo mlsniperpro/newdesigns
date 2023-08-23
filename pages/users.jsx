@@ -98,7 +98,6 @@ function Users() {
       });
       return newSubscribers;
     });
-    //setPaypalSubs(subsData);
   };
   // Function to retrieve words generated
   const fetchWordsGenerated = async () => {
