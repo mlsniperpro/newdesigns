@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
+
+
 import Link from 'next/link';
 
+
+
 import { db } from '@/config/firebase';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  where,
-} from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
+
 
 function Users() {
   const [subscribers, setSubscribers] = useState({});
@@ -127,10 +124,16 @@ function Users() {
   };
 
   const filteredUsers = users.filter((user) => {
-    const trimmedSearchTerm = searchTerm.trim();
+    const trimmedSearchTerm = searchTerm.trim().toLowerCase();
+    if (trimmedSearchTerm === '') return true;
+
+    const userSubscription = subscribers[user.userId] || 'Free';
+    console.log("The user subscription is", userSubscription)
+
     return (
-      user.name.toLowerCase().includes(trimmedSearchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(trimmedSearchTerm.toLowerCase())
+      user.name.toLowerCase().includes(trimmedSearchTerm) ||
+      user.email.toLowerCase().includes(trimmedSearchTerm) ||
+      userSubscription.toLowerCase().includes(trimmedSearchTerm)
     );
   });
 
