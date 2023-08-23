@@ -9,28 +9,25 @@ import {
   deleteDoc,
   doc,
   getDocs,
-  onSnapshot,
   query,
   where,
 } from 'firebase/firestore';
 
 function Users() {
-  const [subscribers, setSubscribers] = useState({}); // [1
+  const [subscribers, setSubscribers] = useState({});
   const [actions, setActions] = useState({});
   const [users, setUsers] = useState([]);
-  const [paypalSubs, setPaypalSubs] = useState([]);
+  const [wordsgen, setWordsgen] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const [wordsgen, setWordsgen] = useState([]);
 
-  // Function to retrieve users
   const retrieveUsers = async () => {
     const usersQuerySnapshot = await getDocs(collection(db, 'users'));
-    const users = usersQuerySnapshot.docs
+    const usersData = usersQuerySnapshot.docs
       .map((doc) => doc.data())
       .filter((user) => user.name && user.name.trim() !== '');
-    setUsers(users);
+    setUsers(usersData);
+    return usersData;
   };
-
   //Fetch stripe subscriptions
   const retrieveStripeSubs = async () => {
     const userIds = (
@@ -100,11 +97,11 @@ function Users() {
     setSubscribers((prevSubscribers) => {
       let newSubscribers = { ...prevSubscribers };
       subsData.forEach((sub) => {
-        newSubscribers[sub.userId] = sub.plan;
+        newSubscribers[sub.userId] = sub.plan || sub.subscriptionPlan;
       });
       return newSubscribers;
     });
-    setPaypalSubs(subsData);
+    //setPaypalSubs(subsData);
   };
   // Function to retrieve words generated
   const fetchWordsGenerated = async () => {
@@ -116,67 +113,40 @@ function Users() {
   };
 
   useEffect(() => {
-    retrieveUsers();
-    retrievePaypalSubs();
-    retrieveStripeSubs();
-    fetchWordsGenerated();
+    const fetchAllData = async () => {
+      const usersData = await retrieveUsers();
+      retrieveStripeSubs(usersData);
+      retrievePaypalSubs();
+      fetchWordsGenerated();
+    };
+    fetchAllData();
   }, []);
-  useEffect(() => {
-    console.log("The paypal subs are ", paypalSubs);
-  }, [paypalSubs]);
+
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
+
   const filteredUsers = users.filter((user) => {
-  const trimmedSearchTerm = searchTerm.trim();
-  if (trimmedSearchTerm === '') return true;
-  return (
-    user.name.toLowerCase().includes(trimmedSearchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(trimmedSearchTerm.toLowerCase())
-  );
-});
-
-  // Function to demote users
-  const demoteUsers = async (userId) => {
-    const subscribersQuerySnapshot = await getDocs(
-      query(collection(db, 'subscribers'), where('userId', '==', userId)),
+    const trimmedSearchTerm = searchTerm.trim();
+    return (
+      user.name.toLowerCase().includes(trimmedSearchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(trimmedSearchTerm.toLowerCase())
     );
-    subscribersQuerySnapshot.forEach(async (doc_) => {
-      await deleteDoc(doc(db, 'subscribers', doc_.id));
-    });
-  };
+  });
 
-  // Function to deactivate users
-  const deactivateUsers = async (userId) => {
-    await addDoc(collection(db, 'deactivatedUsers'), { userId });
-  };
-
-  // Function to reactivate users
-  const reactivateUsers = async (userId) => {
-    const deactivatedUsersQuerySnapshot = await getDocs(
-      query(collection(db, 'deactivatedUsers'), where('userId', '==', userId)),
-    );
-    deactivatedUsersQuerySnapshot.forEach(async (doc_) => {
-      await deleteDoc(doc(db, 'deactivatedUsers', doc_.id));
-    });
-  };
-  // Handler for the action change
-  const handleActionChange = (event, userId) => {
-    setActions({ ...actions, [userId]: event.target.value });
-  };
-  // Confirm action handler
-  const handleConfirm = (userId) => {
-    if (actions[userId] === 'Demote') {
-      demoteUsers(userId);
-    } else if (actions[userId] === 'Deactivate') {
-      deactivateUsers(userId);
-    } else if (actions[userId] === 'Reactivate') {
-      reactivateUsers(userId);
+  const handleAction = async (action, userId) => {
+    if (action === 'Demote') {
+      await demoteUsers(userId);
+    } else if (action === 'Deactivate') {
+      await deactivateUsers(userId);
+    } else if (action === 'Reactivate') {
+      await reactivateUsers(userId);
     }
     const updatedActions = { ...actions };
     delete updatedActions[userId];
     setActions(updatedActions);
   };
+
   return (
     <div>
       <div className="mt-4 mx-4">
@@ -184,7 +154,6 @@ function Users() {
           <Link href="/">
             <h1 className="text-lg font-semibold text-gray-900">Home</h1>
           </Link>
-
           <input
             type="text"
             placeholder="Search users"
@@ -199,12 +168,11 @@ function Users() {
               <thead>
                 <tr className="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                   <th className="px-4 py-3">User</th>
-                  {/*<th className="px-4 py-3">Amount</th> */}
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Date Signed Up</th>
                   <th>Take Action</th>
                   <th>Words Generated</th>
-                  <td>Subscription Plan</td>
+                  <th>Subscription Plan</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -223,16 +191,14 @@ function Users() {
                         </div>
                       </div>
                     </td>
-                    {/*<td className="px-4 py-3 text-sm">${user.amount}</td>*/}
                     <td className="px-4 py-3 text-xs">
                       <span
                         className={`px-2 py-1 font-semibold leading-tight ${
-                          user.status === 'approved'
+                          subscribers[user.userId]
                             ? 'text-green-700 bg-green-100 dark:bg-green-700 dark:text-green-100'
                             : 'text-yellow-700 bg-yellow-100'
-                        } rounded-full`}
+                        }`}
                       >
-                        {/*subscribers[user.userId]==="Subscribed" || subscriptions[user.userId]?.plan*/}
                         {subscribers[user.userId]
                           ? 'Subscribed'
                           : 'Not subscribed'}
@@ -241,9 +207,9 @@ function Users() {
                     <td className="px-4 py-3 text-sm">{user.dateSignedUp}</td>
                     <td className="px-4 py-3 text-sm">
                       <select
-                        value={actions[user.userId]?.userId}
+                        value={actions[user.userId]}
                         onChange={(event) =>
-                          handleActionChange(event, user.userId)
+                          handleAction(event.target.value, user.userId)
                         }
                         className="px-4 py-2 border border-gray-400 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       >
@@ -252,22 +218,12 @@ function Users() {
                         <option value="Demote">Unsubscribe</option>
                         <option value="Deactivate">Blacklist</option>
                       </select>
-                      {actions[user.userId] && (
-                        <button
-                          onClick={() => handleConfirm(user.userId)}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50"
-                        >
-                          Confirm
-                        </button>
-                      )}
                     </td>
                     <td className="px-4 py-3 text-sm">
-                      {wordsgen[user.userId] ? wordsgen[user.userId] : 0}
+                      {wordsgen[user.userId] || 0}
                     </td>
                     <td className="px-4 py-3 text-sm">
-                      {subscribers[user.userId]
-                        ? subscribers[user.userId]
-                        : 'Free'}
+                      {subscribers[user.userId] || 'Free'}
                     </td>
                   </tr>
                 ))}
