@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import Link from 'next/link';
@@ -18,6 +18,24 @@ const WORDLIMIT_COLLECTION = 'wordlimit';
 function WordLimit() {
   const [wordLimit, setWordLimit] = useState(20000);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchWordLimit = async () => {
+      try {
+        const wordLimitDoc = await getDocs(
+          collection(db, WORDLIMIT_COLLECTION),
+        );
+        if (!wordLimitDoc.empty) {
+          const currentWordLimit = wordLimitDoc.docs[0].data().limit;
+          setWordLimit(currentWordLimit);
+        }
+      } catch (error) {
+        toast.error('Failed to fetch word limit');
+      }
+    };
+
+    fetchWordLimit();
+  }, []);
 
   const handleInputChange = (event) => {
     const newLimit = event.target.value;

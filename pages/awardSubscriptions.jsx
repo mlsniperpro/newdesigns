@@ -75,9 +75,10 @@ function Admin() {
     };
     try {
       await addDoc(collection(db, 'subscribers'), subscriptionData);
-      alert('Subscription added successfully!');
+      toast.success('Subscription added successfully!');
     } catch (e) {
       alert('The subscriber not among the users');
+      toast
       console.error('Error adding document: ', e);
     }
   };
