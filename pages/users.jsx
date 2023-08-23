@@ -128,7 +128,7 @@ function Users() {
     if (trimmedSearchTerm === '') return true;
 
     const userSubscription = subscribers[user.userId] || 'Free';
-    console.log("The user subscription is", userSubscription)
+    console.log('The user subscription is', userSubscription);
 
     return (
       user.name.toLowerCase().includes(trimmedSearchTerm) ||
@@ -136,13 +136,39 @@ function Users() {
       userSubscription.toLowerCase().includes(trimmedSearchTerm)
     );
   });
+  const demoteUsers = async (userId) => {
+    const subscribersQuerySnapshot = await getDocs(
+      query(collection(db, 'subscribers'), where('userId', '==', userId)),
+    );
+    subscribersQuerySnapshot.forEach(async (doc_) => {
+      await deleteDoc(doc(db, 'subscribers', doc_.id));
+    });
+  };
 
-  const handleAction = async (action, userId) => {
-    if (action === 'Demote') {
+  const deactivateUsers = async (userId) => {
+    await addDoc(collection(db, 'deactivatedUsers'), { userId });
+  };
+
+  const reactivateUsers = async (userId) => {
+    const deactivatedUsersQuerySnapshot = await getDocs(
+      query(collection(db, 'deactivatedUsers'), where('userId', '==', userId)),
+    );
+    deactivatedUsersQuerySnapshot.forEach(async (doc_) => {
+      await deleteDoc(doc(db, 'deactivatedUsers', doc_.id));
+    });
+  };
+
+  const handleActionChange = (event, userId) => {
+    setActions({ ...actions, [userId]: event.target.value });
+  };
+
+  const handleConfirm = async (userId) => {
+    console.log('The action is', actions[userId]);
+    if (actions[userId] === 'Demote') {
       await demoteUsers(userId);
-    } else if (action === 'Deactivate') {
+    } else if (actions[userId] === 'Deactivate') {
       await deactivateUsers(userId);
-    } else if (action === 'Reactivate') {
+    } else if (actions[userId] === 'Reactivate') {
       await reactivateUsers(userId);
     }
     const updatedActions = { ...actions };
@@ -212,7 +238,7 @@ function Users() {
                       <select
                         value={actions[user.userId]}
                         onChange={(event) =>
-                          handleAction(event.target.value, user.userId)
+                          handleActionChange(event, user.userId)
                         }
                         className="px-4 py-2 border border-gray-400 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       >
@@ -221,6 +247,14 @@ function Users() {
                         <option value="Demote">Unsubscribe</option>
                         <option value="Deactivate">Blacklist</option>
                       </select>
+                      {actions[user.userId] && (
+                        <button
+                          onClick={() => handleConfirm(user.userId)}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50"
+                        >
+                          Confirm
+                        </button>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-sm">
                       {wordsgen[user.userId] || 0}
