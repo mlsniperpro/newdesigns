@@ -1,91 +1,67 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
+import Link from 'next/link';
 
+import { auth, db } from '../config/firebase';
 
-import Link from "next/link";
-
-
-
-import { auth, db } from "../config/firebase";
-
-
-
-import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot, query, where } from "firebase/firestore";
-
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
 
 const CancelSubscription = () => {
   const [subscriptions, setSubscriptions] = useState([]);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState('');
   const stripeProducts = {
-    prod_Njtrgy9W8UwGW7: "Monthly",
-    prod_NjtvxM9XlsH2c6: "Yearly",
+    prod_Njtrgy9W8UwGW7: 'Monthly',
+    prod_NjtvxM9XlsH2c6: 'Yearly',
   };
 
   useEffect(() => {
     const fetchSubscriptions = async () => {
       try {
-        const subscribersSnapshot = await getDocs(
-          collection(db, "subscribers")
-        );
-        const subscribers = subscribersSnapshot.docs.map((doc) => doc.data());
-        const userSubscriptions = subscribers.filter(
-          (subscriber) => subscriber.userId === auth.currentUser.uid
+        const q = query(
+          collection(db, 'subscribers'),
+          where('userId', '==', auth.currentUser.uid),
         );
 
-        if (userSubscriptions.length > 0) {
-          const latestSubscription = userSubscriptions.reduce((a, b) =>
-            a.subscriptionEndDate > b.subscriptionEndDate ? a : b
-          );
-          const endDate = new Date(latestSubscription.subscriptionEndDate);
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          const userSubscriptions = snapshot.docs.map((doc) => doc.data());
+          if (userSubscriptions.length > 0) {
+            const latestSubscription = userSubscriptions.reduce((a, b) =>
+              a.subscriptionEndDate > b.subscriptionEndDate ? a : b,
+            );
+            const endDate = new Date(latestSubscription.subscriptionEndDate);
 
-          if (endDate > new Date()) {
-            latestSubscription.status = "Active";
-          } else {
-            latestSubscription.status = "Inactive";
+            if (endDate > new Date()) {
+              latestSubscription.status = 'Active';
+            } else {
+              latestSubscription.status = 'Inactive';
+            }
+
+            setSubscriptions([latestSubscription]);
           }
+        });
 
-          setSubscriptions([latestSubscription]);
-        }
+        return () => unsubscribe();
       } catch (error) {
-        console.error("Error fetching subscriptions: ", error);
+        console.error('Error fetching subscriptions: ', error);
       }
     };
 
-    fetchSubscriptions();
-  }, []);
-
-  useEffect(() => {
-    if (!auth.currentUser?.uid) {
-      return;
+    if (auth.currentUser?.uid) {
+      fetchSubscriptions();
     }
-
-    const q = query(
-      collection(doc(db, "users", auth.currentUser?.uid), "subscriptions"),
-      where("status", "in", ["trialing", "active"])
-    );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newSubscriptions = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        data: doc.data(),
-      }));
-      setSubscriptions(newSubscriptions);
-    });
-
-    return () => unsubscribe();
   }, [auth.currentUser?.uid]);
 
   const handlePayPalCancel = async () => {
     const url =
-      "https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelUserSubscriptions";
+      'https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelUserSubscriptions';
     try {
       const user_id = auth.currentUser?.uid;
       const response = await fetch(url, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId: user_id, reason: "I am not satisfied" }),
+        body: JSON.stringify({ userId: user_id, reason: 'I am not satisfied' }),
       });
       if (!response.ok) {
         throw new Error(`Failed with status: ${response.status}`);
@@ -98,25 +74,25 @@ const CancelSubscription = () => {
   const handleStripeCancel = async (sub_id) => {
     try {
       const response = await fetch(
-        "https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelStripeSubscription",
+        'https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelStripeSubscription',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             subscriptionId: sub_id,
           }),
-        }
+        },
       );
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
     } catch (error) {
       console.error(
-        "There has been a problem with your fetch operation:",
-        error
+        'There has been a problem with your fetch operation:',
+        error,
       );
     }
   };
@@ -129,8 +105,8 @@ const CancelSubscription = () => {
 
       setSubscriptions(
         subscriptions.filter(
-          (subscription) => subscription.id !== subscriptionId
-        )
+          (subscription) => subscription.id !== subscriptionId,
+        ),
       );
       setStatus(`Subscription with id ${subscriptionId} has been cancelled.`);
     } catch (err) {
@@ -143,7 +119,9 @@ const CancelSubscription = () => {
       <div className="flex flex-col items-center bg-white p-6 my-4 w-full sm:w-3/4 lg:w-1/2 xl:w-3/8 xxl:w-1/4 rounded-xl shadow-md space-y-4">
         <div className="text-center space-y-2">
           <Link href="/">
-            <h2 className="text-2xl font-semibold text-blue-700 cursor-pointer">Home</h2>
+            <h2 className="text-2xl font-semibold text-blue-700 cursor-pointer">
+              Home
+            </h2>
           </Link>
           {subscriptions.map((subscription) => (
             <div
@@ -151,9 +129,8 @@ const CancelSubscription = () => {
               className="flex justify-between items-center w-full border-b-2 border-gray-200 py-4"
             >
               <p className="text-lg font-medium text-gray-700">
-                {stripeProducts[
-                  subscription.data?.items[0]?.plan?.product
-                ] || "Yearly"}{" "}
+                {stripeProducts[subscription.data?.items[0]?.plan?.product] ||
+                  'Yearly'}{' '}
                 - {subscription.data?.status || subscription.status}
               </p>
               <button

@@ -1,26 +1,41 @@
-import { useState } from "react";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { useRouter } from "next/router";
-import { db,auth } from "../config/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import {
+  PayPalButtons,
+  PayPalScriptProvider,
+  usePayPalScriptReducer,
+} from '@paypal/react-paypal-js';
+import { useEffect, useState } from 'react';
+
+import { useRouter } from 'next/router';
+
+import { auth, db } from '../config/firebase';
+
+import { addDoc, collection } from 'firebase/firestore';
 
 const options = {
-  "client-id":
-    "ASpt5aPvpjGZzACXTuwBTC4_8VVsPSJQGwLSzRNluEecY6bMm9i67e_MXCsHNqLqYtvAIM1fgPBo5D0a",
-  currency: "USD",
+  'client-id':
+    'ASpt5aPvpjGZzACXTuwBTC4_8VVsPSJQGwLSzRNluEecY6bMm9i67e_MXCsHNqLqYtvAIM1fgPBo5D0a',
+  components: 'buttons',
+  intent: 'subscription',
   vault: true,
 };
 
 const Subscribe = () => {
   const router = useRouter();
-  const [plan, setPlan] = useState(router.query.planduration || "monthly"); // default to 'monthly' if no plan was specified in the URL
-  const [priceMonthly, setPriceMonthly] = useState(
-    router.query.priceMonthly || "10"
-  ); // default to '10' if no priceMonthly was specified in the URL
-  const [priceYearly, setPriceYearly] = useState(
-    router.query.priceYearly || "100"
-  ); // default to '100' if no priceYearly was specified in the URL
+  const [plan, setPlan] = useState(router.query.planduration || 'monthly');
+  const priceMonthly = router.query.priceMonthly || '10';
+  const priceYearly = router.query.priceYearly || '100';
   const [showPaypal, setShowPaypal] = useState(false);
+  const [{ options: paypalOptions }, dispatch] = usePayPalScriptReducer();
+
+  useEffect(() => {
+    dispatch({
+      type: 'resetOptions',
+      value: {
+        ...paypalOptions,
+        intent: 'subscription',
+      },
+    });
+  }, [plan]);
 
   const handleSubscriptionChange = (event) => {
     setPlan(event.target.value);
@@ -52,54 +67,49 @@ const Subscribe = () => {
                   </select>
                 </div>
                 <button
-                  onClick={() => setShowPaypal(true)}
+                  onClick={() => {
+                    setShowPaypal((prevState) => !prevState);
+                  }}
                   className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded"
                 >
-                  Subscribe
+                  {showPaypal ? 'Hide PayPal' : 'Subscribe'}
                 </button>
               </div>
               {showPaypal && (
-                <div className="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7">
-                  <PayPalScriptProvider options={options}>
-                    <PayPalButtons
-                      createSubscription={(data, actions) => {
-                        return actions.subscription.create({
-                          plan_id:
-                            plan === "monthly"
-                              ? "P-5DY729820D282010XMQNAIRI"
-                              : "P-8MS40752A79241224MQNAKFY",
-                        });
-                      }}
-                      onApprove={(data, actions) => {
-                        return actions.order.capture().then((details) => {
-                          const addSubscriber = async () => {
-                            try {
-                              const docRef = await addDoc(
-                                collection(db, "subscribers"),
-                                {
-                                  userId: auth.currentUser.uid,
-                                  email: auth.currentUser.email,
-                                  subscriptionId: details.id,
-                                  subscriptionStatus: details.status,
-                                  subscriptionPlan: details.plan_id,
-                                  //Start date in milliseconds since epoch and number data type
-                                  subscriptionStartDate: Date.now(),
-                                  //End date in milliseconds since epoch and number data type plus 30 days
-                                  subscriptionEndDate: Date.now() + (plan === 'monthly' ? 30 : 365) * 24 * 60 * 60 * 1000,
-                                  ["plan"]: plan,
-                                }
-                              );
-                            } catch (e) {
-                              console.error("Error adding document: ", e);
-                            }
-                          };
-                          addSubscriber();
-                          router.push("/");
-                        });
-                      }}
-                    />
-                  </PayPalScriptProvider>
-                </div>
+                <PayPalButtons
+                  createSubscription={(data, actions) => {
+                     console.log('createSubscription data', data);
+                     console.log('createSubscription actions', actions)
+                    return actions.subscription.create({
+                      plan_id:
+                        plan === 'monthly'
+                          ? 'P-5DY729820D282010XMQNAIRI'
+                          : 'P-8MS40752A79241224MQNAKFY',
+                    });
+                  }}
+                  onApprove={async (data, actions) => {
+                    console.log('onApprove data approve section', data);
+                    console.log('onApprove actions approve section', actions)
+                    try {
+                      await addDoc(collection(db, 'subscribers'), {
+                        userId: auth.currentUser.uid,
+                        email: auth.currentUser.email,
+                        subscriptionId: data.subscriptionID,
+                        subscriptionPlan: plan,
+                        subscriptionStartDate: Date.now(),
+                        subscriptionEndDate:
+                          Date.now() +
+                          (plan === 'monthly' ? 30 : 365) * 24 * 60 * 60 * 1000,
+                      });
+                      router.push('/');
+                    } catch (e) {
+                      console.error('Error adding document: ', e);
+                    }
+                  }}
+                  style={{
+                    label: 'subscribe',
+                  }}
+                />
               )}
             </div>
           </div>
@@ -109,4 +119,10 @@ const Subscribe = () => {
   );
 };
 
-export default Subscribe;
+export default function App() {
+  return (
+    <PayPalScriptProvider options={options}>
+      <Subscribe />
+    </PayPalScriptProvider>
+  );
+}

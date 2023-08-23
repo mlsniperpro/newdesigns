@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { ReactMarkdown } from 'react-markdown';
-import { useMutation } from 'react-query';
 
 
 
@@ -15,27 +13,29 @@ import useSubscription from '@/hooks/useSubscription';
 
 
 
+import fetchResponse from '@/utils/fetchResponse';
+
+
+
 import ChatBody from '@/components/ChatBody';
 import ChatInput from '@/components/ChatInput';
 
 
 
-import { auth, db } from '../config/firebase';
+import { auth } from '../config/firebase';
 
 
 
 import HomeIcon from '@mui/icons-material/Home';
 import LanguageIcon from '@mui/icons-material/Language';
-import { collection, doc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 
-
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 function Tutor() {
   const [user, userLoading] = useAuthState(auth);
   const [language, setLanguage] = useState('spanish');
   const [chat, setChat] = useState([]);
   const { subscribed, loading } = useSubscription(user);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!subscribed && !loading && user) {
@@ -80,65 +80,6 @@ function Tutor() {
       ]);
     }
   }, [language]);
-
-  const fetchResponse = async (chat) => {
-    try {
-      let lastFive = chat.slice(Math.max(chat.length - 40, 0));
-      const response = await fetch(
-        'https://api.openai.com/v1/chat/completions',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: 'Bearer ' + API_KEY,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'gpt-3.5-turbo',
-            messages: lastFive,
-          }),
-        },
-      );
-      const data = await response.json();
-
-      const updateUserWordCount = async () => {
-        try {
-          const docRef = await getDocs(collection(db, 'wordsgenerated'));
-          const wordsGenerated = docRef.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          if (
-            wordsGenerated.some((word) => word.userId === auth.currentUser.uid)
-          ) {
-            const docRef = await getDocs(collection(db, 'wordsgenerated'));
-            const wordsGenerated = docRef.docs.map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            }));
-            const userDoc = wordsGenerated.find(
-              (word) => word.userId === auth.currentUser.uid,
-            );
-            await updateDoc(doc(db, 'wordsgenerated', userDoc.id), {
-              count: userDoc.count + data.choices[0].message.content.length,
-            });
-          } else {
-            await setDoc(doc(db, 'wordsgenerated', auth.currentUser.uid), {
-              userId: auth.currentUser.uid,
-              count: data.choices[0].message.content.length,
-            });
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      updateUserWordCount();
-
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   function changeLanguage() {
     if (language === 'en') {
       setLanguage('spanish');
@@ -149,20 +90,20 @@ function Tutor() {
     }
   }
 
-  const mutation = useMutation({
-    mutationFn: () => {
-      return fetchResponse(chat);
-    },
-    onSuccess: (data) =>
+  const sendMessage = async (message) => {
+    setChat((prev) => [...prev, message]);
+    setIsLoading(true);
+    try {
+      const data = await fetchResponse(chat);
       setChat((prev) => [
         ...prev,
         { role: 'assistant', content: data.choices[0].message.content },
-      ]),
-  });
-
-  const sendMessage = async (message) => {
-    await Promise.resolve(setChat((prev) => [...prev, message]));
-    mutation.mutate();
+      ]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -226,7 +167,7 @@ function Tutor() {
       >
         <ChatInput
           sendMessage={sendMessage}
-          loading={mutation.isLoading}
+          loading={isLoading}
           style={{
             border: '1px solid white',
             fontFamily: 'Monospace',

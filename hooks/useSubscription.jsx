@@ -22,10 +22,6 @@ function useSubscription(user) {
       console.error('Error retrieving prices: ', error);
     }
   };
-  useEffect(() => {
-    console.log('The subscription status is ', subscribed);
-    console.log("The words limit is ", limit);
-  }, [subscribed, limit]);
   const checkSubscription = async () => {
 
     try {
