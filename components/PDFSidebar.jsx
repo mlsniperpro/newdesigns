@@ -1,20 +1,23 @@
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
-
-
+//Import toast and its css
+import toast from 'react-hot-toast';
 
 import Link from 'next/link';
 
-
-
-import handleExtractText, { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
+import handleExtractText, {
+  iterativeCharacterTextSplitter,
+} from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
 
-
-
-
-import { auth, storage } from '@/config/firebase';
+import { auth, db, storage } from '@/config/firebase';
 import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 
 
 const SidebarItem = ({ icon, text, onClick, onDelete }) => (
@@ -124,6 +127,7 @@ function PDFSidebar({ onDocumentClick }) {
     // Check file size
     const fileSizeMB = file.size / (1024 * 1024);
     if (fileSizeMB > 100) {
+      toast.error('File size exceeds 100MB limit!');
       alert('File size exceeds 100MB limit!');
       return;
     }
@@ -133,12 +137,30 @@ function PDFSidebar({ onDocumentClick }) {
 
     // Check word count
     if (wordCount > 100000) {
+      toast.error('Document exceeds 100,000 words limit!');
       alert('Document exceeds 100,000 words limit!');
       return;
     }
 
     if (auth.currentUser) {
       const userId = auth.currentUser.uid;
+
+      // Handle the file size in the wordsgenerated collection
+      const docRef = doc(db, 'wordsgenerated', userId);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        // Situation 1: Document doesn't exist
+        await setDoc(docRef, { size: fileSizeMB, userId: userId });
+      } else if (!docSnap.data().size) {
+        // Situation 2: Document exists but doesn't have a size attribute
+        await updateDoc(docRef, { size: fileSizeMB });
+      } else {
+        // Situation 3: Document exists and has a size attribute
+        const newSize = docSnap.data().size + fileSizeMB;
+        await updateDoc(docRef, { size: newSize });
+      }
+
       const pdfRef = ref(storage, `pdfs/${userId}/${file.name}`);
       const chunks = iterativeCharacterTextSplitter(text, 2000, 100);
       const embeddings = await getEmbeddings(chunks);
@@ -199,8 +221,10 @@ function PDFSidebar({ onDocumentClick }) {
                 <SidebarItem
                   key={index}
                   {...item}
-                  onClick={() => {onDocumentClick(item.text)
-                    setFileName(item.text)}}
+                  onClick={() => {
+                    onDocumentClick(item.text);
+                    setFileName(item.text);
+                  }}
                   onDelete={handleDeleteItem}
                 />
               ))}
