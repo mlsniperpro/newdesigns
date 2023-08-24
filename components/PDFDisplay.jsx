@@ -86,6 +86,8 @@ function PDFDisplay({ onEmbeddingFetched, pdfPath }) {
     if (auth.currentUser && pdfPath) {
       setFinalPdfPath('pdfs/' + auth.currentUser.uid + '/' + pdfPath + '.pdf');
       setIsLoading(true); // Reset isLoading to true whenever pdfPath changes
+    } else {
+      setIsLoading(false); // Set isLoading to false when pdfPath is null
     }
   }, [pdfPath]);
 
