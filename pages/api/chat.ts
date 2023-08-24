@@ -90,7 +90,7 @@ const handler = async (req: Request): Promise<Response> => {
   Here is the user question:
   Question: ${messages[messages.length - 1].content}
   Search for relevant information in the context below and use it to answer user questions exhaustively and deeply using numbered list and thorough analysis.
-  If the context does not provide relevant answer to the question, mention that PDF provided is not relevant to question and stop answering questions.
+  If the context does not provide relevant answer to the question, mention that PDF provided is not relevant to question and try to relate the question to the context.
   Context: ${context}
   `;
       messagesToSend[messagesToSend.length - 1].content = messagesToSend[
