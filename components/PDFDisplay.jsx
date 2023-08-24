@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
+
+
 import { auth, storage } from '@/config/firebase';
+import { CircularProgress } from '@mui/material';
+import { Box } from '@mui/system';
 import { getDownloadURL, ref } from 'firebase/storage';
+
 
 function PDFViewer({ path, onEmbeddingFetched }) {
   const canvasContainerRef = useRef(null);
@@ -78,6 +83,7 @@ function PDFViewer({ path, onEmbeddingFetched }) {
 function PDFDisplay({ onEmbeddingFetched, pdfPath }) {
   const [embeddingData, setEmbeddingData] = useState(null);
   const [finalPdfPath, setFinalPdfPath] = useState(pdfPath);
+  const [isLoading, setIsLoading] = useState(true); // New state to track loading
 
   useEffect(() => {
     if (auth.currentUser && pdfPath) {
@@ -88,14 +94,33 @@ function PDFDisplay({ onEmbeddingFetched, pdfPath }) {
   useEffect(() => {
     if (embeddingData) {
       onEmbeddingFetched(embeddingData);
+      setIsLoading(false); // Set isLoading to false when embeddingData is available
     }
   }, [embeddingData, onEmbeddingFetched]);
 
   return (
     <div className="flex flex-col items-center w-full">
-      <PDFViewer path={finalPdfPath} onEmbeddingFetched={setEmbeddingData} />
+      <div className="flex flex-row items-center justify-center w-full">
+        {isLoading && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute', // This will overlay the progress on top of the PDFViewer
+              zIndex: 10, // Ensure it's above the PDFViewer
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
+        <PDFViewer path={finalPdfPath} onEmbeddingFetched={setEmbeddingData} />
+      </div>
     </div>
   );
 }
+
 
 export default PDFDisplay;

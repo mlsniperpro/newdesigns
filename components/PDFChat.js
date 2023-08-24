@@ -1,21 +1,32 @@
+import { Message } from '@mui/icons-material';
 import { useChat } from 'ai/react';
+import { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import updateUserWordCount from '../utils/updateWordCount';
 
 
 
 export default function PDFChat({ theme = 'light', embeddingData }) {
   
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
+  const { messages,setMessages, input, handleInputChange, handleSubmit } = useChat({
     api: '/api/chat',
     body: {
       data: embeddingData,
     },
   });
 
+  useEffect(() => {
+    console.log(messages);
+    
+  }, [messages]);
+
+  useEffect(() => {
+    setMessages([]);
+  }, [embeddingData]);
+
   const isDarkTheme = theme === 'dark';
 
   const textColorClass = isDarkTheme ? 'text-white' : 'text-black';
-
 
   return (
     <div

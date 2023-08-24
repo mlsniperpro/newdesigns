@@ -4,7 +4,14 @@ import Link from 'next/link';
 
 import { auth, db } from '../config/firebase';
 
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 
 const CancelSubscription = () => {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -23,21 +30,13 @@ const CancelSubscription = () => {
         );
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
-          const userSubscriptions = snapshot.docs.map((doc) => doc.data());
-          if (userSubscriptions.length > 0) {
-            const latestSubscription = userSubscriptions.reduce((a, b) =>
-              a.subscriptionEndDate > b.subscriptionEndDate ? a : b,
-            );
-            const endDate = new Date(latestSubscription.subscriptionEndDate);
-
-            if (endDate > new Date()) {
-              latestSubscription.status = 'Active';
-            } else {
-              latestSubscription.status = 'Inactive';
-            }
-
-            setSubscriptions([latestSubscription]);
-          }
+          const userSubscriptions = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            const endDate = new Date(data.subscriptionEndDate);
+            data.status = endDate > new Date() ? 'Active' : 'Inactive';
+            return data;
+          });
+          setSubscriptions(userSubscriptions);
         });
 
         return () => unsubscribe();
@@ -51,49 +50,43 @@ const CancelSubscription = () => {
     }
   }, [auth.currentUser?.uid]);
 
+  const updateSubscriptionStatusInFirebase = async (subscriptionId, status) => {
+    const subscriptionRef = doc(db, 'subscribers', subscriptionId);
+    await updateDoc(subscriptionRef, { status });
+  };
+
   const handlePayPalCancel = async () => {
     const url =
       'https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelUserSubscriptions';
-    try {
-      const user_id = auth.currentUser?.uid;
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId: user_id, reason: 'I am not satisfied' }),
-      });
-      if (!response.ok) {
-        throw new Error(`Failed with status: ${response.status}`);
-      }
-    } catch (error) {
-      console.error(`An error occurred: ${error.message}`);
+    const user_id = auth.currentUser?.uid;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId: user_id, reason: 'I am not satisfied' }),
+    });
+    if (!response.ok) {
+      throw new Error(`Failed with status: ${response.status}`);
     }
   };
 
   const handleStripeCancel = async (sub_id) => {
-    try {
-      const response = await fetch(
-        'https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelStripeSubscription',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            subscriptionId: sub_id,
-          }),
+    const response = await fetch(
+      'https://us-central1-vioniko-82fcb.cloudfunctions.net/cancelStripeSubscription',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({
+          subscriptionId: sub_id,
+        }),
+      },
+    );
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-    } catch (error) {
-      console.error(
-        'There has been a problem with your fetch operation:',
-        error,
-      );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
   };
 
@@ -102,6 +95,7 @@ const CancelSubscription = () => {
       setStatus(`Cancelling subscription with id ${subscriptionId}`);
       await handleStripeCancel(subscriptionId);
       await handlePayPalCancel();
+      await updateSubscriptionStatusInFirebase(subscriptionId, 'Cancelled');
 
       setSubscriptions(
         subscriptions.filter(
@@ -134,7 +128,11 @@ const CancelSubscription = () => {
                 - {subscription.data?.status || subscription.status}
               </p>
               <button
-                onClick={() => handleCancelSubscription(subscription.id)}
+                onClick={() =>
+                  handleCancelSubscription(
+                    subscription.id || subscription.subscriptionId,
+                  )
+                }
                 className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded"
               >
                 Cancel

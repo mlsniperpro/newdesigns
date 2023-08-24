@@ -16,7 +16,8 @@ import { auth } from '../config/firebase';
 import UserProfile from './UserProfile';
 
 
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import BatchPredictionIcon from '@mui/icons-material/BatchPrediction';
@@ -45,11 +46,12 @@ const MODE_TO_ROUTE = {
 };
 
 function Dashboard(props) {
-  const { onValueChange } = props;
+  const { onValueChange, subscriptionDetails} = props;
   const [admin, setAdmin] = React.useState(false);
   const router = useRouter();
   const [language, setLanguage] = React.useState('spanish');
   const [mode, setMode] = React.useState('guided');
+
 
   const handleUpgrade = () => {
     onValueChange(true);
@@ -139,7 +141,15 @@ function Dashboard(props) {
               text="Tutor"
             />
             <ListItem
-              onClick={() => setMode('pdf')}
+              onClick={() => {
+            
+                if(!subscriptionDetails.subscribed && !subscriptionDetails.userIsPremium && !(subscriptionDetails.paypalStatus==="ACTIVE")){
+                  console.log(subscriptionDetails)
+                  toast.error('You have to subscribed to use this feature')
+                  return
+                }
+                setMode('pdf')
+              }}
               icon={<AccountBoxIcon />}
               text="PDF"
             />
@@ -182,6 +192,7 @@ function Dashboard(props) {
         </div>
       </div>
       <div>
+        <ToastContainer />
         {mode === 'guided' ? (
           <Guided language={language} />
         ) : mode === 'keyword' ? (

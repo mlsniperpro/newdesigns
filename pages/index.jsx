@@ -1,42 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-
-
-
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-
-
-
 import useSubscription from '@/hooks/useSubscription';
-
-
-
 import Dashboard from '../components/dashboard';
 import Loader from '@/components/Loader';
 import PlanSelection from '@/components/PlanSelection';
-
-
-
 import { auth } from '../config/firebase';
-
-
-
 import { parseCookies } from 'nookies';
-
-
 function Index() {
   const [user, loadingAuth] = useAuthState(auth);
   const [upgrade, setUpgrade] = useState(false);
-  const { loading, subscribed } = useSubscription(user); // use custom hook
+  const { loading, subscriptionDetails } = useSubscription(user); // use custom hook
   const router = useRouter();
-
   const handleValueChange = (newValue) => {
     setUpgrade(newValue);
   };
-  useEffect(() => {
-    console.log('The subscription status is ', subscribed);
-  }, [subscribed]);
   useEffect(() => {
     if (
       !auth?.currentUser?.uid &&
@@ -46,7 +25,6 @@ function Index() {
       router.replace('/home');
     }
   }, [user, loadingAuth]);
-
   return (
     <div>
       <Head>
@@ -56,8 +34,8 @@ function Index() {
         <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
           {loading ? (
             <Loader />
-          ) : subscribed && !upgrade ? (
-            <Dashboard onValueChange={handleValueChange} />
+          ) : (subscriptionDetails.payPalStatus=="ACTIVE"||subscriptionDetails.subscribed || subscriptionDetails.fairUse) && !upgrade ? (
+            <Dashboard onValueChange={handleValueChange} subscriptionDetails={subscriptionDetails} />
           ) : (
             <PlanSelection />
           )}
@@ -66,10 +44,7 @@ function Index() {
     </div>
   );
 }
-
 export default Index;
-
-
 export async function getServerSideProps(context) {
   const cookies = parseCookies(context);
 

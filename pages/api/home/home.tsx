@@ -6,6 +6,7 @@ import { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import { useCreateReducer } from '@/hooks/useCreateReducer';
 
@@ -50,6 +51,8 @@ import {
   where,
 } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
+import useSubscription from '@/hooks/useSubscription';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 interface Props {
   serverSideApiKeyIsSet: boolean;
@@ -413,6 +416,19 @@ const handleDeleteFolder = async (folderId: string) => {
     serverSideApiKeyIsSet,
     serverSidePluginKeysSet,
   ]);
+  const [user, loadingAuth] = useAuthState(auth);
+
+const {loading, subscriptionDetails} = useSubscription(user); // use custom hook
+const router = useRouter();
+useEffect(() => {
+  if (!loadingAuth && !loading && !subscriptionDetails) {
+    router.push('/');
+  }else if (subscriptionDetails.paypalStatus == 'ACTIVE' ||subscriptionDetails.subscribed ||subscriptionDetails.fairUse){
+    return;
+  } else {
+    router.push('/');
+  }
+}, [loadingAuth, loading, subscriptionDetails]);
 
   return (
     <HomeContext.Provider
