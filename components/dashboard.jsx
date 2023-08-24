@@ -146,7 +146,10 @@ function Dashboard(props) {
             
                 if(!subscriptionDetails.subscribed && !subscriptionDetails.userIsPremium && !(subscriptionDetails.paypalStatus==="ACTIVE")){
                   toast.error('You have to subscribed to use this feature')
-                  onValueChange(true);
+                  //Wait for 2 seconds
+                  setTimeout(() => {
+                    onValueChange(true);
+                  }, 2000);
                   return
                 }
                 setMode('pdf')
