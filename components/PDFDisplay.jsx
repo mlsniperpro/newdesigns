@@ -1,12 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
-
-
 import { auth, storage } from '@/config/firebase';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/system';
 import { getDownloadURL, ref } from 'firebase/storage';
-
 
 function PDFViewer({ path, onEmbeddingFetched }) {
   const canvasContainerRef = useRef(null);
@@ -88,6 +85,7 @@ function PDFDisplay({ onEmbeddingFetched, pdfPath }) {
   useEffect(() => {
     if (auth.currentUser && pdfPath) {
       setFinalPdfPath('pdfs/' + auth.currentUser.uid + '/' + pdfPath + '.pdf');
+      setIsLoading(true); // Reset isLoading to true whenever pdfPath changes
     }
   }, [pdfPath]);
 
@@ -121,6 +119,5 @@ function PDFDisplay({ onEmbeddingFetched, pdfPath }) {
     </div>
   );
 }
-
 
 export default PDFDisplay;
