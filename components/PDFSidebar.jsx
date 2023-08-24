@@ -1,15 +1,21 @@
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
 
+
+
 import Link from 'next/link';
 
-import handleExtractText, {
-  iterativeCharacterTextSplitter,
-} from '@/utils/extractTextFromPdfs';
+
+
+import handleExtractText, { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
+
+
+
 
 import { auth, storage } from '@/config/firebase';
 import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
+
 
 const SidebarItem = ({ icon, text, onClick, onDelete }) => (
   <li
@@ -113,10 +119,27 @@ function PDFSidebar({ onDocumentClick }) {
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    if (file && auth.currentUser) {
+    if (!file) return;
+
+    // Check file size
+    const fileSizeMB = file.size / (1024 * 1024);
+    if (fileSizeMB > 100) {
+      alert('File size exceeds 100MB limit!');
+      return;
+    }
+
+    const text = await handleExtractText(file);
+    const wordCount = text.split(/\s+/).length;
+
+    // Check word count
+    if (wordCount > 100000) {
+      alert('Document exceeds 100,000 words limit!');
+      return;
+    }
+
+    if (auth.currentUser) {
       const userId = auth.currentUser.uid;
       const pdfRef = ref(storage, `pdfs/${userId}/${file.name}`);
-      const text = await handleExtractText(file);
       const chunks = iterativeCharacterTextSplitter(text, 2000, 100);
       const embeddings = await getEmbeddings(chunks);
 
@@ -141,6 +164,7 @@ function PDFSidebar({ onDocumentClick }) {
         });
     }
   };
+
   useEffect(() => {
     if (sidebarItems.length > 0) {
       onDocumentClick(sidebarItems[0].text);
