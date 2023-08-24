@@ -91,22 +91,40 @@ const CancelSubscription = () => {
   };
 
   const handleCancelSubscription = async (subscriptionId) => {
-    try {
-      setStatus(`Cancelling subscription with id ${subscriptionId}`);
-      await handleStripeCancel(subscriptionId);
-      await handlePayPalCancel();
-      await updateSubscriptionStatusInFirebase(subscriptionId, 'Cancelled');
+    let stripeError = null;
+    let paypalError = null;
 
-      setSubscriptions(
-        subscriptions.filter(
-          (subscription) => subscription.id !== subscriptionId,
-        ),
-      );
-      setStatus(`Subscription with id ${subscriptionId} has been cancelled.`);
+    setStatus(`Cancelling subscription with id ${subscriptionId}`);
+
+    try {
+      await handleStripeCancel(subscriptionId);
     } catch (err) {
-      setStatus(`Error cancelling subscription: ${err.message}`);
+      stripeError = err;
+      setStatus(`Error cancelling Stripe subscription: ${err.message}`);
     }
-  };
+
+    try {
+      await handlePayPalCancel();
+    } catch (err) {
+      paypalError = err;
+      setStatus(`Error cancelling PayPal subscription: ${err.message}`);
+    }
+
+    if (!stripeError && !paypalError) {
+      try {
+        await updateSubscriptionStatusInFirebase(subscriptionId, 'Cancelled');
+        setSubscriptions(
+          subscriptions.filter(
+            (subscription) => subscription.id !== subscriptionId,
+          ),
+        );
+        setStatus(`Subscription with id ${subscriptionId} has been cancelled.`);
+      } catch (err) {
+        setStatus(`Error updating subscription status in Firebase: ${err.message}`);
+      }
+    }
+};
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gradient-to-r from-blue-500 to-blue-700">
