@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -16,8 +18,7 @@ import { auth } from '../config/firebase';
 import UserProfile from './UserProfile';
 
 
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import BatchPredictionIcon from '@mui/icons-material/BatchPrediction';
@@ -144,8 +145,8 @@ function Dashboard(props) {
               onClick={() => {
             
                 if(!subscriptionDetails.subscribed && !subscriptionDetails.userIsPremium && !(subscriptionDetails.paypalStatus==="ACTIVE")){
-                  console.log(subscriptionDetails)
                   toast.error('You have to subscribed to use this feature')
+                  onValueChange(true);
                   return
                 }
                 setMode('pdf')
