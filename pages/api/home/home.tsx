@@ -416,20 +416,6 @@ const handleDeleteFolder = async (folderId: string) => {
     serverSideApiKeyIsSet,
     serverSidePluginKeysSet,
   ]);
-  const [user, loadingAuth] = useAuthState(auth);
-
-const {loading, subscriptionDetails} = useSubscription(user); // use custom hook
-const router = useRouter();
-useEffect(() => {
-  if (!loadingAuth && !loading && !subscriptionDetails) {
-    router.push('/');
-  }else if (subscriptionDetails.paypalStatus == 'ACTIVE' ||subscriptionDetails.subscribed ||subscriptionDetails.fairUse){
-    return;
-  } else {
-    router.push('/');
-  }
-}, [loadingAuth, loading, subscriptionDetails]);
-
   return (
     <HomeContext.Provider
       value={{

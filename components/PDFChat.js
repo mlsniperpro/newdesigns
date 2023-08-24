@@ -1,8 +1,10 @@
-import { Message } from '@mui/icons-material';
 import { useChat } from 'ai/react';
 import { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import updateUserWordCount from '../utils/updateWordCount';
+import { auth,db } from '@/config/firebase';
+
+
 
 
 
@@ -10,13 +12,19 @@ export default function PDFChat({ theme = 'light', embeddingData }) {
   
   const { messages,setMessages, input, handleInputChange, handleSubmit } = useChat({
     api: '/api/chat',
+    onFinish: (data) => {
+      updateUserWordCount(data.content, auth.currentUser.uid);
+    },
     body: {
       data: embeddingData,
+      userId: auth.currentUser.uid,
     },
   });
 
   useEffect(() => {
-    console.log(messages);
+    if(messages[messages.length -1]?.role === 'user') {
+      updateUserWordCount(messages[messages.length -1].content, auth.currentUser.uid);
+    }
     
   }, [messages]);
 

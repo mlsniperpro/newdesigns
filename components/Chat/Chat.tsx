@@ -1,29 +1,27 @@
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
-import {
-  MutableRefObject,
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { MutableRefObject, memo, use, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+
+
 
 import { useTranslation } from 'next-i18next';
 
+
+
 import { getEndpoint } from '@/utils/app/api';
-import {
-  saveConversation,
-  saveConversations,
-  updateConversation,
-} from '@/utils/app/conversation';
+import { saveConversation, saveConversations, updateConversation } from '@/utils/app/conversation';
 import { throttle } from '@/utils/data/throttle';
+
+
 
 import { ChatBody, Conversation, Message } from '@/types/chat';
 import { Plugin } from '@/types/plugin';
 
+
+
 import HomeContext from '@/pages/api/home/home.context';
+
+
 
 import Spinner from '../Spinner';
 import { ChatInput } from './ChatInput';
@@ -33,16 +31,14 @@ import { MemoizedChatMessage } from './MemoizedChatMessage';
 import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
+import { useRouter } from 'next/router';
+import useSubscription from '@/hooks/useSubscription';
 
 import { auth, db } from '@/config/firebase';
-import {
-  collection,
-  doc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  where,
-} from 'firebase/firestore';
+import { collection, doc, getDocs, setDoc, updateDoc, where } from 'firebase/firestore';
+
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -50,7 +46,9 @@ interface Props {
 
 export const Chat = memo(({ stopConversationRef }: Props) => {
   const { t } = useTranslation('chat');
+  
 
+    
   const {
     state: {
       selectedConversation,
