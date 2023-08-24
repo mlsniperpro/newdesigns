@@ -16,6 +16,7 @@ function Users() {
   const [users, setUsers] = useState([]);
   const [wordsgen, setWordsgen] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [fileSize, setFileSize] = useState(0);
 
   const retrieveUsers = async () => {
     const usersQuerySnapshot = await getDocs(collection(db, 'users'));
@@ -103,8 +104,12 @@ function Users() {
   const fetchWordsGenerated = async () => {
     const wordsSnap = await getDocs(collection(db, 'wordsgenerated'));
     const wordsData = wordsSnap.docs.map((doc) => doc.data());
+    setFileSize(
+      Object.fromEntries(wordsData.map((word) => [word.userId, word.size])),
+    )
     setWordsgen(
       Object.fromEntries(wordsData.map((word) => [word.userId, word.count])),
+
     );
   };
 
@@ -201,6 +206,7 @@ function Users() {
                   <th>Take Action</th>
                   <th>Words Generated</th>
                   <th>Subscription Plan</th>
+                  <th>File Size</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -258,8 +264,12 @@ function Users() {
                     <td className="px-4 py-3 text-sm">
                       {wordsgen[user.userId] || 0}
                     </td>
+                   
                     <td className="px-4 py-3 text-sm">
                       {subscribers[user.userId] || 'Free'}
+                    </td>
+                     <td className="px-4 py-3 text-sm">
+                      {fileSize[user.userId] || 0}
                     </td>
                   </tr>
                 ))}

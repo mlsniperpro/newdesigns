@@ -11,14 +11,8 @@ import handleExtractText, {
 import { getEmbeddings } from '@/utils/similarDocs';
 
 import { auth, db, storage } from '@/config/firebase';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
-import {
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
-
 
 const SidebarItem = ({ icon, text, onClick, onDelete }) => (
   <li
@@ -123,12 +117,12 @@ function PDFSidebar({ onDocumentClick }) {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
+    setFileName(file.name.split('.pdf')[0]);
     // Check file size
     const fileSizeMB = file.size / (1024 * 1024);
     if (fileSizeMB > 100) {
       toast.error('File size exceeds 100MB limit!');
-      alert('File size exceeds 100MB limit!');
+      e.target.value = null; // Reset the file input
       return;
     }
 
@@ -138,7 +132,7 @@ function PDFSidebar({ onDocumentClick }) {
     // Check word count
     if (wordCount > 100000) {
       toast.error('Document exceeds 100,000 words limit!');
-      alert('Document exceeds 100,000 words limit!');
+      e.target.value = null; // Reset the file input
       return;
     }
 
@@ -150,14 +144,11 @@ function PDFSidebar({ onDocumentClick }) {
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
-        // Situation 1: Document doesn't exist
         await setDoc(docRef, { size: fileSizeMB, userId: userId });
-      } else if (!docSnap.data().size) {
-        // Situation 2: Document exists but doesn't have a size attribute
-        await updateDoc(docRef, { size: fileSizeMB });
       } else {
-        // Situation 3: Document exists and has a size attribute
-        const newSize = docSnap.data().size + fileSizeMB;
+        const newSize = docSnap.data().size
+          ? docSnap.data().size + fileSizeMB
+          : fileSizeMB;
         await updateDoc(docRef, { size: newSize });
       }
 
@@ -185,6 +176,8 @@ function PDFSidebar({ onDocumentClick }) {
           console.error('Error uploading files:', error);
         });
     }
+
+    e.target.value = null; // Reset the file input
   };
 
   useEffect(() => {
