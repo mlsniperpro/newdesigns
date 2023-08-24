@@ -34,11 +34,11 @@ function Tutor() {
   const [user, userLoading] = useAuthState(auth);
   const [language, setLanguage] = useState('spanish');
   const [chat, setChat] = useState([]);
-  const { subscribed, loading } = useSubscription(user);
+  const { subscriptionDetails, loading } = useSubscription(user);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!subscribed && !loading && user) {
+    if (!subscriptionDetails.subscribed && !(subscriptionDetails.paypalStatus==="ACTIVE") && !loading && user) {
       Router.push('/');
     }
   }, [loading]);
@@ -94,7 +94,7 @@ function Tutor() {
     setChat((prev) => [...prev, message]);
     setIsLoading(true);
     try {
-      const data = await fetchResponse(chat);
+      const data = await fetchResponse(chat, user.uid);
       setChat((prev) => [
         ...prev,
         { role: 'assistant', content: data.choices[0].message.content },

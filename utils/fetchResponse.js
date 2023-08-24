@@ -1,6 +1,6 @@
 import updateUserWordCount from './updateWordCount';
 
-const fetchResponse = async (chat) => {
+const fetchResponse = async (chat, userId) => {
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -19,7 +19,7 @@ const fetchResponse = async (chat) => {
     }
 
     const data = await response.json();
-    updateUserWordCount(data);
+    updateUserWordCount(data, userId);
     return data;
   } catch (error) {
     console.error('Error fetching response:', error);
