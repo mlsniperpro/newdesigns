@@ -3,16 +3,21 @@ import { useEffect, useRef, useState } from 'react';
 //Import toast and its css
 import toast from 'react-hot-toast';
 
+
+
 import Link from 'next/link';
 
-import handleExtractText, {
-  iterativeCharacterTextSplitter,
-} from '@/utils/extractTextFromPdfs';
+
+
+import handleExtractText, { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
+
+
 
 import { auth, db, storage } from '@/config/firebase';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
+
 
 const SidebarItem = ({ icon, text, onClick, onDelete }) => (
   <li
@@ -127,7 +132,8 @@ function PDFSidebar({ onDocumentClick }) {
     }
 
     const text = await handleExtractText(file);
-    const wordCount = text.split(/\s+/).trim().length;
+    const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
+
 
     // Check word count
     //If there is no words in document raise an error telling users to try again or check their pdf format
