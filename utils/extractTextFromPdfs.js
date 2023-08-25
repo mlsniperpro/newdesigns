@@ -1,7 +1,11 @@
+import { toast } from 'react-hot-toast';
+
 const handleExtractText = async (confirmedFile) => {
   // Check if the file is a PDF
   if (!confirmedFile.name.endsWith('.pdf')) {
-    throw new Error('Provided file is not a PDF.');
+    toast.error('Provided file is not a PDF., check on the extension and formating of the file');
+    return
+    //throw new Error('Provided file is not a PDF.');
   }
 
   try {
@@ -64,5 +68,4 @@ export const iterativeCharacterTextSplitter = (
   return result;
 };
 
-
-export  default handleExtractText;
+export default handleExtractText;

@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 import Link from 'next/link';
 
-import handleExtractText, {
+import fhandleExtractText, {
   iterativeCharacterTextSplitter,
 } from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
