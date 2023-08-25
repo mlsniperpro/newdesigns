@@ -135,6 +135,12 @@ function PDFSidebar({ onDocumentClick }) {
       e.target.value = null; // Reset the file input
       return;
     }
+    //If there is no words in document raise an error telling users to try again or check their pdf format
+    if (wordCount === 0) {
+      toast.error('No words found in document. Please try again.');
+      e.target.value = null; // Reset the file input
+      return;
+    }
 
     if (auth.currentUser) {
       const userId = auth.currentUser.uid;
