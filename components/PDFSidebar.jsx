@@ -127,14 +127,9 @@ function PDFSidebar({ onDocumentClick }) {
     }
 
     const text = await handleExtractText(file);
-    const wordCount = text.split(/\s+/).length;
+    const wordCount = text.split(/\s+/).trim().length;
 
     // Check word count
-    if (wordCount > 100000) {
-      toast.error('Document exceeds 100,000 words limit!');
-      e.target.value = null; // Reset the file input
-      return;
-    }
     //If there is no words in document raise an error telling users to try again or check their pdf format
     if (wordCount === 0) {
       toast.error('No words found in document. Please try again.');
