@@ -3,21 +3,16 @@ import { useEffect, useRef, useState } from 'react';
 //Import toast and its css
 import toast from 'react-hot-toast';
 
-
-
 import Link from 'next/link';
 
-
-
-import handleExtractText, { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
+import handleExtractText, {
+  iterativeCharacterTextSplitter,
+} from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
-
-
 
 import { auth, db, storage } from '@/config/firebase';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
-
 
 const SidebarItem = ({ icon, text, onClick, onDelete }) => (
   <li
@@ -122,6 +117,15 @@ function PDFSidebar({ onDocumentClick }) {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // Check file extension
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+    if (fileExtension !== 'pdf') {
+      toast.error('Please upload a valid .pdf file.');
+      e.target.value = null; // Reset the file input
+      return;
+    }
+    if (!file) return;
     setFileName(file.name.split('.pdf')[0]);
     // Check file size
     const fileSizeMB = file.size / (1024 * 1024);
@@ -133,7 +137,6 @@ function PDFSidebar({ onDocumentClick }) {
 
     const text = await handleExtractText(file);
     const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
-
 
     // Check word count
     //If there is no words in document raise an error telling users to try again or check their pdf format
@@ -180,6 +183,7 @@ function PDFSidebar({ onDocumentClick }) {
           setRefreshCounter((prev) => prev + 1);
         })
         .catch((error) => {
+          toast.error('Error uploading files', error);
           console.error('Error uploading files:', error);
         });
     }
@@ -209,7 +213,7 @@ function PDFSidebar({ onDocumentClick }) {
             </button>
             <input
               type="file"
-              accept=".pdf"
+              accept=".pdf, .PDF"
               ref={fileInputRef}
               onChange={handleFileChange}
               style={{ display: 'none' }}
