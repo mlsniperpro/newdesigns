@@ -3,9 +3,7 @@ import { toast } from 'react-hot-toast';
 const handleExtractText = async (confirmedFile) => {
   // Check if the file is a PDF
   if (!confirmedFile.name.endsWith('.pdf')) {
-    toast.error('Provided file is not a PDF., check on the extension and formating of the file');
-    return
-    //throw new Error('Provided file is not a PDF.');
+    throw new Error('Provided file is not a PDF.');
   }
 
   try {

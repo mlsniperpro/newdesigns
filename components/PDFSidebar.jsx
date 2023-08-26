@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 import Link from 'next/link';
 
-import fhandleExtractText, {
+import handleExtractText, {
   iterativeCharacterTextSplitter,
 } from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
@@ -134,8 +134,14 @@ function PDFSidebar({ onDocumentClick }) {
       e.target.value = null; // Reset the file input
       return;
     }
-
-    const text = await handleExtractText(file);
+    let text;
+    try {
+    text = await handleExtractText(file);
+    } catch (error) {
+      toast.error('Error extracting text from PDF. Please try again ensure correct format and pdf extension');
+      e.target.value = null; // Reset the file input
+      return;
+    }
     const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
 
     // Check word count
