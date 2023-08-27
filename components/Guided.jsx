@@ -430,6 +430,9 @@ function Guided({ language }) {
                 <option value="fun">
                   {language === "english" ? "Fun" : "Divertido"}
                 </option>
+                <option value="funny">
+                  {language === "english" ? "Funny" : "Chistoso"}
+                </option>
               </select>
             </div>
             <button
