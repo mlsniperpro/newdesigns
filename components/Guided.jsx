@@ -32,7 +32,7 @@ function Guided({ language }) {
   const [response3, setResponse3] = useState('');
 
   const prompt =
-    language === 'English' || language === 'english' || !language
+    (language === 'english' || !language)
       ? `You are an award winning ${copy} copywriter. Write a ${copy} copy ${
           tone ? `in ${tone} tone` : ''
         } 
@@ -55,7 +55,7 @@ function Guided({ language }) {
         }${audience ? ` y el público es ${audience}` : ''}`;
 
   const prompt2 =
-    language === 'English' || language === 'english' || !language
+    (language === 'english') || !language
       ? `You are an award winning ${copy} copywriter. Write a ${copy} copy ${
           tone ? `in ${tone} tone` : ''
         } 
@@ -82,7 +82,7 @@ function Guided({ language }) {
         }`;
 
   const prompt3 =
-    language === 'English' || language === 'english' || !language
+    (language === 'english' )
       ? `You are an award winning ${copy} copywriter. Write a ${copy} copy ${
           tone ? `in ${tone} tone` : ''
         }
@@ -231,16 +231,16 @@ function Guided({ language }) {
               }}
             >
               <MenuBookIcon style={{ marginRight: '10px' }} />
-              {language === 'english'
+              {(language === 'english')
                 ? 'AI Content Generator: More Accurate and Efficient than ChatGPT'
                 : 'Generador de contenido AI: Mas preciso y eficiente que chatGPT'}
             </h1>
             <br></br>
             <label htmlFor="product_title" style={{color:'white',fontSize:'18px',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}}>
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language === "english"
-                ? "  Título del producto/servicio"
-                : "  Product/Service Title"}
+              {(language === "english")?
+              "Product/Service Title"
+                :"  Título del producto/servicio"}
             </label>
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl"  style={{background:'white',fontFamily:"Monospace",fontSize:'16px'}}>
               <input
@@ -252,12 +252,12 @@ function Guided({ language }) {
                   setTitle(e.target.value);
                 }}
                 name="product_title"
-                placeholder="Título del producto/servicio"
+                placeholder={(language==="english")? "Title for your product or service" :"Título del producto/servicio"}
               />
             </div>
             <label htmlFor="audience" style={{color:'white',fontSize:'18px',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}}>
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              {language === "english"
+              {(language === "english")
                 ? "  Target Audience"
                 : "  Audiencia objetivo"}
             </label>
@@ -272,7 +272,7 @@ function Guided({ language }) {
                 name="audience"
                 id="audience"
                 placeholder={
-                  language === "spanish"
+                  (language === "spanish")
                     ? "Especificar audiencia objetivo"
                     : "Specify target audience"
                 }
@@ -307,7 +307,7 @@ function Guided({ language }) {
             {/*Copy type if a drop down of 3 options: 1. Copywriting 2. Blog Post 3. Social Media Post Make a floating label that translate the main label to spanish*/}
             <label htmlFor="copy_type" style={{color:'white',fontSize:'18px',fontWeight:'bold',fontFamily:"Monospace",fontSize:'18px'}} >
               {/*Use appropriate wording based on whether language is english or spanish*/}
-              <CategoryIcon /> {language === "english" ? "  Copy Type" : " Tipo de copia"}
+              <CategoryIcon /> {(language === "english") ? "  Copy Type" : " Tipo de copia"}
             </label>
             <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl"  style={{background:'white',fontFamily:"Monospace",fontSize:'16px'}}>
               <select
@@ -321,15 +321,15 @@ function Guided({ language }) {
               >
                 <option value="copywriting">
                   {/*Use appropriate wording based on whether language is english or spanish*/}
-                  {language==="english"? "Copywriting": "Redacción de copia"}
+                  {(language==="english")? "Copywriting": "Redacción de copia"}
                 </option>
                 <option value="Blog Post">
                   {/*Use appropriate wording based on whether language is english or spanish*/}
 
-                  {language === "english" ? "Blog Post" : "Publicación de blog"}
+                  {(language === "english" )? "Blog Post" : "Publicación de blog"}
                 </option>
                 <option value="social media post">
-                  {language === "english"
+                  {(language === "english")
                     ? "Social Media copy"
                     : "texto para redes sociales"}
                 </option>
