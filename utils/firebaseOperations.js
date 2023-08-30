@@ -3,7 +3,7 @@ import { auth, db, googleProvider } from '../config/firebase';
 
 
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, getDocs, query, where, getDoc, addDoc,  } from 'firebase/firestore';
 
 
 export const signInUser = async (email, password) => {
