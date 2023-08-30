@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import { updateUserWordCount } from '@/utils/updateWordCount';
+import  updateUserWordCount  from '@/utils/updateWordCount';
 
 import { auth, db } from '../config/firebase';
 import ContentCard from './ContentCard';
