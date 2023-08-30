@@ -74,8 +74,7 @@ function useSubscription(user) {
         headers.append('subscriptionid', latestSubscription.subscriptionId);
         console.log("the latest subscription id being passed is ",latestSubscription.subscriptionId)
         const response = await fetch(
-          //'https://vionikochat.onrender.com/subscriptionDetails',
-          'http://localhost:3000/subscriptionDetails',
+          'https://vionikochat.onrender.com/subscriptionDetails',
           {
             method: 'GET',
             headers: headers,
@@ -120,7 +119,7 @@ function useSubscription(user) {
     paypalEmail,
     paypalStatus,
     paypalSubscriptionId,
-    planId,
+    https: planId,
     name,
     wordsGenerated: wordsgenerated,
     limit,
