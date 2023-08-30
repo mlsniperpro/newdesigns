@@ -121,7 +121,7 @@ function useSubscription(user) {
     paypalSubscriptionId,
     planId: planId,
     name,
-    wordsGenerated,
+    wordsgenerated,
     limit,
     userIsPremium,
     subscribed,
