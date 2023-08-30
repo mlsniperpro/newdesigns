@@ -121,14 +121,13 @@ function useSubscription(user) {
     paypalSubscriptionId,
     planId: planId,
     name,
-    wordsGenerated: wordsgenerated,
+    wordsGenerated,
     limit,
     userIsPremium,
     subscribed,
     lastPayment,
     plan: plansMapperPayPal[planId],
     fairUse,
-    wordsgenerated,
   };
 
   return { loading, subscriptionDetails };
