@@ -17,9 +17,31 @@ export const signInUser = async (email, password) => {
 
 export const signInWithGoogle = async () => {
   const result = await signInWithPopup(auth, googleProvider);
-  return result.user;
-};
+  const user = result.user;
 
+  // Check if user exists in Firestore
+  const userRef = doc(db, 'users', user.uid);
+  const userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) {
+    // If user doesn't exist, create a new record with the provided details
+    const date = new Date();
+    const dateSignedUp = `${date.getFullYear()}-${
+      date.getMonth() + 1
+    }-${date.getDate()}`;
+
+    const docRef = await addDoc(collection(db, 'users'), {
+      authProvider: 'google',
+      userId: user.uid,
+      name: user.displayName,
+      email: user.email, // Using the email from the Google user object
+      dateSignedUp,
+      photo: user.photoURL,
+    });
+  }
+
+  return user;
+};
 export const checkIfUserDisabled = async (user, router) => {
   const disabledQuery = query(
     collection(db, 'deactivatedUsers'),
@@ -27,7 +49,6 @@ export const checkIfUserDisabled = async (user, router) => {
   );
   const disabledDocs = await getDocs(disabledQuery);
   if (disabledDocs.empty) {
-    
     router.push({
       pathname: '/chat',
       query: { userId: user.uid },
