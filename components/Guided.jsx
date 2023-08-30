@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-
+import { updateUserWordCount } from '@/utils/updateWordCount';
 
 import { auth, db } from '../config/firebase';
 import ContentCard from './ContentCard';
@@ -119,37 +119,7 @@ function Guided({ language }) {
     }
   };
 
-  const updateUserWordCount = async (res) => {
-    try {
-      //Get the document from wordsgenerated collection where userId attribute is equal to the current user's uid and update it by adding 30 to curent count attribute in the same document
-      const docRef = await getDocs(collection(db, 'wordsgenerated'));
-      const wordsGenerated = docRef.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      //Check if the any document in wordsgenerated collection has userId attribute equal to the current user's uid if so update the count attribute by adding 30 to it or else create a new document with userId attribute equal to the current user's uid and count attribute equal to 30
-      if (wordsGenerated.some((word) => word.userId === auth.currentUser.uid)) {
-        const docRef = await getDocs(collection(db, 'wordsgenerated'));
-        const wordsGenerated = docRef.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        const userDoc = wordsGenerated.find(
-          (word) => word.userId === auth.currentUser.uid,
-        );
-        await updateDoc(doc(db, 'wordsgenerated', userDoc.id), {
-          count: userDoc.count + res.length,
-        });
-      } else {
-        await setDoc(doc(db, 'wordsgenerated', auth.currentUser.uid), {
-          userId: auth.currentUser.uid,
-          count: res.length,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -180,7 +150,12 @@ function Guided({ language }) {
     setResponse2(responses[1].choices[0].message.content);
     setResponse3(responses[2].choices[0].message.content);
 
-    updateUserWordCount(responses);
+    //Map the responses to updateUserWordCount it take string text and userId
+  responses.map((response) => {
+    updateUserWordCount(response.choices[0].message.content, auth.currentUser.uid);
+  });
+
+    
     setLoading(false);
   };
 
