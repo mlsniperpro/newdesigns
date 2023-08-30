@@ -119,7 +119,7 @@ function useSubscription(user) {
     paypalEmail,
     paypalStatus,
     paypalSubscriptionId,
-    https: planId,
+    planId: planId,
     name,
     wordsGenerated: wordsgenerated,
     limit,
@@ -128,6 +128,7 @@ function useSubscription(user) {
     lastPayment,
     plan: plansMapperPayPal[planId],
     fairUse,
+    wordsgenerated,
   };
 
   return { loading, subscriptionDetails };
