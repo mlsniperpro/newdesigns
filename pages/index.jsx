@@ -30,6 +30,9 @@ function Index() {
       <Head>
         <title>Vionko Marketing AI</title>
       </Head>
+      {console.log("The loading state is ",loading)}
+      {console.log("The subscription details are ",subscriptionDetails)}
+      {console.log("The userid is ",user?.uid)}
       <div className="bg-[#1A232E] flex flex-col items-center justify-center min-h-screen py-2">
         <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
           {loading ? (

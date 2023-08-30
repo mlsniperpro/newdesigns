@@ -10,24 +10,25 @@ import usePremiumStatus from '@/stripe/usePremiumStatus';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 
 
-function useSubscription (user) {
+function useSubscription(user) {
   const [loading, setLoading] = useState(true);
-  const [fairUse, setFairUse] = useState(false); // [1
+  const [fairUse, setFairUse] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const userIsPremium = usePremiumStatus(user);
-  const [limit, setLimit] = useState(0); // [1
-  const [wordsgenerated, setWordsGenerated] = useState(0); // [1
-  const [paypalEmail, setPaypalEmail] = useState(''); // [1
-  const [paypalStatus, setPaypalStatus] = useState(''); // [1
-  const [paypalSubscriptionId, setPaypalSubscriptionId] = useState(''); // [1
-  const [planId, setPlanId] = useState(''); // [1
-  const [name, setName] = useState(''); // [1
-  const [lastPayment, setLastPayment] = useState(''); // [1
-  const subscriptionDetails = {};
+  const [limit, setLimit] = useState(0);
+  const [wordsgenerated, setWordsGenerated] = useState(0);
+  const [paypalEmail, setPaypalEmail] = useState('');
+  const [paypalStatus, setPaypalStatus] = useState('');
+  const [paypalSubscriptionId, setPaypalSubscriptionId] = useState('');
+  const [planId, setPlanId] = useState('');
+  const [name, setName] = useState('');
+  const [lastPayment, setLastPayment] = useState('');
+
   const plansMapperPayPal = {
-    "P-5DY729820D282010XMQNAIRI": "monthly",
-    "P-8MS40752A79241224MQNAKFY": "yearly",
+    'P-5DY729820D282010XMQNAIRI': 'monthly',
+    'P-8MS40752A79241224MQNAKFY': 'yearly',
   };
+
   const retrieveWordLimit = async () => {
     try {
       const limitDoc = await getDocs(collection(db, 'wordlimit'));
@@ -39,14 +40,20 @@ function useSubscription (user) {
       console.error('Error retrieving prices: ', error);
     }
   };
-  const checkSubscription = async () => {
 
+  const checkSubscription = async () => {
+    console.log('Checking subscription');
+    console.log("The userId is at checksubscription",user?.uid)
     try {
-      const subscribersSnapshot = await getDocs(collection(db, 'subscribers'));
-      const subscribers = subscribersSnapshot.docs.map((doc) => doc.data());
-      const userSubscriptions = subscribers.filter(
-        (subscriber) => subscriber.userId === user.uid,
+      const userSubscriptionQuery = query(
+        collection(db, 'subscribers'),
+        where('userId', '==', user.uid),
       );
+      const subscribersSnapshot = await getDocs(userSubscriptionQuery);
+      const userSubscriptions = subscribersSnapshot.docs.map((doc) =>
+        doc.data(),
+      );
+
       const latestSubscription = userSubscriptions.reduce(
         (a, b) => (a.subscriptionEndDate > b.subscriptionEndDate ? a : b),
         {},
@@ -61,71 +68,70 @@ function useSubscription (user) {
       const wordsGenerated = wordsSnapshot.docs.map((doc) => doc.data());
       const currentUserWords = wordsGenerated[0] || { count: 0 };
       setWordsGenerated(currentUserWords.count);
-          try{
+
       if (latestSubscription.subscriptionId) {
         const headers = new Headers();
         headers.append('subscriptionid', latestSubscription.subscriptionId);
-        const response = await fetch("https://vionikochat.onrender.com/subscriptionDetails", {
-          method: 'GET',
-          headers: headers,
-          }
+        console.log("the latest subscription id being passed is ",latestSubscription.subscriptionId)
+        const response = await fetch(
+          //'https://vionikochat.onrender.com/subscriptionDetails',
+          'http://localhost:3000/subscriptionDetails',
+          {
+            method: 'GET',
+            headers: headers,
+          },
         );
         const data = await response.json();
-        const paypalEmail = data.subscriber.email_address;
-        const paypalStatus = data.status;
-        const paypalSubscriptionId = data.id;
-        const planId = data.plan_id;
-        const name = data.subscriber.name.given_name;
-        const lastPayment = data.billing_info.last_payment.time;
-        setPaypalEmail(paypalEmail);
-        setPaypalStatus(paypalStatus);
-        setPaypalSubscriptionId(paypalSubscriptionId);
-        setPlanId(planId);
-        setName(name);
-        setLastPayment(lastPayment);
-        }
-      } catch (error) {
-        console.error('Error retrieving subscription details paypal live: ', error);
+        setPaypalEmail(data.subscriber.email_address);
+        setPaypalStatus(data.status);
+        setPaypalSubscriptionId(data.id);
+        setPlanId(data.plan_id);
+        setName(data.subscriber.name.given_name);
+        setLastPayment(data.billing_info.last_payment.time);
       }
-
 
       if (
         Date.now() < latestSubscription.subscriptionEndDate ||
         auth.currentUser.uid === 'M8LwxAfm26SimGbDs4LDwf1HuCb2' ||
         userIsPremium ||
         auth.currentUser.uid === 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1'
-      ) 
-      {
+      ) {
         setSubscribed(true);
-      } else if(currentUserWords.count < limit) {
+      } else if (currentUserWords.count < limit) {
         setFairUse(true);
       } else {
         setSubscribed(false);
       }
     } catch (error) {
-      console.error(error);
+      console.error('Error in checkSubscription: ', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    retrieveWordLimit();
-    checkSubscription();
-  }, [user, userIsPremium, limit]);
-  subscriptionDetails.paypalEmail = paypalEmail;
-  subscriptionDetails.paypalStatus = paypalStatus;
-  subscriptionDetails.paypalSubscriptionId = paypalSubscriptionId;
-  subscriptionDetails.planId = planId;
-  subscriptionDetails.name = name;
-  subscriptionDetails.wordsGenerated = wordsgenerated;
-  subscriptionDetails.limit = limit;
-  subscriptionDetails.userIsPremium = userIsPremium;
-  subscriptionDetails.subscribed = subscribed;
-  subscriptionDetails.lastPayment = lastPayment;
-  subscriptionDetails.plan = plansMapperPayPal[planId];
-  subscriptionDetails.fairUse = fairUse;
-  return {loading, subscriptionDetails};
+    if (user) {
+      retrieveWordLimit();
+      checkSubscription();
+    }
+  }, [user]);
+
+  const subscriptionDetails = {
+    paypalEmail,
+    paypalStatus,
+    paypalSubscriptionId,
+    planId,
+    name,
+    wordsGenerated: wordsgenerated,
+    limit,
+    userIsPremium,
+    subscribed,
+    lastPayment,
+    plan: plansMapperPayPal[planId],
+    fairUse,
+  };
+
+  return { loading, subscriptionDetails };
 }
 
 export default useSubscription;
