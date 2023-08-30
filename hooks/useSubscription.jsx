@@ -12,7 +12,6 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 
 function useSubscription(user) {
   const [loading, setLoading] = useState(true);
-  const [fairUse, setFairUse] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const userIsPremium = usePremiumStatus(user);
   const [limit, setLimit] = useState(0);
@@ -42,8 +41,6 @@ function useSubscription(user) {
   };
 
   const checkSubscription = async () => {
-    console.log('Checking subscription');
-    console.log("The userId is at checksubscription",user?.uid)
     try {
       const userSubscriptionQuery = query(
         collection(db, 'subscribers'),
@@ -96,8 +93,6 @@ function useSubscription(user) {
         auth.currentUser.uid === 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1'
       ) {
         setSubscribed(true);
-      } else if (wordsgenerated < limit) {
-        setFairUse(true);
       } else {
         setSubscribed(false);
       }
@@ -127,7 +122,7 @@ function useSubscription(user) {
     subscribed,
     lastPayment,
     plan: plansMapperPayPal[planId],
-    fairUse,
+    fairUse: wordsgenerated < limit,
   };
 
   return { loading, subscriptionDetails };
