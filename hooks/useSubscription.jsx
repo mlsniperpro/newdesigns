@@ -96,7 +96,7 @@ function useSubscription(user) {
         auth.currentUser.uid === 'fcJAePkUVwV7fBR3uiGh5iyt2Tf1'
       ) {
         setSubscribed(true);
-      } else if (currentUserWords.count < limit) {
+      } else if (wordsgenerated < limit) {
         setFairUse(true);
       } else {
         setSubscribed(false);
