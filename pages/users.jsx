@@ -18,14 +18,21 @@ function Users() {
   const [searchTerm, setSearchTerm] = useState('');
   const [fileSize, setFileSize] = useState(0);
 
-  const retrieveUsers = async () => {
-    const usersQuerySnapshot = await getDocs(collection(db, 'users'));
-    const usersData = usersQuerySnapshot.docs
-      .map((doc) => doc.data())
-      .filter((user) => user.name && user.name.trim() !== '');
-    setUsers(usersData);
-    return usersData;
-  };
+ const retrieveUsers = async () => {
+   const usersQuerySnapshot = await getDocs(collection(db, 'users'));
+   const usersData = usersQuerySnapshot.docs
+     .map((doc) => doc.data())
+     .filter((user) => user.name && user.name.trim() !== '')
+     .sort((a, b) => {
+       // Parsing the dateSignedUp string into a Date object
+       const dateA = new Date(a.dateSignedUp.split('-').join(', '));
+       const dateB = new Date(b.dateSignedUp.split('-').join(', '));
+       return dateB - dateA; // Sort in descending order
+     });
+   setUsers(usersData);
+   return usersData;
+ };
+
   //Fetch stripe subscriptions
   const retrieveStripeSubs = async () => {
     const userIds = (
