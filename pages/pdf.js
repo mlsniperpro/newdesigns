@@ -26,8 +26,8 @@ export default function PDF() {
   
   const [documentName, setDocumentName] = useState('');
 
-  const [sidebarBasis, setSidebarBasis] = useState('12.5%');
-  const [displayBasis, setDisplayBasis] = useState('43.75%'); // Assuming initial value
+  const [sidebarBasis, setSidebarBasis] = useState('4.5%');
+  const [displayBasis, setDisplayBasis] = useState('30.75%'); // Assuming initial value
   const [embeddingData, setEmbeddingData] = useState(null);
   const [user, userLoading] = useAuthState(auth);
   const { loading, subscriptionDetails } = useSubscription(user);

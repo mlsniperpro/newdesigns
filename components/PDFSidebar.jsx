@@ -251,6 +251,17 @@ function PDFSidebar({ onDocumentClick }) {
               />
             </div>
           </div>
+          <div className="flex justify-center mt-0 mb-0 w-full">
+            <div className="relative ">
+            {/* Link to History page */}  
+              <Link href="/history">
+                <span className="bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50 pl-10 py-2 mr-2">
+                  History
+                </span>
+              </Link> 
+            </div>
+          </div>
+
           {/*A link back home */}
           <div className="flex justify-center mt-5 mb-5 w-full">
             <div className="relative flex">
@@ -261,6 +272,8 @@ function PDFSidebar({ onDocumentClick }) {
                   Home
                 </span>
               </Link>
+              
+
               {/* A link to /embed */}
               <Link href={`/embed?fileName=${fileName}`}>
                 <span className="bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50 pl-10 py-2 ml-2">
@@ -268,6 +281,7 @@ function PDFSidebar({ onDocumentClick }) {
                 </span>
               </Link>
             </div>
+            
           </div>
         </div>
       </div>
