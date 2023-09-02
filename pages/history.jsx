@@ -1,7 +1,8 @@
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import Link  from "next/link"
+
+import Link from 'next/link';
 
 import { auth, db } from '@/config/firebase';
 import {
@@ -70,13 +71,14 @@ function App() {
     setNewTitle('');
   };
 
-  let filteredChats = chats.filter((chat) =>
-    chat.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    chat.fileName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    chat.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    chat.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    chat.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    chat.date?.toLowerCase().includes(searchTerm.toLowerCase()) 
+  let filteredChats = chats.filter(
+    (chat) =>
+      chat.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      chat.fileName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      chat.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      chat.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      chat.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      chat.date?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
   if (showEmbedded) {
     filteredChats = filteredChats.filter((chat) => chat.embedded === true);
@@ -130,7 +132,9 @@ function App() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="p-2 rounded border flex-grow"
           />
-          <Link href="/pdf" className="ml-4 text-white">PDF</Link>
+          <Link href="/pdf" className="ml-4 text-white">
+            PDF
+          </Link>
         </div>
 
         <label className="ml-4 flex items-center">
@@ -157,7 +161,16 @@ function App() {
                     onChange={(e) => setNewTitle(e.target.value)}
                   />
                 ) : (
-                  <span className="text-sm ml-2">{chat.title}</span>
+                  <span className="text-sm ml-2">
+                    {chat.title +
+                      `${
+                        chat.FileName ? '   FileName: ' + chat.FileName : ''
+                      }` +
+                      `${chat.name ? ' Name: ' + chat.name : ''}` +
+                      `${chat.email ? ' Email: ' + chat.email : ''}` +
+                      `${chat.phone ? ' Phone: ' + chat.phone : ''}`+
+                      `${chat.date ? ' Date: ' + chat.date : ''}`}
+                  </span>
                 )}
               </div>
               <div>
