@@ -2,7 +2,6 @@ import { IconEdit, IconTrash } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-// Import the Edit icon
 import { auth, db } from '@/config/firebase';
 import {
   collection,
@@ -21,8 +20,8 @@ function App() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showEmbedded, setShowEmbedded] = useState(false);
-  const [editingChatId, setEditingChatId] = useState(null); // New state to manage editing mode
-  const [newTitle, setNewTitle] = useState(''); // New state to manage the new title
+  const [editingChatId, setEditingChatId] = useState(null);
+  const [newTitle, setNewTitle] = useState('');
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -77,10 +76,36 @@ function App() {
     filteredChats = filteredChats.filter((chat) => chat.embedded === true);
   }
 
+  const exportChats = () => {
+    const blob = new Blob([JSON.stringify(filteredChats)], {
+      type: 'application/json',
+    });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'filteredChats.json';
+    link.click();
+  };
+
+  const importChats = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const importedChats = JSON.parse(e.target.result);
+      setChats(importedChats);
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <div className="flex">
       {/* Sidebar */}
       <div className="w-1/4 bg-gray-800 text-gray-300 p-4 overflow-y-auto h-screen">
+        {/* Import & Export Buttons */}
+        <div class="mb-3">
+          <input type="file" onChange={importChats} />
+          <button onClick={exportChats}>Export Chats</button>
+        </div>
+        {/* Search and Filter */}
         <input
           type="text"
           placeholder="Search Chats"
@@ -96,6 +121,7 @@ function App() {
           />
           <span className="ml-2">Show Only Embedded</span>
         </label>
+        {/* Chat List */}
         <ul className="mt-4">
           {filteredChats.map((chat) => (
             <li
