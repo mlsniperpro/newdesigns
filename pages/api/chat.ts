@@ -36,6 +36,7 @@ const DEFAULT_MODEL = {
 async function saveChatData(userId: string, payload: any) {
   try {
     const docRef = doc(db, `chat`, payload.id);
+    console.log("the document is id is", payload.id)
     await setDoc(docRef, payload);
   } catch (e) {
     console.error('Error adding document: ', e);
@@ -110,17 +111,15 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (model === DEFAULT_MODEL) {
       const userId = json.userId ?? nanoid();
-      console.log("message before modification", messagesToSend)
       const modifiedMessages = messagesToSend.map((message) => ({
         ...message,
         content:
           (message.content.match(/Question: ([^\n]*)(\nContext:[^\n]*\n)?/) ||
             [])[1] || message.content,
       }));
-      console.log("modifiedMessages", modifiedMessages);
 
       const title = modifiedMessages[0].content.substring(0, 100);
-      const id = json.id ?? nanoid();
+      const id = json.id ?? "Hello, this is the invalid id";
       const createdAt = Date.now();
       const payload = {
         id,

@@ -2,13 +2,11 @@ import { useChat } from 'ai/react';
 import { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import updateUserWordCount from '../utils/updateWordCount';
-import { auth,db } from '@/config/firebase';
+import { auth } from '@/config/firebase';
 
 
-
-
-
-export default function PDFChat({ theme = 'light', embeddingData }) {
+export default function PDFChat({ theme = 'light', embeddingData, chatId }) {
+  //Generate random id for the chat
   
   const { messages,setMessages, input, handleInputChange, handleSubmit } = useChat({
     api: '/api/chat',
@@ -18,6 +16,7 @@ export default function PDFChat({ theme = 'light', embeddingData }) {
     body: {
       data: embeddingData,
       userId: auth.currentUser.uid,
+      id: chatId,
     },
   });
 

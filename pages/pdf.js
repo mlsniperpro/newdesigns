@@ -23,7 +23,7 @@ import { auth } from '@/config/firebase';
 
 export default function PDF() {
   const router = useRouter();
-  
+  const chatId = Math.random().toString(36).substring(7);
   const [documentName, setDocumentName] = useState('');
 
   const [sidebarBasis, setSidebarBasis] = useState('4.5%');
@@ -74,7 +74,7 @@ export default function PDF() {
 
       <div className="resize-handle bg-gray-300 w-2 cursor-ew-resize" />
       <div className="flex-grow">
-        <PDFChat embeddingData={embeddingData} />
+        <PDFChat embeddingData={embeddingData} chatId={chatId}/>
       </div>
     </div>
   );
