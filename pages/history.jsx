@@ -82,6 +82,17 @@ function App() {
     filteredChats = filteredChats.filter((chat) => chat.embedded === true);
   }
 
+  // Sorting the filteredChats array by the createdAt attribute in descending order
+  filteredChats.sort((a, b) => {
+    if (a.createdAt > b.createdAt) {
+      return -1;
+    }
+    if (a.createdAt < b.createdAt) {
+      return 1;
+    }
+    return 0;
+  });
+
   const exportChats = () => {
     const blob = new Blob([JSON.stringify(filteredChats)], {
       type: 'application/json',
