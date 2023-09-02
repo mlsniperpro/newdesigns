@@ -7,9 +7,16 @@ JOURNAL OF L A T E X CLASS FILES, VOL. 14, NO. 8, AUGUST 2021   1  Unifying Larg
 d. For closed-source LLMs (e.g., ChatGPT and GPT-4), AutoKG adopts prompt engineering to design customized prompts [96]. As shown in Fig. 20, these prompts contain the task description, few- shot examples, and test input, which instruct LLMs to predict the tail entity for KG completion.  5.2.3   Comparison between PaE and PaG  LLMs as Encoders (PaE) applies an additional prediction head on the top of the representation encoded by LLMs. Therefore, the PaE framework is much easier to finetune since we can only optimize the prediction heads and freeze the LLMs. Moreover, the output of the prediction can be eas- ily specified and integrated with existing KGC functions for different KGC tasks. However, during the inference stage, the PaE requires to compute a score for every candidate in KGs, which could be computationally expensive. Besides, they   cannot   generalize   to   unseen   entities.   Furthermore, the PaE requires the representation output of the LLMs, whereas some state-of-the-
 sociated knowledge graph. The question and verbalized paths are encoded by the language model, and different layers of the language model produce outputs that guide a graph neural network to perform message pass- ing. This process utilizes the explicit knowledge contained in the structured knowledge graph for reasoning purposes. StructGPT [242] adopts a customized interface to allow large language models (e.g., ChatGPT) directly reasoning on KGs to perform multi-step question answering.  6   S YNERGIZED   LLM S   + KG S  The synergy of LLMs and KGs has attracted increasing attention these years, which marries the merits of LLMs and KGs to mutually enhance performance in various down- stream applications. For example, LLMs can be used to understand natural language, while KGs are treated as a knowledge base, which provides factual knowledge. The unification of LLMs and KGs could result in a powerful model for knowledge representation and reasoning. In this section, we will discuss the  
 */
-const message = `I am a large language model'
+let message = `
+  Here is the user question:
+  Question:"How are you doing today?"
+  Search for relevant information in the context below and use it to answer user questions exhaustively and deeply using numbered list and thorough analysis.
+  If the context does not provide relevant answer to the question, mention that PDF provided is not relevant to question and try to relate the question to the context.
+  Context: ${"Write a program to find the factorial of a number using recursion."}
+  `;
+
+  message = "I am good at coding"
           
-`;
 /*
 let result =
   (message.match(/Question: ([^\n]*)(\nContext:[^\n]*\n)?/) || [])[1] ||

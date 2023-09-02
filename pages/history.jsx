@@ -119,7 +119,7 @@ function App() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="p-2 rounded border flex-grow"
           />
-          <Link href="/" className="ml-4 text-white">Home</Link>
+          <Link href="/pdf" className="ml-4 text-white">PDF</Link>
         </div>
 
         <label className="ml-4 flex items-center">

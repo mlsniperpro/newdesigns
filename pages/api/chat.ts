@@ -95,15 +95,10 @@ const handler = async (req: Request): Promise<Response> => {
   `;
       messagesToSend[messagesToSend.length - 1].content = messagesToSend[
         messagesToSend.length - 1
-      ].content.replace(/(\r\n|\n|\r)/gm, '');
+      ].content;
       updateUserWordCount(messagesToSend[messagesToSend.length - 1].content, json.userId);
       messagesToSend[messagesToSend.length - 1].role = 'system';
-    }
-
-    console.log(
-      'Here are the messages being sent',
-      messagesToSend[messagesToSend.length - 1],
-    );
+    };
 
     const stream = await OpenAIStream(
       model,
@@ -115,23 +110,23 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (model === DEFAULT_MODEL) {
       const userId = json.userId ?? nanoid();
+      console.log("message before modification", messagesToSend)
       const modifiedMessages = messagesToSend.map((message) => ({
         ...message,
         content:
           (message.content.match(/Question: ([^\n]*)(\nContext:[^\n]*\n)?/) ||
             [])[1] || message.content,
       }));
+      console.log("modifiedMessages", modifiedMessages);
 
       const title = modifiedMessages[0].content.substring(0, 100);
       const id = json.id ?? nanoid();
       const createdAt = Date.now();
-      const path = `/chatpdf/${id}`;
       const payload = {
         id,
         title,
         userId,
         createdAt,
-        path,
         messages: modifiedMessages,
       };
 
