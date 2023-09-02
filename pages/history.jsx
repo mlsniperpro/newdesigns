@@ -1,6 +1,7 @@
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import Link  from "next/link"
 
 import { auth, db } from '@/config/firebase';
 import {
@@ -70,7 +71,12 @@ function App() {
   };
 
   let filteredChats = chats.filter((chat) =>
-    chat.title.toLowerCase().includes(searchTerm.toLowerCase()),
+    chat.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    chat.fileName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    chat.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    chat.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    chat.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    chat.date?.toLowerCase().includes(searchTerm.toLowerCase()) 
   );
   if (showEmbedded) {
     filteredChats = filteredChats.filter((chat) => chat.embedded === true);
@@ -105,14 +111,17 @@ function App() {
           <input type="file" onChange={importChats} />
           <button onClick={exportChats}>Export Chats</button>
         </div>
-        {/* Search and Filter */}
-        <input
-          type="text"
-          placeholder="Search Chats"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 rounded border mb-4"
-        />
+        <div className="flex justify-between items-center mb-4">
+          <input
+            type="text"
+            placeholder="Search Chats"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="p-2 rounded border flex-grow"
+          />
+          <Link href="/" className="ml-4 text-white">Home</Link>
+        </div>
+
         <label className="ml-4 flex items-center">
           <input
             type="checkbox"
