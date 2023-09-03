@@ -11,21 +11,23 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
   const router = useRouter();
   const { fileName } = router.query;
 
+  // State management for selected fields and text input fields
   const [selectedFields, setSelectedFields] = useState({
     name: false,
     email: false,
     phone: false,
   });
-
   const [textInputFields, setTextInputFields] = useState({
     firstMessage: '',
     inputPlaceholder: '',
     chatName: '',
   });
 
+  // Theme and text color setup
   const isDarkTheme = theme === 'dark';
   const textColorClass = isDarkTheme ? 'text-white' : 'text-black';
 
+  // Code snippet generation
   const vionikoaiChat = {
     userId: auth.currentUser.uid,
     fileName,
@@ -34,24 +36,17 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
       Object.entries(textInputFields).filter(([_, value]) => value),
     ),
   };
+  const codeSnippet = `window.vionikoaiChat = ${JSON.stringify(
+    vionikoaiChat,
+    null,
+    2,
+  )}`;
+  const fullCodeSnippet = `<script>\n  ${codeSnippet}\n</script>\n<script src="https://mlsniperpro.github.io/vionikoaichatbox/client/chatWidget.js"></script>`;
 
-  const codeSnippet = `
-    window.vionikoaiChat = ${JSON.stringify(vionikoaiChat, null, 2)}
-  `;
+  // Markdown snippet for display
+  const markdownSnippet = `\`\`\`javascript\n${fullCodeSnippet}\n\`\`\``;
 
-  const fullCodeSnippet = `
-  <script>
-    ${codeSnippet}
-  </script>
-  <script src="https://mlsniperpro.github.io/vionikoaichatbox/client/chatWidget.js"></script>
-  `;
-
-  const markdownSnippet = `
-  \`\`\`javascript
-  ${fullCodeSnippet}
-  \`\`\`
-  `;
-
+  // Clipboard operations
   const handleCopyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(fullCodeSnippet);
@@ -61,16 +56,17 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
     }
   };
 
+  // Checkbox and text input handling
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
     setSelectedFields((prev) => ({ ...prev, [name]: checked }));
   };
-
   const handleTextInputChange = (e) => {
     const { name, value } = e.target;
     setTextInputFields((prev) => ({ ...prev, [name]: value }));
   };
 
+  // UI rendering
   if (!fileName) {
     return <div>Loading...</div>;
   }
@@ -78,9 +74,7 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
   return (
     <div
       className={`flex flex-col justify-center items-center h-screen ${textColorClass}`}
-      style={{
-        background: 'linear-gradient(to right, #1e3c72, #2a5298)',
-      }}
+      style={{ background: 'linear-gradient(to right, #1e3c72, #2a5298)' }}
     >
       <div
         className={`prose prose-sm ${textColorClass} p-4 rounded-lg shadow-md bg-white`}
