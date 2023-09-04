@@ -73,7 +73,8 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.6",
     "use-debounce": "^9.0.4",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@mozilla/readability": "^0.4.4",
