@@ -13,6 +13,7 @@ import { getEmbeddings } from '@/utils/similarDocs';
 import { auth, db, storage } from '@/config/firebase';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
+import { Button } from '@chakra-ui/react';
 
 const SidebarItem = ({ icon, text, onClick, onDelete }) => (
   <li
@@ -136,9 +137,11 @@ function PDFSidebar({ onDocumentClick }) {
     }
     let text;
     try {
-    text = await handleExtractText(file);
+      text = await handleExtractText(file);
     } catch (error) {
-      toast.error('Error extracting text from PDF. Please try again ensure correct format and pdf extension');
+      toast.error(
+        'Error extracting text from PDF. Please try again ensure correct format and pdf extension',
+      );
       e.target.value = null; // Reset the file input
       return;
     }
@@ -252,36 +255,32 @@ function PDFSidebar({ onDocumentClick }) {
             </div>
           </div>
           <div className="flex justify-center mt-0 mb-0 w-full">
-            <div className="relative ">
-            {/* Link to History page */}  
+            <div className="relative flex">
               <Link href="/history">
-                <span className="bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50 pl-10 py-2 mr-2">
+                <Button className="flex items-center justify-center bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50  py-2 mr-2">
                   History
-                </span>
-              </Link> 
+                </Button>
+              </Link>
+              <Link href={`/pdfcustomers`}>
+                <Button className="flex items-center justify-center bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50  py-2 ml-2">
+                  Customers
+                </Button>
+              </Link>
             </div>
           </div>
-
-          {/*A link back home */}
           <div className="flex justify-center mt-5 mb-5 w-full">
             <div className="relative flex">
-              {' '}
-              {/* Added flex here */}
               <Link href="/">
-                <span className="bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50 pl-10 py-2 mr-2">
+                <Button className="flex items-center justify-center bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50  py-2 mr-2">
                   Home
-                </span>
+                </Button>
               </Link>
-              
-
-              {/* A link to /embed */}
               <Link href={`/embed?fileName=${fileName}`}>
-                <span className="bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50 pl-10 py-2 ml-2">
+                <Button className="flex items-center justify-center bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50  py-2 ml-2">
                   Embed
-                </span>
+                </Button>
               </Link>
             </div>
-            
           </div>
         </div>
       </div>
