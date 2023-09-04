@@ -73,7 +73,7 @@ function App() {
 
   let filteredChats = chats.filter(
     (chat) =>
-      chat.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      chat.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       chat.fileName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       chat.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       chat.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
