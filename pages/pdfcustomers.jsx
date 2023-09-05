@@ -102,7 +102,10 @@ const TableComponent = () => {
               key={index}
               className={index % 2 === 0 ? 'bg-blue-100' : 'bg-blue-200'}
             >
+              {console.log("The row is ", row)}
+              <Link href={`/history?id=${row.chatId}`}>
               <td className="py-2 px-4 border">{row.name ?? 'N/A'}</td>
+              </Link>
               <td className="py-2 px-4 border">{row.email ?? 'N/A'}</td>
               <td className="py-2 px-4 border">{row.phone ?? 'N/A'}</td>
               <td className="py-2 px-4 border">{row.day ?? 'N/A'}</td>

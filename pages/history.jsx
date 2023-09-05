@@ -1,6 +1,7 @@
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { useRouter } from 'next/router';
 
 import Link from 'next/link';
 
@@ -17,8 +18,10 @@ import {
 } from 'firebase/firestore';
 
 function App() {
+  const router = useRouter();
+  const { id } = router.query;
   const [chats, setChats] = useState([]);
-  const [selectedChatId, setSelectedChatId] = useState(null);
+  const [selectedChatId, setSelectedChatId] = useState(id);
   const [selectedChat, setSelectedChat] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showEmbedded, setShowEmbedded] = useState(false);
