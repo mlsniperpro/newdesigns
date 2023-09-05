@@ -94,6 +94,7 @@ const TableComponent = () => {
             <th className="py-2 px-4 border">Phone</th>
             <th className="py-2 px-4 border">Day</th>
             <th className="py-2 px-4 border">Time</th>
+            <th className="py-2 px-4 border">File Name</th>
           </tr>
         </thead>
         <tbody>
@@ -103,13 +104,13 @@ const TableComponent = () => {
               className={index % 2 === 0 ? 'bg-blue-100' : 'bg-blue-200'}
             >
               {console.log("The row is ", row)}
-              <Link href={`/history?id=${row.chatId}`}>
-              <td className="py-2 px-4 border">{row.name ?? 'N/A'}</td>
-              </Link>
+              
+              <td className="py-2 px-4 border"><Link href={`/history?id=${row.chatId}`}>{row.name ?? 'N/A'}</Link></td>
               <td className="py-2 px-4 border">{row.email ?? 'N/A'}</td>
               <td className="py-2 px-4 border">{row.phone ?? 'N/A'}</td>
               <td className="py-2 px-4 border">{row.day ?? 'N/A'}</td>
               <td className="py-2 px-4 border">{row.time ?? 'N/A'}</td>
+              <td className="py-2 px-4 border">{row.fileName.split(".")[0] ?? 'N/A'}</td>
             </tr>
           ))}
         </tbody>
