@@ -1,11 +1,16 @@
-import React, { useMemo, useReducer } from 'react';
+import React, { useMemo, useReducer, useState } from 'react';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
+
+
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+
+
 import { auth } from '@/config/firebase';
+
 
 const initialState = {
   selectedFields: {},
@@ -46,12 +51,26 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
   const router = useRouter();
   const { fileName } = router.query;
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [selectedScript, setSelectedScript] = useState('chatWidget.js');
 
   const isDarkTheme = useMemo(() => theme === 'dark', [theme]);
   const textColorClass = useMemo(
     () => (isDarkTheme ? 'text-white' : 'text-black'),
     [isDarkTheme],
   );
+
+   const toggleScript = () => {
+     const newScript =
+       selectedScript === 'chatWidget.js'
+         ? 'chatWidgetIframe.js'
+         : 'chatWidget.js';
+     setSelectedScript(newScript);
+     toast.success(
+       `Mode switched to ${
+         newScript === 'chatWidget.js' ? 'Script Injection' : 'Iframe'
+       } mode`,
+     );
+   };
 
   const generateCodeSnippet = useMemo(() => {
     const vionikoaiChat = {
@@ -66,8 +85,8 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
       vionikoaiChat,
       null,
       2,
-    )};(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s);js.id = id;js.async = true;js.src = "https://mlsniperpro.github.io/vionikoaichatbox/client/chatWidget.js";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'vionikoaiChat-jssdk'));</script>`;
-  }, [state, fileName]);
+    )};(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s);js.id = id;js.async = true;js.src = "https://mlsniperpro.github.io/vionikoaichatbox/client/${selectedScript}";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'vionikoaiChat-jssdk'));</script>`;
+  }, [state, fileName, selectedScript]);
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
@@ -92,7 +111,7 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
     return <div>Loading...</div>;
   }
 
-  return (
+   return (
     <div
       className={`flex flex-col justify-center items-center h-screen ${textColorClass}`}
     >
@@ -105,6 +124,12 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
           className="mt-4 p-2 bg-blue-500 text-white rounded-md"
         >
           Copy to Clipboard
+        </button>
+        <button
+          onClick={toggleScript}
+          className="mt-4 p-2 bg-green-500 text-white rounded-md"
+        >
+          Toggle Script
         </button>
         <div className="mt-4 flex flex-col">
           <div className="flex flex-col bg-gray-100 p-2 rounded-md">

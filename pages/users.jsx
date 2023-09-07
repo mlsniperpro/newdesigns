@@ -119,6 +119,10 @@ function Users() {
 
     );
   };
+  useEffect(() => {
+    console.log('The subscribers are', subscribers);
+    console.log('The users are', users)
+  }, [subscribers, users]);
 
   useEffect(() => {
     const fetchAllData = async () => {
