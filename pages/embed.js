@@ -2,15 +2,10 @@ import React, { useMemo, useReducer, useState } from 'react';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
-
-
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-
-
 import { auth } from '@/config/firebase';
-
 
 const initialState = {
   selectedFields: {},
@@ -18,6 +13,11 @@ const initialState = {
     firstMessage: '',
     inputPlaceholder: '',
     chatName: '',
+  },
+  editableLabels: {
+    name: 'Name',
+    email: 'Email',
+    phone: 'Phone',
   },
 };
 
@@ -28,7 +28,8 @@ const reducer = (state, action) => {
       if (currentSelectedFields[action.payload.name]) {
         delete currentSelectedFields[action.payload.name];
       } else {
-        currentSelectedFields[action.payload.name] = true;
+        currentSelectedFields[action.payload.name] =
+          state.editableLabels[action.payload.name];
       }
       return {
         ...state,
@@ -39,6 +40,14 @@ const reducer = (state, action) => {
         ...state,
         textInputFields: {
           ...state.textInputFields,
+          [action.payload.name]: action.payload.value,
+        },
+      };
+    case 'SET_EDITABLE_LABEL':
+      return {
+        ...state,
+        editableLabels: {
+          ...state.editableLabels,
           [action.payload.name]: action.payload.value,
         },
       };
@@ -59,18 +68,18 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
     [isDarkTheme],
   );
 
-   const toggleScript = () => {
-     const newScript =
-       selectedScript === 'chatWidget.js'
-         ? 'chatWidgetIframe.js'
-         : 'chatWidget.js';
-     setSelectedScript(newScript);
-     toast.success(
-       `Mode switched to ${
-         newScript === 'chatWidget.js' ? 'Script Injection' : 'Iframe'
-       } mode`,
-     );
-   };
+  const toggleScript = () => {
+    const newScript =
+      selectedScript === 'chatWidget.js'
+        ? 'chatWidgetIframe.js'
+        : 'chatWidget.js';
+    setSelectedScript(newScript);
+    toast.success(
+      `Mode switched to ${
+        newScript === 'chatWidget.js' ? 'Script Injection' : 'Iframe'
+      } mode`,
+    );
+  };
 
   const generateCodeSnippet = useMemo(() => {
     const vionikoaiChat = {
@@ -85,16 +94,23 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
       vionikoaiChat,
       null,
       2,
-    )};(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s);js.id = id;js.async = true;js.src = "https://mlsniperpro.github.io/vionikoaichatbox/client/${selectedScript}";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'vionikoaiChat-jssdk'));</script>`;
+    )};</script>`;
   }, [state, fileName, selectedScript]);
 
   const handleInputChange = (e) => {
-    const { name, value, type } = e.target;
-    const payload = { name, value };
+    const { name, type } = e.target;
+    const payload = { name };
     dispatch({
-      type:
-        type === 'checkbox' ? 'TOGGLE_SELECTED_FIELD' : 'SET_TEXT_INPUT_FIELD',
+      type: 'TOGGLE_SELECTED_FIELD',
       payload,
+    });
+  };
+
+  const handleLabelChange = (e) => {
+    const { name, value } = e.target;
+    dispatch({
+      type: 'SET_EDITABLE_LABEL',
+      payload: { name, value },
     });
   };
 
@@ -111,7 +127,7 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
     return <div>Loading...</div>;
   }
 
-   return (
+  return (
     <div
       className={`flex flex-col justify-center items-center h-screen ${textColorClass}`}
     >
@@ -139,11 +155,17 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
                 <input
                   type="checkbox"
                   name={field}
-                  checked={state.selectedFields[field]}
+                  checked={!!state.selectedFields[field]}
                   onChange={handleInputChange}
                   className="mr-2"
                 />
-                {field.charAt(0).toUpperCase() + field.slice(1)}
+                <input
+                  type="text"
+                  name={field}
+                  value={state.editableLabels[field]}
+                  onChange={handleLabelChange}
+                  className="p-2 border rounded-md"
+                />
               </label>
             ))}
           </div>
