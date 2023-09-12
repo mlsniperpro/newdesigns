@@ -18,6 +18,7 @@ const initialState = {
     name: 'Name',
     email: 'Email',
     phone: 'Phone',
+    submit: 'Submit',
   },
 };
 
@@ -156,7 +157,7 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
         <div className="mt-4 flex flex-col">
           <div className="flex flex-col bg-gray-100 p-2 rounded-md">
             <span className="font-bold mb-2">Select Fields:</span>
-            {['name', 'email', 'phone'].map((field) => (
+            {['name', 'email', 'phone', 'submit'].map((field) => (
               <label key={field} className="flex items-center">
                 <input
                   type="checkbox"
