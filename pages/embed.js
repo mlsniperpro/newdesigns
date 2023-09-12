@@ -86,23 +86,29 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
       userId: auth.currentUser.uid,
       fileName,
       ...state.selectedFields,
-      ...Object.fromEntries(
-        Object.entries(state.textInputFields).filter(([_, value]) => value),
-      ),
+      ...state.textInputFields,
     };
     return `<script type="application/javascript">window.vionikoaiChat = ${JSON.stringify(
       vionikoaiChat,
       null,
       2,
-    )};</script>`;
+    )};(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s);js.id = id;js.async = true;js.src = "https://mlsniperpro.github.io/vionikoaichatbox/client/${selectedScript}";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'vionikoaiChat-jssdk'));</script>`;
   }, [state, fileName, selectedScript]);
 
-  const handleInputChange = (e) => {
-    const { name, type } = e.target;
+  const handleCheckboxChange = (e) => {
+    const { name } = e.target;
     const payload = { name };
     dispatch({
       type: 'TOGGLE_SELECTED_FIELD',
       payload,
+    });
+  };
+
+  const handleTextInputChange = (e) => {
+    const { name, value } = e.target;
+    dispatch({
+      type: 'SET_TEXT_INPUT_FIELD',
+      payload: { name, value },
     });
   };
 
@@ -156,7 +162,7 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
                   type="checkbox"
                   name={field}
                   checked={!!state.selectedFields[field]}
-                  onChange={handleInputChange}
+                  onChange={handleCheckboxChange}
                   className="mr-2"
                 />
                 <input
@@ -181,7 +187,7 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
                   type="text"
                   name={field}
                   value={state.textInputFields[field]}
-                  onChange={handleInputChange}
+                  onChange={handleTextInputChange}
                   className="p-2 border rounded-md"
                 />
               </label>
