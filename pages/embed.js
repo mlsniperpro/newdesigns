@@ -2,10 +2,15 @@ import React, { useMemo, useReducer, useState } from 'react';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
+
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+
+
 import { auth } from '@/config/firebase';
+
 
 const initialState = {
   selectedFields: {},
@@ -20,6 +25,8 @@ const initialState = {
     phone: 'Phone',
     submit: 'Submit',
   },
+  systemPrompt: '',
+  temperature: 0.5,
 };
 
 const reducer = (state, action) => {
@@ -51,6 +58,16 @@ const reducer = (state, action) => {
           ...state.editableLabels,
           [action.payload.name]: action.payload.value,
         },
+      };
+    case 'SET_SYSTEM_PROMPT':
+      return {
+        ...state,
+        systemPrompt: action.payload,
+      };
+    case 'SET_TEMPERATURE':
+      return {
+        ...state,
+        temperature: action.payload,
       };
     default:
       return state;
@@ -86,6 +103,8 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
     const vionikoaiChat = {
       userId: auth.currentUser.uid,
       fileName,
+      systemPrompt: state.systemPrompt,
+      temperature: state.temperature.toFixed(1),
       ...state.selectedFields,
       ...state.textInputFields,
     };
@@ -98,10 +117,9 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
 
   const handleCheckboxChange = (e) => {
     const { name } = e.target;
-    const payload = { name };
     dispatch({
       type: 'TOGGLE_SELECTED_FIELD',
-      payload,
+      payload: { name },
     });
   };
 
@@ -121,6 +139,20 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
     });
   };
 
+  const handleSystemPromptChange = (e) => {
+    dispatch({
+      type: 'SET_SYSTEM_PROMPT',
+      payload: e.target.value,
+    });
+  };
+
+  const handleTemperatureChange = (e) => {
+    dispatch({
+      type: 'SET_TEMPERATURE',
+      payload: parseFloat(e.target.value),
+    });
+  };
+
   const handleCopyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(generateCodeSnippet);
@@ -136,7 +168,7 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
 
   return (
     <div
-      className={`flex flex-col justify-center items-center h-screen ${textColorClass}`}
+      className={`flex mt-50 flex-col justify-center items-center h-screen ${textColorClass}`}
     >
       <div
         className={`prose prose-sm ${textColorClass} p-4 rounded-lg shadow-md bg-white`}
@@ -180,10 +212,7 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
             <span className="font-bold mb-2">Text Inputs:</span>
             {['firstMessage', 'inputPlaceholder', 'chatName'].map((field) => (
               <label key={field} className="flex flex-col mb-2">
-                {field
-                  .split(/(?=[A-Z])/)
-                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                  .join(' ')}
+                {field}
                 <input
                   type="text"
                   name={field}
@@ -194,6 +223,28 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
               </label>
             ))}
           </div>
+         <div className="flex flex-col bg-gray-100 p-2 rounded-md mt-4">
+        <label className="font-bold mb-2">System Prompt:</label>
+        <textarea
+          value={state.systemPrompt}
+          onChange={handleSystemPromptChange}
+          className="p-2 border rounded-md"
+          rows="4"
+        ></textarea>
+        <label className="font-bold mb-2 mt-4">Temperature:</label>
+        <div className="flex items-center">
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={state.temperature}
+            onChange={handleTemperatureChange}
+            className="w-full"
+          />
+          <span className="ml-2">{state.temperature.toFixed(1)}</span>
+        </div>
+      </div>
         </div>
         <div className="mt-4">
           <Link href="/pdf">
