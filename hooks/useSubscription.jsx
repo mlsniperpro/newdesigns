@@ -67,6 +67,7 @@ function useSubscription(user) {
       setWordsGenerated(currentUserWords.count);
 
       if (latestSubscription.subscriptionId) {
+        try{
         const headers = new Headers();
         headers.append('subscriptionid', latestSubscription.subscriptionId);
         console.log("the latest subscription id being passed is ",latestSubscription.subscriptionId)
@@ -84,6 +85,15 @@ function useSubscription(user) {
         setPlanId(data.plan_id);
         setName(data.subscriber.name.given_name);
         setLastPayment(data.billing_info.last_payment.time);
+        }catch(error){
+          console.log("error in fetching subscription details ",error)
+        }
+      }
+      console.log("the latest subscription data is  ",latestSubscription)
+      if(userIsPremium){
+        console.log("user is premium")
+      } else {
+        console.log("user is not premium")
       }
 
       if (
