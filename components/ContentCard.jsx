@@ -1,5 +1,11 @@
-import React from 'react'
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+
+
+
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import remarkGfm from 'remark-gfm';
+
 
 function ContentCard({content, fn, language}) {
   
@@ -17,7 +23,11 @@ function ContentCard({content, fn, language}) {
         <div className="mt-0 mb-0" style={{width:"380px"}}>
           
           <div className="text-sm text-neutral-600 lg-12" style={{width:"100%"}}><ContentCopyIcon style={{marginRight:'10px',cursor:'pointer'}} 
-          onClick={() => {navigator.clipboard.writeText(content); alert("Copied to clipboard.");}}/> {content}</div>
+          onClick={() => {navigator.clipboard.writeText(content); alert("Copied to clipboard.");}}/> 
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {content}
+          </ReactMarkdown>
+          </div>
         </div>
       </div>
     </div>

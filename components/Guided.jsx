@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import  updateUserWordCount  from '@/utils/updateWordCount';
+
+
+
+import updateUserWordCount from '@/utils/updateWordCount';
+
+
 
 import { auth, db } from '../config/firebase';
 import ContentCard from './ContentCard';
@@ -120,44 +125,83 @@ function Guided({ language }) {
   };
 
  
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const prompts = [prompt, prompt2, prompt3];
-    const requests = prompts.map((prompt) =>
-      fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            {
-              role: 'system',
-              content: prompt,
-            },
-          ],
-        }),
-      }).then((res) => res.json()),
-    );
+  const prompts = [prompt, prompt2, prompt3];
 
-    const responses = await Promise.all(requests);
+  const handleStream = async (reader, index) => {
+    let result = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
-    setResponse(responses[0].choices[0].message.content);
-    setResponse2(responses[1].choices[0].message.content);
-    setResponse3(responses[2].choices[0].message.content);
+      const textChunk = new TextDecoder().decode(value);
+      const match = textChunk.match(/data: (.*?})\s/);
+      if (match && match[1]) {
+        const jsonData = JSON.parse(match[1]);
+        if (
+          jsonData.choices &&
+          jsonData.choices[0] &&
+          jsonData.choices[0].delta &&
+          jsonData.choices[0].delta.content
+        ) {
+          result += jsonData.choices[0].delta.content;
+        }
+      }
 
-    //Map the responses to updateUserWordCount it take string text and userId
-  responses.map((response) => {
-    updateUserWordCount(response.choices[0].message.content, auth.currentUser.uid);
-  });
+      switch (index) {
+        case 0:
+          setResponse(result);
+          break;
+        case 1:
+          setResponse2(result);
+          break;
+        case 2:
+          setResponse3(result);
+          break;
+        default:
+          console.error('Unknown index');
+      }
 
-    
-    setLoading(false);
+      if (result) {
+        updateUserWordCount(result, auth.currentUser.uid);
+      }
+    }
   };
+
+  const requests = prompts.map((prompt, index) =>
+    fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: prompt,
+          },
+        ],
+        stream: true,
+      }),
+    })
+      .then((response) => handleStream(response.body.getReader(), index))
+      .catch((error) =>
+        console.error(`Error fetching for prompt ${index}: ${error}`),
+      ),
+  );
+
+  await Promise.allSettled(requests);
+
+  setLoading(false);
+};
+
+
+
 
   return (
     <div className="h-screen flex bg-gradient-to-r from-blue-600 to-blue-900">
@@ -171,7 +215,9 @@ function Guided({ language }) {
              {resNo === "res1"
               ? response && (
                   <CopyToClipboard text={response}>
+                    
                     <ContentCard content={response} fn={setRes} language={language} />
+                  
                   </CopyToClipboard>
                 )
               : resNo === "res2"

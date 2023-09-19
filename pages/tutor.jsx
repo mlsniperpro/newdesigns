@@ -112,11 +112,6 @@ Espere prontamente la respuesta del cliente antes de pasar a la siguiente pregun
   const sendMessage = async (message) => {
     setChat((prev) => [...prev, message]);
     setIsLoading(true);
-    /*
-    if (message.content === 'START' || message.content === 'INICIO') {
-      setFirstMessage(true);
-    }
-    */
     try {
       const data = await fetchResponse(chat, user.uid);
       setChat((prev) => [
