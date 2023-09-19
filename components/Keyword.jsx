@@ -59,74 +59,73 @@ function Keyword({ language }) {
       setLoading(false);
     }
   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setResponse('');
+  try {
+    e.preventDefault();
+    setLoading(true);
 
- const handleSubmit = async (e) => {
-  setResponse('')
-   try {
-     e.preventDefault();
-     setLoading(true);
+    // Initialize Fetch API
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'system', content: prompt }],
+        stream: true,
+      }),
+    });
 
-     // Initialize Fetch API
-     const response = await fetch(
-       'https://api.openai.com/v1/chat/completions',
-       {
-         method: 'POST',
-         headers: {
-           Authorization: `Bearer ${API_KEY}`,
-           'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({
-           model: 'gpt-3.5-turbo',
-           messages: [{ role: 'system', content: prompt }],
-           stream: true,
-         }),
-       },
-     );
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
 
-     if (!response.ok) {
-       throw new Error(`API request failed with status ${response.status}`);
-     }
+    // Initialize Reader
+    const reader = response.body.getReader();
+    let result = '';
 
-     // Initialize Reader
-     const reader = response.body.getReader();
-     let result = '';
+    // Read Stream
+    const readStream = async () => {
+      const { done, value } = await reader.read();
+      if (done) {
+        setLoading(false);
+        updateUserWordCount(result);
+        return;
+      }
 
-     // Read Stream
-     const readStream = async () => {
-       const { done, value } = await reader.read();
-       if (done) {
-         setLoading(false);
-         updateUserWordCount(result);
-         return;
-       }
+      // Convert Uint8Array to string and append to result
+      const textChunk = new TextDecoder().decode(value);
+      const match = textChunk.match(/data: (.*?})\s/);
+      if (match && match[1]) {
+        const jsonData = JSON.parse(match[1]);
+        if (
+          jsonData.choices &&
+          jsonData.choices[0] &&
+          jsonData.choices[0].delta 
+        ) {
+          // Validate that jsonData.choices[0].delta.content is well-formatted Markdown here, if needed
+          result += jsonData.choices[0].delta.content;
+          setResponse(result);
+        }
+      }
 
-       // Convert Uint8Array to string and append to result
-       const textChunk = new TextDecoder('utf-8').decode(value);
-       const match = textChunk.match(/data: (.*?})\s/);
-       if (match && match[1]) {
-         const jsonData = JSON.parse(match[1]);
-         if (
-           jsonData.choices &&
-           jsonData.choices[0] &&
-           jsonData.choices[0].delta &&
-           jsonData.choices[0].delta.content
-         ) {
-           result += jsonData.choices[0].delta.content;
-           setResponse(result);
-         }
-       }
+      // Continue reading
+      readStream();
+    };
 
-       // Continue reading
-       readStream();
-     };
+    // Start reading
+    readStream();
+  } catch (error) {
+    console.error(`An error occurred: ${error}`);
+    setLoading(false);
+  }
+};
 
-     // Start reading
-     readStream();
-   } catch (error) {
-     console.error(`An error occurred: ${error}`);
-     setLoading(false);
-   }
- };
+
   const handleCopy = () => {
     if (response) {
       navigator.clipboard.writeText(response);
@@ -152,7 +151,7 @@ function Keyword({ language }) {
 
             {response && (
               <div className="bg-white rounded-lg p-4 overflow-x-auto">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown key={response} remarkPlugins={[remarkGfm]}>
                   {response}
                 </ReactMarkdown>
                 <button
