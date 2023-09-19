@@ -60,32 +60,73 @@ function Keyword({ language }) {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'system', content: prompt }],
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const response = data.choices[0].message.content;
-        setResponse(response);
-        updateUserWordCount(response);
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-      });
-  };
+ const handleSubmit = async (e) => {
+  setResponse('')
+   try {
+     e.preventDefault();
+     setLoading(true);
 
+     // Initialize Fetch API
+     const response = await fetch(
+       'https://api.openai.com/v1/chat/completions',
+       {
+         method: 'POST',
+         headers: {
+           Authorization: `Bearer ${API_KEY}`,
+           'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+           model: 'gpt-3.5-turbo',
+           messages: [{ role: 'system', content: prompt }],
+           stream: true,
+         }),
+       },
+     );
+
+     if (!response.ok) {
+       throw new Error(`API request failed with status ${response.status}`);
+     }
+
+     // Initialize Reader
+     const reader = response.body.getReader();
+     let result = '';
+
+     // Read Stream
+     const readStream = async () => {
+       const { done, value } = await reader.read();
+       if (done) {
+         setLoading(false);
+         updateUserWordCount(result);
+         return;
+       }
+
+       // Convert Uint8Array to string and append to result
+       const textChunk = new TextDecoder('utf-8').decode(value);
+       const match = textChunk.match(/data: (.*?})\s/);
+       if (match && match[1]) {
+         const jsonData = JSON.parse(match[1]);
+         if (
+           jsonData.choices &&
+           jsonData.choices[0] &&
+           jsonData.choices[0].delta &&
+           jsonData.choices[0].delta.content
+         ) {
+           result += jsonData.choices[0].delta.content;
+           setResponse(result);
+         }
+       }
+
+       // Continue reading
+       readStream();
+     };
+
+     // Start reading
+     readStream();
+   } catch (error) {
+     console.error(`An error occurred: ${error}`);
+     setLoading(false);
+   }
+ };
   const handleCopy = () => {
     if (response) {
       navigator.clipboard.writeText(response);
