@@ -1,4 +1,4 @@
-import updateUserWordCount from './updateWordCount';
+
 
 const fetchResponse = async (chat, userId) => {
   try {
@@ -11,6 +11,7 @@ const fetchResponse = async (chat, userId) => {
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
         messages: chat,
+        stream: true,
       }),
     });
 
@@ -18,9 +19,7 @@ const fetchResponse = async (chat, userId) => {
       throw new Error(`API responded with HTTP ${response.status}`);
     }
 
-    const data = await response.json();
-    updateUserWordCount(data, userId);
-    return data;
+    return response.body.getReader();
   } catch (error) {
     console.error('Error fetching response:', error);
     throw error; // Propagate the error to the calling function

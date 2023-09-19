@@ -2,33 +2,20 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
-
-
 import Link from 'next/link';
 import Router from 'next/router';
 
-
-
 import useSubscription from '@/hooks/useSubscription';
 
-
-
 import fetchResponse from '@/utils/fetchResponse';
-
-
 
 import ChatBody from '@/components/ChatBody';
 import ChatInput from '@/components/ChatInput';
 
-
-
 import { auth } from '../config/firebase';
-
-
 
 import HomeIcon from '@mui/icons-material/Home';
 import LanguageIcon from '@mui/icons-material/Language';
-
 
 function Tutor() {
   const [user, userLoading] = useAuthState(auth);
@@ -39,7 +26,12 @@ function Tutor() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!subscriptionDetails.subscribed && !(subscriptionDetails.paypalStatus==="ACTIVE") && !loading && user) {
+    if (
+      !subscriptionDetails.subscribed &&
+      !(subscriptionDetails.paypalStatus === 'ACTIVE') &&
+      !loading &&
+      user
+    ) {
       Router.push('/');
     }
   }, [loading]);
@@ -112,12 +104,41 @@ Espere prontamente la respuesta del cliente antes de pasar a la siguiente pregun
   const sendMessage = async (message) => {
     setChat((prev) => [...prev, message]);
     setIsLoading(true);
+
+    // Append an initial empty assistant message
+    setChat((prev) => [...prev, { role: 'assistant', content: '' }]);
+
     try {
-      const data = await fetchResponse(chat, user.uid);
-      setChat((prev) => [
-        ...prev,
-        { role: 'assistant', content: data.choices[0].message.content },
-      ]);
+      const reader = await fetchResponse(chat, user.uid);
+      let assistantMessage = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const textChunk = new TextDecoder().decode(value);
+
+        const match = textChunk.match(/data: (.*?})\s/);
+        if (match && match[1]) {
+          const jsonData = JSON.parse(match[1]);
+          if (
+            jsonData.choices &&
+            jsonData.choices[0] &&
+            jsonData.choices[0].delta &&
+            jsonData.choices[0].delta.content
+          ) {
+            assistantMessage += jsonData.choices[0].delta.content;
+            setChat((prev) => {
+              // Replace the last message with the updated assistant message
+              return prev.map((msg, index) =>
+                index === prev.length - 1
+                  ? { role: 'assistant', content: assistantMessage }
+                  : msg,
+              );
+            });
+          }
+        }
+      }
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
@@ -169,20 +190,23 @@ Espere prontamente la respuesta del cliente antes de pasar a la siguiente pregun
           <LanguageIcon style={{ marginRight: '10px' }} />
           {language === 'en' ? 'Switch to Spanish' : 'Cambiar a Inglés'}
         </button>
-         {!firstMessage && <p
-          className=" mx-auto"
-          style={{
-            width: '300px',
-            fontSize: '18px',
-            marginBottom: '10px',
-          }}
-        >
-          {language === 'en' ? 'NOTE: To start interacting with the TUTOR , write this word : START' : 'NOTA: Para comenzar a interactuar con el TUTOR, teclee esta palabra : INICIO'}
-        </p>
-        }
+        {!firstMessage && (
+          <p
+            className=" mx-auto"
+            style={{
+              width: '300px',
+              fontSize: '18px',
+              marginBottom: '10px',
+            }}
+          >
+            {language === 'en'
+              ? 'NOTE: To start interacting with the TUTOR , write this word : START'
+              : 'NOTA: Para comenzar a interactuar con el TUTOR, teclee esta palabra : INICIO'}
+          </p>
+        )}
       </div>
       <div
-        className="h-[90%] overflow-auto w-full max-w-4xl min-w-[20rem] py-8 px-4 self-center
+        className="h-[70%] overflow-auto w-full max-w-4xl min-w-[20rem] py-8 px-4 self-center
       scrollbar-thumb-slate-400 scrollbar-thin scrollbar-track-gray-tranparent scrollbar-thumb-rounded-md
       "
         style={{ border: '1px solid #fff' }}
