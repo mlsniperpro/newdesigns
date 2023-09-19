@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import updateUserWordcount from '@/utils/updateWordcount';
+
 
 import Link from 'next/link';
 import Router from 'next/router';
@@ -114,7 +116,10 @@ Espere prontamente la respuesta del cliente antes de pasar a la siguiente pregun
 
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+        if (done) {
+          await updateUserWordcount(assistantMessage, user.uid);
+          break;
+        }
 
         const textChunk = new TextDecoder().decode(value);
 
