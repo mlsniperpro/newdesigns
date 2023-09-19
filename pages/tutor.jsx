@@ -1,23 +1,35 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import updateUserWordcount from '@/utils/updateWordcount';
+
 
 
 import Link from 'next/link';
 import Router from 'next/router';
 
+
+
 import useSubscription from '@/hooks/useSubscription';
 
+
+
 import fetchResponse from '@/utils/fetchResponse';
+import updateUserWordCount from '@/utils/updateWordCount';
+
+
 
 import ChatBody from '@/components/ChatBody';
 import ChatInput from '@/components/ChatInput';
 
+
+
 import { auth } from '../config/firebase';
+
+
 
 import HomeIcon from '@mui/icons-material/Home';
 import LanguageIcon from '@mui/icons-material/Language';
+
 
 function Tutor() {
   const [user, userLoading] = useAuthState(auth);
