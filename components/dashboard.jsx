@@ -43,6 +43,7 @@ const MODE_TO_ROUTE = {
   prompts: '/prompts',
   pdf: '/pdf',
   cancel: '/cancel',
+  internet: '/yougoogle',
   
 };
 
@@ -140,6 +141,11 @@ function Dashboard(props) {
               onClick={() => setMode('tutor')}
               icon={<AccessibilityNewIcon />}
               text="Tutor"
+            />
+            <ListItem
+              onClick={() => setMode('internet')}
+              icon={<AccessibilityNewIcon />}
+              text="YouGoogle"
             />
             <ListItem
               onClick={() => {
