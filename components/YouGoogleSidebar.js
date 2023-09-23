@@ -218,7 +218,6 @@ function YouGoogleSideBar({ onDocumentClick=()=>{console.log("onDocumentClick no
             >
               <IconPlus size={16} />
               New Chat <br />
-              Drop PDF here
             </button>
             <input
               type="file"
@@ -254,30 +253,11 @@ function YouGoogleSideBar({ onDocumentClick=()=>{console.log("onDocumentClick no
               />
             </div>
           </div>
-          <div className="flex justify-center mt-0 mb-0 w-full">
-            <div className="relative flex">
-              <Link href="/history">
-                <Button className="flex items-center justify-center bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50  py-2 mr-2">
-                  History
-                </Button>
-              </Link>
-              <Link href={`/pdfcustomers`}>
-                <Button className="flex items-center justify-center bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50  py-2 ml-2">
-                  Customers
-                </Button>
-              </Link>
-            </div>
-          </div>
           <div className="flex justify-center mt-5 mb-5 w-full">
             <div className="relative flex">
               <Link href="/">
                 <Button className="flex items-center justify-center bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50  py-2 mr-2">
                   Home
-                </Button>
-              </Link>
-              <Link href={`/embed?fileName=${fileName}`}>
-                <Button className="flex items-center justify-center bg-gray-700 focus:outline-none rounded w-full text-sm text-gray-50  py-2 ml-2">
-                  Embed
                 </Button>
               </Link>
             </div>

@@ -46,6 +46,7 @@ async function saveChatData(userId: string, payload: any) {
 const handler = async (req: Request): Promise<Response> => {
   try {
     const json = await req.json();
+    console.log("the json is", json)
     let { model, messages, key, prompt, temperature } = json as ChatBody;
 
     if (!model) {
