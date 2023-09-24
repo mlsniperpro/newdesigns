@@ -13,32 +13,49 @@ export default function YouGoogleChat({
   // State management for messages and input
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [mode, setMode] = useState('google'); 
 
-  // Simulate API call to fetch messages
+  // Function to simulate API call to fetch messages
   const fetchMessages = async () => {
-    // Replace this with your actual API call
-    // const fetchedMessages = await apiCall();
-    // setMessages(fetchedMessages);
+    // Implement your API call here to fetch messages
   };
 
-  // Handle message submission
-  const handleMessageSubmit = (e) => {
+  // Function to handle message submission
+  const handleMessageSubmit = async (e) => {
     e.preventDefault();
     const newMessage = {
       content: input,
       role: 'user', // Replace with the actual role
     };
-    setMessages([...messages, newMessage]);
-    updateUserWordCount(input, auth?.currentUser?.uid);
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+    const response = await fetch('http://localhost:3000/openChat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chatId: chatId,
+        messages: [...messages, newMessage],
+        embeddingData: embeddingData,
+        mode: mode,
+      }),
+    });
+
+    if (!response.ok) {
+      // Handle error here
+    }
+
+    //updateUserWordCount(input, auth?.currentUser?.uid);
     setInput('');
   };
 
-  // Reset messages when embeddingData changes
+  // useEffect to reset messages when chatId changes
   useEffect(() => {
-    setMessages([]);
-  }, [embeddingData]);
+    fetchMessages();
+  }, [chatId]);
 
-  // Update word count when a new message is added
+  // useEffect to update word count when a new message is added
   useEffect(() => {
     if (messages[messages.length - 1]?.role === 'user') {
       // Additional logic for updating word count can go here

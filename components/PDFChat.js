@@ -6,7 +6,6 @@ import { auth } from '@/config/firebase';
 
 
 export default function PDFChat({ theme = 'light', embeddingData, chatId }) {
-  //Generate random id for the chat
   
   const { messages,setMessages, input, handleInputChange, handleSubmit } = useChat({
     api: '/api/chat',
