@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
+import fetchResponse from '../utils/fetchResponse';
+import { performGoogleSearch } from '../utils/googleSearch';
 import updateUserWordCount from '../utils/updateWordCount';
 
 import { auth } from '@/config/firebase';
@@ -10,59 +12,64 @@ export default function YouGoogleChat({
   embeddingData,
   chatId,
 }) {
-  // State management for messages and input
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [mode, setMode] = useState('google'); 
+  const [mode, setMode] = useState('google');
 
-  // Function to simulate API call to fetch messages
   const fetchMessages = async () => {
-    // Implement your API call here to fetch messages
+    // Implement your message fetching logic here
   };
 
-  // Function to handle message submission
   const handleMessageSubmit = async (e) => {
     e.preventDefault();
-    const newMessage = {
-      content: input,
-      role: 'user', // Replace with the actual role
-    };
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    const googleResults = await performGoogleSearch(input, 10); // Assuming this is async
+    const prompt = `Based on the google search result below please answer the user question.
+    User question: ${input}
+    Google search results: ${googleResults}`;
 
-    const response = await fetch('http://localhost:3000/openChat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        chatId: chatId,
-        messages: [...messages, newMessage],
-        embeddingData: embeddingData,
-        mode: mode,
-      }),
-    });
-
-    if (!response.ok) {
-      // Handle error here
-    }
-
-    //updateUserWordCount(input, auth?.currentUser?.uid);
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { content: prompt, role: 'user' },
+    ]);
+    let message = [...messages, { content: prompt, role: 'user' }]
+    const reader = await fetchResponse(message, auth?.currentUser?.uid);
+    let assistantMessage = '';
     setInput('');
+    while (true) {
+      const { done, value } = reader.read();
+      if (done) {
+        break;
+      }
+      const textChunk = new TextDecoder().decode(value);
+      const match = textChunk.match(/data: (.*?})\s/);
+      if (match && match[1]) {
+        const jsonData = JSON.parse(match[1]);
+        if (
+          jsonData.choices &&
+          jsonData.choices[0] &&
+          jsonData.choices[0].delta &&
+          jsonData.choices[0].delta.content
+        ) {
+          assistantMessage = jsonData.choices[0].delta.content;
+          setMessages((prevMessages) => [
+            ...prevMessages.slice(0, -1),
+            { content: assistantMessage, role: 'assistant' },
+          ]);
+        }
+      }
+    }
   };
 
-  // useEffect to reset messages when chatId changes
   useEffect(() => {
     fetchMessages();
   }, [chatId]);
 
-  // useEffect to update word count when a new message is added
   useEffect(() => {
     if (messages[messages.length - 1]?.role === 'user') {
       // Additional logic for updating word count can go here
     }
   }, [messages]);
 
-  // Theme and text color settings
   const isDarkTheme = theme === 'dark';
   const textColorClass = isDarkTheme ? 'text-white' : 'text-black';
 
