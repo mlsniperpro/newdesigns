@@ -1,78 +1,120 @@
+// Importing required modules and utilities
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+
+
 
 import fetchResponse from '../utils/fetchResponse';
 import { performGoogleSearch } from '../utils/googleSearch';
 import updateUserWordCount from '../utils/updateWordCount';
 
+
+
 import { auth } from '@/config/firebase';
 
+
+// Main component definition
 export default function YouGoogleChat({
   theme = 'light',
   embeddingData,
   chatId,
 }) {
+  // State variables
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [mode, setMode] = useState('google');
 
-  const fetchMessages = async () => {
-    // Implement your message fetching logic here
-  };
-
+  // Function to handle message submission
   const handleMessageSubmit = async (e) => {
     e.preventDefault();
-    const googleResults = await performGoogleSearch(input, 10); // Assuming this is async
-    const prompt = `Based on the google search result below please answer the user question.
+    try {
+      // Perform Google search based on user input
+      const googleResults = await performGoogleSearch(input, 10);
+
+      // Create the prompt for the assistant
+      const prompt = `Based on the google search result below please answer the user question.
+      Be extremely detailed exhausting all the facts and highly analytical.
     User question: ${input}
     Google search results: ${googleResults}`;
 
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { content: prompt, role: 'user' },
-    ]);
-    let message = [...messages, { content: prompt, role: 'user' }]
-    const reader = await fetchResponse(message, auth?.currentUser?.uid);
-    let assistantMessage = '';
-    setInput('');
-    while (true) {
-      const { done, value } = reader.read();
-      if (done) {
-        break;
-      }
-      const textChunk = new TextDecoder().decode(value);
-      const match = textChunk.match(/data: (.*?})\s/);
-      if (match && match[1]) {
-        const jsonData = JSON.parse(match[1]);
-        if (
-          jsonData.choices &&
-          jsonData.choices[0] &&
-          jsonData.choices[0].delta &&
-          jsonData.choices[0].delta.content
-        ) {
-          assistantMessage = jsonData.choices[0].delta.content;
-          setMessages((prevMessages) => [
-            ...prevMessages.slice(0, -1),
-            { content: assistantMessage, role: 'assistant' },
-          ]);
+      // Update the messages state to include only the user's input
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { content: input, role: 'user' },
+      ]);
+
+      // Fetch the assistant's response using the entire prompt
+      const reader = await fetchResponse(
+        [...messages, { content: prompt, role: 'user' }],
+        auth?.currentUser?.uid,
+      );
+
+      let assistantMessage = '';
+      setInput('');
+
+      // Read message chunks asynchronously
+      while (true) {
+        const { done, value: chunk } = await reader.read();
+        if (done) {
+          break;
+        }
+        const textChunk = new TextDecoder().decode(chunk);
+        const match = textChunk.match(/data: (.*?})\s/);
+        if (match && match[1]) {
+          const jsonData = JSON.parse(match[1]);
+          if (
+            jsonData.choices &&
+            jsonData.choices[0] &&
+            jsonData.choices[0].delta &&
+            jsonData.choices[0].delta.content
+          ) {
+            assistantMessage += jsonData.choices[0].delta.content;
+            setMessages((prevMessages) => {
+              const lastMessage = prevMessages[prevMessages.length - 1];
+
+              // Check if the last message has the role 'assistant'
+              if (lastMessage && lastMessage.role === 'assistant') {
+                return [
+                  ...prevMessages.slice(0, -1),
+                  { content: assistantMessage, role: 'assistant' },
+                ];
+              }
+
+              // If the last message is not from the assistant, append a new assistant message
+              return [
+                ...prevMessages,
+                { content: assistantMessage, role: 'assistant' },
+              ];
+            });
+          }
         }
       }
+    } catch (error) {
+      console.error('Error in handleMessageSubmit:', error);
     }
   };
 
+
+  // Fetch messages when chatId changes
   useEffect(() => {
+    const fetchMessages = async () => {
+      // Implement your message fetching logic here
+    };
     fetchMessages();
   }, [chatId]);
 
+  // Additional logic for updating word count
   useEffect(() => {
     if (messages[messages.length - 1]?.role === 'user') {
       // Additional logic for updating word count can go here
     }
   }, [messages]);
 
+  // Theme-related variables
   const isDarkTheme = theme === 'dark';
   const textColorClass = isDarkTheme ? 'text-white' : 'text-black';
 
+  // JSX for rendering the component
   return (
     <div
       className={`flex flex-col h-screen p-4 ${
