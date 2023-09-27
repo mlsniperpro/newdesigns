@@ -16,13 +16,21 @@ import { auth } from '@/config/firebase';
 // Main component definition
 export default function YouGoogleChat({
   theme = 'light',
-  embeddingData,
+  currentUrl,
   chatId,
+  mode,
 }) {
   // State variables
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [mode, setMode] = useState('google');
+
+  useEffect(() => {
+    console.log('currentUrl', currentUrl);
+  }, [currentUrl]);
+
+  useEffect(() => {
+    console.log('mode', mode);
+  }, [mode]);
 
   // Function to handle message submission
   const handleMessageSubmit = async (e) => {
