@@ -7,92 +7,155 @@ import ReactMarkdown from 'react-markdown';
 import fetchResponse from '../utils/fetchResponse';
 import { performGoogleSearch } from '../utils/googleSearch';
 import updateUserWordCount from '../utils/updateWordCount';
+import { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
+import { getEmbeddings } from '@/utils/similarDocs';
+import { contextRetriever } from '@/utils/similarDocs';
 
 
 
-import { auth } from '@/config/firebase';
+import { auth, db, storage } from '@/config/firebase';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
 
 
 // Main component definition
 export default function YouGoogleChat({
   theme = 'light',
-  currentUrl,
+  transcriptContent,
   chatId,
+  currentUrl,
   mode,
 }) {
   // State variables
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [embeddingwithChunks, setEmbeddingwithChunks] = useState();
+  useEffect(() => {
+    if (!transcriptContent) return;
+    const fetchData = async () => {
+      // Reference to Firestore document
+      const docRef = doc(
+        db,
+        'transcripts',
+        Buffer.from(currentUrl)
+          .toString('base64')
+          .replace(/\//g, '_')
+          .replace(/\+/g, '-')
+          .replace(/=/g, ''),
+      );
+
+;
+      const docSnap = await getDoc(docRef);
+
+      let shouldUpdate = true;
+
+      if (docSnap.exists()) {
+        const existingData = docSnap.data();
+
+        // Check if transcript is the same as the existing one
+        if (existingData.transcript === transcriptContent) {
+          setEmbeddingwithChunks(existingData.embeddings);
+          console.log(
+            'Document and transcript content are the same. Skipping update.',
+          );
+          shouldUpdate = false;
+        }
+      }
+
+      if (shouldUpdate) {
+        const chunks = iterativeCharacterTextSplitter(
+          transcriptContent,
+          2000,
+          100,
+        );
+
+        // Use Promise.all for concurrent fetching of embeddings
+        const embeddings = await getEmbeddings(chunks);
+        setEmbeddingwithChunks(embeddings);
+
+        if (docSnap.exists()) {
+          await updateDoc(docRef, {
+            transcript: transcriptContent,
+            embeddings: embeddings,
+          });
+        } else {
+          await setDoc(docRef, {
+            transcript: transcriptContent,
+            embeddings: embeddings,
+          });
+        }
+      }
+    };
+
+    fetchData();
+  }, [transcriptContent]);
 
   useEffect(() => {
-    console.log('currentUrl', currentUrl);
-  }, [currentUrl]);
-
-  useEffect(() => {
-    console.log('mode', mode);
-  }, [mode]);
+    if (!embeddingwithChunks) return;
+    console.log('Embedding with chunks', embeddingwithChunks);
+  }, [embeddingwithChunks]);
 
   // Function to handle message submission
   const handleMessageSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Perform Google search based on user input
-      const googleResults = await performGoogleSearch(input, 10);
-
-      // Create the prompt for the assistant
-      const prompt = `Based on the google search result below please answer the user question.
-      Be extremely detailed exhausting all the facts and highly analytical.
-    User question: ${input}
-    Google search results: ${googleResults}`;
-
-      // Update the messages state to include only the user's input
+      let prompt, reader;
       setMessages((prevMessages) => [
         ...prevMessages,
         { content: input, role: 'user' },
       ]);
 
-      // Fetch the assistant's response using the entire prompt
-      const reader = await fetchResponse(
-        [...messages, { content: prompt, role: 'user' }],
-        auth?.currentUser?.uid,
-      );
+      if (mode === 'google') {
+        const googleResults = await performGoogleSearch(input, 10);
+        prompt = `Based on the google search result below please answer the user question.
+      Be extremely detailed exhausting all the facts and highly analytical.
+      User question: ${input}
+      Google search results: ${googleResults}`;
+        reader = await fetchResponse(
+          [...messages, { content: prompt, role: 'user' }],
+          auth?.currentUser?.uid,
+        );
+      } else {
+        const context = await contextRetriever(embeddingwithChunks, input);
+        prompt = `
+      Based on youtube transcript below please answer the user question.
+      Be extremely detailed exhausting all the facts and highly analytical.
+      User question: ${input}
+      YouTube transcript: ${context}`;
+        reader = await fetchResponse(
+          [...messages, { content: prompt, role: 'user' }],
+          auth?.currentUser?.uid,
+        );
+      }
 
       let assistantMessage = '';
       setInput('');
 
-      // Read message chunks asynchronously
       while (true) {
-        const { done, value: chunk } = await reader.read();
+        const { done, value } = await reader.read();
         if (done) {
           break;
         }
-        const textChunk = new TextDecoder().decode(chunk);
+
+        const textChunk = new TextDecoder().decode(value);
         const match = textChunk.match(/data: (.*?})\s/);
-        if (match && match[1]) {
-          const jsonData = JSON.parse(match[1]);
-          if (
-            jsonData.choices &&
-            jsonData.choices[0] &&
-            jsonData.choices[0].delta &&
-            jsonData.choices[0].delta.content
-          ) {
-            assistantMessage += jsonData.choices[0].delta.content;
+
+        if (match?.[1]) {
+          const { choices } = JSON.parse(match[1]);
+          const content = choices?.[0]?.delta?.content;
+
+          if (content) {
+            assistantMessage += content;
             setMessages((prevMessages) => {
               const lastMessage = prevMessages[prevMessages.length - 1];
+              const newMessage = {
+                content: assistantMessage,
+                role: 'assistant',
+              };
 
-              // Check if the last message has the role 'assistant'
-              if (lastMessage && lastMessage.role === 'assistant') {
-                return [
-                  ...prevMessages.slice(0, -1),
-                  { content: assistantMessage, role: 'assistant' },
-                ];
-              }
-
-              // If the last message is not from the assistant, append a new assistant message
-              return [
-                ...prevMessages,
-                { content: assistantMessage, role: 'assistant' },
-              ];
+              return lastMessage?.role === 'assistant'
+                ? [...prevMessages.slice(0, -1), newMessage]
+                : [...prevMessages, newMessage];
             });
           }
         }
@@ -102,6 +165,9 @@ export default function YouGoogleChat({
     }
   };
 
+  useEffect(() => {
+    console.log('Transcript content', transcriptContent);
+  }, [transcriptContent]);
 
   // Fetch messages when chatId changes
   useEffect(() => {
