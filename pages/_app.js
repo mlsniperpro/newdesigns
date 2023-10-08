@@ -2,10 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+
+
 import Script from 'next/script';
+
+
 
 import '@/styles/globals.css';
 import { Inter } from '@next/font/google';
+
 
 const queryClient = new QueryClient();
 const inter = Inter({ subsets: ['latin'] });
@@ -56,7 +61,6 @@ function App({ Component, pageProps }) {
           <h2 className="text-2xl font-bold mb-2 text-gray-700">
             Browser Incompatibility
           </h2>
-         
 
           <p className="text-gray-700">
             Your browser does not support the required script. Please switch to
@@ -67,16 +71,19 @@ function App({ Component, pageProps }) {
     );
   }
   const handlePDFJSScriptLoad = () => {
+    console.log('PDFJS script loaded');
     window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    //'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
   };
 
   return (
     <div className={inter.className}>
       <Toaster />
       <QueryClientProvider client={queryClient}>
-         <Script
-          src="https://mozilla.github.io/pdf.js/build/pdf.js"
+        <Script
+          //src="https://mozilla.github.io/pdf.js/build/pdf.js"
+          src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"
           onLoad={handlePDFJSScriptLoad}
         />
         {rewardfulReady ? <Component {...pageProps} /> : <div>Loading...</div>}
