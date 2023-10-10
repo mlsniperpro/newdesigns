@@ -16,6 +16,7 @@ import { contextRetriever } from '@/utils/similarDocs';
 import { auth, db, storage } from '@/config/firebase';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
+import toast from 'react-hot-toast';
 
 
 // Main component definition
@@ -115,7 +116,13 @@ export default function YouGoogleChat({
           [...messages, { content: prompt, role: 'user' }],
           auth?.currentUser?.uid,
         );
-      } else {
+      } else if(!embeddingwithChunks) {
+        //Remove the user message
+        setMessages((prevMessages) => [...prevMessages.slice(0, -1)]);
+        toast.error('Please wait for the transcript to load');
+        return;
+      } else
+        {
         const context = await contextRetriever(embeddingwithChunks, input);
         prompt = `
       Based on youtube transcript below please answer the user question.
