@@ -107,6 +107,7 @@ export default function YouGoogleChat({
 
       if (mode === 'google') {
         const googleResults = await performGoogleSearch(input, 10);
+        console.log("Here are the google results", googleResults);
         prompt = `Based on the google search result below please answer the user question following this next 4 instructions :
 
 1. Respond to the user's question according to requirements of user, be very precise. 
