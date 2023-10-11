@@ -1,5 +1,6 @@
 // Importing required modules and utilities
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
 
@@ -16,7 +17,6 @@ import { contextRetriever } from '@/utils/similarDocs';
 import { auth, db, storage } from '@/config/firebase';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
-import toast from 'react-hot-toast';
 
 
 // Main component definition
@@ -45,7 +45,6 @@ export default function YouGoogleChat({
           .replace(/=/g, ''),
       );
 
-;
       const docSnap = await getDoc(docRef);
 
       let shouldUpdate = true;
@@ -108,25 +107,33 @@ export default function YouGoogleChat({
 
       if (mode === 'google') {
         const googleResults = await performGoogleSearch(input, 10);
-        prompt = `Based on the google search result below please answer the user question.
-      Be extremely detailed exhausting all the facts and highly analytical.
+        prompt = `Based on the google search result below please answer the user question following this next 4 instructions :
+
+1. Respond to the user's question according to requirements of user, be very precise. 
+2. Present your response in a checklist format.
+3. Use the same language as the user's question.
+4. Provide a link to the sources used at the end of your response.
+
       User question: ${input}
       Google search results: ${googleResults}`;
         reader = await fetchResponse(
           [...messages, { content: prompt, role: 'user' }],
           auth?.currentUser?.uid,
         );
-      } else if(!embeddingwithChunks) {
+      } else if (!embeddingwithChunks) {
         //Remove the user message
         setMessages((prevMessages) => [...prevMessages.slice(0, -1)]);
         toast.error('Please wait for the transcript to load');
         return;
-      } else
-        {
+      } else {
         const context = await contextRetriever(embeddingwithChunks, input);
         prompt = `
-      Based on youtube transcript below please answer the user question.
-      Be extremely detailed exhausting all the facts and highly analytical.
+      Based on youtube transcript below,  please answer the user question, following this next 3 instructions:
+
+1. Respond to the user's question according to requirements of user, be very precise. 
+2. Present your response in a checklist format.
+3. Use the same language as the user's question.
+    
       User question: ${input}
       YouTube transcript: ${context}`;
         reader = await fetchResponse(
