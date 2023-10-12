@@ -136,7 +136,10 @@ export default function YouGoogleChat({
 3. In the response you give ,use the same language used from the user's question.
     
       User question: ${input}
-      YouTube transcript: ${context}`;
+      YouTube transcript: ${context}
+      
+      And again remember to reply in the same language that user used in the question and not in the language used in the transcript.`;
+
         reader = await fetchResponse(
           [...messages, { content: prompt, role: 'user' }],
           auth?.currentUser?.uid,
