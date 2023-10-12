@@ -133,7 +133,7 @@ export default function YouGoogleChat({
 
 1. Respond to the user's question according to requirements of user, be very precise. 
 2. Present your response in a checklist format.
-3. Use the same language as the user's question.
+3. In the response you give ,use the same language used from the user's question.
     
       User question: ${input}
       YouTube transcript: ${context}`;
