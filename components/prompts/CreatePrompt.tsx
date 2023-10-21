@@ -199,7 +199,7 @@ const CreatePrompt: React.FC<CreatePromptProps> = ({ prompt, url }) => {
             className="flex space-x-6 px-4 py-3 bg-black text-white font-bold justify-between rounded-[22px]"
           >
             <Link href={`/chat`}>
-              <p>Copy & Open ChatGPT</p>
+              <p>Copy & Open VionikoChat</p>
               <BsArrowUpRightCircle className="text-2xl" />
             </Link>
           </button>
