@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 
 
 
+
 import fetchResponse from '../utils/fetchResponse';
 import { performGoogleSearch } from '../utils/googleSearch';
 import updateUserWordCount from '../utils/updateWordCount';
@@ -152,6 +153,8 @@ export default function YouGoogleChat({
       while (true) {
         const { done, value } = await reader.read();
         if (done) {
+          await updateUserWordCount(prompt, auth?.currentUser?.uid);
+          await updateUserWordCount(assistantMessage, auth?.currentUser?.uid)
           break;
         }
 
@@ -178,9 +181,11 @@ export default function YouGoogleChat({
           }
         }
       }
+      
     } catch (error) {
       console.error('Error in handleMessageSubmit:', error);
     }
+
   };
 
   useEffect(() => {

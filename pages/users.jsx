@@ -17,21 +17,22 @@ function Users() {
   const [wordsgen, setWordsgen] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [fileSize, setFileSize] = useState(0);
+  const [subscriptionEndDates, setSubscriptionEndDates] = useState({});
 
- const retrieveUsers = async () => {
-   const usersQuerySnapshot = await getDocs(collection(db, 'users'));
-   const usersData = usersQuerySnapshot.docs
-     .map((doc) => doc.data())
-     .filter((user) => user.name && user.name.trim() !== '')
-     .sort((a, b) => {
-       // Parsing the dateSignedUp string into a Date object
-       const dateA = new Date(a.dateSignedUp.split('-').join(', '));
-       const dateB = new Date(b.dateSignedUp.split('-').join(', '));
-       return dateB - dateA; // Sort in descending order
-     });
-   setUsers(usersData);
-   return usersData;
- };
+  const retrieveUsers = async () => {
+    const usersQuerySnapshot = await getDocs(collection(db, 'users'));
+    const usersData = usersQuerySnapshot.docs
+      .map((doc) => doc.data())
+      .filter((user) => user.name && user.name.trim() !== '')
+      .sort((a, b) => {
+        // Parsing the dateSignedUp string into a Date object
+        const dateA = new Date(a.dateSignedUp.split('-').join(', '));
+        const dateB = new Date(b.dateSignedUp.split('-').join(', '));
+        return dateB - dateA; // Sort in descending order
+      });
+    setUsers(usersData);
+    return usersData;
+  };
 
   //Fetch stripe subscriptions
   const retrieveStripeSubs = async () => {
@@ -113,15 +114,14 @@ function Users() {
     const wordsData = wordsSnap.docs.map((doc) => doc.data());
     setFileSize(
       Object.fromEntries(wordsData.map((word) => [word.userId, word.size])),
-    )
+    );
     setWordsgen(
       Object.fromEntries(wordsData.map((word) => [word.userId, word.count])),
-
     );
   };
   useEffect(() => {
     console.log('The subscribers are', subscribers);
-    console.log('The users are', users)
+    console.log('The users are', users);
   }, [subscribers, users]);
 
   useEffect(() => {
@@ -218,6 +218,7 @@ function Users() {
                   <th>Words Generated</th>
                   <th>Subscription Plan</th>
                   <th>File Size</th>
+                  <th>Subscription End Date</th> {/* New column header */}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -275,12 +276,16 @@ function Users() {
                     <td className="px-4 py-3 text-sm">
                       {wordsgen[user.userId] || 0}
                     </td>
-                   
+
                     <td className="px-4 py-3 text-sm">
                       {subscribers[user.userId] || 'Free'}
                     </td>
-                     <td className="px-4 py-3 text-sm">
+                    <td className="px-4 py-3 text-sm">
                       {fileSize[user.userId] || 0}
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      {subscriptionEndDates[user.userId] || 'N/A'}{' '}
+                      {/* New column cell */}
                     </td>
                   </tr>
                 ))}
