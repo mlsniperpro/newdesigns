@@ -17,8 +17,6 @@ function Users() {
   const [wordsgen, setWordsgen] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [fileSize, setFileSize] = useState(0);
-  const [subscriptionEndDates, setSubscriptionEndDates] = useState({});
-
   const retrieveUsers = async () => {
     const usersQuerySnapshot = await getDocs(collection(db, 'users'));
     const usersData = usersQuerySnapshot.docs
@@ -33,7 +31,6 @@ function Users() {
     setUsers(usersData);
     return usersData;
   };
-
   //Fetch stripe subscriptions
   const retrieveStripeSubs = async () => {
     const userIds = (
@@ -57,14 +54,12 @@ function Users() {
           ),
       )
     ).filter(Boolean);
-
     const subscriptionsRefs = userIds.map((id) =>
       query(
         collection(db, 'users', id, 'subscriptions'),
         where('status', 'in', ['trialing', 'active']),
       ),
     );
-
     const stripeProducts = {
       prod_Njtrgy9W8UwGW7: 'Monthly',
       prod_NjtvxM9XlsH2c6: 'Yearly',
@@ -92,21 +87,50 @@ function Users() {
       await getDocs(
         query(
           collection(db, 'subscribers'),
-          where('subscriptionEndDate', '>', Date.now()),
         ),
       )
     ).docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }));
+    console.log('the subs data is ', subsData);
+   subsData.forEach(async (sub) => {
+     const headers = new Headers();
+     headers.append('subscriptionid', sub.subscriptionId);
 
-    setSubscribers((prevSubscribers) => {
-      let newSubscribers = { ...prevSubscribers };
-      subsData.forEach((sub) => {
-        newSubscribers[sub.userId] = sub.plan || sub.subscriptionPlan;
-      });
-      return newSubscribers;
-    });
+     try {
+       const response = await fetch(
+         'https://vionikochat.onrender.com/subscriptionDetails',
+         {
+           method: 'GET',
+           headers: headers,
+         },
+       );
+       const data = await response.json();
+       console.log('the data obtained from paypal is  ', data);
+
+       setSubscribers((prevSubscribers) => {
+         // Only update if the userId doesn't already exist in prevSubscribers
+         if (!prevSubscribers.hasOwnProperty(sub.userId)) {
+           return {
+             ...prevSubscribers,
+             [sub.userId]: sub.plan || sub.subscriptionPlan,
+           };
+         }
+         return prevSubscribers; // Return previous state if userId already exists
+       });
+     } catch (error) {
+       console.log('Error retrieving subscription', error);
+     }
+   });
+
+   setSubscribers((prevSubscribers) => {
+     let newSubscribers = { ...prevSubscribers };
+     subsData.forEach((sub) => {
+       newSubscribers[sub.userId] = sub.plan || sub.subscriptionPlan;
+     });
+     return newSubscribers;
+   });
   };
   // Function to retrieve words generated
   const fetchWordsGenerated = async () => {
@@ -120,11 +144,6 @@ function Users() {
     );
   };
   useEffect(() => {
-    console.log('The subscribers are', subscribers);
-    console.log('The users are', users);
-  }, [subscribers, users]);
-
-  useEffect(() => {
     const fetchAllData = async () => {
       const usersData = await retrieveUsers();
       retrieveStripeSubs(usersData);
@@ -137,13 +156,12 @@ function Users() {
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
-
   const filteredUsers = users.filter((user) => {
     const trimmedSearchTerm = searchTerm.trim().toLowerCase();
     if (trimmedSearchTerm === '') return true;
 
     const userSubscription = subscribers[user.userId] || 'Free';
-    console.log('The user subscription is', userSubscription);
+    console.log('the user subscription is ', userSubscription);
 
     return (
       user.name.toLowerCase().includes(trimmedSearchTerm) ||
@@ -191,6 +209,10 @@ function Users() {
     setActions(updatedActions);
   };
 
+  useEffect(() => {
+    console.log('The subscribers are ', subscribers);
+  }, [subscribers]);
+
   return (
     <div>
       <div className="mt-4 mx-4">
@@ -218,7 +240,6 @@ function Users() {
                   <th>Words Generated</th>
                   <th>Subscription Plan</th>
                   <th>File Size</th>
-                  <th>Subscription End Date</th> {/* New column header */}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -283,10 +304,6 @@ function Users() {
                     <td className="px-4 py-3 text-sm">
                       {fileSize[user.userId] || 0}
                     </td>
-                    <td className="px-4 py-3 text-sm">
-                      {subscriptionEndDates[user.userId] || 'N/A'}{' '}
-                      {/* New column cell */}
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -297,5 +314,4 @@ function Users() {
     </div>
   );
 }
-
 export default Users;

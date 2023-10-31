@@ -1,14 +1,9 @@
 import { useEffect, useState } from 'react';
 
-
-
 import { auth, db } from '../config/firebase';
-
-
 
 import usePremiumStatus from '@/stripe/usePremiumStatus';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-
 
 function useSubscription(user) {
   const [loading, setLoading] = useState(true);
@@ -44,7 +39,7 @@ function useSubscription(user) {
     try {
       const userSubscriptionQuery = query(
         collection(db, 'subscribers'),
-        where('userId', '==', user.uid),
+        where('userId', '==', user.uid || user),
       );
       const subscribersSnapshot = await getDocs(userSubscriptionQuery);
       const userSubscriptions = subscribersSnapshot.docs.map((doc) =>
@@ -59,7 +54,7 @@ function useSubscription(user) {
       const wordsSnapshot = await getDocs(
         query(
           collection(db, 'wordsgenerated'),
-          where('userId', '==', user.uid),
+          where('userId', '==', user.uid || user),
         ),
       );
       const wordsGenerated = wordsSnapshot.docs.map((doc) => doc.data());
@@ -67,35 +62,31 @@ function useSubscription(user) {
       setWordsGenerated(currentUserWords.count);
 
       if (latestSubscription.subscriptionId) {
-        try{
-        const headers = new Headers();
-        headers.append('subscriptionid', latestSubscription.subscriptionId);
-        console.log("the latest subscription id being passed is ",latestSubscription.subscriptionId)
-        const response = await fetch(
-          'https://vionikochat.onrender.com/subscriptionDetails',
-          {
-            method: 'GET',
-            headers: headers,
-          },
-        );
-        const data = await response.json();
-        setPaypalEmail(data.subscriber.email_address);
-        setPaypalStatus(data.status);
-        setPaypalSubscriptionId(data.id);
-        setPlanId(data.plan_id);
-        setName(data.subscriber.name.given_name);
-        setLastPayment(data.billing_info.last_payment.time);
-        }catch(error){
-          console.log("error in fetching subscription details ",error)
+        try {
+          const headers = new Headers();
+          headers.append('subscriptionid', latestSubscription.subscriptionId);
+          console.log(
+            'the latest subscription id being passed is ',
+            latestSubscription.subscriptionId,
+          );
+          const response = await fetch(
+            'https://vionikochat.onrender.com/subscriptionDetails',
+            {
+              method: 'GET',
+              headers: headers,
+            },
+          );
+          const data = await response.json();
+          setPaypalEmail(data.subscriber.email_address);
+          setPaypalStatus(data.status);
+          setPaypalSubscriptionId(data.id);
+          setPlanId(data.plan_id);
+          setName(data.subscriber.name.given_name);
+          setLastPayment(data.billing_info.last_payment.time);
+        } catch (error) {
+          console.log('error in fetching subscription details ', error);
         }
       }
-      console.log("the latest subscription data is  ",latestSubscription)
-      if(userIsPremium){
-        console.log("user is premium")
-      } else {
-        console.log("user is not premium")
-      }
-
       if (
         Date.now() < latestSubscription.subscriptionEndDate ||
         auth.currentUser.uid === 'M8LwxAfm26SimGbDs4LDwf1HuCb2' ||
