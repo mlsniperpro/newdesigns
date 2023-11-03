@@ -18,15 +18,19 @@ const initialState = {
     firstMessage: '',
     inputPlaceholder: '',
     chatName: '',
+    supportOption: '',
+    supportContact: '', // Can be a phone number or a URL
   },
   editableLabels: {
     name: 'Name',
     email: 'Email',
     phone: 'Phone',
     submit: 'Submit',
+    support: 'Support',
   },
   systemPrompt: '',
   temperature: 0.5,
+  supportType: null, // 'whatsapp', 'telegram', or 'custom'
 };
 
 const reducer = (state, action) => {
@@ -69,6 +73,32 @@ const reducer = (state, action) => {
         ...state,
         temperature: action.payload,
       };
+    case 'SET_SUPPORT_TYPE':
+      return {
+        ...state,
+        supportType: action.payload,
+        textInputFields: {
+          ...state.textInputFields,
+          // Reset supportContact when changing support type
+          supportContact: '',
+        },
+      };
+    case 'SET_SUPPORT_CONTACT':
+      return {
+        ...state,
+        textInputFields: {
+          ...state.textInputFields,
+          supportContact: action.payload,
+        },
+      };
+    case 'SET_CUSTOM_SUPPORT_URL':
+      return {
+        ...state,
+        textInputFields: {
+          ...state.textInputFields,
+          customSupportUrl: action.payload,
+        },
+      };
     default:
       return state;
   }
@@ -85,6 +115,7 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
     () => (isDarkTheme ? 'text-white' : 'text-black'),
     [isDarkTheme],
   );
+  
 
   const toggleScript = () => {
     const newScript =
@@ -105,6 +136,9 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
       fileName,
       systemPrompt: state.systemPrompt,
       temperature: state.temperature.toFixed(1),
+      supportType: state.supportType,
+      customSupportUrl: state.textInputFields.customSupportUrl,
+      supportContact: state.textInputFields.supportContact,
       ...state.selectedFields,
       ...state.textInputFields,
     };
@@ -153,12 +187,33 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
     });
   };
 
+  const handleSupportTypeChange = (e) => {
+    dispatch({
+      type: 'SET_SUPPORT_TYPE',
+      payload: e.target.value,
+    });
+  };
+
+  const handleSupportContactChange = (e) => {
+    dispatch({
+      type: 'SET_SUPPORT_CONTACT',
+      payload: e.target.value,
+    });
+  };
+
+  const handleCustomSupportUrlChange = (e) => {
+    dispatch({
+      type: 'SET_CUSTOM_SUPPORT_URL',
+      payload: e.target.value,
+    });
+  };
+
   const handleCopyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(generateCodeSnippet);
       toast.success('Code copied to clipboard');
     } catch (err) {
-      toast.error('Failed to copy code to clipboard');
+      toast.error('Failed to copy code');
     }
   };
 
@@ -223,34 +278,65 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
               </label>
             ))}
           </div>
-         <div className="flex flex-col bg-gray-100 p-2 rounded-md mt-4">
-        <label className="font-bold mb-2">System Prompt:</label>
-        <textarea
-          value={state.systemPrompt}
-          onChange={handleSystemPromptChange}
-          className="p-2 border rounded-md"
-          rows="4"
-        ></textarea>
-        <label className="font-bold mb-2 mt-4">Temperature:</label>
-        <div className="flex items-center">
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={state.temperature}
-            onChange={handleTemperatureChange}
-            className="w-full"
-          />
-          <span className="ml-2">{state.temperature.toFixed(1)}</span>
+          <div className="flex flex-col bg-gray-100 p-2 rounded-md mt-4">
+            <label className="font-bold mb-2">System Prompt:</label>
+            <textarea
+              value={state.systemPrompt}
+              onChange={handleSystemPromptChange}
+              className="p-2 border rounded-md"
+              rows="4"
+            ></textarea>
+            <label className="font-bold mb-2 mt-4">Temperature:</label>
+            <div className="flex items-center">
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={state.temperature}
+                onChange={handleTemperatureChange}
+                className="w-full"
+              />
+              <span className="ml-2">{state.temperature.toFixed(1)}</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col bg-gray-100 p-2 rounded-md mt-4">
+          <span className="font-bold mb-2">Support Options:</span>
+          <select
+            value={state.supportType}
+            onChange={handleSupportTypeChange}
+            className="p-2 border rounded-md mb-2"
+          >
+            <option value="">Select Support Type</option>
+            <option value="whatsapp">WhatsApp</option>
+            <option value="telegram">Telegram</option>
+            <option value="custom">Custom</option>
+          </select>
+          {state.supportType === 'whatsapp' ||
+          state.supportType === 'telegram' ? (
+            <input
+              type="tel"
+              placeholder={`Enter ${state.supportType} phone number`}
+              value={state.textInputFields.supportContact}
+              onChange={handleSupportContactChange}
+              className="p-2 border rounded-md"
+            />
+          ) : state.supportType === 'custom' ? (
+            <input
+              type="url"
+              placeholder="Enter custom support URL"
+              value={state.textInputFields.supportContact}
+              onChange={handleSupportContactChange}
+              className="p-2 border rounded-md"
+            />
+          ) : null}
         </div>
       </div>
-        </div>
-        <div className="mt-4">
-          <Link href="/pdf">
-            <span className={`underline ${textColorClass}`}>Back to PDF</span>
-          </Link>
-        </div>
+      <div className="mt-4">
+        <Link href="/pdf">
+          <span className={`underline ${textColorClass}`}>Back to PDF</span>
+        </Link>
       </div>
     </div>
   );
