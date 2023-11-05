@@ -18,6 +18,7 @@ const initialState = {
     firstMessage: '',
     inputPlaceholder: '',
     chatName: '',
+    supportLabel: "Live Support",
     supportOption: '',
     supportContact: '', // Can be a phone number or a URL
   },
@@ -265,7 +266,7 @@ const CodeSnippetComponent = ({ theme = 'light' }) => {
           </div>
           <div className="flex flex-col bg-gray-100 p-2 rounded-md mt-4">
             <span className="font-bold mb-2">Text Inputs:</span>
-            {['firstMessage', 'inputPlaceholder', 'chatName'].map((field) => (
+            {['firstMessage', 'inputPlaceholder', 'chatName', 'supportLabel'].map((field) => (
               <label key={field} className="flex flex-col mb-2">
                 {field}
                 <input
