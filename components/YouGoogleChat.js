@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
-
-
 import fetchResponse from '../utils/fetchResponse';
 import { performGoogleSearch } from '../utils/googleSearch';
 import updateUserWordCount from '../utils/updateWordCount';
@@ -12,12 +10,9 @@ import { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
 import { contextRetriever } from '@/utils/similarDocs';
 
-
-
 import { auth, db, storage } from '@/config/firebase';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
-
 
 // Main component definition
 export default function YouGoogleChat({
@@ -31,6 +26,7 @@ export default function YouGoogleChat({
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [embeddingwithChunks, setEmbeddingwithChunks] = useState();
+  let links = [];
   useEffect(() => {
     if (!transcriptContent) return;
     const fetchData = async () => {
@@ -108,16 +104,17 @@ export default function YouGoogleChat({
 
       if (mode === 'google') {
         const googleResults = await performGoogleSearch(input, 10);
-        console.log("Here are the google results", googleResults);
-        prompt = `Based on the google search result below please answer the user question following this next 4 instructions :
+        links = googleResults['links'];
+        console.log('Here are the google results', googleResults);
+        prompt = `You are provided with incomplete snippets extracted from internet and user question:
+        QUESTION: ${input}
+      SNIPPETS: ${googleResults['snippets']};
+1. Present your response in a checklist format.
+2. Use the same language as the user's question.
+`;
+        //3. List the following links as the sources of the snippets above after you are done answering questions:
+        //LINKS: ${googleResults['links']}
 
-1. Respond to the user's question according to requirements of user, be very precise. 
-2. Present your response in a checklist format.
-3. Use the same language as the user's question.
-4. Provide a link to the sources used at the end of your response.
-
-      User question: ${input}
-      Google search results: ${googleResults}`;
         reader = await fetchResponse(
           [...messages, { content: prompt, role: 'user' }],
           auth?.currentUser?.uid,
@@ -148,13 +145,29 @@ export default function YouGoogleChat({
       }
 
       let assistantMessage = '';
-      
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) {
+          //We need to add line breaks to the links and ensure they are listed separate from the snippets and one another
+          links = links.map((x) => x + '\n');
+          links = links.join('\n');
+          assistantMessage += '\n\n' + links;
+          // Update the last message in the message thread
+          setMessages((prevMessages) => {
+            // Clone the previous messages array
+            let updatedMessages = [...prevMessages];
+              // Update the content of the last message
+              let lastMessageIndex = updatedMessages.length - 1;
+              updatedMessages[lastMessageIndex] = {
+                ...updatedMessages[lastMessageIndex],
+                content:
+                   assistantMessage,
+              };
+            return updatedMessages;
+          });
           await updateUserWordCount(prompt, auth?.currentUser?.uid);
-          await updateUserWordCount(assistantMessage, auth?.currentUser?.uid)
+          await updateUserWordCount(assistantMessage, auth?.currentUser?.uid);
           break;
         }
 
@@ -181,11 +194,9 @@ export default function YouGoogleChat({
           }
         }
       }
-      
     } catch (error) {
       console.error('Error in handleMessageSubmit:', error);
     }
-
   };
 
   useEffect(() => {

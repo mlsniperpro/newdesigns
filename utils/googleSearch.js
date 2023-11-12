@@ -20,7 +20,11 @@ export const performGoogleSearch = async (query, num) => {
   try {
     const response = await axios(config);
     console.log(response.data['organic']);
-    return response.data['organic'].map((x) => `Link: ${x['link']}\n${x['snippet']}`);
+    //Return only the snippets and not the link
+    return {snippets: response.data['organic'].map((x) => x['snippet'])
+    , links: response.data['organic'].map((x) => x['link'])
+  };
+    //return response.data['organic'].map((x) => `Link: ${x['link']}\n${x['snippet']}`);
   } catch (error) {
     throw new Error(error);
   }
