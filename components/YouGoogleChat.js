@@ -5,7 +5,6 @@ import ReactMarkdown from 'react-markdown';
 
 
 
-
 import fetchResponse from '../utils/fetchResponse';
 import { performGoogleSearch } from '../utils/googleSearch';
 import updateUserWordCount from '../utils/updateWordCount';
@@ -99,6 +98,7 @@ export default function YouGoogleChat({
   // Function to handle message submission
   const handleMessageSubmit = async (e) => {
     e.preventDefault();
+    setInput('');
     try {
       let prompt, reader;
       setMessages((prevMessages) => [
@@ -148,7 +148,7 @@ export default function YouGoogleChat({
       }
 
       let assistantMessage = '';
-      setInput('');
+      
 
       while (true) {
         const { done, value } = await reader.read();
