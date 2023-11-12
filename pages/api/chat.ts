@@ -1,7 +1,7 @@
-import updateUserWordCount from '@/utils/updateWordCount';
 import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from '@/utils/app/const';
 import { OpenAIError, OpenAIStream } from '@/utils/server';
 import { contextRetriever } from '@/utils/similarDocs';
+import updateUserWordCount from '@/utils/updateWordCount';
 
 
 
@@ -26,9 +26,9 @@ export const config = {
 };
 
 const DEFAULT_MODEL = {
-  id: 'gpt-3.5-turbo-16k',
+  id: 'gpt-3.5-turbo-1106',
   tokenLimit: 16384,
-  name: 'GPT-3.5 Turbo',
+  name: 'gpt-3.5-turbo-1106',
   maxLength: 16384,
 };
 
@@ -52,7 +52,6 @@ const handler = async (req: Request): Promise<Response> => {
     if (!model) {
       model = DEFAULT_MODEL;
     }
-
     if (model.tokenLimit === undefined) {
       return new Response('Token limit not specified', { status: 400 });
     }

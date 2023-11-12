@@ -74,7 +74,7 @@ const handleSubmit = async (e) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-3.5-turbo-1106',
         messages: [{ role: 'system', content: prompt }],
         stream: true,
       }),

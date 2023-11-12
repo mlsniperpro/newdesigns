@@ -28,25 +28,25 @@ function Freestyle({language}) {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api.openai.com/v1/chat/completions",
+        'https://api.openai.com/v1/chat/completions',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            Authorization: "Bearer " + API_KEY,
-            "Content-Type": "application/json",
+            Authorization: 'Bearer ' + API_KEY,
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: "gpt-3.5-turbo",
+            model: 'gpt-3.5-turbo-1106',
             messages: [
               {
-                role: "system",
+                role: 'system',
                 content:
-                  "You are an expert copywriter with over 20 years of experience. Listen to user carefully.",
+                  'You are an expert copywriter with over 20 years of experience. Listen to user carefully.',
               },
-              { role: "user", content: prompt },
+              { role: 'user', content: prompt },
             ],
           }),
-        }
+        },
       );
       const data = await response.json();
       setContent(data.choices[0].message.content);
