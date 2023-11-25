@@ -13,11 +13,14 @@ import { auth, db } from '../config/firebase';
 
 import BatchPredictionIcon from '@mui/icons-material/BatchPrediction';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import OpenAI from 'openai';
 import remarkGfm from 'remark-gfm';
 
 
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
-
+const openai = new OpenAI({
+   apiKey: process.env.NEXT_PUBLIC_API_KEY,
+   dangerouslyAllowBrowser: true,
+ });
 function Keyword({ language }) {
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
@@ -59,71 +62,27 @@ function Keyword({ language }) {
       setLoading(false);
     }
   };
+   const openai = new OpenAI({
+     apiKey: process.env.NEXT_PUBLIC_API_KEY,
+     dangerouslyAllowBrowser: true,
+   });
 const handleSubmit = async (e) => {
   e.preventDefault();
   setResponse('');
-  try {
-    e.preventDefault();
-    setLoading(true);
-
-    // Initialize Fetch API
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo-1106',
-        messages: [{ role: 'system', content: prompt }],
-        stream: true,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
-
-    // Initialize Reader
-    const reader = response.body.getReader();
-    let result = '';
-
-    // Read Stream
-    const readStream = async () => {
-      const { done, value } = await reader.read();
-      if (done) {
-        setLoading(false);
-        updateUserWordCount(result);
-        return;
-      }
-
-      // Convert Uint8Array to string and append to result
-      const textChunk = new TextDecoder().decode(value);
-      const match = textChunk.match(/data: (.*?})\s/);
-      if (match && match[1]) {
-        const jsonData = JSON.parse(match[1]);
-        if (
-          jsonData.choices &&
-          jsonData.choices[0] &&
-          jsonData.choices[0].delta 
-        ) {
-          // Validate that jsonData.choices[0].delta.content is well-formatted Markdown here, if needed
-          result += jsonData.choices[0].delta.content;
-          setResponse(result);
-        }
-      }
-
-      // Continue reading
-      readStream();
-    };
-
-    // Start reading
-    readStream();
-  } catch (error) {
-    console.error(`An error occurred: ${error}`);
-    setLoading(false);
+  setLoading(true);
+  const stream = await openai.chat.completions.create({
+    model: 'gpt-3.5-turbo-1106',
+    messages: [{ role: 'system', content: prompt }],
+    stream: true,
+  });
+  let currentMessage = '';
+  for await (const chunk of stream) {
+    currentMessage += chunk.choices[0]?.delta?.content || '';
+    setResponse(currentMessage);
   }
+  setLoading(false); 
 };
+
 
 
   const handleCopy = () => {
