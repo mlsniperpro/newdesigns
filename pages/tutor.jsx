@@ -29,6 +29,7 @@ import { auth } from '../config/firebase';
 
 import HomeIcon from '@mui/icons-material/Home';
 import LanguageIcon from '@mui/icons-material/Language';
+import OpenAI from 'openai';
 
 
 function Tutor() {
@@ -38,7 +39,11 @@ function Tutor() {
   const [chat, setChat] = useState([]);
   const { subscriptionDetails, loading } = useSubscription(user);
   const [isLoading, setIsLoading] = useState(false);
-
+  
+  const openai = new OpenAI({
+    apiKey: process.env.NEXT_PUBLIC_API_KEY,
+    dangerouslyAllowBrowser: true,
+  });
   useEffect(() => {
     if (
       !subscriptionDetails.subscribed &&
@@ -121,46 +126,23 @@ Espere prontamente la respuesta del cliente antes de pasar a la siguiente pregun
 
     // Append an initial empty assistant message
     setChat((prev) => [...prev, { role: 'assistant', content: '' }]);
-
-    try {
-      const reader = await fetchResponse(chat, user.uid);
-      let assistantMessage = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          await updateUserWordcount(assistantMessage, user.uid);
-          break;
-        }
-
-        const textChunk = new TextDecoder().decode(value);
-
-        const match = textChunk.match(/data: (.*?})\s/);
-        if (match && match[1]) {
-          const jsonData = JSON.parse(match[1]);
-          if (
-            jsonData.choices &&
-            jsonData.choices[0] &&
-            jsonData.choices[0].delta &&
-            jsonData.choices[0].delta.content
-          ) {
-            assistantMessage += jsonData.choices[0].delta.content;
-            setChat((prev) => {
-              // Replace the last message with the updated assistant message
-              return prev.map((msg, index) =>
-                index === prev.length - 1
-                  ? { role: 'assistant', content: assistantMessage }
-                  : msg,
-              );
-            });
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error sending message:', error);
-    } finally {
-      setIsLoading(false);
+    const stream = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo-1106',
+      messages: chat,
+      stream: true,
+    });
+    let currentMessage = '';
+    for await (const chunk of stream) {
+      currentMessage += chunk.choices[0]?.delta?.content || '';
+      setChat((prev) => {
+        return prev.map((msg, index) =>
+          index === prev.length - 1
+            ? { role: 'assistant', content: currentMessage }
+            : msg,
+        );
+      });
     }
+    setIsLoading(false);
   };
 
   return (

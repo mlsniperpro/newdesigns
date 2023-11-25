@@ -1,15 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
 
 import Router from 'next/router';
 
 
-
 import { auth, db } from '../config/firebase';
-
 
 
 import { addDoc, collection, getDocs } from 'firebase/firestore';
@@ -52,7 +48,6 @@ function Admin() {
           {},
         );
 
-      
       setEmailIdMapper(emailIdMap);
     };
 
@@ -78,7 +73,7 @@ function Admin() {
       toast.success('Subscription added successfully!');
     } catch (e) {
       alert('The subscriber not among the users');
-      toast
+      toast;
       console.error('Error adding document: ', e);
     }
   };
@@ -90,7 +85,7 @@ function Admin() {
   }, [emailIdMapper]);
   return (
     <div>
-      <ToastContainer/>
+      <ToastContainer />
       <>
         {/*Start of the header  Buttons*/}
         <div className="flex items-center justify-center">
@@ -163,7 +158,7 @@ function Admin() {
                     emailIdMapper[e?.target?.value.toLowerCase()];
                   if (selectedUserId) {
                     setUserId(selectedUserId);
-                  } 
+                  }
                 }}
                 type="text"
                 id="email"
@@ -204,6 +199,5 @@ function Admin() {
     </div>
   );
 }
-
 
 export default Admin;
