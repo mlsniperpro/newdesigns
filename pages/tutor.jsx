@@ -2,35 +2,22 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
-
-
 import Link from 'next/link';
 import Router from 'next/router';
 
-
-
 import useSubscription from '@/hooks/useSubscription';
-
-
 
 import fetchResponse from '@/utils/fetchResponse';
 import updateUserWordCount from '@/utils/updateWordCount';
 
-
-
 import ChatBody from '@/components/ChatBody';
 import ChatInput from '@/components/ChatInput';
 
-
-
 import { auth } from '../config/firebase';
-
-
 
 import HomeIcon from '@mui/icons-material/Home';
 import LanguageIcon from '@mui/icons-material/Language';
 import OpenAI from 'openai';
-
 
 function Tutor() {
   const [user, userLoading] = useAuthState(auth);
@@ -39,7 +26,7 @@ function Tutor() {
   const [chat, setChat] = useState([]);
   const { subscriptionDetails, loading } = useSubscription(user);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const openai = new OpenAI({
     apiKey: process.env.NEXT_PUBLIC_API_KEY,
     dangerouslyAllowBrowser: true,
@@ -122,13 +109,14 @@ Espere prontamente la respuesta del cliente antes de pasar a la siguiente pregun
 
   const sendMessage = async (message) => {
     setChat((prev) => [...prev, message]);
+    let updatedChat = [...chat, message];
     setIsLoading(true);
 
     // Append an initial empty assistant message
     setChat((prev) => [...prev, { role: 'assistant', content: '' }]);
     const stream = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo-1106',
-      messages: chat,
+      messages: updatedChat,
       stream: true,
     });
     let currentMessage = '';
@@ -142,6 +130,7 @@ Espere prontamente la respuesta del cliente antes de pasar a la siguiente pregun
         );
       });
     }
+    updateUserWordCount(user.uid, currentMessage);
     setIsLoading(false);
   };
 
