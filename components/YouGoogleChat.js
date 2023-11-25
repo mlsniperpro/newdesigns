@@ -3,17 +3,25 @@ import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
-import fetchResponse from '../utils/fetchResponse';
+
+
 import { performGoogleSearch } from '../utils/googleSearch';
 import updateUserWordCount from '../utils/updateWordCount';
 import { iterativeCharacterTextSplitter } from '@/utils/extractTextFromPdfs';
 import { getEmbeddings } from '@/utils/similarDocs';
 import { contextRetriever } from '@/utils/similarDocs';
 
+
+
 import { auth, db, storage } from '@/config/firebase';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { deleteObject, listAll, ref, uploadBytes } from 'firebase/storage';
+import OpenAI from 'openai';
 
+
+const openai = new OpenAI({
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  dangerouslyAllowBrowser: true,
+});
 // Main component definition
 export default function YouGoogleChat({
   theme = 'light',
@@ -95,8 +103,7 @@ export default function YouGoogleChat({
   const handleMessageSubmit = async (e) => {
     e.preventDefault();
     setInput('');
-    try {
-      let prompt, reader;
+      let prompt = '';
       setMessages((prevMessages) => [
         ...prevMessages,
         { content: input, role: 'user' },
@@ -105,20 +112,16 @@ export default function YouGoogleChat({
       if (mode === 'google') {
         const googleResults = await performGoogleSearch(input, 10);
         links = googleResults['links'];
+        links = links.map((x) => x + '\n');
+        links = links.join('\n');
         console.log('Here are the google results', googleResults);
         prompt = `You are provided with incomplete snippets extracted from internet and user question:
         QUESTION: ${input}
       SNIPPETS: ${googleResults['snippets']};
 1. Present your response in a checklist format.
 2. Use the same language as the user's question.
+3. Add the following links to your response at the end: ${googleResults['links']}
 `;
-        //3. List the following links as the sources of the snippets above after you are done answering questions:
-        //LINKS: ${googleResults['links']}
-
-        reader = await fetchResponse(
-          [...messages, { content: prompt, role: 'user' }],
-          auth?.currentUser?.uid,
-        );
       } else if (!embeddingwithChunks) {
         //Remove the user message
         setMessages((prevMessages) => [...prevMessages.slice(0, -1)]);
@@ -138,86 +141,36 @@ export default function YouGoogleChat({
       
       And again remember to reply in the same language that user used in the question and not in the language used in the transcript.`;
 
-        reader = await fetchResponse(
-          [...messages, { content: prompt, role: 'user' }],
-          auth?.currentUser?.uid,
-        );
       }
 
+      const stream = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo-1106',
+        messages: [{ content: prompt, role: 'user' }],
+        stream: true,
+      });
+      let currentMessage = '';
+      for await (const chunk of stream) {
+        currentMessage += chunk.choices[0]?.delta?.content || '';
+        setMessages((prevMessages) => {
+          const lastMessage = prevMessages[prevMessages.length - 1];
+          const newMessage = {
+            content: currentMessage,
+            role: 'assistant',
+          };
+
+          return lastMessage?.role === 'assistant'
+            ? [...prevMessages.slice(0, -1), newMessage]
+            : [...prevMessages, newMessage];
+        });
+      }
+      await updateUserWordCount(prompt, auth?.currentUser?.uid);
+      await updateUserWordCount(currentMessage, auth?.currentUser?.uid);
+      
       let assistantMessage = '';
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          //We need to add line breaks to the links and ensure they are listed separate from the snippets and one another
-          links = links.map((x) => x + '\n');
-          links = links.join('\n');
-          assistantMessage += '\n\n' + links;
-          // Update the last message in the message thread
-          setMessages((prevMessages) => {
-            // Clone the previous messages array
-            let updatedMessages = [...prevMessages];
-              // Update the content of the last message
-              let lastMessageIndex = updatedMessages.length - 1;
-              updatedMessages[lastMessageIndex] = {
-                ...updatedMessages[lastMessageIndex],
-                content:
-                   assistantMessage,
-              };
-            return updatedMessages;
-          });
-          await updateUserWordCount(prompt, auth?.currentUser?.uid);
-          await updateUserWordCount(assistantMessage, auth?.currentUser?.uid);
-          break;
-        }
-
-        const textChunk = new TextDecoder().decode(value);
-        const match = textChunk.match(/data: (.*?})\s/);
-
-        if (match?.[1]) {
-          const { choices } = JSON.parse(match[1]);
-          const content = choices?.[0]?.delta?.content;
-
-          if (content) {
-            assistantMessage += content;
-            setMessages((prevMessages) => {
-              const lastMessage = prevMessages[prevMessages.length - 1];
-              const newMessage = {
-                content: assistantMessage,
-                role: 'assistant',
-              };
-
-              return lastMessage?.role === 'assistant'
-                ? [...prevMessages.slice(0, -1), newMessage]
-                : [...prevMessages, newMessage];
-            });
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error in handleMessageSubmit:', error);
-    }
+  
+    
   };
-
-  useEffect(() => {
-    console.log('Transcript content', transcriptContent);
-  }, [transcriptContent]);
-
-  // Fetch messages when chatId changes
-  useEffect(() => {
-    const fetchMessages = async () => {
-      // Implement your message fetching logic here
-    };
-    fetchMessages();
-  }, [chatId]);
-
-  // Additional logic for updating word count
-  useEffect(() => {
-    if (messages[messages.length - 1]?.role === 'user') {
-      // Additional logic for updating word count can go here
-    }
-  }, [messages]);
-
   // Theme-related variables
   const isDarkTheme = theme === 'dark';
   const textColorClass = isDarkTheme ? 'text-white' : 'text-black';

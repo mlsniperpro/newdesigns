@@ -7,7 +7,6 @@ import Router from 'next/router';
 
 import useSubscription from '@/hooks/useSubscription';
 
-import fetchResponse from '@/utils/fetchResponse';
 import updateUserWordCount from '@/utils/updateWordCount';
 
 import ChatBody from '@/components/ChatBody';
