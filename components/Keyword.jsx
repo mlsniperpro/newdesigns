@@ -80,6 +80,7 @@ const handleSubmit = async (e) => {
     currentMessage += chunk.choices[0]?.delta?.content || '';
     setResponse(currentMessage);
   }
+  updateUserWordCount(currentMessage);
   setLoading(false); 
 };
 
