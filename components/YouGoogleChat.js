@@ -130,16 +130,18 @@ export default function YouGoogleChat({
       } else {
         const context = await contextRetriever(embeddingwithChunks, input);
         prompt = `
-      Based on youtube transcript below,  please answer the user question, following this next 3 instructions:
+      Based on youtube transcript below,  please answer the user question, following these instructions:
 
-1. Respond to the user's question according to requirements of user, be very precise. 
-2. Present your response in a checklist format.
-3. In the response you give ,use the same language used from the user's question.
+
+1. Present your response in a checklist format.
+2. In the response you give ,use the same language used from the user's question.
     
       USER QUESTION: ${input}
       YOUTUBE TRANSCRIPT: ${context}
       
-      And again remember to reply in the same language that user used in the question and not in the language used in the transcript.`;
+      And again remember to reply in the same language that user used in the question and not in the language used in the transcript.
+      USEFUL RESPONSE: 
+      `;
 
       }
 
