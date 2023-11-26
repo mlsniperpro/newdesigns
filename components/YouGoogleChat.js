@@ -136,8 +136,8 @@ export default function YouGoogleChat({
 2. Present your response in a checklist format.
 3. In the response you give ,use the same language used from the user's question.
     
-      User question: ${input}
-      YouTube transcript: ${context}
+      USER QUESTION: ${input}
+      YOUTUBE TRANSCRIPT: ${context}
       
       And again remember to reply in the same language that user used in the question and not in the language used in the transcript.`;
 
@@ -165,10 +165,6 @@ export default function YouGoogleChat({
       }
       await updateUserWordCount(prompt, auth?.currentUser?.uid);
       await updateUserWordCount(currentMessage, auth?.currentUser?.uid);
-      
-      let assistantMessage = '';
-
-  
     
   };
   // Theme-related variables

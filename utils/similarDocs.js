@@ -88,7 +88,7 @@ const getSimilarDocsFromChunks = async (
 };
 const contextRetriever = async (embeddingData, input) => {
   let texts;
-  const docs = await getSimilarDocsFromChunks(embeddingData, input, 21);
+  const docs = await getSimilarDocsFromChunks(embeddingData, input, 15);
   console.log('THE DOCS ARE: ', docs);
   texts = docs.map((doc) => doc.doc);
   texts = texts.join(' ');
