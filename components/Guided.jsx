@@ -18,9 +18,14 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box } from '@mui/system';
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import OpenAI from 'openai';
 
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+const openai = new OpenAI({
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  dangerouslyAllowBrowser: true,
+});
 
 function Guided({ language }) {
   const [loading, setLoading] = useState(false);
@@ -130,54 +135,17 @@ const handleSubmit = async (e) => {
 
   const prompts = [prompt, prompt2, prompt3];
 
-  const handleStream = async (reader, index) => {
-    let result = '';
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      const textChunk = new TextDecoder().decode(value);
-      const match = textChunk.match(/data: (.*?})\s/);
-      if (match && match[1]) {
-        const jsonData = JSON.parse(match[1]);
-        if (
-          jsonData.choices &&
-          jsonData.choices[0] &&
-          jsonData.choices[0].delta &&
-          jsonData.choices[0].delta.content
-        ) {
-          result += jsonData.choices[0].delta.content;
-        }
-      }
-
-      switch (index) {
-        case 0:
-          setResponse(result);
-          break;
-        case 1:
-          setResponse2(result);
-          break;
-        case 2:
-          setResponse3(result);
-          break;
-        default:
-          console.error('Unknown index');
-      }
-
-      if (result) {
-        updateUserWordCount(result, auth.currentUser.uid);
-      }
+  const handleStream = async (stream, setResponseFunc) => {
+    let currentMessage = '';
+    for await (const chunk of stream) {
+      currentMessage += chunk.choices[0]?.delta?.content || '';
+      setResponseFunc(currentMessage);
     }
   };
 
-  const requests = prompts.map((prompt, index) =>
-    fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+  const requests = prompts.map((prompt, index) => {
+    return openai.chat.completions
+      .create({
         model: 'gpt-3.5-turbo-1106',
         messages: [
           {
@@ -186,18 +154,29 @@ const handleSubmit = async (e) => {
           },
         ],
         stream: true,
-      }),
-    })
-      .then((response) => handleStream(response.body.getReader(), index))
+      })
+      .then((stream) => {
+        switch (index) {
+          case 0:
+            return handleStream(stream, setResponse);
+          case 1:
+            return handleStream(stream, setResponse2);
+          case 2:
+            return handleStream(stream, setResponse3);
+          default:
+            console.error('Unknown index');
+        }
+      })
       .catch((error) =>
         console.error(`Error fetching for prompt ${index}: ${error}`),
-      ),
-  );
+      );
+  });
 
   await Promise.allSettled(requests);
-
+  updateUserWordCount(response + response2 + response3, auth.currentUser.uid);
   setLoading(false);
 };
+
 
 
 

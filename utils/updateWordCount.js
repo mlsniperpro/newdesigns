@@ -1,8 +1,9 @@
-import { auth, db } from '@/config/firebase';
+import { db } from '@/config/firebase';
 
 import { doc, getDoc, increment, setDoc, updateDoc } from 'firebase/firestore';
 
 const updateUserWordCount = async (data,userId) => {
+  console.log("The userId passed in To Update User Word Count Now is: ", userId)
   console.log("The userId passed in To Update User Word Count Now is: ", userId)
   console.log('updateUserWordCount called');
   console.log("The data passed in To Update User Word Count Now is: ", data)
