@@ -1,3 +1,16 @@
 {
-  "/page": "app/page.js"
+  "/_not-found": "app/_not-found.js",
+  "/google/page": "app/google/page.js",
+  "/page": "app/page.js",
+  "/marketing/page": "app/marketing/page.js",
+  "/keyword-generator/page": "app/keyword-generator/page.js",
+  "/conversation-history/page": "app/conversation-history/page.js",
+  "/pdf/page": "app/pdf/page.js",
+  "/sin-nombre/page": "app/sin-nombre/page.js",
+  "/chat/page": "app/chat/page.js",
+  "/perfil/page": "app/perfil/page.js",
+  "/tutor/page": "app/tutor/page.js",
+  "/youtube/page": "app/youtube/page.js",
+  "/prompts/page": "app/prompts/page.js",
+  "/subscription-plans/page": "app/subscription-plans/page.js"
 }
