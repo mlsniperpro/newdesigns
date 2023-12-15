@@ -1,0 +1,139 @@
+/* Font Import */
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Antonio:wght@400;600&family=Lato&family=Poppins:wght@500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Color Variables */
+:root {
+  --corporativo1: #2a336a;
+  --corporativo2: #4f77bc;
+  --oscuro1: #3a4554;
+  --claro1: #c7d3dd;
+  --blanco: #fafafa;
+  --advertencia: #ea3d45;
+}
+
+/* Text Utillity Classes */
+.texto1 {
+  font-family: "Anton";
+  font-size: 6rem; /* 96px */
+  line-height: normal;
+}
+.texto2 {
+  font-family: "Anton";
+  font-size: 3.875rem; /* 62px */
+  line-height: 4rem; /* 64px */
+}
+.texto3 {
+  font-family: "Antonio";
+  font-weight: 600;
+  font-size: 3.25rem; /* 52px */
+  line-height: normal;
+}
+.texto4 {
+  font-family: "Antonio";
+  font-weight: 400;
+  font-size: 2.5rem; /* 40px */
+  line-height: normal;
+}
+.texto-contenido {
+  font-family: "Lato";
+  font-weight: 400;
+  font-size: 1.5rem; /* 24px */
+  line-height: 2rem; /* 32px */
+}
+.texto5 {
+  font-family: "Anton";
+  font-size: 1.75rem; /* 28px */
+  line-height: 4rem; /* 64px */
+}
+.texto-contenido-v2 {
+  font-family: "Lato";
+  font-weight: 400;
+  font-size: 1rem; /* 16px */
+  line-height: 1.25rem; /* 20px */
+}
+.titulo-movil {
+  font-family: "Anton";
+  font-size: 2.25rem; /* 36px */
+  line-height: 2.5rem; /* 40px */
+}
+
+/* Custom List Image */
+.list-img {
+  list-style-image: url("../../public/Check.svg");
+}
+
+/* Footer Background */
+.bg-footer {
+  background-image: url("../../public/Footer.png");
+}
+
+/********** Range Input Styles **********/
+/*Range Reset*/
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Removes default focus */
+input[type="range"]:focus {
+  outline: none;
+}
+
+/***** Chrome, Safari, Opera and Edge Chromium styles *****/
+/* slider track */
+input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #4f77bc95; 
+  border-radius: 0rem;
+  height: 0.5rem;
+}
+
+/* slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  margin-top: -4px; /* Centers thumb on the track */
+  border-radius: 100%;
+
+  /*custom styles*/
+  background-color: var(--corporativo1);
+  height: 1rem;
+  width: 1rem;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  border: 1px solid var(--corporativo1);
+  outline: 3px solid var(--corporativo1);
+  outline-offset: 0.125rem;
+}
+
+/******** Firefox styles ********/
+/* slider track */
+input[type="range"]::-moz-range-track {
+  background-color: var(--corporativo1);
+  border-radius: 0.5rem;
+  height: 0.5rem;
+}
+
+/* slider thumb */
+input[type="range"]::-moz-range-thumb {
+  border: none; /*Removes extra border that FF applies*/
+  margin-top: -4px; /* Centers thumb on the track */
+  border-radius: 100%;
+
+  /*custom styles*/
+  background-color: var(--corporativo1);
+  height: 1rem;
+  width: 1rem;
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+  border: 1px solid var(--corporativo1);
+  outline: 3px solid var(--corporativo1);
+  outline-offset: 0.125rem;
+}
