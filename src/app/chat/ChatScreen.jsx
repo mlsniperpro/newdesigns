@@ -3,7 +3,7 @@ import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import Left from "../../../public/Left.svg";
 import Right from "../../../public/Right.svg";
-import Settings from "../../../public/Settings.svg";
+import Settings from "../../../public/settings.svg";
 import Dashes from "../../../public/DashLines.svg";
 import Robot from "../../../public/Robot.svg";
 import Person from "../../../public/Person.svg";
