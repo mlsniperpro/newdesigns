@@ -31,7 +31,7 @@ const FoldersList = ({ folders, setFolders }) => {
           <button
             className="flex items-center gap-2 p-2"
           >
-            <Image src={Arrow} alt="" onClick={(e) => e.target.classList.toggle('rotate-90')} />
+            <Image src={Arrow} alt="" onClick={(e) => e.target.classList.toggle('rotate-90')}/>
             <input
               placeholder={item.name}
               ref={newVal}

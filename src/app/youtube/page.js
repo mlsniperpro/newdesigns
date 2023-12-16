@@ -29,7 +29,7 @@ const page = () => {
           <div className="!mt-11 2xl:mt-24 [&>*>*]:!text-lg [&>*]:!h-[83px] [&>*>*]:!leading-none whitespace-nowrap">
             <PropertyCard text={"Introduce la URL del video de YouTube aquí"} />
           </div>
-          <Image src={Youtube} className="rounded-[10px] mt-12" />
+          <Image src={Youtube} className="rounded-[10px] mt-12" alt=""/>
         </div>
         <div className="mx-4 md:mx-0 flex flex-col justify-between items-center">
           <Prompt />
@@ -52,6 +52,7 @@ const page = () => {
       <Image
         src={Logo}
         className="absolute bottom-6 right-10 w-20 h-8 2xl:w-auto 2xl:h-auto"
+        alt=""
       />
     </div>
   );

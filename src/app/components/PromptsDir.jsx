@@ -16,7 +16,7 @@ const PromptsDir = () => {
           VK.
         </p>
       </div>
-      <Image src={img} className="h-52 sm:h-auto" />
+      <Image src={img} className="h-52 sm:h-auto" alt=""/>
     </div>
   );
 };

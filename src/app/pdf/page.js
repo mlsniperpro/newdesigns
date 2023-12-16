@@ -45,6 +45,7 @@ const page = () => {
       <Image
         src={Logo}
         className="absolute -bottom-14 right-10 w-20 h-8 lg:w-auto lg:h-auto"
+        alt=""
       />
     </div>
   );

@@ -34,6 +34,7 @@ const Marketing = () => {
       <Image
         src={Logo}
         className="absolute bottom-6 right-10 w-20 h-8 md:w-auto md:h-auto"
+        alt=""
       />
     </div>
   );

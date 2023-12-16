@@ -4,12 +4,12 @@ import Button from "../components/Button";
 import Excel from "../../../public/Excel.svg";
 import SidebarInput from "../components/SidebarInput";
 
-const page = () => {
+const Page = () => {
   return (
     <div className="text-Oscuro1 px-16">
       <header className="flex items-center justify-between gap-5 pt-9 md:flex-nowrap flex-wrap">
         <div className="flex gap-3 md:flex-nowrap flex-wrap">
-          <Image src={Logo} className="w-[126px]" />
+          <Image src={Logo} className="w-[126px]" alt=""/>
           <div>
             <Button text={"Menú Vioniko"} />
           </div>
@@ -17,7 +17,7 @@ const page = () => {
             <SidebarInput />
           </div>
           <button className="bg-green-600 text-Blanco uppercase flex justify-center items-center gap-3 p-2.5 text-xl font-['Anton']">
-            <Image src={Excel} />
+            <Image src={Excel} alt=""/>
             <span>Exportar a Excel</span>
           </button>
         </div>
@@ -107,4 +107,4 @@ const Table = () => {
   );
 };
 
-export default page;
+export default Page;

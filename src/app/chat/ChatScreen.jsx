@@ -64,14 +64,14 @@ const Chat = ({
           className="cursor-pointer hover:opacity-60"
           onClick={() => setIsLeftOpen((isLeftOpen) => !isLeftOpen)}
         >
-          {isLeftOpen ? <Image src={Left} /> : <Image src={Right} />}
+          {isLeftOpen ? <Image src={Left} alt=""/> : <Image src={Right} alt=""/>}
         </button>
         <div className="flex gap-3 items-center">
           <span className="border-r-2 border-black border-opacity-60 px-1 my-2">
             Temp: {temp}
           </span>
           <div className="cursor-pointer hover:opacity-60">
-            <Image src={Settings} width={16} />
+            <Image src={Settings} width={16} alt=""/>
           </div>
           <div className="cursor-pointer hover:opacity-60">
             <Image src={Dashes} width={16} alt="" />
@@ -81,7 +81,7 @@ const Chat = ({
           className="cursor-pointer hover:opacity-60"
           onClick={() => setIsRightOpen((isRightOpen) => !isRightOpen)}
         >
-          {isRightOpen ? <Image src={Right} /> : <Image src={Left} alt="" />}
+          {isRightOpen ? <Image src={Right} alt=""/> : <Image src={Left} alt="" />}
         </button>
       </header>
       <main>
@@ -108,6 +108,7 @@ const Chat = ({
                         src={Delete}
                         alt=""
                         onClick={() => deleteMsg(msg.id)}
+                        alt=""
                       />
                     </>
                   ) : (

@@ -26,7 +26,7 @@ const Login = () => {
       <header className="flex justify-between py-4 px-4">
         <Language />
         <button onClick={closeDialog}>
-          <Image src={Close} />
+          <Image src={Close} alt=""/>
         </button>
       </header>
       <main className="w-3/4 lg:w-[768px] mx-auto mt-4">
@@ -51,7 +51,7 @@ const Login = () => {
         </div>
         <div className="mt-16">
           <SubmitBtn>
-            Inscribirse <Image src={Arrow} />
+            Inscribirse <Image src={Arrow} alt=""/>
           </SubmitBtn>
         </div>
         <p className="text-center text-md md:text-2xl font-['Lato'] mt-6">

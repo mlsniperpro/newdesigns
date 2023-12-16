@@ -16,7 +16,7 @@ const page = () => {
         </h1>
         <div className="relative bg-Claro1 ml-auto px-5 py-3">
             <h2 className="text-base md:text-[32px] font-['Antonio'] uppercase tracking-tight">NOTA: Para comenzar a interactuar con el TUTOR, teclee esta palabra : INICIO</h2>
-            <Image src={Triangle} className="absolute -bottom-6 left-5 w-6 h-6" />
+            <Image src={Triangle} className="absolute -bottom-6 left-5 w-6 h-6" alt=""/>
         </div>
         <div className="w-[95%] md:w-[90%] py-3 border-t border-Claro1 absolute bottom-0">
             <Search />
@@ -25,6 +25,7 @@ const page = () => {
       <Image
         src={Logo}
         className="absolute bottom-6 right-10 w-20 h-8 lg:w-auto lg:h-auto"
+        alt=""
       />
     </div>
   );

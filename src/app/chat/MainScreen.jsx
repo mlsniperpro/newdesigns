@@ -18,16 +18,16 @@ const MainScreen = ({
           className="cursor-pointer hover:opacity-60"
           onClick={() => setIsLeftOpen((isLeftOpen) => !isLeftOpen)}
         >
-          {isLeftOpen ? <Image src={Left} /> : <Image src={Right} />}
+          {isLeftOpen ? <Image src={Left} alt=""/> : <Image src={Right} alt=""/>}
         </button>
         <button
           className="cursor-pointer hover:opacity-60"
           onClick={() => setIsRightOpen((isRightOpen) => !isRightOpen)}
         >
-          {isRightOpen ? <Image src={Right} /> : <Image src={Left} />}
+          {isRightOpen ? <Image src={Right} alt=""/> : <Image src={Left} alt=""/>}
         </button>
       </div>
-      <Image src={Logo} className="mx-auto mt-10 w-[164px] lg:w-[532px]" />
+      <Image src={Logo} className="mx-auto mt-10 w-[164px] lg:w-[532px]" alt=""/>
       <div className="bg-[#e9edf1] px-6 py-5 lg:w-[639px] mx-auto mt-11">
         <h1 className="texto2 text-center uppercase !leading-none !text-2xl">
           Prompt del sistema

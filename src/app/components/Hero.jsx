@@ -17,6 +17,7 @@ const Hero = () => {
           <Image
             src={logo}
             className="w-[13.8125rem] h-[5.3125rem] mb-5 sm:w-[32rem] sm:mb-8 sm:h-auto"
+            alt=""
           />
           <div className="text-center text-white mb-32 sm:mb-10">
             <h3 className="text-4xl font-normal font-['Antonio'] uppercase mb-4">
@@ -35,14 +36,14 @@ const Hero = () => {
               className="text-white text-2xl font-light font-['Lato'] flex justify-center items-center gap-5 border py-3 px-11 sm:px-6 sm:text-xl"
             >
               Iniciar sesión
-              <Image src={rocket} />
+              <Image src={rocket} alt=""/>
             </a>
             <a
               href="/"
               className="text-white text-2xl font-light font-['Lato'] flex justify-center items-center gap-0 border py-3 px-11 sm:px-6 sm:text-xl"
             >
               Regístrate &nbsp;<span className="font-bold">¡ gratis!</span>
-              <Image src={register} className="ml-5" />
+              <Image src={register} className="ml-5" alt=""/>
             </a>
             <p className="text-neutral-50 text-base font-normal font-['Lato'] text-center sm:absolute -bottom-10 right-0">
               No se requiere tarjeta de crédito
@@ -60,7 +61,7 @@ const Hero = () => {
             poder de la inteligencia artificial y disparar tu productividad e
             ingresos.
           </p>
-          <Image src={logoDark} className="w-[7.18rem] h-11 mt-3" />
+          <Image src={logoDark} className="w-[7.18rem] h-11 mt-3" alt=""/>
         </div>
       </div>
     </div>

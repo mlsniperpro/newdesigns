@@ -5,7 +5,7 @@ const Language = () => {
   return (
     <div className="flex justify-end items-center gap-4">
       <p className="text-sm font-normal font-['Inter']">English</p>
-      <Image src={americanflag} className="w-6 h-6" />
+      <Image src={americanflag} className="w-6 h-6" alt=""/>
     </div>
   );
 };

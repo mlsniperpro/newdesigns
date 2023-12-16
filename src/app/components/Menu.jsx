@@ -48,7 +48,7 @@ const Menu = () => {
         <Language />
       </div>
       <button className={`md:hidden block border border-slate-300 mt-3 ml-5 transition-all ${isMenuOpen ? 'absolute translate-x-60 -translate-y-2 z-40':''}`} onClick={() => setIsMenuOpen(isMenuOpen => !isMenuOpen)}>
-        <Image src={MenuIcon} />
+        <Image src={MenuIcon} alt=""/>
       </button>
     </div>
   );

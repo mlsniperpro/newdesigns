@@ -104,7 +104,7 @@ const Sidebar = ({ isLeft, list, setList, folders, setFolders }) => {
             <div key={item.id} className="flex items-center justify-between">
               {isLeft ? (
                 <Link href={item.link} className="cursor-pointer flex items-center gap-2 p-2">
-                  <Image src={Chat} />
+                  <Image src={Chat} alt=""/>
                   <input
                     value={item.name}
                     className={`cursor-pointer bg-transparent focus:outline-none overflow-ellipsis w-3/4`}

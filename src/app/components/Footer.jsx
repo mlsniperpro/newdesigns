@@ -19,7 +19,7 @@ const Footer = () => {
           <div className=" text-slate-700 text-xl font-normal font-['Lato'] leading-loose">
             Regístrate <span className="font-bold">¡gratis!</span>
           </div>
-          <Image src={RegisterBlue} />
+          <Image src={RegisterBlue} alt=""/>
         </div>
       </div>
       <div className="p-5 bg-Coporativo1 rounded-md">
@@ -31,7 +31,7 @@ const Footer = () => {
           </div>
           <Input placeholder={"Subject:"} type={"text"} />
           <textarea placeholder="Message:" className="bg-transparent border border-neutral-100 rounded-md w-full mb-2 text-lg font-medium font-['Poppins'] leading-7 placeholder-white px-4 py-2 outline-none focus:shadow-inner focus:shadow-[rgb(0,0,0,0.3)] text-white" rows={4} />
-          <Image src={Captcha} className="mb-16" />
+          <Image src={Captcha} className="mb-16" alt=""/>
           <button type='submit' className="absolute bottom-3 right-5 text-center text-neutral-100 text-xl font-normal font-['Anton'] uppercase leading-normal tracking-tight">Enviar mensaje</button>
         </form>
       </div>

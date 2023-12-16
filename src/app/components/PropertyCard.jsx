@@ -12,7 +12,7 @@ const PropertyCard = ({ text, height, isAccordion }) => {
       <p className="opacity-60 text-center text-gray-700 text-2xl font-normal font-['Lato'] leading-loose">
         {text}
       </p>
-      {isAccordion && <Image src={ArrowDown} className={`absolute right-5 ${isAccordion ? 'cursor-pointer':''} ${isAccordionOpen ? 'top-8': 'top-1/2'}`} onClick={() => setIsAccordionOpen(isAccordionOpen => !isAccordionOpen)} />}
+      {isAccordion && <Image src={ArrowDown} className={`absolute right-5 ${isAccordion ? 'cursor-pointer':''} ${isAccordionOpen ? 'top-8': 'top-1/2'}`} onClick={() => setIsAccordionOpen(isAccordionOpen => !isAccordionOpen)} alt=""/>}
       {isAccordionOpen && <p className="text-center text-gray-700 text-xl font-normal font-['Lato'] leading-loose mt-10">lorem ipsum dolor sit amet</p>}
     </div>
   );

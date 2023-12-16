@@ -15,7 +15,7 @@ const page = () => {
         <Language />
       </div>
       <div className="absolute top-6 right-10 w-32 lg:w-[175px] hidden md:block">
-        <Image src={Logo} />
+        <Image src={Logo} alt=""/>
       </div>
       <h1 className="text-center text-Oscuro1 text-4xl md:text-[62px] font-normal font-['Anton'] uppercase leading-none md:leading-[64px] mt-6 md:mt-24">
         Seleccionar Plan de Suscripción
@@ -63,9 +63,9 @@ const page = () => {
         </SubscriptionCard>
       </div>
       <div className="flex justify-center items-center gap-5 py-3 lg:hidden">
-        <Image src={Ellipse} onClick={()=> {setActiveSub(1); setHiddenSubs([2, 3])}} />
-        <Image src={Ellipse} onClick={()=> {setActiveSub(2); setHiddenSubs([1, 3])}} />
-        <Image src={Ellipse} onClick={()=> {setActiveSub(3); setHiddenSubs([1, 2])}} />
+        <Image src={Ellipse} onClick={()=> {setActiveSub(1); setHiddenSubs([2, 3])}} alt=""/>
+        <Image src={Ellipse} onClick={()=> {setActiveSub(2); setHiddenSubs([1, 3])}} alt=""/>
+        <Image src={Ellipse} onClick={()=> {setActiveSub(3); setHiddenSubs([1, 2])}} alt=""/>
       </div>
     </div>
   );
@@ -130,7 +130,7 @@ const SubscriptionCard = ({ children, isBasic, isMensual, isAnual }) => {
           </span>
           {isBasic && (
             <div className="flex gap-4 px-5 py-4 justify-center items-center bg-neutral-50 rounded-[10px] border-b border-slate-300">
-              <Image src={Warning} />
+              <Image src={Warning} alt=""/>
               <p className="text-Oscuro1 text-base font-semibold font-['Lato'] leading-tight">
                 Ha alcanzado el límite gratuito de uso disponible para este mes
               </p>

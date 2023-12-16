@@ -19,7 +19,7 @@ const Card = ({ children, heading, subheading, img, isImgRight }) => {
         </div>
         <div className="texto-contenido !text-xl">{children}</div>
       </div>
-      <Image src={img} className="rounded-xl object-cover w-96 h-80" />
+      <Image src={img} className="rounded-xl object-cover w-96 h-80" alt=""/>
     </div>
   );
 };

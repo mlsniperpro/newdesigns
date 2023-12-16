@@ -26,7 +26,7 @@ const Login = () => {
       <header className="flex justify-between py-4 px-4">
         <Language />
         <button onClick={closeDialog}>
-          <Image src={Close} />
+          <Image src={Close} alt=""/>
         </button>
       </header>
       <main className="w-3/4 md:w-[526px] mx-auto">
@@ -34,7 +34,7 @@ const Login = () => {
           Iniciar sesión
         </h1>
         <button className="flex gap-3 justify-center items-center bg-Claro1 rounded-[10px] h-[71px] w-full">
-          <Image src={Google} />
+          <Image src={Google} alt=""/>
           <span className="text-md md:text-2xl font-['Lato'] leading-loose">
             Iniciar sesión con Google
           </span>

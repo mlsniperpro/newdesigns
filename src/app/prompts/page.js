@@ -30,7 +30,7 @@ const tags = [
   { text: "Sales", color: "bg-green-600" },
 ];
 
-const page = () => {
+const Page = () => {
   return (
     <div className="xl:pl-20 pt-3 flex relative flex-col md:flex-row">
       <div>
@@ -62,33 +62,33 @@ const Navbar = () => {
   return (
     <nav className="flex justify-between items-start px-3">
       <div className="flex justify-center translate-y-0 md:translate-y-14 lg:translate-y-0 lg:justify-start items-center  gap-2 flex-wrap">
-        <Image src={Logo} className="hidden lg:block" />
+        <Image src={Logo} className="hidden lg:block" alt=""/>
         <div className="bg-neutral-50 grow rounded-[10px] border border-slate-300 w-72 lg:w-80 pl-3 py-3 basis-44">
           <p className="opacity-60 text-gray-700 text-2xl font-normal font-['Lato']">
             Buscar...
           </p>
         </div>
         <div className="flex items-center gap-1 md:gap-2 grow bg-neutral-50 rounded-[10px] border border-slate-300 py-3 px-1 md:px-3 basis-44">
-          <Image src={WarnBlue} />
+          <Image src={WarnBlue} alt=""/>
           <p className="text-center text-gray-700 text-base font-extrabold font-['Lato'] leading-7 whitespace-nowrap">
             Reciente / Anterior
           </p>
         </div>
         <div className="flex items-center gap-10 grow bg-neutral-50 rounded-[10px] border border-slate-300 py-3 pl-3 md:px-3 basis-44">
-          <Image src={Fire} />
+          <Image src={Fire} alt=""/>
           <p className="text-center text-gray-700 text-base font-extrabold font-['Lato'] leading-7 whitespace-nowrap">
             Esta Semana
           </p>
         </div>
         <div className="flex items-center gap-10 grow bg-neutral-50 rounded-[10px] border border-slate-300 py-3 pl-3 md:px-3 basis-44">
-          <Image src={Dashes} />
+          <Image src={Dashes} alt=""/>
           <p className="text-center text-gray-700 text-base font-extrabold font-['Lato'] leading-7 whitespace-nowrap">
             Esta Semana
           </p>
         </div>
       </div>
       <button className="bg-neutral-50 rounded-[10px] border border-slate-300 flex justify-center items-center px-4 gap-4 py-4 absolute top-5 right-5 lg:static">
-        <Image src={Icon} className="w-[18px] h-[18px]" />
+        <Image src={Icon} className="w-[18px] h-[18px]" alt=""/>
         <span className="text-center text-gray-700 text-2xl font-bold font-['Antonio'] uppercase leading-none">
           Crear
         </span>
@@ -97,4 +97,4 @@ const Navbar = () => {
   );
 };
 
-export default page;
+export default Page;

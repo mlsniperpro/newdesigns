@@ -5,7 +5,7 @@ import Image from "next/image";
 import Prompt from "../components/Prompt";
 import Search from "../components/Search";
 
-const page = () => {
+const Page = () => {
   return (
     <div className="lg:pl-20 pt-3 flex relative flex-col md:flex-row">
       <div>
@@ -16,6 +16,7 @@ const page = () => {
           <Image
             src={GoogleHollow}
             className="mx-auto w-[89px] h-[89px] md:block hidden"
+            alt=""
           />
           <h1 className="texto2 text-center uppercase !leading-none !text-4xl md:!text-6xl">
             Buscador Vioniko
@@ -51,9 +52,10 @@ const page = () => {
       <Image
         src={Logo}
         className="absolute bottom-6 right-10 w-20 h-8 lg:w-auto lg:h-auto"
+        alt=""
       />
     </div>
   );
 };
 
-export default page;
+export default Page;

@@ -5,7 +5,7 @@ import Logo from "../../../public/Logo-Blue.svg";
 import MagnifyingGlass from "../../../public/Union (1).png";
 import Image from "next/image";
 
-const page = () => {
+const Page = () => {
   return (
     <div className="lg:pl-20 pt-3 flex relative flex-col md:flex-row">
       <Menu />
@@ -14,6 +14,7 @@ const page = () => {
           <Image
             src={MagnifyingGlass}
             className="mx-auto mb-5 w-[131.85px] h-[131px] md:block hidden"
+            alt=""
           />
           <h1 className="texto2 text-center text-Oscuro1 uppercase !leading-none !text-4xl md:!text-6xl">
             Generador de contenido AI:
@@ -36,9 +37,10 @@ const page = () => {
       <Image
         src={Logo}
         className="absolute bottom-6 right-10 w-20 h-8 md:w-auto md:h-auto"
+        alt=""
       />
     </div>
   );
 };
 
-export default page;
+export default Page;
