@@ -51,11 +51,11 @@ const Hero = () => {
         </div>
       </div>
       <div className="px-11 py-14 bg-gradient-to-r from-teal-400 to-amber-200 shadow-[15px_15px_0px_15px_rgba(0,0,0,0.3)]  mr-[2%] sm:absolute sm:-bottom-[25vh] lg:w-[60rem] sm:w-[90vw] sm:left-[50%] sm:-translate-x-[50%] sm:px-20 sm:py-10 sm:shadow-[15px_15px_0px_0px_rgba(0,0,0,0.3)]">
-        <div class="flex flex-col justify-start items-center gap-6 px-5">
-          <h1 class="text-center text-gray-700 text-5xl font-normal font-['Anton'] uppercase leading-[48px]">
+        <div className="flex flex-col justify-start items-center gap-6 px-5">
+          <h1 className="text-center text-gray-700 text-5xl font-normal font-['Anton'] uppercase leading-[48px]">
             TOUR COMPLETO por el ECOSISTEMA del CHATVIONIKO
           </h1>
-          <p class="text-center text-gray-700 text-2xl font-normal font-['Lato'] leading-9">
+          <p className="text-center text-gray-700 text-2xl font-normal font-['Lato'] leading-9">
             Descubre las multiples funciones disponibles que hay, para usar el
             poder de la inteligencia artificial y disparar tu productividad e
             ingresos.
