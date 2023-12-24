@@ -54,6 +54,7 @@ function Login() {
             console.error("Error checking if user is disabled:", error);
           });
       })
+
       .catch((error) => {
         console.error("Error signing in:", error);
       });
@@ -61,24 +62,25 @@ function Login() {
 
   const signInWithGoogleClick = () => {
     signInWithGoogle()
-      .then((user) => {
+    .then((user) => {
         checkIfUserDisabled(user, router)
           .then((isDisabled) => {
+            router.push("/chat")
             if (isDisabled) {
               toast.error("User is disabled");
-              // Handle disabled user (e.g., show an error message)
             } else {
               toast.success("Login Successfull");
-              // Set the auth cookie
               setCookie(null, "auth", user.uid, {
                 maxAge: 30 * 24 * 60 * 60, // 30 days
                 path: "/",
               });
             }
           })
+
           .catch((error) => {
             console.error("Error checking if user is disabled:", error);
           });
+    
       })
       .catch((error) => {
         console.error("Error signing in with Google:", error);
