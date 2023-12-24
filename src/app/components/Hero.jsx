@@ -32,14 +32,14 @@ const Hero = () => {
           </div>
           <div className="flex flex-col gap-3 justify-center sm:flex-row relative sm:gap-12">
             <a
-              href="/"
+              href="/login"
               className="text-white text-2xl font-light font-['Lato'] flex justify-center items-center gap-5 border py-3 px-11 sm:px-6 sm:text-xl"
             >
               Iniciar sesión
               <Image src={rocket} alt=""/>
             </a>
             <a
-              href="/"
+              href="/signup"
               className="text-white text-2xl font-light font-['Lato'] flex justify-center items-center gap-0 border py-3 px-11 sm:px-6 sm:text-xl"
             >
               Regístrate &nbsp;<span className="font-bold">¡ gratis!</span>
