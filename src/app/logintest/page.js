@@ -1,5 +1,7 @@
 "use client";
 
+// Ensure you import setCookie from the correct location
+// import { setCookie } from 'path-to-setCookie-function';
 import Close from "../../../public/Close.svg";
 import Google from "../../../public/Google.svg";
 import AuthInput from "../components/AuthInput";
@@ -25,94 +27,88 @@ const Login = () => {
   const dialog = useRef();
 
   useEffect(() => {
-    dialog.current.showModal();
+    if (dialog.current) {
+      dialog.current.showModal();
+    }
   }, []);
 
   const closeDialog = () => {
-    dialog.current.close();
+    if (dialog.current) {
+      dialog.current.close();
+    }
   };
 
-  const signIn = (e) => {
+  const signIn = async (e) => {
     e.preventDefault();
 
-    signInUser(email, password)
-      .then((user) => {
-        if (!user.emailVerified) {
-          const alertMessage =
-            language === "en"
-              ? "Please verify your email address"
-              : "Por favor verifica tu correo electrónico";
-          alert(alertMessage);
-          return;
-        }
+    try {
+      const user = await signInUser(email, password);
+      if (!user.emailVerified) {
+        const alertMessage =
+          language === "en"
+            ? "Please verify your email address"
+            : "Por favor verifica tu correo electrónico";
+        alert(alertMessage);
+        return;
+      }
 
-        checkIfUserDisabled(user, router)
-          .then((isDisabled) => {
-            if (isDisabled) {
-              toast.error("User is disabled");
-              // Handle disabled user (e.g., show an error message)
-            } else {
-              toast.success("Login Successfull");
-              // Set the auth cookie
-              setCookie(null, "auth", user.uid, {
-                maxAge: 30 * 24 * 60 * 60, // 30 days
-                path: "/",
-              });
-            }
-          })
-          .catch((error) => {
-            console.error("Error checking if user is disabled:", error);
-          });
-      })
-
-      .catch((error) => {
-        console.error("Error signing in:", error);
-      });
+      const isDisabled = await checkIfUserDisabled(user, router);
+      if (isDisabled) {
+        toast.error("User is disabled");
+      } else {
+        toast.success("Login Successful");
+        setCookie(null, "auth", user.uid, {
+          maxAge: 30 * 24 * 60 * 60, // 30 days
+          path: "/",
+        });
+      }
+    } catch (error) {
+      console.error("Error signing in:", error);
+      toast.error("Error during sign in");
+    }
   };
 
-  const signInWithGoogleClick = () => {
-    signInWithGoogle()
-      .then((user) => {
-        checkIfUserDisabled(user, router)
-          .then((isDisabled) => {
-            router.push("/chat");
-            if (isDisabled) {
-              toast.error("User is disabled");
-            } else {
-              toast.success("Login Successfull");
-              setCookie(null, "auth", user.uid, {
-                maxAge: 30 * 24 * 60 * 60, // 30 days
-                path: "/",
-              });
-            }
-          })
-
-          .catch((error) => {
-            console.error("Error checking if user is disabled:", error);
-          });
-      })
-      .catch((error) => {
-        console.error("Error signing in with Google:", error);
-      });
+  const signInWithGoogleClick = async () => {
+    try {
+      const user = await signInWithGoogle();
+      const isDisabled = await checkIfUserDisabled(user, router);
+      if (isDisabled) {
+        toast.error("User is disabled");
+      } else {
+        toast.success("Login Successful");
+        setCookie(null, "auth", user.uid, {
+          maxAge: 30 * 24 * 60 * 60, // 30 days
+          path: "/",
+        });
+        router.push("/chat");
+      }
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+      toast.error("Error during Google sign in");
+    }
   };
+
   return (
     <dialog
       ref={dialog}
       className="[&::backdrop]:bg-[rgba(0,0,0,0.7)] bg-neutral-50 rounded-[10px] w-full h-[90vh] md:w-[735px] md:h-[804px] text-Oscuro1"
     >
-       <ToastContainer />
+      <ToastContainer />
       <header className="flex justify-between py-4 px-4">
         <Language />
         <button onClick={closeDialog}>
-          <Image src={Close} alt="" />
+          <Image src={Close} alt="Close" />
         </button>
       </header>
       <main className="w-3/4 md:w-[526px] mx-auto">
         <h1 className="text-[62px] font-['Anton'] uppercase text-center">
           Iniciar sesión
         </h1>
-        <button className="flex gap-3 justify-center items-center bg-Claro1 rounded-[10px] h-[71px] w-full">
-          <Image src={Google} alt="" />
+        <button
+          onClick={signInWithGoogleClick}
+          className="flex gap-3 justify-center items-center bg-Claro1 rounded-[10px] h-[71px] w-full"
+        >
+          <Image src={Google} alt="Sign in with Google" />
           <span className="text-md md:text-2xl font-['Lato'] leading-loose">
             Iniciar sesión con Google
           </span>
@@ -121,8 +117,16 @@ const Login = () => {
           Bienvenido de vuelta a Vioniko 👋
         </h2>
         <div className="w-full mt-6 [&>*]:mb-4">
-          <AuthInput placeholder={"Correo electrónico"} type={"text"} />
-          <AuthInput placeholder={"Contraseña"} type={"password"} />
+          <AuthInput
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={"Correo electrónico"}
+            type={"text"}
+          />
+          <AuthInput
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={"Contraseña"}
+            type={"password"}
+          />
         </div>
         <div className="flex justify-between items-center mt-7">
           <div className="flex justify-center items-center gap-2">
@@ -136,12 +140,14 @@ const Login = () => {
           </p>
         </div>
         <div className="mt-5">
-          <SubmitBtn>Inicia sesión</SubmitBtn>
+          <SubmitBtn onClick={signIn}>
+            Inicia sesión
+          </SubmitBtn>
         </div>
         <p className="text-center text-md md:text-2xl font-['Lato'] mt-2">
           ¿No tienes una cuenta?{" "}
-          <Link href={"/"} className="font-bold ">
-            Regístrate
+          <Link href={"/"}>
+            <span className="font-bold ">Regístrate</span>
           </Link>
         </p>
       </main>

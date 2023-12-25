@@ -4,13 +4,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import Router from "next/router";
+import {useRouter} from "next/navigation";
 
 import { auth, db } from "../config/firebase";
 
 import { addDoc, collection, getDocs } from "firebase/firestore";
 
 function Admin() {
+  const Router = useRouter();
   const [emailIdMapper, setEmailIdMapper] = useState({});
   const [plan, setPlan] = useState("monthly");
   const [userId, setUserId] = useState("");

@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import Settings from "../../../public/settings.svg";
 import SidebarInput from "../components/SidebarInput";
@@ -183,7 +184,9 @@ const Sidebar = ({ isLeft, list, setList, folders, setFolders }) => {
           <Image src={Settings} alt="" />
           Ajustes
         </div>
+        <Link href={"/dashboard"}>
         <Button text={"Menú Vioniko"} />
+        </Link>
       </footer>
     </aside>
   );
