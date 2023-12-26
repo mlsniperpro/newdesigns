@@ -144,14 +144,14 @@ const Login = () => {
         </h2>
         <div className="w-full mt-6 [&>*]:mb-4 flex justify-center gap-10 items-center">
           <div>
-            <AuthInput placeholder={"Nombre"} type={"text"} />
+            <AuthInput onChange={(e) => setPassword(e.target.value)} placeholder={"Nombre"} type={"text"} />
             <AuthInput placeholder={"Número de teléfono"} type={"tel"} />
             <AuthInput placeholder={"Contraseña"} type={"password"} />
           </div>
           <div>
             <AuthInput placeholder={"Apellido"} type={"text"} />
-            <AuthInput placeholder={"Correo electrónico"} type={"password"} />
-            <AuthInput placeholder={"Repita Contraseña"} type={"password"} />
+            <AuthInput onChange={(e) => setPassword(e.target.value)} placeholder={"Correo electrónico"} type={"password"} />
+            <AuthInput onChange={(e) => setConfirmPassword(e.target.value)} placeholder={"Repita Contraseña"} type={"password"} />
           </div>
         </div>
         <div className="mt-16">
