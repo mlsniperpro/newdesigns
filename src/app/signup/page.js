@@ -8,6 +8,7 @@ import SubmitBtn from "../components/SubmitBtn";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {auth, db} from "../config/firebase";
