@@ -8,6 +8,7 @@ import SubmitBtn from "../components/SubmitBtn";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {auth, db} from "../config/firebase";
@@ -144,14 +145,14 @@ const Login = () => {
         </h2>
         <div className="w-full mt-6 [&>*]:mb-4 flex justify-center gap-10 items-center">
           <div>
-            <AuthInput onChange={(e) => setPassword(e.target.value)} placeholder={"Nombre"} type={"text"} />
+            <AuthInput placeholder={"Nombre"} type={"text"} />
             <AuthInput placeholder={"Número de teléfono"} type={"tel"} />
             <AuthInput placeholder={"Contraseña"} type={"password"} />
           </div>
           <div>
             <AuthInput placeholder={"Apellido"} type={"text"} />
-            <AuthInput onChange={(e) => setPassword(e.target.value)} placeholder={"Correo electrónico"} type={"password"} />
-            <AuthInput onChange={(e) => setConfirmPassword(e.target.value)} placeholder={"Repita Contraseña"} type={"password"} />
+            <AuthInput placeholder={"Correo electrónico"} type={"password"} />
+            <AuthInput placeholder={"Repita Contraseña"} type={"password"} />
           </div>
         </div>
         <div className="mt-16">

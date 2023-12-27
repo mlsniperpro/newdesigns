@@ -1,314 +1,158 @@
 "use client";
-import { useState } from "react";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
+// Ensure you import setCookie from the correct location
+// import { setCookie } from 'path-to-setCookie-function';
+import Close from "../../../public/Close.svg";
+import Google from "../../../public/Google.svg";
+import AuthInput from "../components/AuthInput";
+import Language from "../components/Language";
+import SubmitBtn from "../components/SubmitBtn";
 import {
   checkIfUserDisabled,
   signInUser,
   signInWithGoogle,
 } from "@/app/utils/firebaseOperations";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import LanguageIcon from "@mui/icons-material/Language";
-import { setCookie } from "nookies";
-
-function Login() {
+const Login = () => {
   const [language, setLanguage] = useState("sp");
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dialog = useRef();
 
-  const signIn = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (dialog.current) {
+      dialog.current.showModal();
+    }
+  }, []);
 
-    signInUser(email, password)
-      .then((user) => {
-        if (!user.emailVerified) {
-          const alertMessage =
-            language === "en"
-              ? "Please verify your email address"
-              : "Por favor verifica tu correo electrónico";
-          alert(alertMessage);
-          return;
-        }
-
-        checkIfUserDisabled(user, router)
-          .then((isDisabled) => {
-            if (isDisabled) {
-              toast.error("User is disabled");
-              // Handle disabled user (e.g., show an error message)
-            } else {
-              toast.success("Login Successfull");
-              // Set the auth cookie
-              setCookie(null, "auth", user.uid, {
-                maxAge: 30 * 24 * 60 * 60, // 30 days
-                path: "/",
-              });
-            }
-          })
-          .catch((error) => {
-            console.error("Error checking if user is disabled:", error);
-          });
-      })
-
-      .catch((error) => {
-        console.error("Error signing in:", error);
-      });
+  const closeDialog = () => {
+    if (dialog.current) {
+      dialog.current.close();
+    }
   };
 
-  const signInWithGoogleClick = () => {
-    signInWithGoogle()
-    .then((user) => {
-        checkIfUserDisabled(user, router)
-          .then((isDisabled) => {
-            router.push("/chat")
-            if (isDisabled) {
-              toast.error("User is disabled");
-            } else {
-              toast.success("Login Successfull");
-              setCookie(null, "auth", user.uid, {
-                maxAge: 30 * 24 * 60 * 60, // 30 days
-                path: "/",
-              });
-            }
-          })
+  const signIn = async (e) => {
+    e.preventDefault();
 
-          .catch((error) => {
-            console.error("Error checking if user is disabled:", error);
-          });
-    
-      })
-      .catch((error) => {
-        console.error("Error signing in with Google:", error);
-      });
+    try {
+      const user = await signInUser(email, password);
+      if (!user.emailVerified) {
+        const alertMessage =
+          language === "en"
+            ? "Please verify your email address"
+            : "Por favor verifica tu correo electrónico";
+        alert(alertMessage);
+        return;
+      }
+
+      const isDisabled = await checkIfUserDisabled(user, router);
+      if (isDisabled) {
+        toast.error("User is disabled");
+      } else {
+        toast.success("Login Successful");
+        setCookie(null, "auth", user.uid, {
+          maxAge: 30 * 24 * 60 * 60, // 30 days
+          path: "/",
+        });
+      }
+    } catch (error) {
+      console.error("Error signing in:", error);
+      toast.error("Error during sign in");
+    }
+  };
+
+  const signInWithGoogleClick = async () => {
+    try {
+      const user = await signInWithGoogle();
+      const isDisabled = await checkIfUserDisabled(user, router);
+      if (isDisabled) {
+        toast.error("User is disabled");
+      } else {
+        toast.success("Login Successful");
+        setCookie(null, "auth", user.uid, {
+          maxAge: 30 * 24 * 60 * 60, // 30 days
+          path: "/",
+        });
+        router.push("/chat");
+      }
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+      toast.error("Error during Google sign in");
+    }
   };
 
   return (
-    <div className="antialiased ">
+    <dialog
+      ref={dialog}
+      className="[&::backdrop]:bg-[rgba(0,0,0,0.7)] bg-neutral-50 rounded-[10px] w-full h-[90vh] md:w-[735px] md:h-[804px] text-Oscuro1"
+    >
       <ToastContainer />
-      <Link href={"/"}>
-        <button
-          className="bg-[white] rounded-[5px] py-[15px] px-[25px] text-[#fff] text-[14px] leading-[17px] font-semibold "
-          style={{
-            color: "white",
-            fontFamily: "Monospace",
-            fontSize: "20px",
-            background: "#283081",
-            margin: "10px",
-          }}
-        >
-          {language === "en" ? "Subscription" : " Sitio Principal "}
+      <header className="flex justify-between py-4 px-4">
+        <Language />
+        <button onClick={closeDialog}>
+          <Image src={Close} alt="Close" />
         </button>
-      </Link>
-      <div
-        className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300"
-        style={{ background: "rgb(40,48,129)", color: "white" }}
-      >
-        <h1
-          className="text-4xl font-medium"
-          style={{
-            textAlign: "center",
-            fontFamily: "monospace",
-            fontSize: "40px",
-          }}
-        >
-          {language === "sp" ? "Iniciar sesión" : "Login"}
+      </header>
+      <main className="w-3/4 md:w-[526px] mx-auto">
+        <h1 className="text-[62px] font-['Anton'] uppercase text-center">
+          Iniciar sesión
         </h1>
-        <br></br>
         <button
-          onClick={() =>
-            language === "sp" ? setLanguage("en") : setLanguage("sp")
-          }
-          style={{
-            background: "white",
-            color: "rgb(40,48,129)",
-            height: "35px",
-            width: "200px",
-            borderRadius: "5px",
-            fontFamily: "monospace",
-            fontSize: "20px",
-          }}
+          onClick={signInWithGoogleClick}
+          className="flex gap-3 justify-center items-center bg-Claro1 rounded-[10px] h-[71px] w-full"
         >
-          <LanguageIcon /> {language === "sp" ? "English" : "Spanish"}
+          <Image src={Google} alt="Sign in with Google" />
+          <span className="text-md md:text-2xl font-['Lato'] leading-loose">
+            Iniciar sesión con Google
+          </span>
         </button>
-        <br></br>
-        <br></br>
-        <p style={{ fontSize: "20px", fontFamily: "monospace" }}>
-          {language === "sp"
-            ? "Bienvenido de vuelta a Vioniko 👋"
-            : "Hi, Welcome Back to Vioniko 👋"}
-        </p>
-        <div className="my-5">
-          <button
-            onClick={signInWithGoogleClick}
-            className="w-full text-center py-3 my-3 border flex space-x-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
-            style={{ background: "white", color: "rgb(40,48,129)" }}
-          >
-            <Image
-              src="https://www.svgrepo.com/show/355037/google.svg"
-              width={24}
-              height={24}
-              className="w-6 h-6"
-              alt=""
-            />{" "}
-            <span style={{ fontSize: "17px" }}>
-              {language === "sp"
-                ? "Iniciar sesión con Google"
-                : "Login with Google"}
-            </span>
-          </button>
+        <h2 className="text-[40px] font-['Antonio'] uppercase text-center tracking-tight">
+          Bienvenido de vuelta a Vioniko 👋
+        </h2>
+        <div className="w-full mt-6 [&>*]:mb-4">
+          <AuthInput
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={"Correo electrónico"}
+            type={"text"}
+          />
+          <AuthInput
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={"Contraseña"}
+            type={"password"}
+          />
         </div>
-        <form action="" onSubmit={signIn} className="my-10">
-          <div className="flex flex-col space-y-5">
-            <label htmlFor="email">
-              <p
-                className="font-medium text-slate-700 pb-2"
-                style={{
-                  color: "white",
-                  fontFamily: "monospace",
-                  fontSize: "20px",
-                }}
-              >
-                ➤ {language === "sp" ? "Correo electrónico" : "Email address"}
-              </p>
-              <input
-                id="email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                type="email"
-                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
-                placeholder="Enter email address"
-                style={{
-                  color: "black",
-                  fontFamily: "monospace",
-                  fontSize: "20px",
-                }}
-              />
+        <div className="flex justify-between items-center mt-7">
+          <div className="flex justify-center items-center gap-2">
+            <input type="checkbox" className="accent-Claro1 w-6 h-6" />
+            <label className="text-md md:text-2xl font-normal font-['Lato']">
+              Recuérdame
             </label>
-            <label htmlFor="password">
-              <p
-                className="font-medium text-slate-700 pb-2"
-                style={{
-                  color: "white",
-                  fontFamily: "monospace",
-                  fontSize: "20px",
-                }}
-              >
-                ➤ {language === "sp" ? "Contraseña" : "Password"}
-              </p>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
-                placeholder="Enter your password"
-                style={{
-                  color: "black",
-                  fontFamily: "monospace",
-                  fontSize: "20px",
-                }}
-              />
-            </label>
-            <div className="flex flex-row justify-between">
-              <div>
-                <label
-                  htmlFor="remember"
-                  className=""
-                  style={{
-                    color: "white",
-                    fontFamily: "monospace",
-                    fontSize: "20px",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    id="remember"
-                    className="w-4 h-4 border-slate-200 focus:bg-indigo-600"
-                    style={{ marginRight: "10px" }}
-                  />
-                  {language === "sp" ? "Recuérdame" : "Remember me"}
-                </label>
-              </div>
-              <div>
-                <Link
-                  href="/passwordreset"
-                  className="font-medium text-indigo-600"
-                  style={{
-                    color: "white",
-                    fontFamily: "monospace",
-                    fontSize: "20px",
-                  }}
-                >
-                  {language === "sp"
-                    ? "¿Olvidaste tu contraseña?"
-                    : "Forgot Password?"}
-                </Link>
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center"
-              style={{
-                background: "white",
-                color: "rgb(40,48,129)",
-                fontFamily: "monospace",
-                fontSize: "18px",
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                />
-              </svg>
-              <span>{language === "sp" ? "Iniciar sesión" : "Login"}</span>
-            </button>
-            <p
-              className="text-center"
-              style={{
-                color: "white",
-                fontFamily: "monospace",
-                fontSize: "18px",
-              }}
-            >
-              {language === "sp"
-                ? "¿No tienes una cuenta?"
-                : "Not registered yet?"}
-              <Link
-                className="text-indigo-600 font-medium inline-flex space-x-1 items-center"
-                href="/signup"
-                style={{
-                  color: "white",
-                  fontFamily: "monospace",
-                  fontSize: "18px",
-                  marginLeft: "10px",
-                }}
-              >
-                <span>
-                  {language === "sp" ? "Regístrate" : "Register now1"}
-                </span>
-              </Link>
-            </p>
           </div>
-        </form>
-      </div>
-    </div>
+          <p className="text-md md:text-2xl font-bold font-['Lato']">
+            ¿Olvidaste tu contraseña?
+          </p>
+        </div>
+        <div className="mt-5">
+          <SubmitBtn onClick={signIn}>
+            Inicia sesión
+          </SubmitBtn>
+        </div>
+        <p className="text-center text-md md:text-2xl font-['Lato'] mt-2">
+          ¿No tienes una cuenta?{" "}
+          <Link href={"/"}>
+            <span className="font-bold ">Regístrate</span>
+          </Link>
+        </p>
+      </main>
+    </dialog>
   );
-}
+};
 
 export default Login;
