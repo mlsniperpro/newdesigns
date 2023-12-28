@@ -19,19 +19,19 @@ import Image from "next/image";
 import { useState } from "react";
 
 const items = [
-  { icon: icon1, text: "English" },
-  { icon: icon2, text: "Actualizar" },
-  { icon: icon3, text: "guiado" },
-  { icon: icon4, text: "chat" },
-  { icon: icon5, text: "prompts" },
-  { icon: icon6, text: "palabra clave" },
-  { icon: icon7, text: "perfil" },
-  { icon: icon8, text: "tutor" },
-  { icon: icon9, text: "youTube" },
-  { icon: icon10, text: "Buscador Vioniko" },
-  { icon: icon11, text: "Analizador de Documentos VK" },
-  { icon: icon12, text: "cancelar" },
-  { icon: icon13, text: "cerrar sesión" },
+  { icon: icon1, text: "English", link: "/english" },
+  { icon: icon2, text: "Actualizar", link: "/update" },
+  { icon: icon3, text: "guiado", link: "/guided" },
+  { icon: icon4, text: "chat", link: "/chat" },
+  { icon: icon5, text: "prompts", link: "/prompts" },
+  { icon: icon6, text: "palabra clave", link: "/keyword" },
+  { icon: icon7, text: "perfil", link: "/profile" },
+  { icon: icon8, text: "tutor", link: "/tutor" },
+  { icon: icon9, text: "youTube", link: "/youtube" },
+  { icon: icon10, text: "Buscador Vioniko", link: "/vioniko" },
+  { icon: icon11, text: "Analizador de Documentos VK", link: "/analyzer" },
+  { icon: icon12, text: "cancelar", link: "/cancel" },
+  { icon: icon13, text: "cerrar sesión", link: "/logout" },
 ];
 
 const Menu = () => {
@@ -41,7 +41,7 @@ const Menu = () => {
       <div className={`text-Oscuro1 bg-Claro1 pl-7 pb-3 md:block ${isMenuOpen ? 'block absolute top-0 left-0 z-30':'hidden'}`}>
         <h2 className="texto5 uppercase">Menú</h2>
         {items.map((item) => (
-          <MenuItem key={item.text} icon={item.icon} text={item.text} />
+          <MenuItem key={item.text} icon={item.icon} text={item.text} link={item.link} />
         ))}
       </div>
       <div className="mt-2 hidden md:block">
