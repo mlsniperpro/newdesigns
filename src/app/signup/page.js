@@ -5,18 +5,18 @@ import Close from "../../../public/Close.svg";
 import AuthInput from "../components/AuthInput";
 import Language from "../components/Language";
 import SubmitBtn from "../components/SubmitBtn";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import {toast, ToastContainer} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import {auth, db} from "../config/firebase";
-import {useRouter} from "next/navigation";
-import {collection, doc, getDoc, getDocs, setDoc} from "firebase/firestore";
+import { auth, db } from "../config/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const router = useRouter();
@@ -36,7 +36,8 @@ const Login = () => {
   const closeDialog = () => {
     dialog.current.close();
   };
-   const onSubmit = async (e) => {
+
+  const onSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -49,19 +50,22 @@ const Login = () => {
     }
 
     try {
+      console.log("The email is ", email)
+      console.log("The password is ", password)
       const { user } = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      await sendEmailVerification(user);
 
+      await sendEmailVerification(user);
+      console.log("I have successfully sent the email verification")
       const date = new Date();
       const dateSignedUp = `${date.getFullYear()}-${
         date.getMonth() + 1
       }-${date.getDate()}`;
 
-      const docRef = await addDoc(collection(db, "users"), {
+      await addDoc(collection(db, "users"), {
         userId: user.uid,
         email,
         firstName,
@@ -77,17 +81,7 @@ const Login = () => {
           : "Please verify your email";
       toast.success(toastMessage);
 
-      console.log("Document written with ID: ", docRef.id);
-
-      // Trigger Rewardful conversion event after user account is successfully created.
-      setTimeout(async () => {
-        if (window.Rewardful?.referral) {
-          console.log("Rewardful referral", window.Rewardful.referral);
-          window.rewardful("convert", { ["email"]: email });
-        }
-
-        router.push("/login");
-      }, 5000);
+      router.push("/login");
     } catch (e) {
       let errorMessage;
       switch (e.code) {
@@ -120,9 +114,9 @@ const Login = () => {
             language === "sp" ? "Algo salió mal." : "Something went wrong.";
       }
       toast.error(errorMessage);
-      console.error("Error: ", e);
     }
   };
+
   return (
     <dialog
       ref={dialog}
@@ -134,7 +128,7 @@ const Login = () => {
           <Image src={Close} alt="" />
         </button>
       </header>
-      <main className="w-3/4 lg:w-[768px] mx-auto mt-4">
+      <form className="w-3/4 lg:w-[768px] mx-auto mt-4">
         <h1 className="text-[62px] font-['Anton'] uppercase text-left leading-none">
           Obtén Tu Cuenta Gratis Ahora.
         </h1>
@@ -144,28 +138,53 @@ const Login = () => {
         </h2>
         <div className="w-full mt-6 [&>*]:mb-4 flex justify-center gap-10 items-center">
           <div>
-            <AuthInput onChange={(e) => setPassword(e.target.value)} placeholder={"Nombre"} type={"text"} />
-            <AuthInput placeholder={"Número de teléfono"} type={"tel"} />
-            <AuthInput placeholder={"Contraseña"} type={"password"} />
+            <AuthInput
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder={"Nombre"}
+              type={"text"}
+            />
+            <AuthInput
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              placeholder={"Número de teléfono"}
+              type={"tel"}
+            />
+            <AuthInput
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={"Contraseña"}
+              type={"password"}
+            />
           </div>
           <div>
-            <AuthInput placeholder={"Apellido"} type={"text"} />
-            <AuthInput onChange={(e) => setPassword(e.target.value)} placeholder={"Correo electrónico"} type={"password"} />
-            <AuthInput onChange={(e) => setConfirmPassword(e.target.value)} placeholder={"Repita Contraseña"} type={"password"} />
+            <AuthInput
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder={"Apellido"}
+              type={"text"}
+            />
+            <AuthInput
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={"Correo electrónico"}
+              type={"email"}
+            />
+            <AuthInput
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder={"Repita Contraseña"}
+              type={"password"}
+            />
           </div>
         </div>
         <div className="mt-16">
-          <SubmitBtn>
+          <SubmitBtn onClick={onSubmit} type="submit">
             Inscribirse <Image src={Arrow} alt="" />
           </SubmitBtn>
         </div>
         <p className="text-center text-md md:text-2xl font-['Lato'] mt-6">
           ¿Ya tienes una cuenta?{" "}
-          <Link href={"/"} className="font-bold ">
+          <Link href={"/login"} className="font-bold ">
             Inicia sesión
           </Link>
         </p>
-      </main>
+      </form>
+      <ToastContainer />
     </dialog>
   );
 };

@@ -7,17 +7,15 @@ import Google from "../../../public/Google.svg";
 import AuthInput from "../components/AuthInput";
 import Language from "../components/Language";
 import SubmitBtn from "../components/SubmitBtn";
-import {
-  checkIfUserDisabled,
-  signInUser,
-  signInWithGoogle,
-} from "@/app/utils/firebaseOperations";
+import { checkIfUserDisabled, signInUser, signInWithGoogle } from "@/app/utils/firebaseOperations";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { setCookie } from 'nookies';
 import { useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 
 const Login = () => {
   const [language, setLanguage] = useState("sp");
